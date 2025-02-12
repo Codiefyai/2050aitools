@@ -1,14 +1,6 @@
-services:
-  # A Docker web service
-  
-  - type: web
-    name: 2025ai-website # Choose a name for your service
-    runtime: static-html
-    routes:
-      - path: /
-        rewrite: /index.html
-    runtime: python
-    plan: free
-    autoDeploy: false
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+ services:
+   - type: web
+     name: 2050ai-tools
+     routes:
+       - path: /*
+         staticDir: .  #  <--  Dot (.) means current directory (root)
