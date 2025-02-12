@@ -1,6 +1,6 @@
  services:
    - type: web
-     name: 2050aitools
+     name: 2050ai-tools
      routes:
        - path: /*
          staticDir: .  #  <--  Dot (.) means current directory (root)
