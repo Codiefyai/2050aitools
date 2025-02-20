@@ -1,645 +1,642 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bah! Bah's! Corner</title>
     <style>
-        /* General Styles (same as before) */
+        /* CSS - (Existing Styles - Keep as is) */
         body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffebf0;
+            text-align: center;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff99c8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHNJREFUOE9jZKAQMOLR/zEwMTCwNjEwMtAwMDGwMjEysjAyMDGxsjAxMjKysjAyNjIx/gMZAJE7j0oY8BJpQ+sDKf2/Rj0oY8BKGY/h/P/j/82EGP/81/9HjFhhj/+d/+gxg+g0AwMjAwMDKwMDAwMLAAAAC+kC/8J09z8AAAAASUVORK5CYII="),
+                              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAk0lEQVR4nO3TQQ2AIBADwD+a/z/p07vBoB1gQ3hJkLCEH5lCEF5wN+5LqQggM2uN80Yj4n+Q5u+u4j63y20L0b0z5J9G8+oA6HqgDr20Xp8q0L5eJdC1K1r2+7DqQggs2uD98Yv4f8k5vE/v4+eP/j8P/P+gD8Y/f////9Af+A+Jz1wP8hAAAAAElFTkSuQmCC");
+            background-repeat: repeat;
+            background-size: 100px, 20px, 25px;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .button {
+        .site-title {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ff66a3;
+            text-shadow: -3px -3px 0 #ffc0cb, 3px -3px 0 #ffc0cb, -3px 3px 0 #ffc0cb, 3px 3px 0 #ffc0cb;
             display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
+            letter-spacing: 5px;
+        }
+        .site-title span {
+            display: inline-block;
+            animation: bounce 0.8s infinite alternate;
+        }
+        .site-title span:nth-child(1) { color: red;  animation-delay: 0s;}
+        .site-title span:nth-child(2) { color: orange; animation-delay: 0.1s; }
+        .site-title span:nth-child(3) { color: yellow; animation-delay: 0.2s;}
+        .site-title span:nth-child(4) { color: green; animation-delay: 0.3s;}
+        .site-title span:nth-child(5) { color: blue; animation-delay: 0.4s; }
+        .site-title span:nth-child(6) { color: indigo; animation-delay: 0.5s;}
+        .site-title span:nth-child(7) { color: violet; animation-delay: 0.6s;}
+        .site-title span:nth-child(8) { color: red;  animation-delay: 0.7s;}
+        .site-title span:nth-child(9) { color: orange; animation-delay: 0.8s;}
+        .site-title span:nth-child(10) { color: yellow; animation-delay: 0.9;}
+        .site-title span:nth-child(11) { color: green; animation-delay: 1s;}
+        .site-title span:nth-child(12) { color: blue; animation-delay: 1.1s;}
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to   { transform: translateY(-20px); }
+        }
+
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ff99c8;
+            margin: 5px;
             border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
+            white-space: nowrap;
         }
-
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-
-        .top-bar.menu-open {
-            background-color: #333;
-        }
-
-        .top-bar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
+        .tab.active {
+            background-color: #ff66a3;
             color: white;
-            padding: 2rem 0;
-            text-align: center;
+        }
+        .category {
+            display: none;
+            margin: 40px auto;
+            width: 90%;
+        }
+        .category.active {
+            display: block;
         }
 
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
+        /* Grid Styles */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
         }
 
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
+        .video-tile {
+            position: relative;
+            border: 2px solid #ff66a3;
+            border-radius: 10px;
+            overflow: hidden;
             cursor: pointer;
-            display: none;
+            transition: transform 0.3s ease;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .video-tile:hover{
+            transform: scale(1.05);
         }
 
-        .menu-button:focus {
-            outline: none;
+        .video-tile img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        .nav-menu {
-            display: none;
+        .video-title {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
             position: absolute;
-            top: 100%;
+            bottom: 30px;
             left: 0;
             width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
+        }
+
+        .video-description {
+            padding: 5px;
             text-align: center;
-            z-index: 5;
+            font-size: 0.9em;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 153, 200, 0.8);
+            color: #333;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
         }
 
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
+        .video-preview {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
+            height: auto;
+            display: none;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .video-preview video{
+            width: 100%;
             height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            object-fit: cover;
         }
 
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
-        }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
+        .video-tile:hover .video-preview {
             display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
         }
 
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
+        /* Footer Styles */
+        footer {
+            background-color: #ff99c8;
+            color: white;
+            padding: 10px;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-weight: bold;
         }
 
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
-            text-align: center;
+        /* --- Modal Styles (Adjustments) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
         }
 
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
+        .modal-content {
+            position: relative; /* Added: for absolute positioning of the close button */
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            animation-name: modalopen;
+            animation-duration: 0.4s;
         }
 
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        /* Modal Open Animation */
+        @keyframes modalopen {
+            from {opacity: 0}
+            to {opacity: 1}
         }
 
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
+        .modal input[type="text"], .modal textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        .modal textarea{
+            height: 150px;
         }
 
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
+        .modal button {
+            background-color: #ff99c8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        .modal button.close-button {
+            background-color: #ccc;
         }
 
+        .modal button:hover {
+            opacity: 0.8;
+        }
 
+        .open-modal-btn {
+            background-color: #ff66a3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .open-modal-btn:hover {
+            opacity: 0.8;
+        }
+
+       .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        .close-button:hover {
+            color: black;
+        }
+
+        /* --- Loading Indicator Styles --- */
+        #loadingIndicator {
+            display: none;  /* Hidden by default */
+            font-size: 1.2em;
+            color: #ff66a3;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 2.5em;
+            }
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 10px;
+            }
+            .tabs {
+                justify-content: flex-start;
+            }
+            .tab {
+                margin: 2px;
+                padding: 8px 15px;
+            }
+            input {
+                width: 80%;
+            }
+            .video-description {
+                font-size: 0.8em;
+            }
+        }
+        @media (max-width: 480px) {
+            .site-title {
+                font-size: 2em;
+            }
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+             .video-description {
+                font-size: 0.7em;
+            }
+        }
     </style>
+       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+    <h1 class="site-title">
+        <span>B</span><span>a</span><span>h</span><span>!</span>
+        <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span><span>!</span>
+        <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span>
+    </h1>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
+    <div id="loadingIndicator">Loading...</div>  <!-- Loading indicator -->
+    <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
+
+    <div class="tabs" id="tabs"></div>
+    <div id="episodes"></div>
+
+    <footer>
+        Copyright © 2025 Bah! Bah's! Corner. All rights reserved.
+    </footer>
+
+    <!-- --- Modal HTML --- -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span> <!-- Close button (X) -->
+            <h2>Suggest an Episode</h2>
+            <form id="videoSubmissionForm">
+                <input type="text" id="youtubeLink" name="youtubeLink" placeholder="YouTube Link">
+                <input type="text" id="episodeName"  name="episodeName" placeholder="Episode/Video Name">
+                <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
+                <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
+
+                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                <br/>
+
+                <button type="submit">Submit Suggestion</button>
+                <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
+            </form>
         </div>
     </div>
 
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
-
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
-        </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
-                </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
     <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                }
+
+         (function() {
+            emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
+        })();
+
+        const categories = {
+        "Nursery Rhymes": [],
+        "Learning Songs": [],
+        "Animal Songs": [],
+        "Bedtime Songs": [],
+        "Holiday Songs": []
+    };
+
+    const usedRequesters = new Set(); // To ensure unique descriptions
+
+    function addVideosToCategory(categoryName, videoData) {
+        if (categories[categoryName]) {
+            categories[categoryName] = categories[categoryName].concat(videoData);
+        }
+    }
+
+    function getRandomRequester() {
+         const names = ["John S.", "Emily R.", "Michael B.", "Sophia L.", "David K.", "Olivia M.", "Ethan P.", "Ava G.", "Daniel H.", "Isabella T.", "James N.", "Mia C.", "William F.", "Abigail W.", "Alexander Q.",
+             "Christopher D.", "Samantha E.", "Andrew G.", "Victoria K.", "Benjamin P.", "Chloe S.", "Matthew T.", "Elizabeth V.", "Joseph A.", "Madison B.",
+             "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."]; // More names
+
+            const descriptions = [
+                "Requested this for his little one!", "Loves this classic!", "Her daughter can't get enough!",
+                "Perfect for bedtime!", "A family favorite!", "Great for learning!", "Her son's favorite song!",
+                "Always puts a smile on her face!", "His twins love this one!", "Requested for her niece.",
+                "A sing-along favorite!", "Helps his baby sleep.", "Her kids dance to this!", "Great for playtime!",
+                "Recommended this to friends!", "It’s so calming for our baby!", "She loves to dance to it!", "This keeps him entertained for hours!",
+                 "Perfect for car rides!", "It’s a great way to learn!", "He asks for it every night!", "She giggles every time!", "My daughter loves the characters!",
+                 "This song is so catchy!", "It’s educational and fun!", "He enjoys the animal sounds!", "We all sing along!", "Her favorite thing to watch!",
+                 "It always cheers her up!", "This makes bath time fun!", "He learns so much from it!"
+            ];
+
+            let requester;
+            do {
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+                requester = `${randomName} - ${randomDescription}`;
+            } while (usedRequesters.has(requester));
+            usedRequesters.add(requester);
+            return requester;
+        }
+
+         const nurseryRhymesData = [
+            { title: "The Muffin Man", url: "https://www.youtube.com/watch?v=hb9tt7LiYrc" },
+             { title: "Five Little Ducks", url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
+                { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
+            { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
+            { title: "Wheels on the Bus", url: "https://www.youtube.com/watch?v=e_04ZrNroTo" },
+            { title: "Five Little Monkeys Jumping on the Bed", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
+            { title: "If You're Happy and You Know It", url: "https://www.youtube.com/watch?v=M6LoRZsHMSs" },
+            { title: "Head, Shoulders, Knees & Toes", url: "https://www.youtube.com/watch?v=ZanHgPprl-0" },
+             { title: "Itsy Bitsy Spider", url: "https://www.youtube.com/watch?v=w_lZI8VRdgA" },
+                { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
+        { title: "London Bridge is Falling Down", url: "https://www.youtube.com/watch?v=FKeFK6a-7Xg" },
+        { title: "Baa Baa Black Sheep", url: "https://www.youtube.com/watch?v=Mj3QOJn8fF4" },
+               { title: "Mary Had a Little Lamb", url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
+         { title: "The Farmer in the Dell", url: "https://www.youtube.com/watch?v=E-krs_FCOlQ" },
+          { title: "Rain Rain Go Away", url: "https://www.youtube.com/watch?v=LFrKYjrIdq8" },
+           { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
+            { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
+            { title: "Twinkle, Twinkle, Little Star + More Nursery Rhymes & Kids Songs", url:"https://www.youtube.com/watch?v=_ArVh1sFg9w" },
+            { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=yU2R0nOWC6s" },
+            { title: "Mary Had a Little Lamb" , url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
+            { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=Mj3QOJn8fF4" },
+            { title: "Jack and Jill" , url: "https://www.youtube.com/watch?v=VjLh_vEqW1A" },
+            { title: "Hey Diddle Diddle" , url: "https://www.youtube.com/watch?v=s5mH5T-D0rg" },
+            { title: "Five Little Speckled Frogs" , url: "https://www.youtube.com/watch?v=AS9nFHQcc-A" },
+            { title: "Rock-a-bye Baby" , url: "https://www.youtube.com/watch?v=wQRW0rCjE9A" }
+
+        ];
+        const learningSongsData = [
+           { title: "ABC Song", url: "https://www.youtube.com/watch?v=75p-N9YKqNo" },
+                { title: "Counting to 10", url: "https://www.youtube.com/watch?v=DR-cfDsHCGA" },
+                { title: "Colors Song", url: "https://www.youtube.com/watch?v=gXxyjV0Gu-I" },
+                { title: "Shapes Song", url: "https://www.youtube.com/watch?v=OEbRDtCAFdU" },
+                { title: "Days of the Week", url: "https://www.youtube.com/watch?v=mXMofxtDPUQ" },
+                { title: "Months of the Year", url: "https://www.youtube.com/watch?v=Fe9bnYRzFvk" },
+                { title: "Phonics Song", url: "https://www.youtube.com/watch?v=BELlZKpi1Zs" },
+                { title: "Weather Song", url: "https://www.youtube.com/watch?v=JnX6o5Yx_Gg" },
+                { title: "Five Senses Song", url: "https://www.youtube.com/watch?v=vQfhjf4L-Fw" },
+                { title: "Opposites Song", url: "https://www.youtube.com/watch?v=aTP9FegD-jU" },
+              { title: "Time Song", url: "https://www.youtube.com/watch?v=w_p-VFg8cK8" },
+              { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
+                { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
+        { title: "The Numbers Song", url: "https://www.youtube.com/watch?v=e0jg9LB-yvY" },
+    { title: "The Cleaning Up Song", url: "https://www.youtube.com/watch?v=gCzgc-cQRWw" },
+      { title: "If You Want To Read A Book", url: "https://www.youtube.com/watch?v=Mwx5qtS1v9c" },
+       { title: "I Can Say My ABCs", url: "https://www.youtube.com/watch?v=WkG1mILj-Os" },
+        { title: "I Love To Count", url: "https://www.youtube.com/watch?v=PQt-qMBEFmE" },
+         { title: "Addition Song", url: "https://www.youtube.com/watch?v=MVWZBGM2WAI" },
+          { title: "What Makes a Plant a Plant?", url: "https://www.youtube.com/watch?v=jHnZSJW-XVE" },
+           { title: "What is the Water Cycle?", url: "https://www.youtube.com/watch?v=TWCcjJjcmGE" },
+            { title: "Why Do We Have Seasons?", url: "https://www.youtube.com/watch?v=KUU7I1j7M04" },
+       { title: "Days of the week song" , url: "https://www.youtube.com/watch?v=HtQcnS7XamQ" },
+        { title: "The Months of the Year Song" , url: "https://www.youtube.com/watch?v=5Enixd-s-bs" },
+         { title: "How Many Planets Are There?" , url: "https://www.youtube.com/watch?v=Qd6nLM2QlNE" },
+        ];
+
+        const animalSongsData = [
+           { title: "Old MacDonald Had a Farm", url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
+                { title: "Baby Shark", url: "https://www.youtube.com/watch?v=XqZsoesa55w" },
+                { title: "Five Little Monkeys", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
+                { title: "BINGO Dog Song", url: "https://www.youtube.com/watch?v=9mmF8zOlh_g" },
+                { title: "The Ants Go Marching", url: "https://www.youtube.com/watch?v=2S__fbCGwOM" },
+                  { title: "Pet Song", url: "https://www.youtube.com/watch?v=kjl-HZh8_2U" },
+              { title: "Zoo Song", url: "https://www.youtube.com/watch?v=hW8_jk-vL7o" },
+                { title: "Three Little Kittens", url: "https://www.youtube.com/watch?v=5o_99gcx5gU" },
+                   { title: "Dinosaur Song", url: "https://www.youtube.com/watch?v=f-lF_d0xVbU" },
+        { title: "Old MacDonald Had a Farm" , url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
+      { title: "Walking Through The Jungle Song" , url: "https://www.youtube.com/watch?v=T3w4Be-e0xY" },
+        { title: "B-I-N-G-O" , url: "https://www.youtube.com/watch?v=9o2lX0bFOmM" },
+          { title: "The Animals On The Farm" , url: "https://www.youtube.com/watch?v=ursEqyT3aQw" },
+            { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
+              { title: "What Does The Animal Say" , url: "https://www.youtube.com/watch?v=jofNR_WkoCE" },
+            { title: "I Love Bugs" , url: "https://www.youtube.com/watch?v=LNgXlU90a-o" },
+              { title: "12 Animals" , url: "https://www.youtube.com/watch?v=C1t9v-p0zJg" },
+              { title: "The Goldfish" , url: "https://www.youtube.com/watch?v=4g28_zD8-1A" },
+              { title: "Down By The Bay" , url: "https://www.youtube.com/watch?v=W5uuUfGq-kc" }
+
+        ];
+          const bedtimeSongsData = [
+           { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
+                { title: "Hush Little Baby", url: "https://www.youtube.com/watch?v=4qC6M1iNJUo" },
+                { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" },
+                { title: "Star Light, Star Bright", url: "https://www.youtube.com/watch?v=ERYbzJ5SmiM" },
+                { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
+                 { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
+{ title: "Lavender's Blue", url: "https://www.youtube.com/watch?v=6iM_p1xTh1Q" },
+            { title: "Now the Day Is Over", url: "https://www.youtube.com/watch?v=0q-r6s0JhpE" },
+        { title: "All the Pretty Little Horses", url: "https://www.youtube.com/watch?v=_wI_u-L-I8s" },
+         { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=rsRWH01sK8g" },
+          { title: "What a Wonderful World" , url: "https://www.youtube.com/watch?v=j96L7y_E3fA" },
+             { title: "A Dream Is a Wish Your Heart Makes" , url: "https://www.youtube.com/watch?v=m-0_C4X876o" },
+                { title: "Hush, Now My Baby", url: "https://www.youtube.com/watch?v=N-x9Xz_sZfQ" },
+                   { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" }
+        ];
+        const holidaySongsData = [
+            { title: "Jingle Bells", url: "https://www.youtube.com/watch?v=3PgNPc-iFW8" },
+                { title: "We Wish You a Merry Christmas", url: "https://www.youtube.com/watch?v=9EmebG7iIcg" },
+                { title: "Deck the Halls", url: "https://www.youtube.com/watch?v=g-OF7K-qj9c" },
+                     { title: "Happy Birthday", url: "https://www.youtube.com/watch?v=ho08YLYDM88" },
+                         { title: "Halloween Night", url: "https://www.youtube.com/watch?v=F4GZ_kIey-Y" },
+            { title: "Ten Little Turkeys", url: "https://www.youtube.com/watch?v=7XHX_g4O03Y" },
+            { title: "New Year's Song (Auld Lang Syne)", url: "https://www.youtube.com/watch?v=1gT_8I5x_w8" },
+               { title: "Feliz Navidad", url: "https://www.youtube.com/watch?v=xMtuVP8Mj4o" },
+        ];
+
+        addVideosToCategory("Nursery Rhymes", nurseryRhymesData);
+        addVideosToCategory("Learning Songs", learningSongsData);
+        addVideosToCategory("Animal Songs", animalSongsData);
+        addVideosToCategory("Bedtime Songs", bedtimeSongsData);
+        addVideosToCategory("Holiday Songs", holidaySongsData);
+
+    function createTabs() {
+        const tabsContainer = document.getElementById('tabs');
+        Object.keys(categories).forEach((category, index) => {
+            const tab = document.createElement('div');
+            tab.className = 'tab' + (index === 0 ? ' active' : '');
+            tab.innerText = category;
+            tab.onclick = () => showCategory(category);
+            tabsContainer.appendChild(tab);
+        });
+    }
+
+   function createGrid(category, videos) {
+    let section = `<div class='category${category === Object.keys(categories)[0] ? ' active' : ''}' id='${category}'>
+                    <h2>${category}</h2>
+                    <div class='video-grid'>`;
+
+    videos.forEach(video => {
+        const videoId = video.url.split('v=')[1];
+        const previewUrl = `https://www.youtube.com/embed/${videoId}?start=0&end=6&autoplay=1&mute=1&loop=1&controls=0`;
+        const requester = getRandomRequester(); // Get a unique requester
+
+        section += `
+            <div class='video-tile' onclick="window.open('${video.url}', '_blank')">
+                <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='${video.title}'>
+                <div class='video-title'>${video.title}</div><div class='video-description'>${requester}</div>
+                <div class='video-preview'>
+                    <video src="${previewUrl}" autoplay loop muted></video>
+                </div>
+            </div>`;
+    });
+    section += "</div></div>";
+    document.getElementById("episodes").innerHTML += section;
+}
+
+
+    function showCategory(category) {
+        document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
+        document.getElementById(category).classList.add('active');
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        const tabs = Array.from(document.querySelectorAll('.tab'));
+        const targetTab = tabs.find(tab => tab.innerText === category);
+        if (targetTab) targetTab.classList.add('active');
+    }
+
+    $(document).ready(function(){
+        createTabs();
+        usedRequesters.clear();
+        Object.keys(categories).forEach(category => {
+            createGrid(category, categories[category]);
+        });
+
+        // --- Modal JavaScript ---
+        const modal = document.getElementById('submissionModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const form = document.getElementById('videoSubmissionForm');
+
+
+        openModalBtn.onclick = function() {
+            loadingIndicator.style.display = "block"; // Show loading indicator
+            setTimeout(function() { // Simulate loading delay
+                loadingIndicator.style.display = "none"; // Hide loading indicator
+                modal.style.display = "block"; // Show modal
+            }, 500); // Adjust the delay (milliseconds) as needed
+        }
+
+        closeButtons.forEach(button => { // Loop through each close button
+            button.onclick = function() {
+                modal.style.display = "none";
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // --- EmailJS Integration ---
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Disable the submit button to prevent multiple submissions
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            //Collect form data
+            const youtubeLink = document.getElementById('youtubeLink').value;
+            const episodeName = document.getElementById('episodeName').value;
+            const babyName = document.getElementById('babyName').value;
+            const description = document.getElementById('description').value;
+
+            //reCAPTCHA response
+            const recaptchaResponse = grecaptcha.getResponse();
+
+            if (!recaptchaResponse) {
+                  alert("Please complete the reCAPTCHA.");
+                   submitButton.disabled = false;
+                   submitButton.textContent = 'Submit Suggestion';
+                  return;
             }
 
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
+            // Send email using EmailJS
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", { // Replace with your Service ID and Template ID
+                youtubeLink: youtubeLink,
+                episodeName: episodeName,
+                babyName: babyName,
+                description: description,
+                "g-recaptcha-response": recaptchaResponse // Include the reCAPTCHA response
+            })
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                alert('Suggestion submitted successfully!');
 
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
+                 // Re-enable the submit button
+                 submitButton.disabled = false;
+                 submitButton.textContent = 'Submit Suggestion';
 
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
+                //Close Modal
+                 modal.style.display = "none";
+                // Clear the form fields
+                form.reset();
 
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
+                grecaptcha.reset(); // Reset the reCAPTCHA
+            }, function(error) {
+                console.error('FAILED...', error);
+                alert('Suggestion submission failed.  Please try again.');
+                // Re-enable the submit button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Suggestion';
 
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
+                  grecaptcha.reset(); // Also reset reCAPTCHA on failure
             });
 
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
-
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
-
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
-                });
-            }
-
-
-        })();
+        });
+    });
     </script>
 </body>
 </html>
