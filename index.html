@@ -298,7 +298,8 @@
             }
         }
     </style>
-       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcrON0qAAAAACPOSYdJEmON3Bjv75SfvAk5_s_r"></script>
+
 </head>
 <body>
     <h1 class="site-title">
@@ -328,7 +329,7 @@
                 <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
                 <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
 
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                <input type="hidden" id="recaptchaResponse" name="recaptchaResponse">
                 <br/>
 
                 <button type="submit">Submit Suggestion</button>
@@ -515,128 +516,125 @@
                     <h2>${category}</h2>
                     <div class='video-grid'>`;
 
-    videos.forEach(video => {
-        const videoId = video.url.split('v=')[1];
-        const previewUrl = `https://www.youtube.com/embed/${videoId}?start=0&end=6&autoplay=1&mute=1&loop=1&controls=0`;
-        const requester = getRandomRequester(); // Get a unique requester
+videos.forEach(video => {
+    const videoId = video.url.split('v=')[1];
+    const previewUrl = `https://www.youtube.com/embed/${videoId}?start=0&end=6&autoplay=1&mute=1&loop=1&controls=0`;
+    const requester = getRandomRequester(); // Get a unique requester
 
-        section += `
-            <div class='video-tile' onclick="window.open('${video.url}', '_blank')">
-                <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='${video.title}'>
-                <div class='video-title'>${video.title}</div><div class='video-description'>${requester}</div>
-                <div class='video-preview'>
-                    <video src="${previewUrl}" autoplay loop muted></video>
-                </div>
-            </div>`;
-    });
-    section += "</div></div>";
-    document.getElementById("episodes").innerHTML += section;
+    section += `
+        <div class='video-tile' onclick="window.open('${video.url}', '_blank')">
+            <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='${video.title}'>
+            <div class='video-title'>${video.title}</div><div class='video-description'>${requester}</div>
+            <div class='video-preview'>
+                <video src="${previewUrl}" autoplay loop muted></video>
+            </div>
+        </div>`;
+});
+section += "</div></div>";
+document.getElementById("episodes").innerHTML += section;}
+
+function showCategory(category) {
+    document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
+    document.getElementById(category).classList.add('active');
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const targetTab = tabs.find(tab => tab.innerText === category);
+    if (targetTab) targetTab.classList.add('active');
 }
 
+$(document).ready(function(){
+    createTabs();
+    usedRequesters.clear();
+    Object.keys(categories).forEach(category => {
+        createGrid(category, categories[category]);
+    });
 
-    function showCategory(category) {
-        document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
-        document.getElementById(category).classList.add('active');
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        const tabs = Array.from(document.querySelectorAll('.tab'));
-        const targetTab = tabs.find(tab => tab.innerText === category);
-        if (targetTab) targetTab.classList.add('active');
+    // --- Modal JavaScript ---
+    const modal = document.getElementById('submissionModal');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const form = document.getElementById('videoSubmissionForm');
+
+
+    openModalBtn.onclick = function() {
+        loadingIndicator.style.display = "block"; // Show loading indicator
+        setTimeout(function() { // Simulate loading delay
+            loadingIndicator.style.display = "none"; // Hide loading indicator
+            modal.style.display = "block"; // Show modal
+        }, 500); // Adjust the delay (milliseconds) as needed
     }
 
-    $(document).ready(function(){
-        createTabs();
-        usedRequesters.clear();
-        Object.keys(categories).forEach(category => {
-            createGrid(category, categories[category]);
-        });
-
-        // --- Modal JavaScript ---
-        const modal = document.getElementById('submissionModal');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const form = document.getElementById('videoSubmissionForm');
-
-
-        openModalBtn.onclick = function() {
-            loadingIndicator.style.display = "block"; // Show loading indicator
-            setTimeout(function() { // Simulate loading delay
-                loadingIndicator.style.display = "none"; // Hide loading indicator
-                modal.style.display = "block"; // Show modal
-            }, 500); // Adjust the delay (milliseconds) as needed
+    closeButtons.forEach(button => { // Loop through each close button
+        button.onclick = function() {
+            modal.style.display = "none";
         }
-
-        closeButtons.forEach(button => { // Loop through each close button
-            button.onclick = function() {
-                modal.style.display = "none";
-            }
-        });
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // --- EmailJS Integration ---
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            // Disable the submit button to prevent multiple submissions
-            const submitButton = form.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-
-            //Collect form data
-            const youtubeLink = document.getElementById('youtubeLink').value;
-            const episodeName = document.getElementById('episodeName').value;
-            const babyName = document.getElementById('babyName').value;
-            const description = document.getElementById('description').value;
-
-            //reCAPTCHA response
-            const recaptchaResponse = grecaptcha.getResponse();
-
-            if (!recaptchaResponse) {
-                  alert("Please complete the reCAPTCHA.");
-                   submitButton.disabled = false;
-                   submitButton.textContent = 'Submit Suggestion';
-                  return;
-            }
-
-            // Send email using EmailJS
-            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", { // Replace with your Service ID and Template ID
-                youtubeLink: youtubeLink,
-                episodeName: episodeName,
-                babyName: babyName,
-                description: description,
-                "g-recaptcha-response": recaptchaResponse // Include the reCAPTCHA response
-            })
-            .then(function(response) {
-                console.log('SUCCESS!', response.status, response.text);
-                alert('Suggestion submitted successfully!');
-
-                 // Re-enable the submit button
-                 submitButton.disabled = false;
-                 submitButton.textContent = 'Submit Suggestion';
-
-                //Close Modal
-                 modal.style.display = "none";
-                // Clear the form fields
-                form.reset();
-
-                grecaptcha.reset(); // Reset the reCAPTCHA
-            }, function(error) {
-                console.error('FAILED...', error);
-                alert('Suggestion submission failed.  Please try again.');
-                // Re-enable the submit button
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Suggestion';
-
-                  grecaptcha.reset(); // Also reset reCAPTCHA on failure
-            });
-
-        });
     });
-    </script>
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // --- EmailJS Integration ---
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Disable the submit button to prevent multiple submissions
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+
+        //Collect form data
+        const youtubeLink = document.getElementById('youtubeLink').value;
+        const episodeName = document.getElementById('episodeName').value;
+        const babyName = document.getElementById('babyName').value;
+        const description = document.getElementById('description').value;
+
+        // Execute reCAPTCHA and get token
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute('6LcrON0qAAAAACPOSYdJEmON3Bjv75SfvAk5_s_r', {action: 'submit_suggestion'});
+
+            // Set the reCAPTCHA response in the hidden input field
+            document.getElementById('recaptchaResponse').value = token;
+
+
+          // Send email using EmailJS
+          emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
+              youtubeLink: youtubeLink,
+              episodeName: episodeName,
+              babyName: babyName,
+              description: description,
+              "g-recaptcha-response": token // Include the reCAPTCHA response
+          })
+          .then(function(response) {
+              console.log('SUCCESS!', response.status, response.text);
+              alert('Suggestion submitted successfully!');
+
+               // Re-enable the submit button
+               submitButton.disabled = false;
+               submitButton.textContent = 'Submit Suggestion';
+
+              //Close Modal
+               modal.style.display = "none";
+              // Clear the form fields
+              form.reset();
+
+          }, function(error) {
+              console.error('FAILED...', error);
+              alert('Suggestion submission failed.  Please try again.');
+              // Re-enable the submit button
+              submitButton.disabled = false;
+              submitButton.textContent = 'Submit Suggestion';
+
+          });
+
+        });
+
+    });
+});
+</script>
+
 </body>
 </html>
