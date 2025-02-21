@@ -600,7 +600,7 @@
                 const token = await grecaptcha.enterprise.execute('6LcrON0qAAAAACPOSYdJEmON3Bjv75SfvAk5_s_r', {action: 'submit_suggestion'})
 
                 // Send email using EmailJS
-                emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
+                emailjs.send("service_l2p4i2j","template_j9eb828"), { // Replace with your Service ID and Template ID
                     youtubeLink: youtubeLink,
                     episodeName: episodeName,
                     babyName: babyName,
