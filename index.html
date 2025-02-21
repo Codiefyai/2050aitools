@@ -11,8 +11,8 @@
             background-color: #ffebf0;
             text-align: center;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff99c8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-                              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHNJREFUOE9jZKAQMOLR/zEwMTCwNjEwMtAwMDGwMjEysjAyMDGxsjAxMjKysjAyNjIx/gMZAJE7j0oY8BJpQ+sDKf2/Rj0oY8BKGY/h/P/j/82EGP/81/9HjFhhj/+d/+gxg+g0AwMjAwMDKwMDAwMLAAAAC+kC/8J09z8AAAAASUVORK5CYII="),
-                              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAk0lEQVR4nO3TQQ2AIBADwD+a/z/p07vBoB1gQ3hJkLCEH5lCEF5wN+5LqQggM2uN80Yj4n+Q5u+u4j63y20L0b0z5J9G8+oA6HqgDr20Xp8q0L5eJdC1K1r2+7DqQggs2uD98Yv4f8k5vE/v4+eP/j8P/P+gD8Y/f////9Af+A+Jz1wP8hAAAAAElFTkSuQmCC");
+            url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHNJREFUOE9jZKAQMOLR/zEwMTCwNjEwMtAwMDGwMjEysjAyMDGxsjAxMjKysjAyNjIx/gMZAJE7j0oY8BJpQ+sDKf2/Rj0oY8BKGY/h/P/j/82EGP/81/9HjFhhj/+d/+gxg+g0AwMjAwMDKwMDAwMLAAAAC+kC/8J09z8AAAAASUVORK5CYII="),
+            url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAk0lEQVR4nO3TQQ2AIBADwD+a/z/p07vBoB1gQ3hJkLCEH5lCEF5wN+5LqQggM2uN80Yj4n+Q5u+u4j63y20L0b0z5J9G8+oA6HqgDr20Xp8q0L5eJdC1K1r2+7DqQggs2uD98Yv4f8k5vE/v4+eP/j8P/P+gD8Y/f////9Af+A+Jz1wP8hAAAAAElFTkSuQmCC");
             background-repeat: repeat;
             background-size: 100px, 20px, 25px;
             overflow-x: hidden;
@@ -35,7 +35,7 @@
         .site-title span:nth-child(2) { color: orange; animation-delay: 0.1s; }
         .site-title span:nth-child(3) { color: yellow; animation-delay: 0.2s;}
         .site-title span:nth-child(4) { color: green; animation-delay: 0.3s;}
-        .site-title span:nth-child(5) { color: blue; animation-delay: 0.4s; }
+        .site-title span:nth-child(5) { color: blue; animation-delay: 0.4s;}
         .site-title span:nth-child(6) { color: indigo; animation-delay: 0.5s;}
         .site-title span:nth-child(7) { color: violet; animation-delay: 0.6s;}
         .site-title span:nth-child(8) { color: red;  animation-delay: 0.7s;}
@@ -194,7 +194,7 @@
             to {opacity: 1}
         }
 
-        .modal input[type="text"], .modal textarea {
+        .modal input[type="text"],.modal input[type="email"] , .modal textarea {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -239,7 +239,7 @@
             opacity: 0.8;
         }
 
-       .close-button {
+        .close-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -293,7 +293,7 @@
             .video-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
-             .video-description {
+            .video-description {
                 font-size: 0.7em;
             }
         }
@@ -302,52 +302,53 @@
 
 </head>
 <body>
-    <h1 class="site-title">
-        <span>B</span><span>a</span><span>h</span><span>!</span>
-        <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span><span>!</span>
-        <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span>
-    </h1>
+<h1 class="site-title">
+    <span>B</span><span>a</span><span>h</span><span>!</span>
+    <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span><span>!</span>
+    <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span>
+</h1>
 
-    <div id="loadingIndicator">Loading...</div>  <!-- Loading indicator -->
-    <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
+<div id="loadingIndicator">Loading...</div>  <!-- Loading indicator -->
+<button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
 
-    <div class="tabs" id="tabs"></div>
-    <div id="episodes"></div>
+<div class="tabs" id="tabs"></div>
+<div id="episodes"></div>
 
-    <footer>
-        Copyright © 2025 Bah! Bah's! Corner. All rights reserved.
-    </footer>
+<footer>
+    Copyright © 2025 Bah! Bah's! Corner. All rights reserved.
+</footer>
 
-    <!-- --- Modal HTML --- -->
-    <div id="submissionModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">×</span> <!-- Close button (X) -->
-            <h2>Suggest an Episode</h2>
-            <form id="videoSubmissionForm">
-                <input type="text" id="youtubeLink" name="youtubeLink" placeholder="YouTube Link">
-                <input type="text" id="episodeName"  name="episodeName" placeholder="Episode/Video Name">
-                <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
-                <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
+<!-- --- Modal HTML --- -->
+<div id="submissionModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">×</span> <!-- Close button (X) -->
+        <h2>Suggest an Episode</h2>
+        <form id="videoSubmissionForm">
+            <input type="text" id="youtubeLink" name="youtubeLink" placeholder="YouTube Link">
+            <input type="text" id="episodeName"  name="episodeName" placeholder="Episode/Video Name">
+            <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
+            <input type="email" id="mommyEmail" name="mommyEmail" placeholder="Parent's Email (for notifications)" required style="width: 100%;">
+            <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
 
-                <input type="hidden" id="recaptchaResponse" name="recaptchaResponse">
-                <br/>
+            <input type="hidden" id="recaptchaResponse" name="recaptchaResponse">
+            <br/>
 
-                <button type="submit">Submit Suggestion</button>
-                <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
-            </form>
-        </div>
+            <button type="submit">Submit Suggestion</button>
+            <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
+        </form>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
-    <script>
+<script>
+    // EmailJS Initialization (Move outside of document ready for efficiency)
+    (function() {
+        emailjs.init("cAOXhnd37_jzIQcVJ"); // Replace with your EmailJS user ID
+    })();
 
-         (function() {
-            emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
-        })();
-
-        const categories = {
+    const categories = {
         "Nursery Rhymes": [],
         "Learning Songs": [],
         "Animal Songs": [],
@@ -364,141 +365,141 @@
     }
 
     function getRandomRequester() {
-         const names = ["John S.", "Emily R.", "Michael B.", "Sophia L.", "David K.", "Olivia M.", "Ethan P.", "Ava G.", "Daniel H.", "Isabella T.", "James N.", "Mia C.", "William F.", "Abigail W.", "Alexander Q.",
-             "Christopher D.", "Samantha E.", "Andrew G.", "Victoria K.", "Benjamin P.", "Chloe S.", "Matthew T.", "Elizabeth V.", "Joseph A.", "Madison B.",
-             "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."]; // More names
+        const names = ["John S.", "Emily R.", "Michael B.", "Sophia L.", "David K.", "Olivia M.", "Ethan P.", "Ava G.", "Daniel H.", "Isabella T.", "James N.", "Mia C.", "William F.", "Abigail W.", "Alexander Q.",
+            "Christopher D.", "Samantha E.", "Andrew G.", "Victoria K.", "Benjamin P.", "Chloe S.", "Matthew T.", "Elizabeth V.", "Joseph A.", "Madison B.",
+            "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."]; // More names
 
-            const descriptions = [
-                "Requested this for his little one!", "Loves this classic!", "Her daughter can't get enough!",
-                "Perfect for bedtime!", "A family favorite!", "Great for learning!", "Her son's favorite song!",
-                "Always puts a smile on her face!", "His twins love this one!", "Requested for her niece.",
-                "A sing-along favorite!", "Helps his baby sleep.", "Her kids dance to this!", "Great for playtime!",
-                "Recommended this to friends!", "It’s so calming for our baby!", "She loves to dance to it!", "This keeps him entertained for hours!",
-                 "Perfect for car rides!", "It’s a great way to learn!", "He asks for it every night!", "She giggles every time!", "My daughter loves the characters!",
-                 "This song is so catchy!", "It’s educational and fun!", "He enjoys the animal sounds!", "We all sing along!", "Her favorite thing to watch!",
-                 "It always cheers her up!", "This makes bath time fun!", "He learns so much from it!"
-            ];
+        const descriptions = [
+            "Requested this for his little one!", "Loves this classic!", "Her daughter can't get enough!",
+            "Perfect for bedtime!", "A family favorite!", "Great for learning!", "Her son's favorite song!",
+            "Always puts a smile on her face!", "His twins love this one!", "Requested for her niece.",
+            "A sing-along favorite!", "Helps his baby sleep.", "Her kids dance to this!", "Great for playtime!",
+            "Recommended this to friends!", "It’s so calming for our baby!", "She loves to dance to it!", "This keeps him entertained for hours!",
+            "Perfect for car rides!", "It’s a great way to learn!", "He asks for it every night!", "She giggles every time!", "My daughter loves the characters!",
+            "This song is so catchy!", "It’s educational and fun!", "He enjoys the animal sounds!", "We all sing along!", "Her favorite thing to watch!",
+            "It always cheers her up!", "This makes bath time fun!", "He learns so much from it!"
+        ];
 
-            let requester;
-            do {
-                const randomName = names[Math.floor(Math.random() * names.length)];
-                const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
-                requester = `${randomName} - ${randomDescription}`;
-            } while (usedRequesters.has(requester));
-            usedRequesters.add(requester);
-            return requester;
-        }
+        let requester;
+        do {
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+            requester = `${randomName} - ${randomDescription}`;
+        } while (usedRequesters.has(requester));
+        usedRequesters.add(requester);
+        return requester;
+    }
 
-         const nurseryRhymesData = [
-            { title: "The Muffin Man", url: "https://www.youtube.com/watch?v=hb9tt7LiYrc" },
-             { title: "Five Little Ducks", url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
-                { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
-            { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
-            { title: "Wheels on the Bus", url: "https://www.youtube.com/watch?v=e_04ZrNroTo" },
-            { title: "Five Little Monkeys Jumping on the Bed", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
-            { title: "If You're Happy and You Know It", url: "https://www.youtube.com/watch?v=M6LoRZsHMSs" },
-            { title: "Head, Shoulders, Knees & Toes", url: "https://www.youtube.com/watch?v=ZanHgPprl-0" },
-             { title: "Itsy Bitsy Spider", url: "https://www.youtube.com/watch?v=w_lZI8VRdgA" },
-                { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
+    const nurseryRhymesData = [
+        { title: "The Muffin Man", url: "https://www.youtube.com/watch?v=hb9tt7LiYrc" },
+        { title: "Five Little Ducks", url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
+        { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
+        { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
+        { title: "Wheels on the Bus", url: "https://www.youtube.com/watch?v=e_04ZrNroTo" },
+        { title: "Five Little Monkeys Jumping on the Bed", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
+        { title: "If You're Happy and You Know It", url: "https://www.youtube.com/watch?v=M6LoRZsHMSs" },
+        { title: "Head, Shoulders, Knees & Toes", url: "https://www.youtube.com/watch?v=ZanHgPprl-0" },
+        { title: "Itsy Bitsy Spider", url: "https://www.youtube.com/watch?v=w_lZI8VRdgA" },
+        { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
         { title: "London Bridge is Falling Down", url: "https://www.youtube.com/watch?v=FKeFK6a-7Xg" },
         { title: "Baa Baa Black Sheep", url: "https://www.youtube.com/watch?v=Mj3QOJn8fF4" },
-               { title: "Mary Had a Little Lamb", url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
-         { title: "The Farmer in the Dell", url: "https://www.youtube.com/watch?v=E-krs_FCOlQ" },
-          { title: "Rain Rain Go Away", url: "https://www.youtube.com/watch?v=LFrKYjrIdq8" },
-           { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
-            { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
-            { title: "Twinkle, Twinkle, Little Star + More Nursery Rhymes & Kids Songs", url:"https://www.youtube.com/watch?v=_ArVh1sFg9w" },
-            { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=yU2R0nOWC6s" },
-            { title: "Mary Had a Little Lamb" , url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
-            { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=Mj3QOJn8fF4" },
-            { title: "Jack and Jill" , url: "https://www.youtube.com/watch?v=VjLh_vEqW1A" },
-            { title: "Hey Diddle Diddle" , url: "https://www.youtube.com/watch?v=s5mH5T-D0rg" },
-            { title: "Five Little Speckled Frogs" , url: "https://www.youtube.com/watch?v=AS9nFHQcc-A" },
-            { title: "Rock-a-bye Baby" , url: "https://www.youtube.com/watch?v=wQRW0rCjE9A" }
+        { title: "Mary Had a Little Lamb", url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
+        { title: "The Farmer in the Dell", url: "https://www.youtube.com/watch?v=E-krs_FCOlQ" },
+        { title: "Rain Rain Go Away", url: "https://www.youtube.com/watch?v=LFrKYjrIdq8" },
+        { title: "Twinkle Twinkle Little Star and Many More Videos", url:"https://www.youtube.com/watch?v=trz_R5EdKqw"},
+        { title: "The Wheels on the Bus and More! ", url:"https://www.youtube.com/watch?v=5KWAw8-xXSE" },
+        { title: "Twinkle, Twinkle, Little Star + More Nursery Rhymes & Kids Songs", url:"https://www.youtube.com/watch?v=_ArVh1sFg9w" },
+        { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=yU2R0nOWC6s" },
+        { title: "Mary Had a Little Lamb" , url: "https://www.youtube.com/watch?v=jYwAp9tD6GE" },
+        { title: "Baa Baa Black Sheep" , url: "https://www.youtube.com/watch?v=Mj3QOJn8fF4" },
+        { title: "Jack and Jill" , url: "https://www.youtube.com/watch?v=VjLh_vEqW1A" },
+        { title: "Hey Diddle Diddle" , url: "https://www.youtube.com/watch?v=s5mH5T-D0rg" },
+        { title: "Five Little Speckled Frogs" , url: "https://www.youtube.com/watch?v=AS9nFHQcc-A" },
+        { title: "Rock-a-bye Baby" , url: "https://www.youtube.com/watch?v=wQRW0rCjE9A" }
 
-        ];
-        const learningSongsData = [
-           { title: "ABC Song", url: "https://www.youtube.com/watch?v=75p-N9YKqNo" },
-                { title: "Counting to 10", url: "https://www.youtube.com/watch?v=DR-cfDsHCGA" },
-                { title: "Colors Song", url: "https://www.youtube.com/watch?v=gXxyjV0Gu-I" },
-                { title: "Shapes Song", url: "https://www.youtube.com/watch?v=OEbRDtCAFdU" },
-                { title: "Days of the Week", url: "https://www.youtube.com/watch?v=mXMofxtDPUQ" },
-                { title: "Months of the Year", url: "https://www.youtube.com/watch?v=Fe9bnYRzFvk" },
-                { title: "Phonics Song", url: "https://www.youtube.com/watch?v=BELlZKpi1Zs" },
-                { title: "Weather Song", url: "https://www.youtube.com/watch?v=JnX6o5Yx_Gg" },
-                { title: "Five Senses Song", url: "https://www.youtube.com/watch?v=vQfhjf4L-Fw" },
-                { title: "Opposites Song", url: "https://www.youtube.com/watch?v=aTP9FegD-jU" },
-              { title: "Time Song", url: "https://www.youtube.com/watch?v=w_p-VFg8cK8" },
-              { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
-                { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
+    ];
+    const learningSongsData = [
+        { title: "ABC Song", url: "https://www.youtube.com/watch?v=75p-N9YKqNo" },
+        { title: "Counting to 10", url: "https://www.youtube.com/watch?v=DR-cfDsHCGA" },
+        { title: "Colors Song", url: "https://www.youtube.com/watch?v=gXxyjV0Gu-I" },
+        { title: "Shapes Song", url: "https://www.youtube.com/watch?v=OEbRDtCAFdU" },
+        { title: "Days of the Week", url: "https://www.youtube.com/watch?v=mXMofxtDPUQ" },
+        { title: "Months of the Year", url: "https://www.youtube.com/watch?v=Fe9bnYRzFvk" },
+        { title: "Phonics Song", url: "https://www.youtube.com/watch?v=BELlZKpi1Zs" },
+        { title: "Weather Song", url: "https://www.youtube.com/watch?v=JnX6o5Yx_Gg" },
+        { title: "Five Senses Song", url: "https://www.youtube.com/watch?v=vQfhjf4L-Fw" },
+        { title: "Opposites Song", url: "https://www.youtube.com/watch?v=aTP9FegD-jU" },
+        { title: "Time Song", url: "https://www.youtube.com/watch?v=w_p-VFg8cK8" },
+        { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
+        { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
         { title: "The Numbers Song", url: "https://www.youtube.com/watch?v=e0jg9LB-yvY" },
-    { title: "The Cleaning Up Song", url: "https://www.youtube.com/watch?v=gCzgc-cQRWw" },
-      { title: "If You Want To Read A Book", url: "https://www.youtube.com/watch?v=Mwx5qtS1v9c" },
-       { title: "I Can Say My ABCs", url: "https://www.youtube.com/watch?v=WkG1mILj-Os" },
+        { title: "The Cleaning Up Song", url: "https://www.youtube.com/watch?v=gCzgc-cQRWw" },
+        { title: "If You Want To Read A Book", url: "https://www.youtube.com/watch?v=Mwx5qtS1v9c" },
+        { title: "I Can Say My ABCs", url: "https://www.youtube.com/watch?v=WkG1mILj-Os" },
         { title: "I Love To Count", url: "https://www.youtube.com/watch?v=PQt-qMBEFmE" },
-         { title: "Addition Song", url: "https://www.youtube.com/watch?v=MVWZBGM2WAI" },
-          { title: "What Makes a Plant a Plant?", url: "https://www.youtube.com/watch?v=jHnZSJW-XVE" },
-           { title: "What is the Water Cycle?", url: "https://www.youtube.com/watch?v=TWCcjJjcmGE" },
-            { title: "Why Do We Have Seasons?", url: "https://www.youtube.com/watch?v=KUU7I1j7M04" },
-       { title: "Days of the week song" , url: "https://www.youtube.com/watch?v=HtQcnS7XamQ" },
+        { title: "Addition Song", url: "https://www.youtube.com/watch?v=MVWZBGM2WAI" },
+        { title: "What Makes a Plant a Plant?", url: "https://www.youtube.com/watch?v=jHnZSJW-XVE" },
+        { title: "What is the Water Cycle?", url: "https://www.youtube.com/watch?v=TWCcjJjcmGE" },
+        { title: "Why Do We Have Seasons?", url: "https://www.youtube.com/watch?v=KUU7I1j7M04" },
+        { title: "Days of the week song" , url: "https://www.youtube.com/watch?v=HtQcnS7XamQ" },
         { title: "The Months of the Year Song" , url: "https://www.youtube.com/watch?v=5Enixd-s-bs" },
-         { title: "How Many Planets Are There?" , url: "https://www.youtube.com/watch?v=Qd6nLM2QlNE" },
-        ];
+        { title: "How Many Planets Are There?" , url: "https://www.youtube.com/watch?v=Qd6nLM2QlNE" },
+    ];
 
-        const animalSongsData = [
-           { title: "Old MacDonald Had a Farm", url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
-                { title: "Baby Shark", url: "https://www.youtube.com/watch?v=XqZsoesa55w" },
-                { title: "Five Little Monkeys", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
-                { title: "BINGO Dog Song", url: "https://www.youtube.com/watch?v=9mmF8zOlh_g" },
-                { title: "The Ants Go Marching", url: "https://www.youtube.com/watch?v=2S__fbCGwOM" },
-                  { title: "Pet Song", url: "https://www.youtube.com/watch?v=kjl-HZh8_2U" },
-              { title: "Zoo Song", url: "https://www.youtube.com/watch?v=hW8_jk-vL7o" },
-                { title: "Three Little Kittens", url: "https://www.youtube.com/watch?v=5o_99gcx5gU" },
-                   { title: "Dinosaur Song", url: "https://www.youtube.com/watch?v=f-lF_d0xVbU" },
+    const animalSongsData = [
+        { title: "Old MacDonald Had a Farm", url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
+        { title: "Baby Shark", url: "https://www.youtube.com/watch?v=XqZsoesa55w" },
+        { title: "Five Little Monkeys", url: "https://www.youtube.com/watch?v=ZhODBFQ2-bQ" },
+        { title: "BINGO Dog Song", url: "https://www.youtube.com/watch?v=9mmF8zOlh_g" },
+        { title: "The Ants Go Marching", url: "https://www.youtube.com/watch?v=2S__fbCGwOM" },
+        { title: "Pet Song", url: "https://www.youtube.com/watch?v=kjl-HZh8_2U" },
+        { title: "Zoo Song", url: "https://www.youtube.com/watch?v=hW8_jk-vL7o" },
+        { title: "Three Little Kittens", url: "https://www.youtube.com/watch?v=5o_99gcx5gU" },
+        { title: "Dinosaur Song", url: "https://www.youtube.com/watch?v=f-lF_d0xVbU" },
         { title: "Old MacDonald Had a Farm" , url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
-      { title: "Walking Through The Jungle Song" , url: "https://www.youtube.com/watch?v=T3w4Be-e0xY" },
+        { title: "Walking Through The Jungle Song" , url: "https://www.youtube.com/watch?v=T3w4Be-e0xY" },
         { title: "B-I-N-G-O" , url: "https://www.youtube.com/watch?v=9o2lX0bFOmM" },
-          { title: "The Animals On The Farm" , url: "https://www.youtube.com/watch?v=ursEqyT3aQw" },
-            { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
-              { title: "What Does The Animal Say" , url: "https://www.youtube.com/watch?v=jofNR_WkoCE" },
-            { title: "I Love Bugs" , url: "https://www.youtube.com/watch?v=LNgXlU90a-o" },
-              { title: "12 Animals" , url: "https://www.youtube.com/watch?v=C1t9v-p0zJg" },
-              { title: "The Goldfish" , url: "https://www.youtube.com/watch?v=4g28_zD8-1A" },
-              { title: "Down By The Bay" , url: "https://www.youtube.com/watch?v=W5uuUfGq-kc" }
+        { title: "The Animals On The Farm" , url: "https://www.youtube.com/watch?v=ursEqyT3aQw" },
+        { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=pZw9veQ76fo" },
+        { title: "What Does The Animal Say" , url: "https://www.youtube.com/watch?v=jofNR_WkoCE" },
+        { title: "I Love Bugs" , url: "https://www.youtube.com/watch?v=LNgXlU90a-o" },
+        { title: "12 Animals" , url: "https://www.youtube.com/watch?v=C1t9v-p0zJg" },
+        { title: "The Goldfish" , url: "https://www.youtube.com/watch?v=4g28_zD8-1A" },
+        { title: "Down By The Bay" , url: "https://www.youtube.com/watch?v=W5uuUfGq-kc" }
 
-        ];
-          const bedtimeSongsData = [
-           { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
-                { title: "Hush Little Baby", url: "https://www.youtube.com/watch?v=4qC6M1iNJUo" },
-                { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" },
-                { title: "Star Light, Star Bright", url: "https://www.youtube.com/watch?v=ERYbzJ5SmiM" },
-                { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
-                 { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
-{ title: "Lavender's Blue", url: "https://www.youtube.com/watch?v=6iM_p1xTh1Q" },
-            { title: "Now the Day Is Over", url: "https://www.youtube.com/watch?v=0q-r6s0JhpE" },
+    ];
+    const bedtimeSongsData = [
+        { title: "Twinkle Twinkle Little Star", url: "https://www.youtube.com/watch?v=yCjJyiqpAuU" },
+        { title: "Hush Little Baby", url: "https://www.youtube.com/watch?v=4qC6M1iNJUo" },
+        { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" },
+        { title: "Star Light, Star Bright", url: "https://www.youtube.com/watch?v=ERYbzJ5SmiM" },
+        { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
+        { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=KGgs_Hje-xM" },
+        { title: "Lavender's Blue", url: "https://www.youtube.com/watch?v=6iM_p1xTh1Q" },
+        { title: "Now the Day Is Over", url: "https://www.youtube.com/watch?v=0q-r6s0JhpE" },
         { title: "All the Pretty Little Horses", url: "https://www.youtube.com/watch?v=_wI_u-L-I8s" },
-         { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=rsRWH01sK8g" },
-          { title: "What a Wonderful World" , url: "https://www.youtube.com/watch?v=j96L7y_E3fA" },
-             { title: "A Dream Is a Wish Your Heart Makes" , url: "https://www.youtube.com/watch?v=m-0_C4X876o" },
-                { title: "Hush, Now My Baby", url: "https://www.youtube.com/watch?v=N-x9Xz_sZfQ" },
-                   { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" }
-        ];
-        const holidaySongsData = [
-            { title: "Jingle Bells", url: "https://www.youtube.com/watch?v=3PgNPc-iFW8" },
-                { title: "We Wish You a Merry Christmas", url: "https://www.youtube.com/watch?v=9EmebG7iIcg" },
-                { title: "Deck the Halls", url: "https://www.youtube.com/watch?v=g-OF7K-qj9c" },
-                     { title: "Happy Birthday", url: "https://www.youtube.com/watch?v=ho08YLYDM88" },
-                         { title: "Halloween Night", url: "https://www.youtube.com/watch?v=F4GZ_kIey-Y" },
-            { title: "Ten Little Turkeys", url: "https://www.youtube.com/watch?v=7XHX_g4O03Y" },
-            { title: "New Year's Song (Auld Lang Syne)", url: "https://www.youtube.com/watch?v=1gT_8I5x_w8" },
-               { title: "Feliz Navidad", url: "https://www.youtube.com/watch?v=xMtuVP8Mj4o" },
-        ];
+        { title: "Five Little Ducks" , url: "https://www.youtube.com/watch?v=rsRWH01sK8g" },
+        { title: "What a Wonderful World" , url: "https://www.youtube.com/watch?v=j96L7y_E3fA" },
+        { title: "A Dream Is a Wish Your Heart Makes" , url: "https://www.youtube.com/watch?v=m-0_C4X876o" },
+        { title: "Hush, Now My Baby", url: "https://www.youtube.com/watch?v=N-x9Xz_sZfQ" },
+        { title: "Rock-a-bye Baby", url: "https://www.youtube.com/watch?v=eBV_mqZAGsE" }
+    ];
+    const holidaySongsData = [
+        { title: "Jingle Bells", url: "https://www.youtube.com/watch?v=3PgNPc-iFW8" },
+        { title: "We Wish You a Merry Christmas", url: "https://www.youtube.com/watch?v=9EmebG7iIcg" },
+        { title: "Deck the Halls", url: "https://www.youtube.com/watch?v=g-OF7K-qj9c" },
+        { title: "Happy Birthday", url: "https://www.youtube.com/watch?v=ho08YLYDM88" },
+        { title: "Halloween Night", url: "https://www.youtube.com/watch?v=F4GZ_kIey-Y" },
+        { title: "Ten Little Turkeys", url: "https://www.youtube.com/watch?v=7XHX_g4O03Y" },
+        { title: "New Year's Song (Auld Lang Syne)", url: "https://www.youtube.com/watch?v=1gT_8I5x_w8" },
+        { title: "Feliz Navidad", url: "https://www.youtube.com/watch?v=xMtuVP8Mj4o" },
+    ];
 
-        addVideosToCategory("Nursery Rhymes", nurseryRhymesData);
-        addVideosToCategory("Learning Songs", learningSongsData);
-        addVideosToCategory("Animal Songs", animalSongsData);
-        addVideosToCategory("Bedtime Songs", bedtimeSongsData);
-        addVideosToCategory("Holiday Songs", holidaySongsData);
+    addVideosToCategory("Nursery Rhymes", nurseryRhymesData);
+    addVideosToCategory("Learning Songs", learningSongsData);
+    addVideosToCategory("Animal Songs", animalSongsData);
+    addVideosToCategory("Bedtime Songs", bedtimeSongsData);
+    addVideosToCategory("Holiday Songs", holidaySongsData);
 
     function createTabs() {
         const tabsContainer = document.getElementById('tabs');
@@ -511,17 +512,17 @@
         });
     }
 
-   function createGrid(category, videos) {
-    let section = `<div class='category${category === Object.keys(categories)[0] ? ' active' : ''}' id='${category}'>
-                    <h2>${category}</h2>
-                    <div class='video-grid'>`;
+      function createGrid(category, videos) {
+        let section = `<div class='category${category === Object.keys(categories)[0] ? ' active' : ''}' id='${category}'>
+            <h2>${category}</h2>
+            <div class='video-grid'>`;
 
-videos.forEach(video => {
-    const videoId = video.url.split('v=')[1];
-    const previewUrl = `https://www.youtube.com/embed/${videoId}?start=0&end=6&autoplay=1&mute=1&loop=1&controls=0`;
-    const requester = getRandomRequester(); // Get a unique requester
+        videos.forEach(video => {
+            const videoId = video.url.split('v=')[1];
+            const previewUrl = `https://www.youtube.com/embed/${videoId}?start=0&end=6&autoplay=1&mute=1&loop=1&controls=0`;
+            const requester = getRandomRequester(); // Get a unique requester
 
-    section += `
+            section += `
         <div class='video-tile' onclick="window.open('${video.url}', '_blank')">
             <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='${video.title}'>
             <div class='video-title'>${video.title}</div><div class='video-description'>${requester}</div>
@@ -529,111 +530,110 @@ videos.forEach(video => {
                 <video src="${previewUrl}" autoplay loop muted></video>
             </div>
         </div>`;
-});
-section += "</div></div>";
-document.getElementById("episodes").innerHTML += section;}
+        });
+        section += "</div></div>";
+        document.getElementById("episodes").innerHTML += section;}
 
-function showCategory(category) {
-    document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
-    document.getElementById(category).classList.add('active');
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    const tabs = Array.from(document.querySelectorAll('.tab'));
-    const targetTab = tabs.find(tab => tab.innerText === category);
-    if (targetTab) targetTab.classList.add('active');
-}
-
-$(document).ready(function(){
-    createTabs();
-    usedRequesters.clear();
-    Object.keys(categories).forEach(category => {
-        createGrid(category, categories[category]);
-    });
-
-    // --- Modal JavaScript ---
-    const modal = document.getElementById('submissionModal');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const form = document.getElementById('videoSubmissionForm');
-
-
-    openModalBtn.onclick = function() {
-        loadingIndicator.style.display = "block"; // Show loading indicator
-        setTimeout(function() { // Simulate loading delay
-            loadingIndicator.style.display = "none"; // Hide loading indicator
-            modal.style.display = "block"; // Show modal
-        }, 500); // Adjust the delay (milliseconds) as needed
+    function showCategory(category) {
+        document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
+        document.getElementById(category).classList.add('active');
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        const tabs = Array.from(document.querySelectorAll('.tab'));
+        const targetTab = tabs.find(tab => tab.innerText === category);
+        if (targetTab) targetTab.classList.add('active');
     }
 
-    closeButtons.forEach(button => { // Loop through each close button
-        button.onclick = function() {
-            modal.style.display = "none";
-        }
-    });
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // --- EmailJS Integration ---
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        // Disable the submit button to prevent multiple submissions
-        const submitButton = form.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.textContent = 'Submitting...';
-
-        //Collect form data
-        const youtubeLink = document.getElementById('youtubeLink').value;
-        const episodeName = document.getElementById('episodeName').value;
-        const babyName = document.getElementById('babyName').value;
-        const description = document.getElementById('description').value;
-
-        // Execute reCAPTCHA and get token
-        grecaptcha.enterprise.ready(async () => {
-          const token = await grecaptcha.enterprise.execute('6LcrON0qAAAAACPOSYdJEmON3Bjv75SfvAk5_s_r', {action: 'submit_suggestion'});
-
-            // Set the reCAPTCHA response in the hidden input field
-            document.getElementById('recaptchaResponse').value = token;
-
-
-          // Send email using EmailJS
-          emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
-              youtubeLink: youtubeLink,
-              episodeName: episodeName,
-              babyName: babyName,
-              description: description,
-              "g-recaptcha-response": token // Include the reCAPTCHA response
-          })
-          .then(function(response) {
-              console.log('SUCCESS!', response.status, response.text);
-              alert('Suggestion submitted successfully!');
-
-               // Re-enable the submit button
-               submitButton.disabled = false;
-               submitButton.textContent = 'Submit Suggestion';
-
-              //Close Modal
-               modal.style.display = "none";
-              // Clear the form fields
-              form.reset();
-
-          }, function(error) {
-              console.error('FAILED...', error);
-              alert('Suggestion submission failed.  Please try again.');
-              // Re-enable the submit button
-              submitButton.disabled = false;
-              submitButton.textContent = 'Submit Suggestion';
-
-          });
-
+    $(document).ready(function(){
+        createTabs();
+        usedRequesters.clear();
+        Object.keys(categories).forEach(category => {
+            createGrid(category, categories[category]);
         });
 
+        // --- Modal JavaScript ---
+        const modal = document.getElementById('submissionModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const form = document.getElementById('videoSubmissionForm');
+
+
+        openModalBtn.onclick = function() {
+            loadingIndicator.style.display = "block"; // Show loading indicator
+            setTimeout(function() { // Simulate loading delay
+                loadingIndicator.style.display = "none"; // Hide loading indicator
+                modal.style.display = "block"; // Show modal
+            }, 500); // Adjust the delay (milliseconds) as needed
+        }
+
+        closeButtons.forEach(button => { // Loop through each close button
+            button.onclick = function() {
+                modal.style.display = "none";
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // --- EmailJS Integration ---
+        form.addEventListener('submit', function(event) {
+            console.log("Submit button clicked!");
+            event.preventDefault(); // Prevent the default form submission
+
+            // Disable the submit button to prevent multiple submissions
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            //Collect form data
+            const youtubeLink = document.getElementById('youtubeLink').value;
+            const episodeName = document.getElementById('episodeName').value;
+            const babyName = document.getElementById('babyName').value;
+            const mommyEmail = document.getElementById('mommyEmail').value;
+            const description = document.getElementById('description').value;
+
+            // Execute reCAPTCHA and get token
+             grecaptcha.enterprise.ready(async () => {
+                const token = await grecaptcha.enterprise.execute('6LcrON0qAAAAACPOSYdJEmON3Bjv75SfvAk5_s_r', {action: 'submit_suggestion'})
+
+                // Send email using EmailJS
+                emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
+                    youtubeLink: youtubeLink,
+                    episodeName: episodeName,
+                    babyName: babyName,
+                    mommyEmail: mommyEmail,
+                    description: description,
+                    "g-recaptcha-response": token // Include the reCAPTCHA response
+                })
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        alert('Suggestion submitted successfully!');
+
+                        // Re-enable the submit button
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Submit Suggestion';
+
+                        //Close Modal
+                        modal.style.display = "none";
+                        // Clear the form fields
+                        form.reset();
+
+                    }, function(error) {
+                        console.error('FAILED...', error);
+                        alert('Suggestion submission failed.  Please try again.');
+                        // Re-enable the submit button
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Submit Suggestion';
+
+                    });
+
+            });
+
+        });
     });
-});
 </script>
 
 </body>
