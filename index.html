@@ -330,7 +330,7 @@
             <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
             <div class="g-recaptcha" data-sitekey="6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la"></div>
             <br/>
-            <button type="submit">Submit Suggestion</button>
+            <button type="submit" id="submitSuggestionButton" disabled>Submit Suggestion</button>
             <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
         </form>
     </div>
@@ -540,6 +540,11 @@
         if (targetTab) targetTab.classList.add('active');
     }
 
+    // Function to enable submit button after reCAPTCHA is verified
+    function enableSubmitButton() {
+        document.getElementById('submitSuggestionButton').disabled = false;
+    }
+
     $(document).ready(function(){
         createTabs();
         usedRequesters.clear();
@@ -553,6 +558,7 @@
         const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
         const loadingIndicator = document.getElementById('loadingIndicator');
         const form = document.getElementById('videoSubmissionForm');
+        const submitButton = document.getElementById('submitSuggestionButton'); // Get submit button by ID
 
         openModalBtn.onclick = function() {
             loadingIndicator.style.display = "block"; // Show loading indicator
@@ -579,10 +585,17 @@
             console.log("Submit button clicked!");
             event.preventDefault(); // Prevent the default form submission
 
-            // Disable the submit button to prevent multiple submissions
-            const submitButton = form.querySelector('button[type="submit"]');
+            //Validate recaptcha FIRST
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                alert("Please complete the reCAPTCHA to verify you're human.");
+                return; // Stop submission if recaptcha is not completed
+            }
+
+            // Disable the submit button to prevent multiple submissions and change text
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
+
 
             //Collect form data
             const youtubeLink = document.getElementById('youtubeLink').value;
@@ -591,14 +604,6 @@
             const mommyEmail = document.getElementById('mommyEmail').value;
             const description = document.getElementById('description').value;
 
-            //Validate recaptcha
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                alert("Please complete the reCAPTCHA to verify you're human.");
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Suggestion';
-                return;
-            }
 
             // Send email using EmailJS
             emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
@@ -612,26 +617,36 @@
                     console.log('SUCCESS!', response.status, response.text);
                     alert('Suggestion submitted successfully!');
 
-                    // Re-enable the submit button
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Submit Suggestion';
+                    // Re-enable the submit button and reset text (Not needed anymore as modal closes and form resets)
+                    // submitButton.disabled = false;
+                    // submitButton.textContent = 'Submit Suggestion';
 
                     //Close Modal
                     modal.style.display = "none";
                     // Clear the form fields
                     form.reset();
                      grecaptcha.reset(); // Reset reCAPTCHA
+                     submitButton.disabled = true; // Keep submit button disabled after successful submission and modal close
+                     submitButton.textContent = 'Submit Suggestion'; // Reset submit button text
 
                 }, function(error) {
                     console.error('FAILED...', error);
                     alert('Suggestion submission failed.  Please try again.');
-                    // Re-enable the submit button
+                    // Re-enable the submit button and reset text
                     submitButton.disabled = false;
                     submitButton.textContent = 'Submit Suggestion';
 
                 });
 
         });
+
+        // Enable submit button when recaptcha is verified.
+        window.captcha_onload = function(){
+             grecaptcha.render('recaptcha-container', {
+               'sitekey' : '6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la',
+               'callback' : enableSubmitButton,
+             });
+           };
     });
 </script>
 
