@@ -328,7 +328,9 @@
             <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
             <input type="email" id="mommyEmail" name="mommyEmail" placeholder="Parent's Email (for notifications)" required style="width: 100%;">
             <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
-            <div class="g-recaptcha" data-sitekey="6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la"></div>
+            <div class="g-recaptcha"
+                 data-sitekey="6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la"
+                 data-callback="enableSubmitButton"></div>
             <br/>
             <button type="submit" id="submitSuggestionButton" disabled>Submit Suggestion</button>
             <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
@@ -555,10 +557,10 @@
         // --- Modal JavaScript ---
         const modal = document.getElementById('submissionModal');
         const openModalBtn = document.getElementById('openModalBtn');
-        const closeButtons = document.querySelectorAll('.close-button'); // Select all close buttons
+        const closeButtons = document.querySelectorAll('.close-button');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const form = document.getElementById('videoSubmissionForm');
-        const submitButton = document.getElementById('submitSuggestionButton'); // Get submit button by ID
+        const submitButton = document.getElementById('submitSuggestionButton');
 
         openModalBtn.onclick = function() {
             loadingIndicator.style.display = "block"; // Show loading indicator
@@ -639,14 +641,6 @@
                 });
 
         });
-
-        // Enable submit button when recaptcha is verified.
-        window.captcha_onload = function(){
-             grecaptcha.render('recaptcha-container', {
-               'sitekey' : '6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la',
-               'callback' : enableSubmitButton,
-             });
-           };
     });
 </script>
 
