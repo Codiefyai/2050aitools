@@ -298,7 +298,6 @@
             }
         }
     </style>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <h1 class="site-title">
@@ -322,17 +321,19 @@
     <div class="modal-content">
         <span class="close-button">×</span> <!-- Close button (X) -->
         <h2>Suggest an Episode</h2>
-        <form id="videoSubmissionForm">
-            <input type="text" id="youtubeLink" name="youtubeLink" placeholder="YouTube Link">
-            <input type="text" id="episodeName"  name="episodeName" placeholder="Episode/Video Name">
+        <form id="videoSubmissionForm" action="https://formsubmit.co/info.bahbahscorner@gmail.com" method="POST">
+            <input type="hidden" name="_next" value="https://bahbahscorner.com/thankyou.html"> <!-- Replace with your thank you page URL -->
+            <input type="hidden" name="_subject" value="New Video Suggestion from Bah Bah's Corner">
+            <input type="hidden" name="_captcha" value="false"> <!-- Disable built-in FormSubmit captcha if you are not using paid plan -->
+
+            <input type="text" id="youtubeLink" name="youtubeLink" placeholder="YouTube Link" required>
+            <input type="text" id="episodeName"  name="episodeName" placeholder="Episode/Video Name" required>
             <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional)">
             <input type="email" id="mommyEmail" name="mommyEmail" placeholder="Parent's Email (for notifications)" required style="width: 100%;">
             <textarea id="description"  name="description" placeholder="Why loving this video? (Optional)"></textarea>
-            <div class="g-recaptcha"
-                 data-sitekey="6Lc_0N4qAAAAAJBIPW0rNg-ff_Wm7yN-ublJK9la"
-                 data-callback="enableSubmitButton"></div>
+
             <br/>
-            <button type="submit" id="submitSuggestionButton" disabled>Submit Suggestion</button>
+            <button type="submit" id="submitSuggestionButton">Submit Suggestion</button>
             <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
         </form>
     </div>
@@ -342,10 +343,6 @@
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
 <script>
-    // EmailJS Initialization (Move outside of document ready for efficiency)
-    (function() {
-        emailjs.init("cAOXhnd37_jzIQcVJ"); // Replace with your EmailJS user ID
-    })();
 
     const categories = {
         "Nursery Rhymes": [],
@@ -542,10 +539,6 @@
         if (targetTab) targetTab.classList.add('active');
     }
 
-    // Function to enable submit button after reCAPTCHA is verified
-    function enableSubmitButton() {
-        document.getElementById('submitSuggestionButton').disabled = false;
-    }
 
     $(document).ready(function(){
         createTabs();
@@ -582,65 +575,7 @@
             }
         }
 
-        // --- EmailJS Integration ---
-        form.addEventListener('submit', function(event) {
-            console.log("Submit button clicked!");
-            event.preventDefault(); // Prevent the default form submission
 
-            //Validate recaptcha FIRST
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                alert("Please complete the reCAPTCHA to verify you're human.");
-                return; // Stop submission if recaptcha is not completed
-            }
-
-            // Disable the submit button to prevent multiple submissions and change text
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-
-
-            //Collect form data
-            const youtubeLink = document.getElementById('youtubeLink').value;
-            const episodeName = document.getElementById('episodeName').value;
-            const babyName = document.getElementById('babyName').value;
-            const mommyEmail = document.getElementById('mommyEmail').value;
-            const description = document.getElementById('description').value;
-
-
-            // Send email using EmailJS
-            emailjs.send("service_l2p4i2j", "template_j9eb828", { // Replace with your Service ID and Template ID
-                youtubeLink: youtubeLink,
-                episodeName: episodeName,
-                babyName: babyName,
-                mommyEmail: mommyEmail,
-                description: description
-            })
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                    alert('Suggestion submitted successfully!');
-
-                    // Re-enable the submit button and reset text (Not needed anymore as modal closes and form resets)
-                    // submitButton.disabled = false;
-                    // submitButton.textContent = 'Submit Suggestion';
-
-                    //Close Modal
-                    modal.style.display = "none";
-                    // Clear the form fields
-                    form.reset();
-                     grecaptcha.reset(); // Reset reCAPTCHA
-                     submitButton.disabled = true; // Keep submit button disabled after successful submission and modal close
-                     submitButton.textContent = 'Submit Suggestion'; // Reset submit button text
-
-                }, function(error) {
-                    console.error('FAILED...', error);
-                    alert('Suggestion submission failed.  Please try again.');
-                    // Re-enable the submit button and reset text
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Submit Suggestion';
-
-                });
-
-        });
     });
 </script>
 
