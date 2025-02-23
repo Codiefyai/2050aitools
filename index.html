@@ -1,10 +1,9 @@
-Vegetable-Patch-Match!
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baa Bah's Corner - Game Collection</title>
+    <title>Baa Bah's Corner - Vegetable Patch Match!</title>
     <link rel="icon" href="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" type="image/png">
     <style>
         body {
@@ -18,24 +17,24 @@ Vegetable-Patch-Match!
             text-align: center;
             margin: 0;
             padding-top: 20px;
-            overflow: hidden;
+            overflow: auto; /* Changed to auto for better mobile handling if content overflows */
         }
 
         .game-container {
             background-color: #fff8e1;
-            padding: 30px;
+            padding: 20px; /* Adjusted padding for smaller screens */
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            width: 85%;
+            width: 95%; /* Increased width for better use of screen on mobile */
             max-width: 900px;
             margin: 20px auto;
         }
 
         h1 {
             color: #ff8a65;
-            margin-bottom: 5px;
+            margin-bottom: 10px; /* Reduced margin for smaller screens */
             text-shadow: 2px 2px 0 #ffcc80;
-            font-size: 2.8em;
+            font-size: 2em; /* Adjusted font size for smaller screens */
             animation: rainbow-text 5s linear infinite;
         }
 
@@ -54,21 +53,24 @@ Vegetable-Patch-Match!
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin for smaller screens */
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 10px; /* Added gap between top bar items */
         }
 
         #level-score-display, #timer-display, #level-display, #highscore-display, #game3-score-display, #game3-level-display, #game3-highscore-display, #game2-score-display, #game2-level-display, #game2-highscore-display {
-            font-size: 1.5em;
+            font-size: 1.2em; /* Adjusted font size for smaller screens */
             color: #ff6f00;
             font-weight: bold;
             text-shadow: 1px 1px 0 #ffca28;
+            margin-bottom: 5px; /* Added a small bottom margin for better spacing when wrapped */
         }
 
         /* Game 1 Styles (Peek-a-Boo) */
         #game-holes {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Reduced minmax for smaller tiles */
+            gap: 10px; /* Reduced gap for smaller screens */
             justify-content: center;
             align-items: center;
         }
@@ -76,27 +78,27 @@ Vegetable-Patch-Match!
         .hole-row {
             display: flex;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px; /* Reduced margin for smaller screens */
         }
 
         .hole {
             position: relative;
-            height: 100px;
+            height: 80px; /* Reduced height for smaller holes */
             background-color: #ffcdd2;
             border-radius: 50% 50% 0 0;
             overflow: hidden;
             box-shadow: inset 0px 5px 8px rgba(0,0,0,0.1);
-            aspect-ratio: 120/100;
+            aspect-ratio: 120/100; /* Keep aspect ratio */
             max-width: 100%;
         }
 
         .thumbnail-area {
             position: absolute;
-            top: 60px;
+            top: 50px; /* Adjusted position for smaller holes */
             left: 50%;
             transform: translateX(-50%);
-            width: 90px;
-            height: 90px;
+            width: 70px; /* Reduced width for smaller thumbnails */
+            height: 70px; /* Reduced height for smaller thumbnails */
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
@@ -117,7 +119,8 @@ Vegetable-Patch-Match!
         /* Game 3 Styles (Apple Catch) */
         #game3-container {
             position: relative;
-            width: 400px;
+            width: 90%; /* Percentage width for responsiveness */
+            max-width: 400px; /* Max width to prevent stretching too much */
             height: 500px;
             margin: 20px auto;
             background-color: #aed581; /* Light green background for farm field */
@@ -127,26 +130,30 @@ Vegetable-Patch-Match!
 
         #game3-canvas {
             display: block; /* Important for canvas to take up space */
+            width: 100%; /* Canvas to fill container */
+            height: 100%; /* Canvas to fill container */
         }
 
         /* Game 2 Styles (Vegetable Match) */
         #game2-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns for now, adjust as needed */
-            gap: 15px;
-            max-width: 500px; /* Adjust max width as needed */
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjusted minmax for smaller tiles */
+            gap: 10px; /* Reduced gap for smaller screens */
+            max-width: 95%; /* Percentage max width for responsiveness */
             margin: 20px auto;
+            padding: 10px; /* Add padding around the grid */
         }
 
         .game2-tile {
-            width: 100px;
-            height: 100px;
+            width: 100%; /* Make tiles responsive within grid */
+            height: auto; /* Height auto to maintain aspect ratio */
+            aspect-ratio: 1/1; /* Ensure tiles are square */
             background-color: #ffcc80; /* Light orange tile back */
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2em;
+            font-size: 1.5em; /* Adjusted font size for smaller screens */
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             perspective: 1000px; /* For flip effect */
@@ -183,12 +190,12 @@ Vegetable-Patch-Match!
         .game2-tile-back {
             background-color: #fff8e1; /* Back is the vegetable side */
             transform: rotateY(180deg);
-            font-size: 3em; /* Adjust vegetable icon size */
+            font-size: 2em; /* Adjusted vegetable icon size */
         }
 
 
         #level-failed-overlay, #level-complete-overlay, #game-won-overlay, #game-start-overlay, #game3-start-overlay, #game3-over-overlay, #game3-level-complete-overlay, #game3-won-overlay, #game2-start-overlay, #game2-over-overlay, #game2-level-complete-overlay, #game2-won-overlay {
-            position: absolute;
+            position: fixed; /* Changed to fixed for full screen overlay */
             top: 0;
             left: 0;
             width: 100%;
@@ -199,19 +206,20 @@ Vegetable-Patch-Match!
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 2em;
+            font-size: 1.5em; /* Adjusted font size for smaller screens */
             text-shadow: 2px 2px 0 black;
             z-index: 10; /* Ensure overlays are on top */
         }
 
         #level-failed-overlay h2, #level-complete-overlay h2, #game-won-overlay h2, #game-start-overlay h2, #game3-start-overlay h2, #game3-over-overlay h2, #game3-level-complete-overlay h2, #game3-won-overlay h2, #game2-start-overlay h2, #game2-over-overlay h2, #game2-level-complete-overlay h2, #game2-won-overlay h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin for smaller screens */
+            font-size: 1.8em; /* Adjusted font size for smaller screen titles */
         }
 
         #level-failed-overlay button, #level-complete-overlay button, #game-won-overlay button, #game-start-overlay button, #game3-start-overlay button, #game3-over-overlay button, #game3-level-complete-overlay button, #game3-won-overlay button, #game2-start-overlay button, #game2-over-overlay button, #game2-level-complete-overlay button, #game2-won-overlay button {
             background-color: #ff9800;
             color: white;
-            padding: 15px 30px;
+            padding: 10px 20px; /* Adjusted button padding for smaller screens */
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -228,13 +236,13 @@ Vegetable-Patch-Match!
 
         #level-complete-overlay #level-stars-earned, #game3-level-complete-overlay #level-stars-earned, #game2-level-complete-overlay #level-stars-earned {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin for smaller screens */
         }
 
         #level-complete-overlay #level-stars-earned .star-earned-icon, #game3-level-complete-overlay #level-stars-earned .star-earned-icon, #game2-level-complete-overlay #level-stars-earned .star-earned-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 5px;
+            width: 30px; /* Reduced star icon size for smaller screens */
+            height: 30px; /* Reduced star icon size for smaller screens */
+            margin: 0 3px; /* Reduced margin for smaller screens */
             background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"%3E%3Cpath d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3C/svg%3E');
             background-size: contain;
             background-repeat: no-repeat;
@@ -242,107 +250,90 @@ Vegetable-Patch-Match!
         }
 
         #game-won-overlay p, #level-failed-overlay p, #game3-over-overlay p, #game3-won-overlay p, #game2-over-overlay p, #game2-won-overlay p {
-            margin-bottom: 30px;
-            font-size: 1.3em;
+            margin-bottom: 20px; /* Reduced margin for smaller screens */
+            font-size: 1.1em; /* Adjusted font size for smaller screens */
+        }
+
+        /* Media Queries for smaller screens */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            #top-bar {
+                font-size: 0.9em; /* Slightly smaller font in top bar */
+            }
+            .game-container {
+                padding: 15px;
+            }
+            #game2-container {
+                gap: 8px;
+            }
+            .game2-tile {
+                font-size: 1.3em;
+            }
+            .game2-tile-back {
+                font-size: 1.8em;
+            }
+            #game-holes {
+                gap: 8px;
+            }
+            .hole {
+                height: 70px;
+            }
+            .thumbnail-area {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            #top-bar {
+                font-size: 0.8em; /* Even smaller font in top bar for very small screens */
+            }
+            .game-container {
+                padding: 10px;
+            }
+            #game2-container {
+                gap: 5px;
+            }
+            .game2-tile {
+                font-size: 1.1em;
+            }
+            .game2-tile-back {
+                font-size: 1.5em;
+            }
+            #game-holes {
+                gap: 5px;
+            }
+            .hole {
+                height: 60px;
+            }
+            .thumbnail-area {
+                width: 50px;
+                height: 50px;
+            }
         }
 
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>Baa Bah's Corner - Game Collection</h1>
+        <h1>Vegetable Patch Match!</h1>
         <div id="top-bar">
-            <div id="level-score-display">Score: 0</div>  <!-- Game 1 Score -->
-            <div id="level-display">Level: 1</div>     <!-- Game 1 Level -->
-            <div id="highscore-display">Highscore: 0</div> <!-- Game 1 Highscore -->
-            <div id="timer-display">Time: <span id="time-remaining"></span>s</div> <!-- Game 1 Timer -->
-
-            <div id="game3-score-display" style="display: none;">Score: 0</div>  <!-- Game 3 Score -->
-            <div id="game3-level-display" style="display: none;">Level: 1</div>     <!-- Game 3 Level -->
-            <div id="game3-highscore-display" style="display: none;">Highscore: 0</div> <!-- Game 3 Highscore -->
-
-            <div id="game2-score-display" style="display: none;">Score: 0</div>  <!-- Game 2 Score -->
-            <div id="game2-level-display" style="display: none;">Level: 1</div>     <!-- Game 2 Level -->
-            <div id="game2-highscore-display" style="display: none;">Highscore: 0</div> <!-- Game 2 Highscore -->
+            <div id="game2-score-display">Score: 0</div>
+            <div id="game2-level-display">Level: 1</div>
+            <div id="game2-highscore-display">Highscore: 0</div>
+            <div id="timer-display">Time: <span id="time-remaining"></span>s</div>
         </div>
 
-        <h2>Game 1: Peek-a-Boo Pictures!</h2>
-        <div id="game-holes">
-            <!-- Holes for Game 1 -->
-        </div>
-
-        <h2>Game 2: Vegetable Patch Match!</h2>
-        <div id="game2-container" style="display: none;">
+        <div id="game2-container">
             <!-- Game 2 Tiles will be generated here -->
         </div>
 
-        <h2>Game 3: Baa Bah's Apple Catch!</h2>
-        <div id="game3-container" style="display: none;">
-            <canvas id="game3-canvas" width="400" height="500"></canvas>
-        </div>
-
-
-        <div id="level-failed-overlay">  <!-- Game 1 Overlays -->
-            <h2>Time's Up!</h2>
-            <p>Oops! Time ran out, but don't worry!</p>
-            <p id="final-score">Your Score: 0</p>
-            <button onclick="startGame()">Try Again!</button>
-        </div>
-
-        <div id="level-complete-overlay">
-            <h2>Level Complete!</h2>
-            <p>Well Done!</p>
-            <div id="level-stars-earned">
-                <!-- Star icons will be added here by JavaScript -->
-            </div>
-            <button onclick="nextLevel()">Next Level</button>
-            <button onclick="startGame()">Play Again</button>
-        </div>
-
-        <div id="game-won-overlay">
-            <h2>You Won! 🎉</h2>
-            <p>Congratulations! You completed all levels!</p>
-            <p id="final-highscore">Your Highscore: 0</p>
-            <button onclick="resetGame()">Play Again</button>
-        </div>
-
-        <div id="game-start-overlay">
-            <h2>Get Ready to Peek-a-Boo!</h2>
-            <p>Click the pictures as soon as they pop up!</p>
-            <button onclick="startGame()">Start Game</button>
-        </div>
-
-        <div id="game3-start-overlay">  <!-- Game 3 Overlays -->
-            <h2>Baa Bah's Apple Catch!</h2>
-            <p>Help Farmer Baa Bah catch the falling apples!</p>
-            <button onclick="startGame3()">Start Game</button>
-        </div>
-
-        <div id="game3-over-overlay">
-            <h2>Game Over!</h2>
-            <p>Oh no! You missed too many apples!</p>
-            <p id="game3-final-score">Your Score: 0</p>
-            <button onclick="startGame3()">Try Again!</button>
-        </div>
-
-        <div id="game3-level-complete-overlay">
-            <h2>Level Complete!</h2>
-            <p>Apple Catching Expert!</p>
-            <div id="level-stars-earned">
-                <!-- Star icons will be added here by JavaScript -->
-            </div>
-            <button onclick="nextLevel3()">Next Level</button>
-            <button onclick="startGame3()">Play Again</button>
-        </div>
-
-        <div id="game3-won-overlay">
-            <h2>You're the Apple Catching Champion! 🎉</h2>
-            <p>You caught all the apples and fed Baa Bah's sheep!</p>
-            <p id="game3-final-highscore">Your Highscore: 0</p>
-            <button onclick="resetGame3()">Play Again</button>
-        </div>
-
-        <div id="game2-start-overlay">  <!-- Game 2 Overlays -->
+        <div id="game2-start-overlay">
             <h2>Vegetable Patch Match!</h2>
             <p>Match the pairs of veggies in the patch!</p>
             <button onclick="startGame2()">Start Game</button>
@@ -376,498 +367,13 @@ Vegetable-Patch-Match!
     </div>
 
     <!-- Sound Effects -->
-    <audio id="popSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/bubble-pop-sound-effect-fesliyanstudios.com.mp3" preload="auto"></audio>
-    <audio id="levelFailedSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/zapsplat_cartoon_fail_drum_001_75449.mp3" preload="auto"></audio>
-    <audio id="levelUpSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/level-up-arcade-video-game-sound-effect-38286.mp3" preload="auto"></audio>
-    <audio id="catchSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/apple-bite-95777.mp3" preload="auto"></audio>
-    <audio id="dropSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/drop-water-6-95775.mp3" preload="auto"></audio>
     <audio id="tileFlipSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/flip-card-or-page-2-95773.mp3" preload="auto"></audio> <!-- New sound for tile flip -->
     <audio id="matchSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/correct-answer-tone-96333.mp3" preload="auto"></audio> <!-- New sound for tile match -->
     <audio id="mismatchSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/wrong-answer-fail-buzzer-01-96332.mp3" preload="auto"></audio> <!-- New sound for tile mismatch -->
+    <audio id="levelUpSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/level-up-arcade-video-game-sound-effect-38286.mp3" preload="auto"></audio>
 
 
     <script>
-        // Game 1 Variables and Functions (Peek-a-Boo Pictures) - EXISTING CODE - Ensure it's present
-
-        const gameHolesContainer = document.getElementById('game-holes');
-        const levelScoreDisplay = document.getElementById('level-score-display');
-        const timerDisplay = document.getElementById('timer-display');
-        const levelDisplay = document.getElementById('level-display');
-        const highscoreDisplay = document.getElementById('highscore-display');
-        const levelFailedOverlay = document.getElementById('level-failed-overlay');
-        const levelCompleteOverlay = document.getElementById('level-complete-overlay');
-        const gameWonOverlay = document.getElementById('game-won-overlay');
-        const gameStartOverlay = document.getElementById('game-start-overlay');
-        const finalScoreDisplay = document.getElementById('final-score');
-        const finalHighscoreDisplay = document.getElementById('final-highscore');
-
-        const popSound = document.getElementById('popSound');
-        const levelFailedSound = document.getElementById('levelFailedSound');
-        const levelUpSound = document.getElementById('levelUpSound');
-
-
-        let levelScore = 0;
-        let totalGameScore = 0;
-        let gameActive = false;
-        let timeUp = false;
-        let peekingInterval;
-        let levelTimerInterval;
-        let levelTime = 30;
-        let initialLevelTime = 30;
-        let gameDuration = 30000;
-        let thumbnailPeekTimeout = 700;
-        let initialDelay = 1500;
-        let level = 1;
-        const maxLevel = 10;
-        let numberOfHoles = 6;
-        // let holesPerRow = 3; Removed fixed holesPerRow
-        let highscore = 0;
-        const highscoreKey = 'peekabooHighscore';
-
-        const gameVideoThumbnails = [
-            "https://i.ytimg.com/vi/yCjJyiqpAuU/hqdefault.jpg",
-            "https://i.ytimg.com/vi/e_04ZrNroTo/hqdefault.jpg",
-            "https://i.ytimg.com/vi/_6HzoUcx3eo/hqdefault.jpg",
-            "https://i.ytimg.com/vi/75p-N9YKqNo/hqdefault.jpg",
-            "https://i.ytimg.com/vi/tkpfg-1FJLU/hqdefault.jpg",
-            "https://i.ytimg.com/vi/XqZsoesa55w/hqdefault.jpg",
-            "https://i.ytimg.com/vi/f_raDpgx_3M/hqdefault.jpg",
-            "https://i.ytimg.com/vi/O06dK2Lv9WM/hqdefault.jpg"
-            // Add more thumbnail URLs here
-        ];
-        let levelUpScoreThreshold = 10;
-
-
-        function startGame() { // Game 1 Start Function - EXISTING CODE - Ensure it's present
-            gameStartOverlay.style.display = 'none';
-            levelFailedOverlay.style.display = 'none';
-            levelCompleteOverlay.style.display = 'none';
-            gameWonOverlay.style.display = 'none';
-            levelScore = 0;
-            totalGameScore = 0;
-            level = 1;
-            levelScoreDisplay.innerText = "Score: 0";
-            levelDisplay.innerText = "Level: " + level;
-            timeUp = false;
-            gameActive = true;
-            thumbnailPeekTimeout = 700;
-            initialDelay = 1500;
-            numberOfHoles = 6;
-            initialLevelTime = 30;
-            levelTime = initialLevelTime;
-            timerDisplay.innerText = levelTime;
-
-            const storedHighscore = localStorage.getItem(highscoreKey);
-            if (storedHighscore) {
-                highscore = parseInt(storedHighscore);
-            } else {
-                highscore = 0;
-            }
-            highscoreDisplay.innerText = "Highscore: " + highscore;
-
-
-            generateHoles();
-
-            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
-            thumbnailAreas.forEach((area, index) => {
-                const imgElement = area.querySelector('.game-thumbnail');
-                const randomIndex = Math.floor(Math.random() * gameVideoThumbnails.length);
-                imgElement.src = gameVideoThumbnails[randomIndex];
-                imgElement.alt = `Thumbnail ${index + 1}`;
-            });
-
-
-            setTimeout(() => {
-                if (!gameActive) return;
-                startLevelTimer();
-                peekingInterval = setInterval(peekRandomThumbnail, calculatePeekInterval());
-            }, initialDelay);
-        }
-
-        function nextLevel() { // Game 1 Next Level - EXISTING CODE - Ensure it's present
-            level++;
-            if (level > maxLevel) {
-                gameWon();
-                return;
-            }
-            levelCompleteOverlay.style.display = 'none';
-            gameActive = true;
-            clearInterval(peekingInterval);
-            clearInterval(levelTimerInterval);
-            timeUp = false;
-            levelScore = 0;
-            levelScoreDisplay.innerText = "Score: 0";
-            levelDisplay.innerText = "Level: " + level;
-            numberOfHoles += 1;
-            initialLevelTime = Math.max(5, initialLevelTime - 2);
-            levelTime = initialLevelTime;
-            timerDisplay.innerText = levelTime;
-
-            generateHoles();
-
-            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
-            thumbnailAreas.forEach((area, index) => {
-                const imgElement = area.querySelector('.game-thumbnail');
-                const randomIndex = Math.floor(Math.random() * gameVideoThumbnails.length);
-                imgElement.src = gameVideoThumbnails[randomIndex];
-                imgElement.alt = `Thumbnail ${index + 1}`;
-            });
-
-
-            startLevelTimer();
-            peekingInterval = setInterval(peekRandomThumbnail, calculatePeekInterval());
-        }
-
-        function generateHoles() { // Game 1 Generate Holes - EXISTING CODE - Ensure it's present
-            gameHolesContainer.innerHTML = '';
-            gameHolesContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(120px, 1fr))`; // Dynamically set columns
-
-            for (let i = 0; i < numberOfHoles; i++) {
-                const hole = document.createElement('div');
-                hole.className = 'hole';
-                const thumbnailArea = document.createElement('div');
-                thumbnailArea.className = 'thumbnail-area';
-                const img = document.createElement('img');
-                img.src = "";
-                img.alt = "Game Thumbnail";
-                img.className = "game-thumbnail";
-                thumbnailArea.appendChild(img);
-                hole.appendChild(thumbnailArea);
-                gameHolesContainer.appendChild(hole);
-            }
-            attachThumbnailClickListeners();
-        }
-
-        function attachThumbnailClickListeners() { // Game 1 Listeners - EXISTING CODE - Ensure it's present
-            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
-            thumbnailAreas.forEach(area => {
-                area.addEventListener('click', function() {
-                    if (!gameActive || this.classList.contains('clicked')) return;
-
-                    this.classList.add('clicked');
-                    this.classList.remove('visible');
-                    levelScore++;
-                    totalGameScore++;
-                    levelScoreDisplay.innerText = "Score: " + levelScore;
-                    highscoreDisplay.innerText = "Highscore: " + totalGameScore;
-                    popSound.play();
-
-                    setTimeout(() => {
-                        this.classList.remove('clicked');
-                    }, 300);
-
-                    if (levelScore >= levelUpScoreThreshold && gameActive) {
-                        gameActive = false;
-                        clearInterval(peekingInterval);
-                        clearInterval(levelTimerInterval);
-                        levelComplete();
-                    }
-                });
-            });
-        }
-
-        function startLevelTimer() { // Game 1 Timer - EXISTING CODE - Ensure it's present
-            levelTime = initialLevelTime;
-            timerDisplay.innerText = levelTime;
-            levelTimerInterval = setInterval(() => {
-                levelTime--;
-                timerDisplay.innerText = levelTime;
-                if (levelTime <= 0) {
-                    clearInterval(levelTimerInterval);
-                    clearInterval(peekingInterval);
-                    gameActive = false;
-                    timeUp = true;
-                    levelFailed();
-                }
-            }, 1000);
-        }
-
-        function calculatePeekInterval() { // Game 1 Peek Interval - EXISTING CODE - Ensure it's present
-            return Math.max(500, 2000 - (levelScore * 20));
-        }
-
-        function peekRandomThumbnail() { // Game 1 Peek Random - EXISTING CODE - Ensure it's present
-            if (!gameActive) return;
-
-            const visibleArea = document.querySelector('.thumbnail-area.visible');
-            if (visibleArea) {
-                visibleArea.classList.remove('visible');
-            }
-
-            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
-            const randomIndex = Math.floor(Math.random() * thumbnailAreas.length);
-            const randomArea = thumbnailAreas[randomIndex];
-            randomArea.classList.add('visible');
-
-            setTimeout(() => {
-                randomArea.classList.remove('visible');
-            }, thumbnailPeekTimeout);
-            thumbnailPeekTimeout = Math.max(200, thumbnailPeekTimeout - 10);
-        }
-
-        function levelComplete() { // Game 1 Level Complete - EXISTING CODE - Ensure it's present
-            gameActive = false;
-            levelUpSound.play();
-            levelCompleteOverlay.style.display = 'flex';
-            updateHighscore();
-        }
-
-        function gameWon() { // Game 1 Game Won - EXISTING CODE - Ensure it's present
-            gameActive = false;
-            gameWonOverlay.style.display = 'flex';
-            updateHighscore();
-            finalHighscoreDisplay.innerText = "Your Highscore: " + highscore;
-        }
-
-        function levelFailed() { // Game 1 Level Failed - EXISTING CODE - Ensure it's present
-            gameActive = false;
-            finalScoreDisplay.innerText = "Your Score: " + levelScore;
-            levelFailedOverlay.style.display = 'flex';
-            levelFailedSound.play();
-            updateHighscore();
-        }
-
-        function updateHighscore() { // Game 1 Update Highscore - EXISTING CODE - Ensure it's present
-            if (totalGameScore > highscore) {
-                highscore = totalGameScore;
-                localStorage.setItem(highscoreKey, highscore);
-                highscoreDisplay.innerText = "Highscore: " + highscore;
-            }
-        }
-
-        function resetGame() { // Game 1 Reset Game - EXISTING CODE - Ensure it's present
-            gameWonOverlay.style.display = 'none';
-            startGame();
-        }
-
-
-        gameStartOverlay.style.display = 'flex'; // Game 1 Start Overlay Display - EXISTING CODE - Ensure it's present
-
-
-        // Game 3 Variables and Functions (Baa Bah's Apple Catch) - EXISTING CODE - Ensure it's present
-
-        const game3Container = document.getElementById('game3-container');
-        const game3Canvas = document.getElementById('game3-canvas');
-        const game3Context = game3Canvas.getContext('2d');
-        const game3ScoreDisplay = document.getElementById('game3-score-display');
-        const game3LevelDisplay = document.getElementById('game3-level-display');
-        const game3HighscoreDisplay = document.getElementById('game3-highscore-display');
-        const game3StartOverlay = document.getElementById('game3-start-overlay');
-        const game3OverOverlay = document.getElementById('game3-over-overlay');
-        const game3LevelCompleteOverlay = document.getElementById('game3-level-complete-overlay');
-        const game3WonOverlay = document.getElementById('game3-won-overlay');
-        const game3FinalScoreDisplay = document.getElementById('game3-final-score');
-        const game3FinalHighscoreDisplay = document.getElementById('game3-final-highscore');
-
-        const catchSound = document.getElementById('catchSound');
-        const dropSound = document.getElementById('dropSound');
-
-        let game3Active = false;
-        let game3Level = 1;
-        let game3Score = 0;
-        let game3Highscore = 0;
-        const game3HighscoreKey = 'appleCatchHighscore';
-        let basketX;
-        let basketY;
-        const basketWidth = 80;
-        const basketHeight = 50;
-        let appleX;
-        let appleY;
-        let appleSpeed;
-        const appleRadius = 20;
-        let applesCaughtThisLevel = 0;
-        const applesToCatchPerLevel = 10;
-        let lives = 3; // Starting lives
-        let lastFrameTime = 0;
-
-
-        function initGame3() { // Game 3 Init - EXISTING CODE - Ensure it's present
-            game3ScoreDisplay.style.display = 'flex';
-            game3LevelDisplay.style.display = 'flex';
-            game3HighscoreDisplay.style.display = 'flex';
-            game3Container.style.display = 'block';
-            gameHolesContainer.style.display = 'none';
-            levelScoreDisplay.style.display = 'none';
-            levelDisplay.style.display = 'none';
-            highscoreDisplay.style.display = 'none';
-            timerDisplay.style.display = 'none';
-            gameStartOverlay.style.display = 'none';
-            levelFailedOverlay.style.display = 'none';
-            levelCompleteOverlay.style.display = 'none';
-            gameWonOverlay.style.display = 'none';
-
-
-            // Load highscore
-            const storedGame3Highscore = localStorage.getItem(game3HighscoreKey);
-            if (storedGame3Highscore) {
-                game3Highscore = parseInt(storedGame3Highscore);
-            } else {
-                game3Highscore = 0;
-            }
-            game3HighscoreDisplay.innerText = "Highscore: " + game3Highscore;
-
-            game3StartOverlay.style.display = 'flex';
-        }
-
-
-        function startGame3() { // Game 3 Start - EXISTING CODE - Ensure it's present
-            game3StartOverlay.style.display = 'none';
-            game3OverOverlay.style.display = 'none';
-            game3LevelCompleteOverlay.style.display = 'none';
-            game3WonOverlay.style.display = 'none';
-
-            game3Active = true;
-            game3Level = 1;
-            game3Score = 0;
-            applesCaughtThisLevel = 0;
-            lives = 3;
-
-            game3ScoreDisplay.innerText = "Score: 0";
-            game3LevelDisplay.innerText = "Level: " + game3Level;
-
-            basketX = game3Canvas.width / 2 - basketWidth / 2;
-            basketY = game3Canvas.height - basketHeight - 20;
-            appleSpeed = 3;
-            resetApple();
-
-            game3Canvas.addEventListener('mousemove', moveBasket);
-            requestAnimationFrame(gameLoop3);
-        }
-
-
-        function resetGame3() { // Game 3 Reset - EXISTING CODE - Ensure it's present
-            game3WonOverlay.style.display = 'none';
-            startGame3();
-        }
-
-
-        function nextLevel3() { // Game 3 Next Level - EXISTING CODE - Ensure it's present
-            game3LevelCompleteOverlay.style.display = 'none';
-            game3Active = true;
-            game3Level++;
-            applesCaughtThisLevel = 0;
-            appleSpeed += 0.5; // Increase apple speed each level
-            game3LevelDisplay.innerText = "Level: " + game3Level;
-            resetApple();
-            requestAnimationFrame(gameLoop3);
-        }
-
-
-        function resetApple() { // Game 3 Reset Apple - EXISTING CODE - Ensure it's present
-            appleX = Math.random() * (game3Canvas.width - appleRadius * 2) + appleRadius;
-            appleY = 0 - appleRadius; // Start apple above the canvas
-        }
-
-
-        function moveBasket(event) { // Game 3 Move Basket - EXISTING CODE - Ensure it's present
-            let rect = game3Canvas.getBoundingClientRect();
-            basketX = event.clientX - rect.left - basketWidth / 2;
-
-            // Keep basket within canvas bounds
-            basketX = Math.max(0, Math.min(game3Canvas.width - basketWidth, basketX));
-        }
-
-
-        function gameLoop3(currentTime) { // Game 3 Game Loop - EXISTING CODE - Ensure it's present
-            if (!game3Active) return;
-            const deltaTime = (currentTime - lastFrameTime) / 1000;
-            lastFrameTime = currentTime;
-
-
-            // Update apple position
-            appleY += appleSpeed;
-
-            // Check for collision
-            if (appleY > basketY && appleY < basketY + basketHeight && appleX > basketX && appleX < basketX + basketWidth) {
-                game3Score++;
-                applesCaughtThisLevel++;
-                game3ScoreDisplay.innerText = "Score: " + game3Score;
-                catchSound.play();
-                resetApple();
-
-                if (applesCaughtThisLevel >= applesToCatchPerLevel) {
-                    game3Active = false;
-                    game3LevelComplete();
-                    return;
-                }
-
-            } else if (appleY > game3Canvas.height) {
-                lives--;
-                dropSound.play();
-                resetApple();
-                if (lives <= 0) {
-                    game3Active = false;
-                    gameOver3();
-                    return;
-                }
-            }
-
-
-            // Drawing
-            game3Context.clearRect(0, 0, game3Canvas.width, game3Canvas.height);
-            drawBasket();
-            drawApple();
-
-
-            requestAnimationFrame(gameLoop3);
-        }
-
-
-        function drawBasket() { // Game 3 Draw Basket - EXISTING CODE - Ensure it's present
-            game3Context.fillStyle = '#ffcc80'; // Light orange basket
-            game3Context.fillRect(basketX, basketY, basketWidth, basketHeight);
-        }
-
-
-        function drawApple() { // Game 3 Draw Apple - EXISTING CODE - Ensure it's present
-            game3Context.fillStyle = 'red';
-            game3Context.beginPath();
-            game3Context.arc(appleX, appleY, appleRadius, 0, Math.PI * 2);
-            game3Context.closePath();
-            game3Context.fill();
-        }
-
-
-        function gameOver3() { // Game 3 Game Over - EXISTING CODE - Ensure it's present
-            game3Active = false;
-            game3Canvas.removeEventListener('mousemove', moveBasket);
-            game3FinalScoreDisplay.innerText = "Your Score: " + game3Score;
-            game3OverOverlay.style.display = 'flex';
-            updateGame3Highscore();
-        }
-
-
-        function game3LevelComplete() { // Game 3 Level Complete - EXISTING CODE - Ensure it's present
-            game3Active = false;
-            game3Canvas.removeEventListener('mousemove', moveBasket);
-            game3LevelCompleteOverlay.style.display = 'flex';
-        }
-
-
-        function gameWon3() { // Game 3 Game Won - EXISTING CODE - Ensure it's present
-            game3Active = false;
-            game3Canvas.removeEventListener('mousemove', moveBasket);
-            game3WonOverlay.style.display = 'flex';
-            updateGame3Highscore();
-            game3FinalHighscoreDisplay.innerText = "Your Highscore: " + game3Highscore;
-        }
-
-
-        function updateGame3Highscore() { // Game 3 Update Highscore - EXISTING CODE - Ensure it's present
-            if (game3Score > game3Highscore) {
-                game3Highscore = game3Score;
-                localStorage.setItem(game3HighscoreKey, game3Highscore);
-                game3HighscoreDisplay.innerText = "Highscore: " + game3Highscore;
-            }
-        }
-
-
-        function resetGame3() { // Game 3 Reset Game - EXISTING CODE - Ensure it's present
-            game3WonOverlay.style.display = 'none';
-            startGame3();
-        }
-
-
         // Game 2 Variables and Functions (Vegetable Patch Match)
         const game2Container = document.getElementById('game2-container');
         const game2ScoreDisplay = document.getElementById('game2-score-display');
@@ -879,10 +385,12 @@ Vegetable-Patch-Match!
         const game2WonOverlay = document.getElementById('game2-won-overlay');
         const game2FinalScoreDisplay = document.getElementById('game2-final-score');
         const game2FinalHighscoreDisplay = document.getElementById('game2-final-highscore');
+        const timerDisplay = document.getElementById('timer-display'); // Get the timer display
 
         const tileFlipSound = document.getElementById('tileFlipSound');
         const matchSound = document.getElementById('matchSound');
         const mismatchSound = document.getElementById('mismatchSound');
+        const levelUpSound = document.getElementById('levelUpSound');
 
         let game2Active = false;
         let game2Level = 1;
@@ -894,6 +402,7 @@ Vegetable-Patch-Match!
         let flippedTiles = [];
         let matchesFound = 0;
         let game2LevelTime = 60; // Time per level in seconds
+        let initialLevelTime = 60; // Initial level time
         let game2TimerInterval;
 
 
@@ -901,25 +410,8 @@ Vegetable-Patch-Match!
             game2ScoreDisplay.style.display = 'flex';
             game2LevelDisplay.style.display = 'flex';
             game2HighscoreDisplay.style.display = 'flex';
-            game2Container.style.display = 'grid'; // Or 'flex' if you change layout
-            gameHolesContainer.style.display = 'none';
-            game3Container.style.display = 'none';
-            levelScoreDisplay.style.display = 'none';
-            levelDisplay.style.display = 'none';
-            highscoreDisplay.style.display = 'none';
-            timerDisplay.style.display = 'none';
-            game3ScoreDisplay.style.display = 'none';
-            game3LevelDisplay.style.display = 'none';
-            game3HighscoreDisplay.style.display = 'none';
-            gameStartOverlay.style.display = 'none';
-            levelFailedOverlay.style.display = 'none';
-            levelCompleteOverlay.style.display = 'none';
-            gameWonOverlay.style.display = 'none';
-            game3StartOverlay.style.display = 'none';
-            game3OverOverlay.style.display = 'none';
-            game3LevelCompleteOverlay.style.display = 'none';
-            game3WonOverlay.style.display = 'none';
-
+            game2Container.style.display = 'grid';
+            game2StartOverlay.style.display = 'flex';
 
             // Load highscore
             const storedGame2Highscore = localStorage.getItem(game2HighscoreKey);
@@ -929,8 +421,6 @@ Vegetable-Patch-Match!
                 game2Highscore = 0;
             }
             game2HighscoreDisplay.innerText = "Highscore: " + game2Highscore;
-
-            game2StartOverlay.style.display = 'flex';
         }
 
 
@@ -944,11 +434,10 @@ Vegetable-Patch-Match!
             game2Level = 1;
             game2Score = 0;
             matchesFound = 0;
-            game2LevelTime = 60; // Reset level time
+            game2LevelTime = initialLevelTime; // Reset level time to initial value
             game2ScoreDisplay.innerText = "Score: 0";
             game2LevelDisplay.innerText = "Level: " + game2Level;
             startLevelTimer2(); // Start level timer for Game 2
-
 
             generateVegetableGrid();
         }
@@ -964,10 +453,11 @@ Vegetable-Patch-Match!
             game2Active = true;
             game2Level++;
             matchesFound = 0;
-            game2LevelTime = Math.max(10, game2LevelTime - 5); // Decrease level time
+            initialLevelTime = Math.max(10, initialLevelTime - 5); // Decrease level time, but not below 10s
+            game2LevelTime = initialLevelTime; // Update current level time
             game2LevelDisplay.innerText = "Level: " + game2Level;
             startLevelTimer2(); // Restart level timer for next level
-            generateVegetableGrid(); // Regenerate grid for next level (can increase difficulty here if needed)
+            generateVegetableGrid(); // Regenerate grid for next level
         }
 
 
@@ -977,18 +467,18 @@ Vegetable-Patch-Match!
             flippedTiles = []; // Reset flipped tiles
             clearInterval(game2TimerInterval); // Clear any existing timer
 
-            const numPairs = game2Level + 3; // Start with 4 pairs, increase with level
+            const numPairs = game2Level + 2; // Start with 3 pairs, increase with level
             const numTiles = numPairs * 2;
             const vegetablesForLevel = [];
             for (let i = 0; i < numPairs; i++) {
-                vegetablesForLevel.push(vegetables[i % vegetables.length]); // Cycle through vegetables if needed
+                vegetablesForLevel.push(vegetables[i % vegetables.length]); // Cycle through vegetables
                 vegetablesForLevel.push(vegetables[i % vegetables.length]);
             }
 
             // Shuffle vegetables
             vegetablesForLevel.sort(() => 0.5 - Math.random());
 
-            game2Container.style.gridTemplateColumns = `repeat(auto-fit, minmax(100px, 1fr))`; // Responsive columns
+            game2Container.style.gridTemplateColumns = `repeat(auto-fit, minmax(80px, 1fr))`; // Responsive columns
 
             for (let i = 0; i < numTiles; i++) {
                 const tile = document.createElement('div');
@@ -1047,7 +537,6 @@ Vegetable-Patch-Match!
                     mismatchSound.play();
                     game2Active = false; // Temporarily disable clicks
                     setTimeout(() => {
-                        mismatchSound.play();
                         tile1.classList.remove('flipped');
                         tile2.classList.remove('flipped');
                         flippedTiles = []; // Reset flipped tiles
@@ -1059,11 +548,10 @@ Vegetable-Patch-Match!
 
 
         function startLevelTimer2() {
-            game2LevelTime = initialLevelTime; // Reset to initial level time, or use level-specific time
-            timerDisplay.innerText = game2LevelTime; // Reuse timerDisplay or create a new one for Game 2
+            timerDisplay.textContent = game2LevelTime; // Set initial time in timerDisplay
             game2TimerInterval = setInterval(() => {
                 game2LevelTime--;
-                timerDisplay.innerText = game2LevelTime;
+                timerDisplay.textContent = game2LevelTime;
                 if (game2LevelTime <= 0) {
                     clearInterval(game2TimerInterval);
                     game2Active = false;
@@ -1085,7 +573,7 @@ Vegetable-Patch-Match!
         function game2LevelComplete() {
             game2Active = false;
             clearInterval(game2TimerInterval);
-            levelUpSound.play(); // Reuse levelUpSound or a different one
+            levelUpSound.play();
             game2LevelCompleteOverlay.style.display = 'flex';
             updateGame2Highscore();
         }
@@ -1108,25 +596,7 @@ Vegetable-Patch-Match!
             }
         }
 
-        // Initialization to show Game 2 Start Overlay on page load (or trigger as needed)
-        gameStartOverlay.style.display = 'none';
-        levelFailedOverlay.style.display = 'none';
-        levelCompleteOverlay.style.display = 'none';
-        gameWonOverlay.style.display = 'none';
-        game3StartOverlay.style.display = 'none';
-        game3OverOverlay.style.display = 'none';
-        game3LevelCompleteOverlay.style.display = 'none';
-        game3WonOverlay.style.display = 'none';
-        game2OverOverlay.style.display = 'none';
-        game2LevelCompleteOverlay.style.display = 'none';
-        game2WonOverlay.style.display = 'none';
-
-
-        initGame2(); // Initialize Game 2 on page load for now
-
-        // To switch between games, you'll need to create buttons or a menu to call initGame(), initGame2(), initGame3()
-        // and show/hide the appropriate game containers and UI elements.
-
+        initGame2(); // Initialize Game 2 on page load
     </script>
 </body>
 </html>
