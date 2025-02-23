@@ -6,9 +6,9 @@
     <title>Baa Bah's Corner!</title>
     <link rel="icon" href="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" type="image/png">
     <style>
-        /* CSS - (Existing Styles - Keep as is) */
+        /* CSS - (Existing Styles - Keep and Enhance) */
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Consider a more universally readable font for accessibility */
             background-color: #ffebf0;
             text-align: center;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff99c8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
@@ -17,6 +17,8 @@
             background-repeat: repeat;
             background-size: 100px, 20px, 25px;
             overflow-x: hidden;
+            color: #333; /* Default text color for better contrast */
+            line-height: 1.6; /* Improved line height for readability */
         }
 
         .site-title {
@@ -34,6 +36,7 @@
         .site-title img {
             height: 1em;
             margin-right: 15px;
+            vertical-align: middle; /* Align image with text */
         }
         .site-title span {
             display: inline-block;
@@ -75,9 +78,18 @@
             text-shadow: none;
             width: auto;
             min-width: unset;
+            /* Accessibility focus styles */
+            outline: 2px solid #ff66a3; /* Default focus outline */
+            outline-offset: 2px;
         }
 
-        .site-title:hover .add-button {
+        .site-title .add-button:focus {
+            outline-color: #007bff; /* Example: Change focus color */
+        }
+
+        .site-title:hover .add-button,
+        .site-title .add-button:focus, /* Include focus state in hover styles */
+        .site-title .add-button:active { /* Add active state for mouse/touch down */
             background-color: #ff66a3;
             color: white;
             border-color: #ff99c8;
@@ -105,13 +117,24 @@
             border-radius: 5px;
             white-space: nowrap;
             transition: background-color 0.3s ease;
+            /* Accessibility focus styles */
+            outline: 2px solid transparent; /* Initially transparent outline */
+            outline-offset: 2px;
         }
-        .tab:hover {
+        .tab:hover,
+        .tab:focus, /* Add focus state */
+        .tab:active { /* Add active state for mouse/touch down */
             background-color: #ffb3da;
+            outline-color: #ffb3da; /* Focus outline color same as hover background */
         }
         .tab.active {
             background-color: #ff66a3;
             color: white;
+            outline-color: #ff66a3; /* Focus outline color same as active background */
+        }
+        .tab.active:focus, /* Ensure focus styles for active tab as well */
+        .tab.active:active {
+            outline-color: #ff66a3;
         }
 
         /* New Parents Requested Tab Styling */
@@ -197,9 +220,15 @@
             transition: transform 0.3s ease;
             background-color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Accessibility focus styles */
+            outline: 2px solid transparent; /* Initially transparent outline */
+            outline-offset: 2px;
         }
-        .video-tile:hover{
+        .video-tile:hover,
+        .video-tile:focus, /* Add focus state */
+        .video-tile:active { /* Add active state for mouse/touch down */
             transform: scale(1.05);
+            outline-color: #ff66a3; /* Focus outline color same as border */
         }
 
         .video-tile img {
@@ -249,7 +278,8 @@
             object-fit: cover;
         }
 
-        .video-tile:hover .video-preview {
+        .video-tile:hover .video-preview,
+        .video-tile:focus .video-preview { /* Show preview on focus as well */
             display: block;
         }
 
@@ -295,25 +325,58 @@
             to {opacity: 1}
         }
 
-        .modal input[type="text"], .modal input[type="email"], .modal textarea {
+        .modal label { /* Style labels for better visual and semantic association */
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left; /* Align labels to the left */
+        }
+
+        .modal input[type="text"],
+        .modal input[type="email"],
+        .modal textarea {
             width: 100%;
+            padding: 10px 20px;
+            border: 1px solid #ccc; /* Add border for better visual boundary */
+            border-radius: 5px;
+            font-size: 1em;
+            margin-bottom: 15px; /* Increased margin for better spacing */
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .modal button { /* Style buttons consistently in modal */
+            background-color: #ff66a3;
+            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            transition: background-color 0.3s ease;
+            margin-top: 10px; /* Add margin above buttons */
+            /* Accessibility focus styles */
+            outline: 2px solid transparent; /* Initially transparent outline */
+            outline-offset: 2px;
         }
-        .modal button.close-button {
-            background-color: #ccc;
+        .modal button:hover,
+        .modal button:focus, /* Add focus state */
+        .modal button:active { /* Add active state for mouse/touch down */
+            opacity: 0.8;
+            outline-color: #ff66a3; /* Focus outline color same as background */
         }
 
-        .modal button:hover {
-            opacity: 0.8;
+        .modal button.close-button {
+            background-color: #ccc; /* Style for close button */
+            color: #333; /* Darker color for contrast */
         }
+        .modal button.close-button:hover,
+        .modal button.close-button:focus,
+        .modal button.close-button:active {
+            background-color: #bbb; /* Slightly darker hover for close button */
+            outline-color: #bbb;
+        }
+
 
         .open-modal-btn {
             background-color: #ff66a3;
@@ -324,10 +387,17 @@
             cursor: pointer;
             font-size: 1em;
             margin-bottom: 20px;
+            /* Accessibility focus styles - Reusing modal button styles for consistency */
+            outline: 2px solid transparent;
+            outline-offset: 2px;
         }
-        .open-modal-btn:hover {
+        .open-modal-btn:hover,
+        .open-modal-btn:focus,
+        .open-modal-btn:active {
             opacity: 0.8;
+            outline-color: #ff66a3;
         }
+
 
         .close-button {
             position: absolute;
@@ -339,10 +409,18 @@
             cursor: pointer;
             padding: 0;
             margin: 0;
+            background: none; /* Remove default button background */
+            border: none; /* Remove default button border */
+            /* Accessibility focus styles */
+            outline: 2px solid transparent; /* Initially transparent outline */
+            outline-offset: 2px;
         }
 
-        .close-button:hover {
+        .close-button:hover,
+        .close-button:focus, /* Add focus state */
+        .close-button:active { /* Add active state for mouse/touch down */
             color: black;
+            outline-color: #aaa; /* Focus outline color same as initial color */
         }
 
         /* --- Loading Indicator Styles --- */
@@ -395,14 +473,21 @@
             cursor: pointer;
             opacity: 0.6;
             transition: opacity 0.3s ease;
+            background: none; /* Remove default button background */
+            border: none; /* Remove default button border */
+             /* Accessibility focus styles */
+            outline: 2px solid transparent; /* Initially transparent outline */
+            outline-offset: 2px;
         }
 
         .close-suggestion-popup:hover,
-        .close-suggestion-popup:focus {
+        .close-suggestion-popup:focus, /* Add focus state */
+        .close-suggestion-popup:active { /* Add active state for mouse/touch down */
             color: black;
             text-decoration: none;
             cursor: pointer;
             opacity: 1;
+            outline-color: #aaa; /* Focus outline color same as initial color */
         }
 
         .suggestion-content h3 {
@@ -462,14 +547,15 @@
                 gap: 10px;
             }
             .tabs {
-                justify-content: flex-start;
+                justify-content: flex-start; /* Align tabs to the start on smaller screens */
             }
             .tab {
                 margin: 2px;
                 padding: 8px 15px;
+                font-size: 0.9em; /* Slightly reduce tab font size */
             }
-            input {
-                width: 80%;
+            .modal-content {
+                margin-top: 5%; /* Adjust modal margin on smaller screens */
             }
             .video-description {
                 font-size: 0.8em;
@@ -481,9 +567,19 @@
             }
             .video-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                padding: 10px; /* Reduce padding in grid */
+                gap: 8px; /* Reduce gap in grid */
             }
             .video-description {
                 font-size: 0.7em;
+            }
+            .tabs {
+                flex-direction: column; /* Stack tabs vertically on very small screens */
+                align-items: stretch; /* Make tabs full width */
+            }
+            .tab {
+                margin: 2px 0; /* Adjust tab margin for vertical layout */
+                text-align: center; /* Center text in vertical tabs */
             }
         }
     </style>
@@ -491,9 +587,9 @@
 <body>
 
 <!-- --- Video Suggestion Pop-up --- -->
-<div id="videoSuggestionPopup" class="video-suggestion-popup">
+<div id="videoSuggestionPopup" class="video-suggestion-popup" role="dialog" aria-live="polite" aria-labelledby="suggestionTitle"> <!-- ARIA roles for accessibility -->
     <div class="suggestion-content">
-        <span class="close-suggestion-popup">×</span>
+        <button class="close-suggestion-popup" aria-label="Close suggestion popup">×</button> <!-- button for close, aria-label for screen readers -->
         <h3 id="suggestionTitle">Someone Suggested a Great Video!</h3>
         <p id="suggestedBy">Suggested by: <span id="suggestionName"></span></p>
         <p>Video Title: <strong id="suggestionVideoTitle"></strong></p>
@@ -501,45 +597,60 @@
 </div>
 
 <!-- --- Welcome Note Pop-up --- -->
-<div id="welcomeNotePopup" class="welcome-note-popup">
+<div id="welcomeNotePopup" class="welcome-note-popup" role="dialog" aria-live="polite"> <!-- ARIA roles for accessibility -->
     <div class="welcome-note-content">
         👋 Welcome to Baa Bah's Corner! <br> Enjoy our collection of fun & educational videos for little ones!
     </div>
 </div>
 
-<h1 class="site-title">
-    <img src="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" alt="Baa Bah's Corner Logo">
-    <span>B</span><span>a</span><span>a</span>
-    <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span>
-    <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span><span>!</span>
-    <button class="add-button" onclick="window.location.href='https://baabahscorner-gamecollection.onrender.com'">Games</button> <!-- "Games" Text Button -->
-</h1>
+<header> <!-- Using header for site title for semantic structure -->
+    <h1 class="site-title">
+        <img src="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" alt="Baa Bah's Corner Logo"> <!-- alt text for image accessibility -->
+        <span>B</span><span>a</span><span>a</span>
+        <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span>
+        <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span><span>!</span>
+        <button class="add-button" onclick="window.location.href='https://baabahscorner-gamecollection.onrender.com'">Games</button> <!-- "Games" Text Button -->
+    </h1>
+</header>
 
-<div id="loadingIndicator">Loading...</div>
+<div id="loadingIndicator" aria-live="assertive">Loading...</div> <!-- aria-live for screen readers to announce loading -->
 <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
 
-<div class="tabs" id="tabs"></div>
-<div id="episodes"></div>
+<nav> <!-- Using nav for tab navigation for semantic structure -->
+    <div class="tabs" id="tabs" role="tablist"></div> <!-- role="tablist" for accessibility -->
+</nav>
+<main id="episodes"> <!-- Using main for main content for semantic structure -->
+    <!-- Categories and video grids will be loaded here -->
+</main>
 
 <footer>
     Copyright © 2025 Baa Bah's Corner!. All rights reserved.
 </footer>
 
 <!-- --- Modal HTML --- -->
-<div id="submissionModal" class="modal">
+<div id="submissionModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"> <!-- ARIA roles for accessibility -->
     <div class="modal-content">
-        <span class="close-button">×</span>
-        <h2>Share a Video Suggestion!</h2>
+        <button class="close-button" aria-label="Close video suggestion form">×</button> <!-- button for close, aria-label for screen readers -->
+        <h2 id="modalTitle">Share a Video Suggestion!</h2> <!-- Modal title, referenced by aria-labelledby -->
         <p style="text-align: left;">Have a favorite kids' video you'd love to see featured on Baa Bah's Corner?  Tell us about it!  If it's a hit with the little ones, we might just add it to our collection.  Just paste the YouTube link below and give us a little info.  Thanks for helping us make Baa Bah's Corner even better!</p>
         <form id="videoSubmissionForm" action="https://formsubmit.co/info.bahbahscorner@gmail.com" method="POST">
             <input type="hidden" name="_next" value="https://bahbahscorner-zqxm.onrender.com">
             <input type="hidden" name="_subject" value="New Video Suggestion from Baa Bah's Corner">
             <input type="hidden" name="_captcha" value="false">
 
+            <label for="youtubeLink">YouTube Video Link:</label> <!-- Labels for form fields -->
             <input type="text" id="youtubeLink" name="youtubeLink" placeholder="Enter YouTube Video Link" required>
+
+            <label for="episodeName">Video Title Suggestion:</label>
             <input type="text" id="episodeName"  name="episodeName" placeholder="Video Title Suggestion" required>
+
+            <label for="babyName">Baby's Name (Optional):</label>
             <input type="text" id="babyName"  name="babyName" placeholder="Baby's Name (Optional, to give a shout-out!)">
-            <input type="email" id="mommyEmail" name="mommyEmail" placeholder="Your Email (So we can say thanks!)" required style="width: 100%;">
+
+            <label for="mommyEmail">Your Email (Required):</label>
+            <input type="email" id="mommyEmail" name="mommyEmail" placeholder="Your Email (So we can say thanks!)" required>
+
+            <label for="description">Why do you ❤️ this video? (Optional):</label>
             <textarea id="description"  name="description" placeholder="Tell us why you and your little one ❤️ this video! (Optional)"></textarea>
 
             <br/>
@@ -732,6 +843,10 @@
         Object.keys(categories).forEach((category, index) => {
             const tab = document.createElement('div');
             tab.className = 'tab' + (index === 0 ? ' active' : '');
+            tab.setAttribute('role', 'tab'); // ARIA role for tabs
+            tab.setAttribute('aria-selected', index === 0 ? 'true' : 'false'); // Initial selected state
+            tab.setAttribute('tabindex', '0'); // Make tabs focusable
+
             if (category === "New Parents Requested") {
                 tab.id = 'newParentsTab';
                 tab.innerHTML = '<span class="rainbow-text">New Parents</span>';
@@ -739,12 +854,18 @@
                 tab.innerText = category;
             }
             tab.onclick = () => showCategory(category);
+            tab.onkeydown = (event) => { // Keyboard navigation for tabs
+                if (event.key === 'Enter' || event.key === ' ') {
+                    showCategory(category);
+                    event.preventDefault(); // Prevent spacebar from scrolling the page
+                }
+            };
             tabsContainer.appendChild(tab);
         });
     }
 
     function createGrid(category, videos) {
-        let section = `<div class='category${category === Object.keys(categories)[0] ? ' active' : ''}' id='${category}'>
+        let section = `<div class='category${category === Object.keys(categories)[0] ? ' active' : ''}' id='${category}' aria-label="${category} Videos"> <!-- aria-label for category section -->
             <h2>${category}</h2>
             <div class='video-grid'>`;
 
@@ -762,11 +883,11 @@
 
 
             section += `
-        <div class='video-tile' onclick="window.open('${video.url}', '_blank')">
-            <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='${video.title}'>
+        <div class='video-tile' onclick="window.open('${video.url}', '_blank')" tabindex="0" aria-label="${video.title} - ${videoDescriptionHTML}"> <!-- tabindex and aria-label for video tile -->
+            <img src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg' alt='Video thumbnail for ${video.title}'> <!-- descriptive alt text for thumbnail -->
             <div class='video-title'>${video.title}</div><div class='video-description'>${videoDescriptionHTML}</div>
             <div class='video-preview'>
-                <video src="${previewUrl}" autoplay loop muted></video>
+                <video src="${previewUrl}" aria-label="Preview of ${video.title}" muted></video> <!-- aria-label for video preview -->
             </div>
         </div>`;
         });
@@ -776,10 +897,16 @@
     function showCategory(category) {
         document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
         document.getElementById(category).classList.add('active');
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false'); // Update ARIA selected state
+        });
         const tabs = Array.from(document.querySelectorAll('.tab'));
         const targetTab = tabs.find(tab => tab.innerText === category || (tab.id === 'newParentsTab' && category === 'New Parents Requested'));
-        if (targetTab) targetTab.classList.add('active');
+        if (targetTab) {
+            targetTab.classList.add('active');
+            targetTab.setAttribute('aria-selected', 'true'); // Update ARIA selected state for active tab
+        }
     }
 
 
@@ -797,24 +924,31 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         const form = document.getElementById('videoSubmissionForm');
         const submitButton = document.getElementById('submitSuggestionButton');
+        const firstTab = document.querySelector('.tab'); // Get the first tab
 
         openModalBtn.onclick = function() {
             loadingIndicator.style.display = "block";
             setTimeout(function() {
                 loadingIndicator.style.display = "none";
                 modal.style.display = "block";
+                const modalCloseButton = modal.querySelector('.close-button'); // Focus on modal close button when modal opens
+                if (modalCloseButton) {
+                    modalCloseButton.focus();
+                }
             }, 500);
         }
 
         closeButtons.forEach(button => {
             button.onclick = function() {
                 modal.style.display = "none";
+                openModalBtn.focus(); // Return focus to the "Suggest a Video" button when modal closes
             }
         });
 
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+                openModalBtn.focus(); // Return focus to the "Suggest a Video" button when modal closes
             }
         }
 
@@ -840,6 +974,10 @@
             suggestionVideoTitleStrong.textContent = randomVideoTitle;
 
             videoSuggestionPopup.style.display = "block";
+            const popupCloseButton = videoSuggestionPopup.querySelector('.close-suggestion-popup'); // Focus on popup close button when popup opens
+            if (popupCloseButton) {
+                popupCloseButton.focus();
+            }
 
             setTimeout(function() {
                 videoSuggestionPopup.style.display = "none";
@@ -859,12 +997,14 @@
         closeSuggestionPopupButton.onclick = function() {
             videoSuggestionPopup.style.display = "none";
             setRandomSuggestionPopupDelay();
+            openModalBtn.focus(); // Return focus to the "Suggest a Video" button when popup is closed manually
         }
 
         window.onclick = function(event) {
             if (event.target == videoSuggestionPopup) {
                 videoSuggestionPopup.style.display = "none";
                 setRandomSuggestionPopupDelay();
+                openModalBtn.focus(); // Return focus to the "Suggest a Video" button when popup is closed by clicking outside
             }
         }
 
@@ -880,6 +1020,10 @@
 
         // Show welcome note after a short delay on page load (e.g., 1 second)
         setTimeout(showWelcomeNotePopup, 1000);
+
+        if (firstTab) { // Focus on the first tab after page load for better keyboard navigation starting point
+            firstTab.focus();
+        }
 
     });
 </script>
