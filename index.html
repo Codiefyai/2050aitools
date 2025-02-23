@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,14 +25,15 @@
             margin: 20px 0;
             color: #ff66a3;
             text-shadow: -3px -3px 0 #ffc0cb, 3px -3px 0 #ffc0cb, -3px 3px 0 #ffc0cb, 3px 3px 0 #ffc0cb;
-            display: flex; /* Changed to flex to align logo and text */
-            align-items: center; /* Vertically align logo and text */
-            justify-content: center; /* Center items horizontally */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             letter-spacing: 5px;
+            position: relative;
         }
         .site-title img {
-            height: 1em; /* Adjust logo size relative to font size */
-            margin-right: 15px; /* Space between logo and text */
+            height: 1em;
+            margin-right: 15px;
         }
         .site-title span {
             display: inline-block;
@@ -55,6 +55,35 @@
         .site-title span:nth-child(14) { color: violet; animation-delay: 1.3s;}
         .site-title span:nth-child(15) { color: red;  animation-delay: 1.4s;}
 
+        /* New Add Button Styles (Text Button - Always Visible & Very Small - "Games") */
+        .site-title .add-button {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            padding: 3px 6px;
+            background-color: #ffc0cb;
+            color: #ff66a3;
+            border: 1px solid #ff66a3;
+            border-radius: 10px;
+            cursor: pointer;
+            opacity: 1;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+            z-index: 10;
+            font-size: 0.7em;
+            white-space: nowrap;
+            font-weight: bold;
+            text-shadow: none;
+            width: auto;
+            min-width: unset;
+        }
+
+        .site-title:hover .add-button {
+            background-color: #ff66a3;
+            color: white;
+            border-color: #ff99c8;
+            opacity: 0.9;
+        }
+
 
         @keyframes bounce {
             from { transform: translateY(0px); }
@@ -75,10 +104,10 @@
             margin: 5px;
             border-radius: 5px;
             white-space: nowrap;
-            transition: background-color 0.3s ease; /* For lazy animation */
+            transition: background-color 0.3s ease;
         }
         .tab:hover {
-            background-color: #ffb3da; /* Slightly lighter on hover */
+            background-color: #ffb3da;
         }
         .tab.active {
             background-color: #ff66a3;
@@ -88,8 +117,8 @@
         /* New Parents Requested Tab Styling */
         .tab#newParentsTab {
             background-color: #ff99c8;
-            position: relative; /* For star positioning */
-            overflow: hidden; /* Clip stars within button bounds */
+            position: relative;
+            overflow: hidden;
         }
 
         .tab#newParentsTab.active {
@@ -104,23 +133,23 @@
             color: transparent;
             font-weight: bold;
             letter-spacing: 1px;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.3); /* Optional: subtle text shadow */
-            transition: transform 0.3s ease; /* Animation for text */
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
         }
 
         .tab#newParentsTab.active span.rainbow-text {
-            transform: scale(1.05); /* Slightly enlarge text when active */
+            transform: scale(1.05);
         }
 
 
         .tab#newParentsTab::before,
         .tab#newParentsTab::after {
-            content: '\272A'; /* Unicode star symbol */
+            content: '\272A';
             position: absolute;
-            color: white; /* Star color */
-            font-size: 1.2em; /* Star size */
-            opacity: 0.8; /* Star opacity */
-            animation: sparkle 1.5s infinite alternate; /* Sparkle animation */
+            color: white;
+            font-size: 1.2em;
+            opacity: 0.8;
+            animation: sparkle 1.5s infinite alternate;
         }
 
         .tab#newParentsTab::before {
@@ -131,7 +160,7 @@
         .tab#newParentsTab::after {
             bottom: 5px;
             right: 10px;
-            animation-delay: 0.5s; /* Offset animation for variety */
+            animation-delay: 0.5s;
         }
 
 
@@ -234,7 +263,7 @@
             font-weight: bold;
         }
 
-        /* --- Modal Styles (Adjustments) --- */
+        /* --- Modal Styles --- */
         .modal {
             display: none;
             position: fixed;
@@ -248,7 +277,7 @@
         }
 
         .modal-content {
-            position: relative; /* Added: for absolute positioning of the close button */
+            position: relative;
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
@@ -261,7 +290,6 @@
             animation-duration: 0.4s;
         }
 
-        /* Modal Open Animation */
         @keyframes modalopen {
             from {opacity: 0}
             to {opacity: 1}
@@ -275,9 +303,9 @@
             cursor: pointer;
             font-size: 1em;
             margin-right: 10px;
-            margin-bottom: 10px; /* Added margin for better spacing */
-            box-sizing: border-box; /* Added to include padding and border in element's total width and height */
-            font-family: 'Comic Sans MS', cursive, sans-serif; /* Inherit font */
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         .modal button.close-button {
             background-color: #ccc;
@@ -319,11 +347,110 @@
 
         /* --- Loading Indicator Styles --- */
         #loadingIndicator {
-            display: none;  /* Hidden by default */
+            display: none;
             font-size: 1.2em;
             color: #ff66a3;
             margin-bottom: 20px;
         }
+
+         /* --- Video Suggestion Pop-up Styles (Left Side, Auto-Fade) --- */
+        .video-suggestion-popup {
+            display: none;
+            position: fixed;
+            z-index: 12;
+            left: 20px;
+            top: 20%;
+            pointer-events: none;
+            overflow: visible;
+            background-color: transparent;
+        }
+
+        .suggestion-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border: 2px solid #ff99c8;
+            border-radius: 10px;
+            width: auto;
+            max-width: 300px;
+            position: relative;
+            box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+            animation-name: suggestionPopupSlideIn;
+            animation-duration: 0.5s;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        @keyframes suggestionPopupSlideIn {
+            from {opacity: 0; transform: translateX(-30px); }
+            to {opacity: 1; transform: translateX(0);}
+        }
+
+        .close-suggestion-popup {
+            color: #aaa;
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-suggestion-popup:hover,
+        .close-suggestion-popup:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .suggestion-content h3 {
+            color: #ff66a3;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            text-align: left;
+        }
+
+        .suggestion-content p {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .suggestion-content strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* --- Welcome Note Pop-up Styles (Slightly Different from Suggestion Pop-up) --- */
+        .welcome-note-popup {
+            display: none;
+            position: fixed;
+            z-index: 11; /* Lower z-index than suggestion popup */
+            left: 20px;
+            bottom: 20px; /* Position at the bottom left */
+            pointer-events: none;
+            background-color: transparent;
+            overflow: visible;
+        }
+
+        .welcome-note-content {
+            background-color: rgba(255, 248, 220, 0.9); /* Light yellow background for warmth */
+            color: #333; /* Dark text color */
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            font-size: 1em;
+            text-align: left;
+            animation: welcomeNoteFadeIn 0.5s ease-out forwards; /* Fade-in animation */
+            opacity: 0; /* Start with opacity 0 for fade-in */
+        }
+
+        @keyframes welcomeNoteFadeIn {
+            to { opacity: 1; } /* Fade in to full opacity */
+        }
+
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -362,14 +489,33 @@
     </style>
 </head>
 <body>
+
+<!-- --- Video Suggestion Pop-up --- -->
+<div id="videoSuggestionPopup" class="video-suggestion-popup">
+    <div class="suggestion-content">
+        <span class="close-suggestion-popup">×</span>
+        <h3 id="suggestionTitle">Someone Suggested a Great Video!</h3>
+        <p id="suggestedBy">Suggested by: <span id="suggestionName"></span></p>
+        <p>Video Title: <strong id="suggestionVideoTitle"></strong></p>
+    </div>
+</div>
+
+<!-- --- Welcome Note Pop-up --- -->
+<div id="welcomeNotePopup" class="welcome-note-popup">
+    <div class="welcome-note-content">
+        👋 Welcome to Baa Bah's Corner! <br> Enjoy our collection of fun & educational videos for little ones!
+    </div>
+</div>
+
 <h1 class="site-title">
     <img src="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" alt="Baa Bah's Corner Logo">
     <span>B</span><span>a</span><span>a</span>
     <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span>
     <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span><span>!</span>
+    <button class="add-button">Games</button> <!-- "Games" Text Button -->
 </h1>
 
-<div id="loadingIndicator">Loading...</div>  <!-- Loading indicator -->
+<div id="loadingIndicator">Loading...</div>
 <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
 
 <div class="tabs" id="tabs"></div>
@@ -382,13 +528,13 @@
 <!-- --- Modal HTML --- -->
 <div id="submissionModal" class="modal">
     <div class="modal-content">
-        <span class="close-button">×</span> <!-- Close button (X) -->
+        <span class="close-button">×</span>
         <h2>Share a Video Suggestion!</h2>
         <p style="text-align: left;">Have a favorite kids' video you'd love to see featured on Baa Bah's Corner?  Tell us about it!  If it's a hit with the little ones, we might just add it to our collection.  Just paste the YouTube link below and give us a little info.  Thanks for helping us make Baa Bah's Corner even better!</p>
         <form id="videoSubmissionForm" action="https://formsubmit.co/info.bahbahscorner@gmail.com" method="POST">
             <input type="hidden" name="_next" value="https://bahbahscorner-zqxm.onrender.com">
             <input type="hidden" name="_subject" value="New Video Suggestion from Baa Bah's Corner">
-            <input type="hidden" name="_captcha" value="false"> <!-- Disable built-in FormSubmit captcha if you are not using paid plan -->
+            <input type="hidden" name="_captcha" value="false">
 
             <input type="text" id="youtubeLink" name="youtubeLink" placeholder="Enter YouTube Video Link" required>
             <input type="text" id="episodeName"  name="episodeName" placeholder="Video Title Suggestion" required>
@@ -398,7 +544,7 @@
 
             <br/>
             <button type="submit" id="submitSuggestionButton">Send Suggestion</button>
-            <button type="button" class="close-button">Close</button> <!-- Close button inside form -->
+            <button type="button" class="close-button">Close</button>
         </form>
     </div>
 </div>
@@ -414,10 +560,10 @@
         "Animal Songs": [],
         "Bedtime Songs": [],
         "Holiday Songs": [],
-        "New Parents Requested": [] // ADDED NEW CATEGORY
+        "New Parents Requested": []
     };
 
-    const usedRequesters = new Set(); // To ensure unique descriptions
+    const usedRequesters = new Set();
 
     function addVideosToCategory(categoryName, videoData) {
         if (categories[categoryName]) {
@@ -428,7 +574,7 @@
     function getRandomRequester() {
         const names = ["John S.", "Emily R.", "Michael B.", "Sophia L.", "David K.", "Olivia M.", "Ethan P.", "Ava G.", "Daniel H.", "Isabella T.", "James N.", "Mia C.", "William F.", "Abigail W.", "Alexander Q.",
             "Christopher D.", "Samantha E.", "Andrew G.", "Victoria K.", "Benjamin P.", "Chloe S.", "Matthew T.", "Elizabeth V.", "Joseph A.", "Madison B.",
-            "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."]; // More names
+            "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."];
 
         const descriptions = [
             "Requested this for his little one!", "Loves this classic!", "Her daughter can't get enough!",
@@ -471,24 +617,24 @@
     const learningSongsData = [
         { title: "ABC Song", url: "https://www.youtube.com/watch?v=75p-N9YKqNo" },
         { title: "Counting to 10", url: "https://www.youtube.com/watch?v=DR-cfDsHCGA" },
-        { title: "Colors Song", url: "https://www.youtube.com/watch?v=tkpfg-1FJLU" }, // updated
+        { title: "Colors Song", url: "https://www.youtube.com/watch?v=tkpfg-1FJLU" },
         { title: "Shapes Song", url: "https://www.youtube.com/watch?v=OEbRDtCAFdU" },
         { title: "Days of the Week", url: "https://www.youtube.com/watch?v=mXMofxtDPUQ" },
         { title: "Months of the Year", url: "https://www.youtube.com/watch?v=Fe9bnYRzFvk" },
         { title: "Phonics Song", url: "https://www.youtube.com/watch?v=BELlZKpi1Zs" },
-        { title: "Weather Song", url: "https://www.youtube.com/watch?v=rD6FRDd9Hew" }, //updated
-        { title: "Five Senses Song", url: "https://www.youtube.com/watch?v=vXXiyIGqliE" }, //updated
-        { title: "Opposites Song", url: "https://www.youtube.com/watch?v=HGeuA4iJ8vI" }, //updated
-        { title: "Time Song", url: "https://www.youtube.com/watch?v=zNfgjx-_UcU" }, //updated
+        { title: "Weather Song", url: "https://www.youtube.com/watch?v=rD6FRDd9Hew" },
+        { title: "Five Senses Song", url: "https://www.youtube.com/watch?v=vXXiyIGqliE" },
+        { title: "Opposites Song", url: "https://www.youtube.com/watch?v=HGeuA4iJ8vI" },
+        { title: "Time Song", url: "https://www.youtube.com/watch?v=zNfgjx-_UcU" },
         { title: "Brahms' Lullaby", url: "https://www.youtube.com/watch?v=t894eGoymio" },
-        { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=OKbpLQp509Y" }, //updated
-        { title: "The Numbers Song", url: "https://www.youtube.com/watch?v=D0Ajq682yrA" }, //updated
+        { title: "Sweet Dreams (Goodnight Song)", url: "https://www.youtube.com/watch?v=OKbpLQp509Y" },
+        { title: "The Numbers Song", url: "https://www.youtube.com/watch?v=D0Ajq682yrA" },
         { title: "The Cleaning Up Song", url: "https://www.youtube.com/watch?v=gCzgc-cQRWw" },
         { title: "If You Want To Read A Book", url: "https://www.youtube.com/watch?v=Mwx5qtS1v9c" },
-        { title: "I Can Say My ABCs", url: "https://www.youtube.com/watch?v=KfJqBYdkJ78" }, //updated
-        { title: "I Love To Count", url: "https://www.youtube.com/watch?v=Q2tribI8hQ8" }, //updated
-        { title: "What Makes a Plant a Plant?", url: "https://www.youtube.com/watch?v=35YlvKztlx8" }, //updated
-        { title: "What is the Water Cycle?", url: "https://www.youtube.com/watch?v=ncORPosDrjI" }, //updated
+        { title: "I Can Say My ABCs", url: "https://www.youtube.com/watch?v=KfJqBYdkJ78" },
+        { title: "I Love To Count", url: "https://www.youtube.com/watch?v=Q2tribI8hQ8" },
+        { title: "What Makes a Plant a Plant?", url: "https://www.youtube.com/watch?v=35YlvKztlx8" },
+        { title: "What is the Water Cycle?", url: "https://www.youtube.com/watch?v=ncORPosDrjI" },
         { title: "Why Do We Have Seasons?", url: "https://www.youtube.com/watch?v=KUU7I1j7M04" },
         { title: "Days of the week song" , url: "https://www.youtube.com/watch?v=HtQcnS7XamQ" },
         { title: "The Months of the Year Song" , url: "https://www.youtube.com/watch?v=5Enixd-s-bs" },
@@ -579,7 +725,7 @@
     addVideosToCategory("Animal Songs", animalSongsData);
     addVideosToCategory("Bedtime Songs", bedtimeSongsData);
     addVideosToCategory("Holiday Songs", holidaySongsData);
-    addVideosToCategory("New Parents Requested", newParentsRequestedData); // ADD NEW DATA TO CATEGORY
+    addVideosToCategory("New Parents Requested", newParentsRequestedData);
 
     function createTabs() {
         const tabsContainer = document.getElementById('tabs');
@@ -587,8 +733,8 @@
             const tab = document.createElement('div');
             tab.className = 'tab' + (index === 0 ? ' active' : '');
             if (category === "New Parents Requested") {
-                tab.id = 'newParentsTab'; // Add ID for specific styling
-                tab.innerHTML = '<span class="rainbow-text">New Parents</span>'; // Rainbow Text
+                tab.id = 'newParentsTab';
+                tab.innerHTML = '<span class="rainbow-text">New Parents</span>';
             } else {
                 tab.innerText = category;
             }
@@ -608,9 +754,9 @@
             let videoDescriptionHTML = '';
 
             if (category === "New Parents Requested") {
-                videoDescriptionHTML = `${video.kidsName} - ${video.loveReason}`; // Custom description for new category
+                videoDescriptionHTML = `${video.kidsName} - ${video.loveReason}`;
             } else {
-                const requester = getRandomRequester(); // Get a unique requester for other categories
+                const requester = getRandomRequester();
                 videoDescriptionHTML = requester;
             }
 
@@ -632,7 +778,7 @@
         document.getElementById(category).classList.add('active');
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
         const tabs = Array.from(document.querySelectorAll('.tab'));
-        const targetTab = tabs.find(tab => tab.innerText === category || (tab.id === 'newParentsTab' && category === 'New Parents Requested')); // Modified condition
+        const targetTab = tabs.find(tab => tab.innerText === category || (tab.id === 'newParentsTab' && category === 'New Parents Requested'));
         if (targetTab) targetTab.classList.add('active');
     }
 
@@ -653,14 +799,14 @@
         const submitButton = document.getElementById('submitSuggestionButton');
 
         openModalBtn.onclick = function() {
-            loadingIndicator.style.display = "block"; // Show loading indicator
-            setTimeout(function() { // Simulate loading delay
-                loadingIndicator.style.display = "none"; // Hide loading indicator
-                modal.style.display = "block"; // Show modal
-            }, 500); // Adjust the delay (milliseconds) as needed
+            loadingIndicator.style.display = "block";
+            setTimeout(function() {
+                loadingIndicator.style.display = "none";
+                modal.style.display = "block";
+            }, 500);
         }
 
-        closeButtons.forEach(button => { // Loop through each close button
+        closeButtons.forEach(button => {
             button.onclick = function() {
                 modal.style.display = "none";
             }
@@ -672,6 +818,68 @@
             }
         }
 
+        // --- Video Suggestion Pop-up JavaScript (Auto-Fade, No Button, Max 10s) ---
+        const videoSuggestionPopup = document.getElementById('videoSuggestionPopup');
+        const closeSuggestionPopupButton = document.querySelector('.close-suggestion-popup');
+        const suggestionNameSpan = document.getElementById('suggestionName');
+        const suggestionVideoTitleStrong = document.getElementById('suggestionVideoTitle');
+
+        const firstNames = ["Ava", "Liam", "Olivia", "Noah", "Emma", "Jackson", "Sophia", "Aiden", "Isabella", "Lucas", "Mia", "Ethan", "Charlotte", "Oliver", "Amelia", "Caleb", "Harper", "Elijah", "Evelyn", "Grayson"];
+        const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Perez", "Wilson", "Anderson", "Thomas", "Jackson", "White", "Harris"];
+        const videoTitles = [
+            "Fun Learning ABC Song", "Counting to 10 with Animals", "The Wheels on the Bus Adventure", "Twinkle Twinkle Bedtime Lullaby", "Old MacDonald's Farm Singalong", "Baby Shark Dance Party", "Colors and Shapes for Toddlers", "Head Shoulders Knees and Toes Workout", "Five Little Ducks Swimming Song", "If You're Happy and You Know It!", "The Muffin Man Song", "Itsy Bitsy Spider Fun", "London Bridge is Falling Down", "Baa Baa Black Sheep Rhyme", "Mary Had a Little Lamb"
+        ];
+
+        function showVideoSuggestionPopup() {
+            const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const randomVideoTitle = videoTitles[Math.floor(Math.random() * videoTitles.length)];
+            const suggestionName = `${randomFirstName} ${randomLastName}`;
+
+            suggestionNameSpan.textContent = suggestionName;
+            suggestionVideoTitleStrong.textContent = randomVideoTitle;
+
+            videoSuggestionPopup.style.display = "block";
+
+            setTimeout(function() {
+                videoSuggestionPopup.style.display = "none";
+                setRandomSuggestionPopupDelay();
+            }, 10000); // Auto-fade after 10 seconds (MAXIMUM time as requested)
+        }
+
+        function setRandomSuggestionPopupDelay() {
+            const minDelay = 5000; // 5 seconds minimum delay
+            const maxDelay = 10000; // 10 seconds maximum delay
+            const delay = Math.random() * (maxDelay - minDelay) + minDelay; // Random delay between 5 and 10 seconds
+            setTimeout(showVideoSuggestionPopup, delay);
+        }
+
+        setRandomSuggestionPopupDelay();
+
+        closeSuggestionPopupButton.onclick = function() {
+            videoSuggestionPopup.style.display = "none";
+            setRandomSuggestionPopupDelay();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == videoSuggestionPopup) {
+                videoSuggestionPopup.style.display = "none";
+                setRandomSuggestionPopupDelay();
+            }
+        }
+
+        // --- Welcome Note Pop-up JavaScript (Auto-Fade) ---
+        const welcomeNotePopup = document.getElementById('welcomeNotePopup');
+
+        function showWelcomeNotePopup() {
+            welcomeNotePopup.style.display = "block";
+            setTimeout(function() {
+                welcomeNotePopup.style.display = "none";
+            }, 4000); // Auto-fade after 4 seconds (keeping it as is)
+        }
+
+        // Show welcome note after a short delay on page load (e.g., 1 second)
+        setTimeout(showWelcomeNotePopup, 1000);
 
     });
 </script>
