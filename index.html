@@ -1,645 +1,493 @@
+Peek a Boo! Picture
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baa Bah's Corner - Peek-a-Boo Pictures! (Cheer & 30s Timer)</title>
+    <link rel="icon" href="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" type="image/png">
     <style>
-        /* General Styles (same as before) */
         body {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffebf0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff99c8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+            url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHNJREFUOE9jZKAQMOLR/zEwMTCwNjEwMtAwMDGwMjEysjAyMDGxsjAxMjKysjAyNjIx/gMZAJE7j0oY8BJpQ+sDKf2/Rj0oY8BKGY/h/P/j/82EGP/81/9HjFhhj/+d/+gxg+g0AwMjAwMDKwMDAwMLAAAAC+kC/8J09z8AAAAASUVORK5CYII="),
+            url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAk0lEQVR4nO3TQQ2AIBADwD+a/z/p07vBoB1gQ3hJkLCEH5lCEF5wN+5LqQggM2uN80Yj4n+Q5u+u4j63y20L0b0z5J9G8+oA6HqgDr20Xp8q0L5eJdC1K1r2+7DqQggs2uD98Yv4f8k5vE/v4+eP/j8P/P+gD8Y/f////9Af+A+Jz1wP8hAAAAAElFTkSuQmCC");
+            background-repeat: repeat;
+            background-size: 100px, 20px, 25px;
+            text-align: center;
             margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+            padding-top: 20px;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
+        .game-container {
+            background-color: #fff8e1;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 85%;
+            max-width: 900px; /* Increased max-width for wider screens */
+            margin: 20px auto;
         }
 
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
+        h1 {
+            color: #ff8a65;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 #ffcc80;
+            font-size: 2.8em;
+            animation: rainbow-text 5s linear infinite;
         }
 
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        @keyframes rainbow-text {
+            0% { color: #ff8a65; }
+            14% { color: #ffb74d; }
+            28% { color: #ffca28; }
+            42% { color: #aed581; }
+            57% { color: #4dd0e1; }
+            71% { color: #64b5f6; }
+            85% { color: #ce93d8; }
+            100% { color: #ff8a65; }
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #level-score-display, #timer-display, #level-display, #highscore-display {
+            font-size: 1.5em;
+            color: #ff6f00;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #ffca28;
+        }
+
+        #game-holes {
+            display: grid; /* Using CSS Grid for layout */
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive columns */
+            gap: 20px; /* Spacing between holes */
+            justify-content: center; /* Center the grid items */
+            align-items: center; /* Center items vertically in grid area */
+        }
+
+
+        .hole-row {
+            display: flex; /* Keeping row for potential future use or specific row styling if needed */
+            justify-content: center; /* Center holes in each row */
+            margin-bottom: 10px; /* Reduced margin between rows */
+        }
+
+        .hole {
             position: relative;
-            z-index: 10;
+            /* width: 120px;  Removed fixed width, grid now controls width */
+            height: 100px;
+            /* margin: 0 15px; Removed fixed margin, grid gap controls spacing */
+            background-color: #ffcdd2;
+            border-radius: 50% 50% 0 0;
+            overflow: hidden;
+            box-shadow: inset 0px 5px 8px rgba(0,0,0,0.1);
+            aspect-ratio: 120/100; /* Maintain aspect ratio, adjust if needed */
+            max-width: 100%; /* Ensure hole doesn't exceed container width */
         }
 
-        .top-bar.menu-open {
-            background-color: #333;
-        }
-
-        .top-bar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
+        .thumbnail-area {
             position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 90px;
+            border-radius: 10px;
+            overflow: hidden;
             cursor: pointer;
-            display: flex;
-            align-items: center;
+            transition: top 0.2s ease-out;
         }
 
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
+        .thumbnail-area.visible {
+            top: 10px;
         }
 
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
+        .thumbnail-area img {
             width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
 
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
+        #level-failed-overlay, #level-complete-overlay, #game-won-overlay, #game-start-overlay {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            color: white;
+            font-size: 2em;
+            text-shadow: 2px 2px 0 black;
         }
 
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
+        #level-failed-overlay h2, #level-complete-overlay h2, #game-won-overlay h2, #game-start-overlay h2 {
+            margin-bottom: 20px;
+        }
+
+        #level-failed-overlay button, #level-complete-overlay button, #game-won-overlay button, #game-start-overlay button {
+            background-color: #ff9800;
+            color: white;
+            padding: 15px 30px;
+            border: none;
             border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 10px;
         }
 
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
+        #level-failed-overlay button:hover, #level-complete-overlay button:hover, #game-won-overlay button:hover, #game-start-overlay button:hover {
+            background-color: #ffa726;
+            transform: scale(1.05);
         }
 
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
+        #level-complete-overlay #level-stars-earned {
+            display: flex;
+            margin-bottom: 20px;
         }
 
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
-            display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
+        #level-complete-overlay #level-stars-earned .star-earned-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"%3E%3Cpath d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3C/svg%3E');
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: inline-block;
         }
 
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
+        #game-won-overlay p, #level-failed-overlay p {
+            margin-bottom: 30px;
+            font-size: 1.3em;
         }
-
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
-        }
-
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
-        }
-
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
-        }
-
 
     </style>
 </head>
 <body>
+    <div class="game-container">
+        <h1>Peek-a-Boo Pictures!</h1>
+        <div id="top-bar">
+            <div id="level-score-display">Score: 0</div>
+            <div id="level-display">Level: 1</div>
+            <div id="highscore-display">Highscore: 0</div>
+            <div id="timer-display">Time: <span id="time-remaining"></span>s</div>
+        </div>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
+        <div id="game-holes">
+            <!-- Holes will be generated here by JavaScript -->
+        </div>
+
+
+        <div id="level-failed-overlay">
+            <h2>Time's Up!</h2>
+            <p>Oops! Time ran out, but don't worry!</p>
+            <p id="final-score">Your Score: 0</p>
+            <button onclick="startGame()">Try Again!</button>
+        </div>
+
+        <div id="level-complete-overlay">
+            <h2>Level Complete!</h2>
+            <p>Well Done!</p>
+            <div id="level-stars-earned">
+                <!-- Star icons will be added here by JavaScript -->
             </div>
+            <button onclick="nextLevel()">Next Level</button>
+            <button onclick="startGame()">Play Again</button>
+        </div>
+
+        <div id="game-won-overlay">
+            <h2>You Won! 🎉</h2>
+            <p>Congratulations! You completed all levels!</p>
+            <p id="final-highscore">Your Highscore: 0</p>
+            <button onclick="resetGame()">Play Again</button>
+        </div>
+
+        <div id="game-start-overlay">
+            <h2>Get Ready to Peek-a-Boo!</h2>
+            <p>Click the pictures as soon as they pop up!</p>
+            <button onclick="startGame()">Start Game</button>
         </div>
     </div>
 
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
-
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
-        </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
-                </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
+    <!-- Sound Effects -->
+    <audio id="popSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/bubble-pop-sound-effect-fesliyanstudios.com.mp3" preload="auto"></audio>
+    <audio id="levelFailedSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/zapsplat_cartoon_fail_drum_001_75449.mp3" preload="auto"></audio>
+    <audio id="levelUpSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/level-up-arcade-video-game-sound-effect-38286.mp3" preload="auto"></audio>
 
 
     <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                }
+        const gameHolesContainer = document.getElementById('game-holes');
+        const levelScoreDisplay = document.getElementById('level-score-display');
+        const timerDisplay = document.getElementById('timer-display');
+        const levelDisplay = document.getElementById('level-display');
+        const highscoreDisplay = document.getElementById('highscore-display');
+        const levelFailedOverlay = document.getElementById('level-failed-overlay');
+        const levelCompleteOverlay = document.getElementById('level-complete-overlay');
+        const gameWonOverlay = document.getElementById('game-won-overlay');
+        const gameStartOverlay = document.getElementById('game-start-overlay');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const finalHighscoreDisplay = document.getElementById('final-highscore');
+
+        const popSound = document.getElementById('popSound');
+        const levelFailedSound = document.getElementById('levelFailedSound');
+        const levelUpSound = document.getElementById('levelUpSound');
+
+        let levelScore = 0;
+        let totalGameScore = 0;
+        let gameActive = false;
+        let timeUp = false;
+        let peekingInterval;
+        let levelTimerInterval;
+        let levelTime = 30;
+        let initialLevelTime = 30;
+        let gameDuration = 30000;
+        let thumbnailPeekTimeout = 700;
+        let initialDelay = 1500;
+        let level = 1;
+        const maxLevel = 10;
+        let numberOfHoles = 6;
+        // let holesPerRow = 3; Removed fixed holesPerRow
+        let highscore = 0;
+        const highscoreKey = 'peekabooHighscore';
+
+        const gameVideoThumbnails = [
+            "https://i.ytimg.com/vi/yCjJyiqpAuU/hqdefault.jpg",
+            "https://i.ytimg.com/vi/e_04ZrNroTo/hqdefault.jpg",
+            "https://i.ytimg.com/vi/_6HzoUcx3eo/hqdefault.jpg",
+            "https://i.ytimg.com/vi/75p-N9YKqNo/hqdefault.jpg",
+            "https://i.ytimg.com/vi/tkpfg-1FJLU/hqdefault.jpg",
+            "https://i.ytimg.com/vi/XqZsoesa55w/hqdefault.jpg",
+            "https://i.ytimg.com/vi/f_raDpgx_3M/hqdefault.jpg",
+            "https://i.ytimg.com/vi/O06dK2Lv9WM/hqdefault.jpg"
+            // Add more thumbnail URLs here
+        ];
+        let levelUpScoreThreshold = 10;
+
+
+        function startGame() {
+            gameStartOverlay.style.display = 'none';
+            levelFailedOverlay.style.display = 'none';
+            levelCompleteOverlay.style.display = 'none';
+            gameWonOverlay.style.display = 'none';
+            levelScore = 0;
+            totalGameScore = 0;
+            level = 1;
+            levelScoreDisplay.innerText = "Score: 0";
+            levelDisplay.innerText = "Level: " + level;
+            timeUp = false;
+            gameActive = true;
+            thumbnailPeekTimeout = 700;
+            initialDelay = 1500;
+            numberOfHoles = 6;
+            initialLevelTime = 30;
+            levelTime = initialLevelTime;
+            timerDisplay.innerText = levelTime;
+
+            const storedHighscore = localStorage.getItem(highscoreKey);
+            if (storedHighscore) {
+                highscore = parseInt(storedHighscore);
+            } else {
+                highscore = 0;
             }
+            highscoreDisplay.innerText = "Highscore: " + highscore;
 
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
 
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
+            generateHoles();
 
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
-
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
-
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
+            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
+            thumbnailAreas.forEach((area, index) => {
+                const imgElement = area.querySelector('.game-thumbnail');
+                const randomIndex = Math.floor(Math.random() * gameVideoThumbnails.length);
+                imgElement.src = gameVideoThumbnails[randomIndex];
+                imgElement.alt = `Thumbnail ${index + 1}`;
             });
 
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
 
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
+            setTimeout(() => {
+                if (!gameActive) return;
+                startLevelTimer();
+                peekingInterval = setInterval(peekRandomThumbnail, calculatePeekInterval());
+            }, initialDelay);
+        }
 
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
+        function nextLevel() {
+            level++;
+            if (level > maxLevel) {
+                gameWon();
+                return;
+            }
+            levelCompleteOverlay.style.display = 'none';
+            gameActive = true;
+            clearInterval(peekingInterval);
+            clearInterval(levelTimerInterval);
+            timeUp = false;
+            levelScore = 0;
+            levelScoreDisplay.innerText = "Score: 0";
+            levelDisplay.innerText = "Level: " + level;
+            numberOfHoles += 1;
+            initialLevelTime = Math.max(5, initialLevelTime - 2);
+            levelTime = initialLevelTime;
+            timerDisplay.innerText = levelTime;
 
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
+            generateHoles();
+
+            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
+            thumbnailAreas.forEach((area, index) => {
+                const imgElement = area.querySelector('.game-thumbnail');
+                const randomIndex = Math.floor(Math.random() * gameVideoThumbnails.length);
+                imgElement.src = gameVideoThumbnails[randomIndex];
+                imgElement.alt = `Thumbnail ${index + 1}`;
+            });
+
+
+            startLevelTimer();
+            peekingInterval = setInterval(peekRandomThumbnail, calculatePeekInterval());
+        }
+
+        function generateHoles() {
+            gameHolesContainer.innerHTML = '';
+            gameHolesContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(120px, 1fr))`; // Dynamically set columns
+
+            for (let i = 0; i < numberOfHoles; i++) {
+                const hole = document.createElement('div');
+                hole.className = 'hole';
+                const thumbnailArea = document.createElement('div');
+                thumbnailArea.className = 'thumbnail-area';
+                const img = document.createElement('img');
+                img.src = "";
+                img.alt = "Game Thumbnail";
+                img.className = "game-thumbnail";
+                thumbnailArea.appendChild(img);
+                hole.appendChild(thumbnailArea);
+                gameHolesContainer.appendChild(hole);
+            }
+            attachThumbnailClickListeners();
+        }
+
+        function attachThumbnailClickListeners() {
+            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
+            thumbnailAreas.forEach(area => {
+                area.addEventListener('click', function() {
+                    if (!gameActive || this.classList.contains('clicked')) return;
+
+                    this.classList.add('clicked');
+                    this.classList.remove('visible');
+                    levelScore++;
+                    totalGameScore++;
+                    levelScoreDisplay.innerText = "Score: " + levelScore;
+                    highscoreDisplay.innerText = "Highscore: " + totalGameScore;
+                    popSound.play();
+
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+
+                    if (levelScore >= levelUpScoreThreshold && gameActive) {
+                        gameActive = false;
+                        clearInterval(peekingInterval);
+                        clearInterval(levelTimerInterval);
+                        levelComplete();
+                    }
                 });
+            });
+        }
+
+
+        function startLevelTimer() {
+            levelTime = initialLevelTime;
+            timerDisplay.innerText = levelTime;
+            levelTimerInterval = setInterval(() => {
+                levelTime--;
+                timerDisplay.innerText = levelTime;
+                if (levelTime <= 0) {
+                    clearInterval(levelTimerInterval);
+                    clearInterval(peekingInterval);
+                    gameActive = false;
+                    timeUp = true;
+                    levelFailed();
+                }
+            }, 1000);
+        }
+
+
+        function calculatePeekInterval() {
+            return Math.max(500, 2000 - (levelScore * 20));
+        }
+
+
+        function peekRandomThumbnail() {
+            if (!gameActive) return;
+
+            const visibleArea = document.querySelector('.thumbnail-area.visible');
+            if (visibleArea) {
+                visibleArea.classList.remove('visible');
             }
 
+            const thumbnailAreas = document.querySelectorAll('.thumbnail-area');
+            const randomIndex = Math.floor(Math.random() * thumbnailAreas.length);
+            const randomArea = thumbnailAreas[randomIndex];
+            randomArea.classList.add('visible');
 
-        })();
+            setTimeout(() => {
+                randomArea.classList.remove('visible');
+            }, thumbnailPeekTimeout);
+            thumbnailPeekTimeout = Math.max(200, thumbnailPeekTimeout - 10);
+        }
+
+
+        function levelComplete() {
+            gameActive = false;
+            levelUpSound.play();
+            levelCompleteOverlay.style.display = 'flex';
+            updateHighscore();
+        }
+
+
+        function gameWon() {
+            gameActive = false;
+            gameWonOverlay.style.display = 'flex';
+            updateHighscore();
+            finalHighscoreDisplay.innerText = "Your Highscore: " + highscore;
+        }
+
+
+        function levelFailed() {
+            gameActive = false;
+            finalScoreDisplay.innerText = "Your Score: " + levelScore;
+            levelFailedOverlay.style.display = 'flex';
+            levelFailedSound.play();
+            updateHighscore();
+        }
+
+        function updateHighscore() {
+            if (totalGameScore > highscore) {
+                highscore = totalGameScore;
+                localStorage.setItem(highscoreKey, highscore);
+                highscoreDisplay.innerText = "Highscore: " + highscore;
+            }
+        }
+
+
+        function resetGame() {
+            gameWonOverlay.style.display = 'none';
+            startGame();
+        }
+
+
+        gameStartOverlay.style.display = 'flex';
     </script>
 </body>
 </html>
