@@ -38,6 +38,19 @@
             margin-right: 15px;
             vertical-align: middle; /* Align image with text */
         }
+        /* Style for YouTube Icon */
+        .site-title .youtube-icon {
+            height: 1.2em; /* Slightly larger than site logo */
+            margin-left: 15px;
+            vertical-align: middle;
+            transition: transform 0.3s ease; /* Add transition for hover effect */
+        }
+
+        .site-title .youtube-icon:hover {
+            transform: scale(1.1); /* Slightly scale up on hover */
+        }
+
+
         .site-title span {
             display: inline-block;
             animation: bounce 0.8s infinite alternate;
@@ -608,6 +621,10 @@
 <header> <!-- Using header for site title for semantic structure -->
     <h1 class="site-title">
         <img src="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" alt="Baa Bah's Corner Logo"> <!-- alt text for image accessibility -->
+        <!-- YouTube Icon Link -->
+        <a href="https://youtube.com/@baabahscorner?si=fhWzOgeFmHCwYacA" target="_blank" aria-label="Visit Baa Bah's Corner YouTube Channel">
+            <img class="youtube-icon" src="https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_social_white_squircle_%282017%29.svg" alt="YouTube Channel Icon">
+        </a>
         <span>B</span><span>a</span><span>a</span>
         <span>B</span><span>a</span><span>h</span><span>'</span><span>s</span>
         <span>C</span><span>o</span><span>r</span><span>n</span><span>e</span><span>r</span><span>!</span>
