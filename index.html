@@ -57,7 +57,7 @@
             margin-bottom: 15px;
         }
 
-        #level-score-display, #timer-display, #level-display, #highscore-display, #game3-score-display, #game3-level-display, #game3-highscore-display, #game2-score-display, #game2-level-display, #game2-highscore-display, #game1-score-display, #game1-level-display, #game1-highscore-display {
+        #level-score-display, #timer-display, #level-display, #highscore-display, #game3-score-display, #game3-level-display, #game3-highscore-display, #game2-score-display, #game2-level-display, #game2-highscore-display, #game1-score-display, #game1-level-display, #game1-highscore-display, #game4-score-display, #game4-level-display, #game4-highscore-display, #game4-timer-display {
             font-size: 1.2em;
             color: #ff6f00;
             font-weight: bold;
@@ -156,22 +156,114 @@
             border-radius: 8px;
         }
 
+        /* Game 4 Styles (Alphabet Adventure) - Responsive Layout */
+        #game4-container-game { /* Renamed to avoid conflict with main game-container */
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 900px;
+            margin: 20px auto;
+            text-align: center; /* Center align content within the game container */
+        }
+
+        #game4-letters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap; /* Allow letters to wrap on smaller screens */
+        }
+
+        .game4-letter {
+            font-size: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            background-color: #ffcc80; /* Light Orange Letter Background */
+            color: white;
+            border-radius: 50%;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 0 #d84315;
+            font-weight: bold;
+        }
+
+        .game4-letter:active {
+            cursor: grabbing;
+        }
+
+        #game4-word-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            max-width: 800px;
+            margin: 0 auto 30px auto; /* Center the word boxes container */
+        }
+
+        .game4-word-box {
+            font-size: 24px;
+            padding: 15px;
+            border: 3px dashed #757575;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fffde7; /* Light Yellow Word Box Background */
+            color: #555;
+            min-width: 150px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .game4-word-box.correct {
+            background-color: #a5d6a7; /* Light Green for Correct */
+            border-color: #388e3c;
+            color: #1b5e20;
+            animation: pulse 1s ease-in-out infinite alternate;
+        }
+
+        .game4-word-box.incorrect {
+            background-color: #ffcdd2; /* Light Red for Incorrect */
+            border-color: #e57373;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+
         /* Overlays - Responsive Font and Padding with Pink Buttons */
-        #level-failed-overlay, #level-complete-overlay, #game-won-overlay, #game-start-overlay, #game3-start-overlay, #game3-over-overlay, #game3-level-complete-overlay, #game3-won-overlay, #game2-start-overlay, #game2-over-overlay, #game2-level-complete-overlay, #game2-won-overlay, #game1-start-overlay, #game1-over-overlay, #game1-level-complete-overlay, #game1-won-overlay {
+        #level-failed-overlay, #level-complete-overlay, #game-won-overlay, #game-start-overlay, #game3-start-overlay, #game3-over-overlay, #game3-level-complete-overlay, #game3-won-overlay, #game2-start-overlay, #game2-over-overlay, #game2-level-complete-overlay, #game2-won-overlay, #game1-start-overlay, #game1-over-overlay, #game1-level-complete-overlay, #game1-won-overlay, #game4-start-overlay, #game4-over-overlay, #game4-level-complete-overlay, #game4-won-overlay {
             padding: 20px;
             font-size: 1.5em;
             border-radius: 15px;
             background-color: rgba(255, 235, 240, 0.9); /* Slightly less transparent overlay */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* Initially hidden, will be shown by JavaScript */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10; /* Ensure overlays are on top */
         }
 
-        #level-failed-overlay h2, #level-complete-overlay h2, #game-won-overlay h2, #game-start-overlay h2, #game3-start-overlay h2, #game3-over-overlay h2, #game3-level-complete-overlay h2, #game3-won-overlay h2, #game2-start-overlay h2, #game2-over-overlay h2, #game2-level-complete-overlay h2, #game2-won-overlay h2, #game1-start-overlay h2, #game1-over-overlay h2, #game1-level-complete-overlay h2, #game1-won-overlay h2 {
+        #level-failed-overlay h2, #level-complete-overlay h2, #game-won-overlay h2, #game-start-overlay h2, #game3-start-overlay h2, #game3-over-overlay h2, #game3-level-complete-overlay h2, #game3-won-overlay h2, #game2-start-overlay h2, #game2-over-overlay h2, #game2-level-complete-overlay h2, #game2-won-overlay h2, #game1-start-overlay h2, #game1-over-overlay h2, #game1-level-complete-overlay h2, #game1-won-overlay h2, #game4-start-overlay h2, #game4-over-overlay h2, #game4-level-complete-overlay h2, #game4-won-overlay h2 {
             margin-bottom: 15px;
             font-size: 1.8em;
             color: #ff8a65;
             animation: rainbow-text 5s linear infinite;
         }
 
-        #level-failed-overlay button, #level-complete-overlay button, #game-won-overlay button, #game-start-overlay button, #game3-start-overlay button, #game3-over-overlay button, #game3-level-complete-overlay button, #game3-won-overlay button, #game2-start-overlay button, #game2-over-overlay button, #game2-level-complete-overlay button, #game2-won-overlay button, #game1-start-overlay button, #game1-over-overlay button, #game1-level-complete-overlay button, #game1-won-overlay button, .back-to-home-button {
+        #level-failed-overlay button, #level-complete-overlay button, #game-won-overlay button, #game-start-overlay button, #game3-start-overlay button, #game3-over-overlay button, #game3-level-complete-overlay button, #game3-won-overlay button, #game2-start-overlay button, #game2-over-overlay button, #game2-level-complete-overlay button, #game2-won-overlay button, #game1-start-overlay button, #game1-over-overlay button, #game1-level-complete-overlay button, #game1-won-overlay button, .back-to-home-button, #game4-start-overlay button, #game4-over-overlay button, #game4-level-complete-overlay button, #game4-won-overlay button {
             background-color: #ffcdd2; /* Pink Button Background */
             color: white;
             padding: 10px 20px;
@@ -184,18 +276,18 @@
             margin: 8px;
         }
 
-        #level-failed-overlay button:hover, #level-complete-overlay button:hover, #game-won-overlay button:hover, #game-start-overlay button:hover, #game3-start-overlay button:hover, #game3-over-overlay button:hover, #game3-level-complete-overlay button:hover, #game3-won-overlay button:hover, #game2-start-overlay button:hover, #game2-over-overlay button:hover, #game2-level-complete-overlay button:hover, #game2-won-overlay button:hover, #game1-start-overlay button:hover, #game1-over-overlay button:hover, #game1-level-complete-overlay button:hover, #game1-won-overlay button:hover, .back-to-home-button:hover {
+        #level-failed-overlay button:hover, #level-complete-overlay button:hover, #game-won-overlay button:hover, #game-start-overlay button:hover, #game3-start-overlay button:hover, #game3-over-overlay button:hover, #game3-level-complete-overlay button:hover, #game3-won-overlay button:hover, #game2-start-overlay button:hover, #game2-over-overlay button:hover, #game2-level-complete-overlay button:hover, #game2-won-overlay button:hover, #game1-start-overlay button:hover, #game1-over-overlay button:hover, #game1-level-complete-overlay button:hover, #game1-won-overlay button:hover, .back-to-home-button:hover, #game4-start-overlay button:hover, #game4-over-overlay button:hover, #game4-level-complete-overlay button:hover, #game4-won-overlay button:hover {
             background-color: #ffb3c6; /* Darker Pink on Hover */
             transform: scale(1.05);
         }
 
-        #level-complete-overlay #level-stars-earned .star-earned-icon, #game3-level-complete-overlay #level-stars-earned .star-earned-icon, #game2-level-complete-overlay #level-stars-earned .star-earned-icon, #game1-level-complete-overlay #level-stars-earned .star-earned-icon {
+        #level-complete-overlay #level-stars-earned .star-earned-icon, #game3-level-complete-overlay #level-stars-earned .star-earned-icon, #game2-level-complete-overlay #level-stars-earned .star-earned-icon, #game1-level-complete-overlay #level-stars-earned .star-earned-icon, #game4-level-complete-overlay #level-stars-earned .star-earned-icon {
             width: 30px;
             height: 30px;
             margin: 0 3px;
         }
 
-        #game-won-overlay p, #level-failed-overlay p, #game3-over-overlay p, #game3-won-overlay p, #game2-over-overlay p, #game2-won-overlay p, #game1-over-overlay p, #game1-won-overlay p, #game1-level-complete-overlay p, #game3-start-overlay p, #game2-start-overlay p, #game1-start-overlay p {
+        #game-won-overlay p, #level-failed-overlay p, #game3-over-overlay p, #game3-won-overlay p, #game2-over-overlay p, #game2-won-overlay p, #game1-over-overlay p, #game1-won-overlay p, #game1-level-complete-overlay p, #game3-start-overlay p, #game2-start-overlay p, #game1-start-overlay p, #game4-start-overlay p, #game4-over-overlay p, #game4-level-complete-overlay p {
             margin-bottom: 20px;
             font-size: 1em;
         }
@@ -280,8 +372,18 @@
                 flex-direction: column;
                 gap: 5px;
             }
-            #level-score-display, #timer-display, #level-display, #highscore-display, #game3-score-display, #game3-level-display, #game3-highscore-display, #game2-score-display, #game2-level-display, #game2-highscore-display, #game1-score-display, #game1-level-display, #game1-highscore-display {
+            #level-score-display, #timer-display, #level-display, #highscore-display, #game3-score-display, #game3-level-display, #game3-highscore-display, #game2-score-display, #game2-level-display, #game2-highscore-display, #game1-score-display, #game1-level-display, #game1-highscore-display, #game4-score-display, #game4-level-display, #game4-highscore-display, #game4-timer-display {
                 font-size: 1em;
+            }
+            .game4-letter {
+                font-size: 40px; /* Smaller letters on mobile */
+                width: 60px;
+                height: 60px;
+                margin: 8px;
+            }
+            .game4-word-box {
+                font-size: 18px; /* Smaller word boxes on mobile */
+                padding: 10px;
             }
         }
 
@@ -319,6 +421,11 @@
 
               target="_top"><button onclick="initGame3()">Play Game</button></a>
           </div>
+          <div class="game-card">
+            <h3>Bah Bah's Alphabet Adventure!</h3>
+            <p>Drag each letter to the word box that starts with it! Learn the alphabet with Bah Bah!</p>
+            <button onclick="initGame4()">Play Game</button>
+          </div>
         </div>
       </div>
       <div id="top-bar" style="display:none;">
@@ -337,6 +444,11 @@
         <div id="game3-score-display" style="display: none;">Score: 0</div>
         <div id="game3-level-display" style="display: none;">Level: 1</div>
         <div id="game3-highscore-display" style="display: none;">Highscore: 0</div>
+        <!-- Game 4 Scores -->
+        <div id="game4-score-display" style="display: none;">Score: 0</div>
+        <div id="game4-level-display" style="display: none;">Level: <span id="game4-level-title">1</span></div>
+        <div id="game4-highscore-display" style="display: none;">Highscore: 0</div>
+        <div id="game4-timer-display" style="display: none;">Time Left: <span id="game4-timer">60</span> seconds</div>
       </div>
       <!-- Game 1: Peek-a-Boo Pictures! -->
       <div id="game1-wrapper" style="display: none;">
@@ -428,6 +540,47 @@
             onclick="window.location.href='https://babahs-corner.onrender.com'">Back
             to Home</button> </div>
       </div>
+
+      <!-- Game 4: Bah Bah's Alphabet Adventure! -->
+      <div id="game4-wrapper" style="display: none;">
+        <h2>Game 4: Bah Bah's Alphabet Adventure!</h2>
+        <div id="game4-container-game"> <!-- Use the renamed container -->
+            <p>Drag each letter to the word box that starts with it!</p>
+
+            <div class="game4-letters-container" id="game4-letters">
+                <!-- Letters will be generated here -->
+            </div>
+            <div class="game4-word-boxes-container" id="game4-word-boxes">
+                <!-- Word boxes will be generated here -->
+            </div>
+        </div>
+
+        <div id="game4-start-overlay">
+            <h2>Bah Bah's Alphabet Adventure</h2>
+            <p>Help Bah Bah learn the alphabet by matching letters to words!</p>
+            <button onclick="startGame4()">Start Game</button>
+        </div>
+        <div id="game4-over-overlay">
+            <h2>Time's up!</h2>
+            <p>Level <span id="game4-level-title-over">1</span> Failed. Final Score: <span id="game4-final-score">0</span></p>
+            <button onclick="startGame4()">Play Again</button>
+        </div>
+        <div id="game4-level-complete-overlay">
+            <h2>Level <span id="game4-level-title-complete">1</span> Complete!</h2>
+            <p>Score: <span id="game4-level-score">0</span>.</p>
+            <div id="level-stars-earned">
+                <!-- Star icons will be added here by JavaScript -->
+            </div>
+            <button onclick="nextLevel4()">Next Level</button>
+            <button onclick="startGame4()">Play Again</button>
+        </div>
+        <div id="game4-won-overlay">
+            <h2>Congratulations! You've completed all levels!</h2>
+            <p>Final Score: <span id="game4-final-highscore">0</span></p>
+            <button onclick="resetGame4()">Play Again</button>
+        </div>
+      </div>
+
     </div>
     <!-- Sound Effects - (Keep all sound elements) --> <audio id="popSound" src="https://www.fesliyanstudios.com/site_assets/sfx/mp3/bubble-pop-sound-effect-fesliyanstudios.com.mp3"
 
@@ -462,6 +615,7 @@
             document.getElementById('game1-wrapper').style.display = 'block';
             document.getElementById('game2-wrapper').style.display = 'none';
             document.getElementById('game3-wrapper').style.display = 'none';
+            document.getElementById('game4-wrapper').style.display = 'none';
             document.getElementById('top-bar').style.display = 'flex';
             document.getElementById('level-score-display').style.display = 'flex';
             document.getElementById('level-display').style.display = 'flex';
@@ -474,6 +628,10 @@
             document.getElementById('game3-score-display').style.display = 'none';
             document.getElementById('game3-level-display').style.display = 'none';
             document.getElementById('game3-highscore-display').style.display = 'none';
+            document.getElementById('game4-score-display').style.display = 'none';
+            document.getElementById('game4-level-display').style.display = 'none';
+            document.getElementById('game4-highscore-display').style.display = 'none';
+            document.getElementById('game4-timer-display').style.display = 'none';
             document.getElementById('game1-holes').style.display = 'grid';
             resetGame();
         }
@@ -483,6 +641,7 @@
             document.getElementById('game1-wrapper').style.display = 'none';
             document.getElementById('game2-wrapper').style.display = 'block';
             document.getElementById('game3-wrapper').style.display = 'none';
+            document.getElementById('game4-wrapper').style.display = 'none';
             document.getElementById('top-bar').style.display = 'flex';
             document.getElementById('level-score-display').style.display = 'none';
             document.getElementById('level-display').style.display = 'none';
@@ -495,6 +654,10 @@
             document.getElementById('game3-score-display').style.display = 'none';
             document.getElementById('game3-level-display').style.display = 'none';
             document.getElementById('game3-highscore-display').style.display = 'none';
+            document.getElementById('game4-score-display').style.display = 'none';
+            document.getElementById('game4-level-display').style.display = 'none';
+            document.getElementById('game4-highscore-display').style.display = 'none';
+            document.getElementById('game4-timer-display').style.display = 'none';
             document.getElementById('game2-container').style.display = 'grid';
             startGame2();
         }
@@ -504,6 +667,7 @@
             document.getElementById('game1-wrapper').style.display = 'none';
             document.getElementById('game2-wrapper').style.display = 'none';
             document.getElementById('game3-wrapper').style.display = 'block';
+            document.getElementById('game4-wrapper').style.display = 'none';
             document.getElementById('top-bar').style.display = 'flex';
             document.getElementById('level-score-display').style.display = 'none';
             document.getElementById('level-display').style.display = 'none';
@@ -516,8 +680,38 @@
             document.getElementById('game3-score-display').style.display = 'flex';
             document.getElementById('game3-level-display').style.display = 'flex';
             document.getElementById('game3-highscore-display').style.display = 'flex';
+            document.getElementById('game4-score-display').style.display = 'none';
+            document.getElementById('game4-level-display').style.display = 'none';
+            document.getElementById('game4-highscore-display').style.display = 'none';
+            document.getElementById('game4-timer-display').style.display = 'none';
             document.getElementById('game3-container').style.display = 'block';
             startGame3();
+        }
+
+        function initGame4() {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('game1-wrapper').style.display = 'none';
+            document.getElementById('game2-wrapper').style.display = 'none';
+            document.getElementById('game3-wrapper').style.display = 'none';
+            document.getElementById('game4-wrapper').style.display = 'block';
+            document.getElementById('top-bar').style.display = 'flex';
+            document.getElementById('level-score-display').style.display = 'none';
+            document.getElementById('level-display').style.display = 'none';
+            document.getElementById('highscore-display').style.display = 'none';
+            document.getElementById('timer-display').style.display = 'none';
+            document.getElementById('game2-score-display').style.display = 'none';
+            document.getElementById('game2-level-display').style.display = 'none';
+            document.getElementById('game2-highscore-display').style.display = 'none';
+            document.getElementById('game2-timer-display').style.display = 'none';
+            document.getElementById('game3-score-display').style.display = 'none';
+            document.getElementById('game3-level-display').style.display = 'none';
+            document.getElementById('game3-highscore-display').style.display = 'none';
+            document.getElementById('game4-score-display').style.display = 'flex';
+            document.getElementById('game4-level-display').style.display = 'flex';
+            document.getElementById('game4-highscore-display').style.display = 'flex';
+            document.getElementById('game4-timer-display').style.display = 'flex';
+            document.getElementById('game4-container-game').style.display = 'block'; // Ensure game container is visible
+            startGame4();
         }
 
 
@@ -526,6 +720,7 @@
         document.getElementById('game1-wrapper').style.display = 'none';
         document.getElementById('game2-wrapper').style.display = 'none';
         document.getElementById('game3-wrapper').style.display = 'none';
+        document.getElementById('game4-wrapper').style.display = 'none';
 
 
         const canvas = document.getElementById('game3-canvas');
@@ -806,6 +1001,238 @@
 
         window.addEventListener('resize', handleResize);
         gameStartOverlay.style.display = 'flex';
+
+
+        // Game 4 JavaScript - Bah Bah's Alphabet Adventure
+
+        const game4LevelTitleDisplay = document.getElementById("game4-level-title");
+        const game4LettersContainer = document.getElementById("game4-letters");
+        const game4WordBoxesContainer = document.getElementById("game4-word-boxes");
+        const game4ScoreDisplay = document.getElementById("game4-score-display");
+        const game4TimerDisplay = document.getElementById("game4-timer");
+        const game4StartOverlay = document.getElementById('game4-start-overlay');
+        const game4GameOverOverlay = document.getElementById('game4-over-overlay');
+        const game4LevelCompleteOverlay = document.getElementById('game4-level-complete-overlay');
+        const game4GameWonOverlay = document.getElementById('game4-won-overlay');
+        const game4FinalScoreDisplayGameOver = document.getElementById('game4-final-score');
+        const game4LevelScoreDisplayComplete = document.getElementById('game4-level-score');
+        const game4LevelTitleDisplayOver = document.getElementById('game4-level-title-over');
+        const game4LevelTitleDisplayComplete = document.getElementById('game4-level-title-complete');
+        const game4FinalHighscoreDisplayWon = document.getElementById('game4-final-highscore');
+        const game4HighscoreDisplay = document.getElementById('game4-highscore-display');
+
+
+        let game4Score = 0;
+        let game4TimeLeft = 60;
+        let game4TimerInterval;
+        let game4CurrentLevel = 1;
+        let game4WordsPerLevel = [3, 3, 4, 4, 5, 5, 6, 6, 7, 8];
+        let game4TimePerLevel = [60, 55, 50, 45, 40, 35, 30, 30, 30, 30];
+        let game4Highscore = 0;
+        const game4HighscoreKey = 'alphabetAdventureHighscore';
+
+
+        const game4Data = [
+            { letter: "A", word: "Apple" },
+            { letter: "B", word: "Banana" },
+            { letter: "C", word: "Cherry" },
+            { letter: "D", word: "Dragonfruit" },
+            { letter: "E", word: "Elephant" },
+            { letter: "F", word: "Fig" },
+            { letter: "G", word: "Grape" },
+            { letter: "H", word: "House" },
+            { letter: "I", word: "Ice Cream" },
+            { letter: "J", word: "Jacket" },
+            { letter: "K", word: "Kite" },
+            { letter: "L", word: "Lemon" } ,
+            { letter: "M", word: "Mango" },
+            { letter: "N", word: "Nest" },
+            { letter: "O", word: "Orange" },
+            { letter: "P", word: "Pear" },
+            { letter: "Q", word: "Queen" },
+            { letter: "R", word: "Rose" },
+            { letter: "S", word: "Strawberry" },
+            { letter: "T", word: "Tree" },
+            { letter: "U", word: "Umbrella" },
+            { letter: "V", word: "Violin" },
+            { letter: "W", word: "Watermelon" },
+            { letter: "X", word: "Xylophone" },
+            { letter: "Y", word: "Yogurt" },
+            { letter: "Z", word: "Zebra" }
+        ];
+
+        let game4CurrentWords = [];
+
+        function resetGame4() {
+            game4CurrentLevel = 1;
+            game4Highscore = localStorage.getItem(game4HighscoreKey) ? parseInt(localStorage.getItem(game4HighscoreKey)) : 0;
+            game4HighscoreDisplay.innerText = "Highscore: " + game4Highscore;
+            startLevel4();
+        }
+
+        function startLevel4() {
+            game4StartOverlay.style.display = 'none';
+            game4GameOverOverlay.style.display = 'none';
+            game4LevelCompleteOverlay.style.display = 'none';
+            game4GameWonOverlay.style.display = 'none';
+
+            game4LevelTitleDisplay.innerText = game4CurrentLevel;
+            game4LevelTitleDisplayOver.innerText = game4CurrentLevel;
+            game4LevelTitleDisplayComplete.innerText = game4CurrentLevel;
+            game4Score = 0;
+            game4TimeLeft = game4TimePerLevel[game4CurrentLevel - 1];
+            game4ScoreDisplay.innerText = game4Score;
+            game4TimerDisplay.innerText = game4TimeLeft;
+            game4CurrentWords = selectRandomWords4(game4WordsPerLevel[game4CurrentLevel - 1]);
+            generateLettersAndBoxes4(game4CurrentWords);
+            startTimer4();
+        }
+
+
+        function startGame4() {
+            game4StartOverlay.style.display = 'none';
+            resetGame4();
+        }
+
+        function selectRandomWords4(count) {
+            const shuffledWords = [...game4Data].sort(() => 0.5 - Math.random());
+            return shuffledWords.slice(0, count);
+        }
+
+        function generateLettersAndBoxes4(words) {
+            game4LettersContainer.innerHTML = '';
+            game4WordBoxesContainer.innerHTML = '';
+
+            const letters = words.map(item => item.letter);
+            const shuffledLetters = [...letters].sort(() => 0.5 - Math.random());
+            const shuffledWords = [...words].sort(() => 0.5 - Math.random());
+
+            shuffledLetters.forEach(letter => {
+                const letterElement = document.createElement('div');
+                letterElement.classList.add('game4-letter');
+                letterElement.id = `game4-letter-${letter}`;
+                letterElement.textContent = letter;
+                letterElement.draggable = true;
+                game4LettersContainer.appendChild(letterElement);
+
+                letterElement.addEventListener("dragstart", dragStart4);
+            });
+
+            shuffledWords.forEach(item => {
+                const boxElement = document.createElement('div');
+                boxElement.classList.add('game4-word-box');
+                boxElement.id = `game4-box-${item.word}`;
+                boxElement.textContent = item.word;
+                game4WordBoxesContainer.appendChild(boxElement);
+
+                boxElement.addEventListener("dragover", dragOver4);
+                boxElement.addEventListener("drop", drop4);
+            });
+        }
+
+        function startTimer4() {
+            game4TimerInterval = setInterval(() => {
+                game4TimeLeft--;
+                game4TimerDisplay.innerText = game4TimeLeft;
+                if (game4TimeLeft <= 0) {
+                    clearInterval(game4TimerInterval);
+                    endGame4();
+                }
+            }, 1000);
+        }
+
+        function dragStart4(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function dragOver4(event) {
+            event.preventDefault();
+        }
+
+        function drop4(event) {
+            event.preventDefault();
+            const draggedLetterId = event.dataTransfer.getData("text");
+            const draggedLetterElement = document.getElementById(draggedLetterId);
+            const droppedBox = event.target.closest('.game4-word-box');
+
+            if (!droppedBox) return;
+
+            const expectedLetter = droppedBox.textContent.charAt(0).toUpperCase();
+            const draggedLetter = draggedLetterElement.textContent;
+
+            if (draggedLetter === expectedLetter) {
+                droppedBox.classList.add('correct');
+                droppedBox.textContent = `${droppedBox.textContent} (${draggedLetter}) ✅`;
+                game4Score++;
+                game4ScoreDisplay.innerText = game4Score;
+                game4LevelScoreDisplayComplete.innerText = game4Score;
+
+
+                droppedBox.removeEventListener("dragover", dragOver4);
+                droppedBox.removeEventListener("drop", drop4);
+                draggedLetterElement.draggable = false;
+                draggedLetterElement.style.opacity = '0.5';
+
+                if (document.querySelectorAll('.game4-word-box.correct').length === game4CurrentWords.length) {
+                    setTimeout(nextRound4, 1500);
+                }
+
+            } else {
+                droppedBox.classList.add('incorrect');
+                setTimeout(() => {
+                    droppedBox.classList.remove('incorrect');
+                }, 500);
+            }
+        }
+
+        function nextRound4() {
+            game4CurrentLevel++;
+            if (game4CurrentLevel > 10) {
+                gameWon4();
+                return;
+            }
+            startLevel4();
+            levelComplete4Overlay();
+
+        }
+
+        function levelComplete4Overlay() {
+            levelCompleteOverlay.style.display = 'flex';
+            levelStarsEarnedDisplay.innerHTML = '';
+            for (let i = 0; i < 1; i++) { // Adjust star count if needed per level
+                const starIcon = document.createElement('span');
+                starIcon.className = 'star-earned-icon';
+                levelStarsEarnedDisplay.appendChild(starIcon);
+            }
+        }
+
+
+        function gameWon4() {
+            clearInterval(game4TimerInterval);
+            game4GameWonOverlay.style.display = 'flex';
+            game4FinalHighscoreDisplayWon.innerText = game4Score;
+            updateHighscore4();
+        }
+
+        function endGame4() {
+            clearInterval(game4TimerInterval);
+            game4GameOverOverlay.style.display = 'flex';
+            game4FinalScoreDisplayGameOver.innerText = game4Score;
+            updateHighscore4();
+        }
+
+        function updateHighscore4() {
+            if (game4Score > game4Highscore) {
+                game4Highscore = game4Score;
+                localStorage.setItem(game4HighscoreKey, game4Highscore);
+                game4HighscoreDisplay.innerText = "Highscore: " + game4Highscore;
+            }
+        }
+
+
+        // Initially show the start overlay for Game 4 if it's the loaded game directly
+        game4StartOverlay.style.display = 'flex';
+
 
     </script>
   </body>
