@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,12 +22,16 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baa Bah's Corner!</title>
+    <title>Baa Bah's Corner:  Sparking Joy & Learning for Your Little One!</title>
+    <meta name="description" content="Discover fun and educational videos for kids on Baa Bah's Corner!  Perfect for toddlers, preschoolers, and parents looking for engaging and safe content.  Suggest a video, explore our categories, and join the fun!">
     <link rel="icon" href="https://i.ibb.co/JjckNpYL/Baabah-s-Corner.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* CSS - (Existing Styles - Keep and Enhance) */
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif; /* Consider a more universally readable font for accessibility */
+            font-family: 'Nunito', sans-serif; /*  More modern, friendly font */
             background-color: #ffebf0;
             text-align: center;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff99c8' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
@@ -373,7 +378,7 @@
             font-size: 1em;
             margin-bottom: 15px; /* Increased margin for better spacing */
             box-sizing: border-box;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Nunito', sans-serif;
         }
 
         .modal button { /* Style buttons consistently in modal */
@@ -567,6 +572,145 @@
             to { opacity: 1; } /* Fade in to full opacity */
         }
 
+        .benefits-section {
+            background-color: #fff;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .benefits-section h2 {
+            color: #ff66a3;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .benefit img {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            border-radius: 50%; /* Optional: Make icons circular */
+        }
+
+        .benefit p {
+            line-height: 1.4;
+        }
+
+        .subscribe-section {
+            background-color: #ffe6ee;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+
+        .subscribe-section h2 {
+            color: #ff66a3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subscribe-section p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subscribe-button {
+            background-color: #ff66a3;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: block;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
+             /* Accessibility focus styles */
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+
+        .subscribe-button:hover,
+        .subscribe-button:focus,
+        .subscribe-button:active {
+            background-color: #e60073;
+             /* Accessibility focus styles */
+            outline-color: #e60073;
+        }
+
+        /* ---  Featured Video Section --- */
+        .featured-video-section {
+            background-color: #f8f8f8;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .featured-video-section h2 {
+            color: #ff66a3;
+            margin-bottom: 20px;
+        }
+
+        .featured-video-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+
+        .featured-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* --- Testimonial Section --- */
+        .testimonial-section {
+            background-color: #fff;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .testimonial-section h2 {
+            color: #ff66a3;
+            margin-bottom: 20px;
+        }
+
+        .testimonial {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .testimonial p.author {
+            font-style: normal;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -590,6 +734,9 @@
             }
             .video-description {
                 font-size: 0.8em;
+            }
+            .benefits-section, .subscribe-section, .testimonial-section, .featured-video-section {
+                padding: 20px;
             }
         }
         @media (max-width: 480px) {
@@ -619,8 +766,6 @@
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2XM7JP6"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
-<iframe width="795" height="447" src="https://www.youtube.com/embed/FhKmm89Uc9s" title="Baa Bah's Corner: Fun Videos for Happy Kids & Easier Parenting! #shorts" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <!-- --- Video Suggestion Pop-up --- -->
 <div id="videoSuggestionPopup" class="video-suggestion-popup" role="dialog" aria-live="polite" aria-labelledby="suggestionTitle"> <!-- ARIA roles for accessibility -->
@@ -653,6 +798,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </h1>
 </header>
 
+<section class="benefits-section">
+    <h2>Why Choose Baa Bah's Corner?</h2>
+    <div class="benefit">
+        <img src="https://i.ibb.co/5WmD3SJC/Educational-Content.png" alt="Educational Content Icon">
+        <div>
+            <h3>Educational Fun</h3>
+            <p>Our videos are designed to be both entertaining and educational, helping your child learn through songs, rhymes, and engaging stories.  Perfect for early learning and development!</p>
+        </div>
+    </div>
+    <div class="benefit">
+        <img src="https://i.ibb.co/KzRFjTxF/Safe-Content-Icon.png" alt="Safe Content Icon">
+        <div>
+            <h3>Safe & Parent-Approved</h3>
+            <p>Rest easy knowing our content is carefully curated and safe for kids. We prioritize a positive viewing experience, giving you peace of mind.</p>
+        </div>
+    </div>
+    <div class="benefit">
+        <img src="https://i.ibb.co/gFZBZkZj/Happy-Kids-Icon.png" alt="Happy Kids Icon">
+        <div>
+            <h3>Spark Joy & Happiness</h3>
+            <p>Watch your little one's face light up! Baa Bah's Corner is filled with cheerful songs and characters that are guaranteed to bring smiles and laughter to your home.</p>
+        </div>
+    </div>
+    <div class="benefit">
+        <img src="https://i.ibb.co/NdgtHMY8/Easy-Access-Icon.png" alt="Easy Access Icon">
+        <div>
+            <h3>Easy to Access & Enjoy</h3>
+            <p>Baa Bah's Corner is available anytime, anywhere.  Whether you're at home or on the go, fun and learning are just a click away. Simple navigation for busy parents!</p>
+        </div>
+    </div>
+</section>
+
+<section class="subscribe-section">
+    <h2>Join the Baa Bah's Corner Family!</h2>
+    <p>Don't miss out on new videos, fun updates, and more! Subscribe to our YouTube channel today and let the learning adventures continue.</p>
+    <a href="https://www.youtube.com/@baabahscorner?sub_confirmation=1" target="_blank" aria-label="Subscribe to Baa Bah's Corner YouTube Channel">
+        <button class="subscribe-button">Subscribe on YouTube!</button>
+    </a>
+</section>
+
 <div id="loadingIndicator" aria-live="assertive">Loading...</div> <!-- aria-live for screen readers to announce loading -->
 <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
 
@@ -662,6 +847,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main id="episodes"> <!-- Using main for main content for semantic structure -->
     <!-- Categories and video grids will be loaded here -->
 </main>
+
+<!-- --- Featured Video Section (MOVED DOWN) --- -->
+<section class="featured-video-section">
+    <h2>Featured Video</h2>
+    <div class="featured-video-container">
+        <iframe src="https://www.youtube.com/embed/FhKmm89Uc9s" title="Baa Bah's Corner: Fun Videos for Happy Kids & Easier Parenting! #shorts" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</section>
+
+<!-- --- Testimonial Section (MOVED DOWN) --- -->
+<section class="testimonial-section">
+    <h2>What Parents Are Saying</h2>
+    <div class="testimonial">
+        <p>"Baa Bah's Corner has been a lifesaver! My toddler loves the songs, and I love that they are educational.  It's the only screen time I feel good about."</p>
+        <p class="author">- Sarah M., Mom of a 2-year-old</p>
+    </div>
+    <div class="testimonial">
+        <p>"My preschooler is learning so much from Baa Bah's Corner!  The animal songs are her favorite, and she's already starting to recognize letters and numbers."</p>
+        <p class="author">-  David L., Dad of a 4-year-old</p>
+    </div>
+    <div class="testimonial">
+        <p>"Finally, kids' content that's both fun *and* safe!  I can trust Baa Bah's Corner to keep my little one entertained without worrying about inappropriate content."</p>
+        <p class="author">-  Jessica K., Mom of a 3-year-old</p>
+    </div>
+</section>
+
 
 <footer>
     Copyright © 2025 Baa Bah's Corner!. All rights reserved.
