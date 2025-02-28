@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -760,6 +761,71 @@
                 text-align: center; /* Center text in vertical tabs */
             }
         }
+
+        /* --- FAQ Section Styles with Toggle --- */
+        .faq-section {
+            background-color: #fff;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .faq-section h2 {
+            color: #ff66a3;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 15px;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none; /* Remove border from last item */
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: #333;
+            cursor: pointer; /* Indicate it's clickable */
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 0; /* Remove default margin */
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+
+        .faq-answer {
+            color: #555;
+            padding: 10px;
+            display: none; /* Initially hidden */
+        }
+
+        .faq-answer a {
+            color: #ff66a3;
+            text-decoration: none;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        .faq-answer.show {
+            display: block; /* Show answer when 'show' class is added */
+        }
+
+
     </style>
 </head>
 <body>
@@ -875,6 +941,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 <!-- --- END SUBSCRIPTION BANNER --- -->
 
+<!-- --- FAQ Section --- -->
+<section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+        <div class="faq-question">1. What is Baa Bah's Corner?</div>
+        <div class="faq-answer">Baa Bah's Corner is a YouTube channel and website for fun, educational content for young children, featuring nursery rhymes, learning songs, and more to spark joy and early learning.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">2. Is Baa Bah's Corner content safe for children?</div>
+        <div class="faq-answer">Yes, all content is kid-friendly, age-appropriate, and parent-approved for a safe viewing experience.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">3. How can I access Baa Bah’s Corner content?</div>
+        <div class="faq-answer">Watch on our <a href="#">YouTube channel</a> or visit our website <a href="https://babahs-corner.onrender.com">babahs-corner.onrender.com</a> for categorized content.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">4. What educational content is offered?</div>
+        <div class="faq-answer">Learning songs for practical skills (handwashing, brushing teeth, potty training) and basic concepts (colors, numbers, alphabet).</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">5. How is educational content quality ensured?</div>
+        <div class="faq-answer">Content is developed with educators and child development experts, aligned with early learning principles.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">6. Is content for specific age groups?</div>
+        <div class="faq-answer">Yes, primarily for toddlers and preschool-aged children (ages 1-6), focusing on early learning through music and stories.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">7. How to stay updated on new videos?</div>
+        <div class="faq-answer">Subscribe to our YouTube channel and turn on notifications for new video updates.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">8. Is Baa Bah’s Corner free to watch?</div>
+        <div class="faq-answer">Yes, all YouTube videos are free. Premium content may be introduced in the future.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">9. Can parents suggest video ideas?</div>
+        <div class="faq-answer">Yes! Share suggestions on our website or YouTube video comments.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">10. How is parent/educator feedback incorporated?</div>
+        <div class="faq-answer">Feedback is actively reviewed to improve content and meet children's learning needs.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">11. What are future goals?</div>
+        <div class="faq-answer">Expand educational offerings with interactive content, printables, and possibly a mobile app.</div>
+    </div>
+</section>
+<!-- --- End FAQ Section --- -->
+
+
 <footer>
     Copyright © 2025 Baa Bah's Corner!. All rights reserved.
 </footer>
@@ -937,7 +1064,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function getRandomRequester() {
         const names = ["John S.", "Emily R.", "Michael B.", "Sophia L.", "David K.", "Olivia M.", "Ethan P.", "Ava G.", "Daniel H.", "Isabella T.", "James N.", "Mia C.", "William F.", "Abigail W.", "Alexander Q.",
             "Christopher D.", "Samantha E.", "Andrew G.", "Victoria K.", "Benjamin P.", "Chloe S.", "Matthew T.", "Elizabeth V.", "Joseph A.", "Madison B.",
-            "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Brandon H.", "Grace J."];
+            "Ryan C.", "Harper D.", "Ethan F.", "Scarlett G.", "Scarlett G.", "Brandon H.", "Grace J."];
 
         const descriptions = [
             "Requested this for his little one!", "Loves this classic!", "Her daughter can't get enough!",
@@ -1275,6 +1402,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (firstTab) { // Focus on the first tab after page load for better keyboard navigation starting point
             firstTab.focus();
         }
+
+        // --- FAQ Toggle JavaScript ---
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.classList.toggle('show');
+            });
+        });
 
     });
 </script>
