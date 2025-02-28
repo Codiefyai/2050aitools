@@ -1,645 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Password Generator</title>
     <style>
-        /* General Styles (same as before) */
         body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
-        }
-
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-
-        .top-bar.menu-open {
-            background-color: #333;
-        }
-
-        .top-bar .container {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: #fff;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            height: 100vh;
+            margin: 0;
         }
-
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
-            display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
-        }
-
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
-        }
-
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
+        h1 {
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
         }
-
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 1rem;
         }
-
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        input[type="number"], input[type="checkbox"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
         }
-
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
+        button {
+            background: #00bcd4;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
+        button:hover {
+            background: #0097a7;
         }
-
-
+        #result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox-container label {
+            margin-left: 10px;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            background: #4CAF50;
+        }
+        .copy-btn:hover {
+            background: #45a049;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
+    <div class="container">
+        <h1>Advanced Password Generator</h1>
+        <label for="length">Password Length:</label>
+        <input type="number" id="length" placeholder="Enter length (8-64 characters)" min="8" max="64">
+        <div class="checkbox-container">
+            <input type="checkbox" id="include-special" checked>
+            <label for="include-special">Include Special Characters</label>
         </div>
-    </div>
-
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
-
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
+        <div class="checkbox-container">
+            <input type="checkbox" id="exclude-similar">
+            <label for="exclude-similar">Exclude Similar Characters (e.g., O, 0, l, I)</label>
         </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
-                </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
-            </div>
-        </footer>
+        <div class="checkbox-container">
+            <input type="checkbox" id="exclude-repeats">
+            <label for="exclude-repeats">Exclude Repeated Characters</label>
+        </div>
+        <button id="generate-btn">Generate Password</button>
+        <div id="result"></div>
+        <button id="copy-btn" class="copy-btn" style="display: none;">Copy Password</button>
     </div>
-
 
     <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("generate-btn").addEventListener("click", generatePassword);
+            document.getElementById("copy-btn").addEventListener("click", copyPassword);
+        });
+
+        function generatePassword() {
+            const length = parseInt(document.getElementById('length').value);
+            const includeSpecial = document.getElementById('include-special').checked;
+            const excludeSimilar = document.getElementById('exclude-similar').checked;
+            const excludeRepeats = document.getElementById('exclude-repeats').checked;
+            const result = document.getElementById('result');
+            const copyBtn = document.getElementById('copy-btn');
+
+            if (isNaN(length) || length < 8 || length > 64) {
+                result.textContent = 'Please enter a valid length between 8 and 64 characters.';
+                result.style.color = 'red';
+                copyBtn.style.display = 'none';
+                return;
+            }
+
+            const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+            const numbers = '0123456789';
+            const special = '!@#$%^&*()_+[]{}|;:,.<>?';
+
+            let allCharacters = uppercase + lowercase + numbers;
+
+            if (includeSpecial) {
+                allCharacters += special;
+            }
+
+            if (excludeSimilar) {
+                allCharacters = allCharacters.replace(/[O0lI]/g, '');
+            }
+
+            let password = '';
+            let usedCharacters = new Set();
+
+            if (includeSpecial) {
+                password += special[Math.floor(Math.random() * special.length)];
+                usedCharacters.add(password[0]);
+            }
+            
+            while (password.length < length - 2) {
+                const char = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+                if (excludeRepeats && usedCharacters.has(char)) {
+                    continue;
                 }
+                password += char;
+                usedCharacters.add(char);
             }
 
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
+            password += lowercase[Math.floor(Math.random() * lowercase.length)];
+            password += numbers[Math.floor(Math.random() * numbers.length)];
+            password = password.split('').sort(() => 0.5 - Math.random()).join('');
 
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
+            result.textContent = password;
+            result.style.color = 'lightgreen';
+            copyBtn.style.display = 'block';
+        }
 
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
+        function copyPassword() {
+            const passwordText = document.getElementById('result').textContent;
+            if (!passwordText) return;
 
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
-
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
+            navigator.clipboard.writeText(passwordText).then(() => {
+                alert("Password copied to clipboard!");
+            }).catch(err => {
+                console.error("Error copying password: ", err);
+                alert("Failed to copy password. Please try again.");
             });
-
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
-
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
-
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
-                });
-            }
-
-
-        })();
+        }
     </script>
 </body>
 </html>
