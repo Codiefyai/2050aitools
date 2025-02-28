@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -327,6 +326,7 @@
             margin-top: 30px;
             border-radius: 5px;
             font-weight: bold;
+            text-align: center; /* Center text in footer */
         }
 
         /* --- Modal Styles --- */
@@ -830,13 +830,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 </section>
 
-<section class="subscribe-section">
-    <h2>Join the Baa Bah's Corner Family!</h2>
-    <p>Don't miss out on new videos, fun updates, and more! Subscribe to our YouTube channel today and let the learning adventures continue.</p>
-    <a href="https://www.youtube.com/@baabahscorner?sub_confirmation=1" target="_blank" aria-label="Subscribe to Baa Bah's Corner YouTube Channel">
-        <button class="subscribe-button">Subscribe on YouTube!</button>
-    </a>
-</section>
 
 <div id="loadingIndicator" aria-live="assertive">Loading...</div> <!-- aria-live for screen readers to announce loading -->
 <button id="openModalBtn" class="open-modal-btn">Suggest a Video</button>
@@ -848,15 +841,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Categories and video grids will be loaded here -->
 </main>
 
-<!-- --- Featured Video Section (MOVED DOWN) --- -->
+<!-- --- Featured Video Section (MOVED TO BEFORE FOOTER) --- -->
 <section class="featured-video-section">
     <h2>Featured Video</h2>
     <div class="featured-video-container">
         <iframe src="https://www.youtube.com/embed/FhKmm89Uc9s" title="Baa Bah's Corner: Fun Videos for Happy Kids & Easier Parenting! #shorts" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 </section>
-
-<!-- --- Testimonial Section (MOVED DOWN) --- -->
+<!-- --- Testimonial Section (MOVED BEFORE SUBSCRIBE SECTION) --- -->
 <section class="testimonial-section">
     <h2>What Parents Are Saying</h2>
     <div class="testimonial">
@@ -873,6 +865,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 </section>
 
+<!-- --- ADD SUBSCRIPTION BANNER HERE (MOVED TO BOTTOM) --- -->
+<section class="subscribe-section">
+    <h2>Join the Baa Bah's Corner Family!</h2>
+    <p>Don't miss out on new videos, fun updates, and more! Subscribe to our YouTube channel today and let the learning adventures continue.</p>
+    <a href="https://www.youtube.com/@baabahscorner?sub_confirmation=1" target="_blank" aria-label="Subscribe to Baa Bah's Corner YouTube Channel">
+        <button class="subscribe-button">Subscribe on YouTube!</button>
+    </a>
+</section>
+<!-- --- END SUBSCRIPTION BANNER --- -->
 
 <footer>
     Copyright © 2025 Baa Bah's Corner!. All rights reserved.
@@ -1005,7 +1006,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const animalSongsData = [
         { title: "Old MacDonald Had a Farm", url: "https://www.youtube.com/watch?v=_6HzoUcx3eo" },
         { title: "Baby Shark", url: "https://www.youtube.com/watch?v=XqZsoesa55w" },
-        { title: "Five Little Monkeys", url: "https://www.youtube.com/watch?v=b0NHrFNZWh0" },
+        { title: "Five Little Monkeys", url: "https://www.youtube.com/watch?v=b0NHrFNrFNZWh0" },
         { title: "BINGO Dog Song", url: "https://www.youtube.com/watch?v=8y2mgyI6kus" },
         { title: "The Ants Go Marching", url: "https://www.youtube.com/watch?v=Pjw2A3QU8Qg" },
         { title: "Pet Song", url: "https://www.youtube.com/watch?v=pWepfJ-8XU0" },
