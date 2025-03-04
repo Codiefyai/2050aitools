@@ -1,645 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click-O-Loco - Conquer Boredom with Ultimate Randomness!</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Df6WRtk8/Click-O-Loco-favicon.png">
+    <meta name="description" content="Tired of the mundane? Click-O-Loco injects randomness into your life with bizarre facts, unexpected events, and hilarious surprises. Conquer boredom now!">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+
+      crossorigin="anonymous" referrerpolicy="noreferrer">
+    <link rel="icon" href="https://i.ibb.co/Df6WRtk/Click-O-Loco-favicon.png" type="image/png">
+    <!-- Favicon Link -->
     <style>
-        /* General Styles (same as before) */
+        /* Global Styles */
         body {
-            font-family: 'Open Sans', sans-serif;
+            text-align: center;
+            padding: 20px;  /* Reduced padding */
+            background-color: black;
+            color: white;
+            font-family: sans-serif;
+            transition: background-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* Reset default margins and padding */
+        * {
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 1200px;
+        /* Responsive Typography */
+        h1 {
+            font-size: 3em; /* Adjust for smaller screens */
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 4px 4px 6px #000000;
+            letter-spacing: 2px; /* Slightly reduced */
+        }
+
+        h2 {
+            font-size: 2em; /* Adjust for smaller screens */
+            color: #FFFF00;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        p, ul, ol {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        /* Section Styles */
+        .section {
+            max-width: 90%;  /* Responsive width */
             margin: 0 auto;
-            padding: 1rem;
+            padding: 30px; /* Reduced padding */
+            border-bottom: 1px dotted #555;
         }
 
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        /* Image Styles */
+        .image-container {
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Call to Action Button */
+        .cta-button, .animated-button, .comment-form input[type="submit"] {
+            font-size: 1.2em;  /* Adjust button text size */
+            padding: 12px 30px; /* Smaller padding */
+            cursor: pointer;
+            background: yellow;
+            color: black;
+            border: none;
+            border-radius: 8px; /* Slightly smaller */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: bold;
             text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
+            display: inline-block;
         }
 
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .cta-button:hover, .animated-button:hover, .comment-form input[type="submit"]:hover {
+            transform: scale(1.1); /* Reduced scaling */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Reduced shadow */
+        }
+
+        /* User Guide Styles */
+        .user-guide-section {
+            margin-top: 40px;
+            text-align: left;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border: 3px dotted #777;
+            border-radius: 12px;
+        }
+
+        .user-guide-section h3 {
+            font-size: 1.4em;
+            color: #FFFF00;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .user-guide-section p, .user-guide-section ul {
+            font-size: 1em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .user-guide-section ul {
+            list-style-type: disc;
+            margin-left: 25px;
+        }
+
+        /* Comment and Review Styles */
+        .comments-section {
+            margin-top: 50px;
+            text-align: left;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 25px;
+            border: 3px dotted #555;
+            border-radius: 12px;
+        }
+
+        .comment {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #222;
+            border-radius: 10px;
             position: relative;
-            z-index: 10;
+            display: none;
         }
 
-        .top-bar.menu-open {
+        .comment.active {
+            display: block;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: yellow;
+            font-size: 1.1em;
+        }
+
+        .comment-date {
+            font-size: 0.9em;
+            color: #aaa;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+
+        .comment-text {
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .comment-rating {
+            color: gold;
+            font-size: 1em;
+        }
+
+        /* Comment Form */
+        .comment-form {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .comment-form input[type="text"],
+        .comment-form textarea {
+            width: 80%;  /* Increased width on smaller screens */
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #555;
             background-color: #333;
+            color: white;
+            font-size: 1em;
         }
 
-        .top-bar .container {
+        /* Animated Buttons */
+        .animated-buttons {
+            margin-top: 40px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            gap: 15px; /* Reduced gap */
         }
 
-        .top-bar-logo img {
-            width: 120px;
+        .animated-button {
+            font-size: 1em; /* Reduced font size */
+            padding: 10px 20px; /* Smaller padding */
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background-color: #111;
+            padding: 60px 0;
+            border-bottom: 2px solid yellow;
+             position: relative; /* For positioning logo */
+        }
+
+        /* Logo Styles */
+        .logo-container {
+            position: absolute;
+            top: 10px; /* Adjust as needed */
+            left: 10px; /* Adjust as needed */
+            width: 100px; /* Adjust size as needed */
             height: auto;
         }
 
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
         }
 
-        .nav-menu li {
-            margin: 0 1rem;
+        /* Footer Styles */
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9em;
         }
 
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
+        footer .social-icons a {
+            display: inline-block;
+            margin: 0 5px;
             color: white;
-            padding: 2rem 0;
-            text-align: center;
+            font-size: 1.2em;
+            text-decoration: none;
         }
 
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
+        /* ReCAPTCHA */
+        #recaptcha {
+          display: inline-block;
         }
 
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
+        /* Media Queries for Smaller Screens */
         @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
+            h1 {
+                font-size: 2.5em;
             }
 
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
+            h2 {
+                font-size: 1.8em;
             }
 
-            .nav-menu ul {
-                flex-direction: column;
+            .animated-buttons {
+                flex-direction: column; /* Stack buttons on smaller screens */
             }
 
-            .nav-menu li {
-                margin: 0.5rem 0;
+            .animated-button {
+                width: 80%; /* Full width on smaller screens */
+                text-align: center;
+                margin-bottom: 10px;
             }
 
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
+            .section {
+                padding: 20px;
+            }
+              .comment-form input[type="text"],
+            .comment-form textarea {
+                width: 90%; /* Adjust for extra small screens */
+            }
+             .logo-container {
+                width: 80px; /* Smaller logo on small screens */
             }
         }
 
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
+        /* Persuasion Popup */
+        #persuasionPopup {
+            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top */
-        }
-
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(68, 68, 68, 0.95); /* Add transparency */
+            color: white;
+            padding: 20px; /* Adjust padding */
+            border: 3px solid yellow;
             border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
-        }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
-            display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
-        }
-
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
-        }
-
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
+            z-index: 2000;
+            max-width: 90%; /* Responsive width */
             text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
         }
 
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
+        #persuasionPopup h2 {
+            font-size: 2em; /* Adjust size */
+            color: #FFFF00;
+            margin-bottom: 15px;
         }
 
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        #persuasionPopup p {
+            font-size: 1.1em; /* Adjust size */
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
+        #closePopupButton {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #dc3545; /* Red */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 0.9em;
         }
 
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
+        #closePopupButton:hover {
+            background-color: #c82333; /* Darker red */
         }
-
 
     </style>
-</head>
-<body>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
-        </div>
-    </div>
-
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
-
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
-        </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
-                </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
-
-    <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                }
-            }
-
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
-
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
-
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
-
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
-
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
-            });
-
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
-
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
-
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
-                });
-            }
-
-
-        })();
+async="" defer="defer"></script>
+    <script type="text/javascript">
+        var onloadCallback = function() {
+            grecaptcha.render('recaptcha', {
+            'sitekey' : 'YOUR_SITE_KEY' //Replace with your site key
+        });
+        };
     </script>
-</body>
+  </head>
+  <body>
+    <div id="persuasionPopup"> <button id="closePopupButton" onclick="closePopup()">X</button>
+      <h2>Feeling Stuck in a Rut?</h2>
+      <p>Discover the cure for your boredom! Click-O-Loco offers a wild escape
+        into a world of random facts, quirky events, and hilarious surprises.
+        Unleash the loco within!</p>
+      <a href="https://app-click-o-loco.onrender.com" class="cta-button">Yes, I
+        Need Some Randomness!</a> </div>
+    <section class="section hero-section">
+      <div class="logo-container"> <img src="https://i.ibb.co/Df6WRtk8/Click-O-Loco-favicon.png"
+
+          alt="Click-O-Loco Logo"> </div>
+      <h1>Click-O-Loco</h1>
+      <p>Inject randomness into your life! Click the buttons below for a wild
+        ride!</p>
+      <div class="animated-buttons"> <a href="https://app-click-o-loco.onrender.com"
+
+          class="animated-button"><span>Enter Click-O-Loco</span></a> <a href="#comments"
+
+          class="animated-button"><span>See What Others Say</span></a> <a href="https://app-click-o-loco.onrender.com"
+
+          class="animated-button"><span>Don't Click Me!</span></a>
+        <!-- Changed text and removed risk-button class --> </div>
+    </section>
+    <section class="section">
+      <h2>Tired of the Same Old Routine?</h2>
+      <div class="image-container"> <img src="https://via.placeholder.com/600x300/333/FFF?text=Someone+Looking+Bored"
+
+          alt="Someone Looking Bored">
+        <!-- Smaller placeholder image --> </div>
+      <p>Is your life a predictable sequence of tasks, responsibilities, and
+        predictable outcomes? Do you crave something more...unhinged? Then
+        you've come to the right place!</p>
+    </section>
+    <section class="section">
+      <h2>Embrace the Randomness with Click-O-Loco!</h2>
+      <div class="image-container"> <img src="https://via.placeholder.com/600x300/333/FFF?text=Someone+Laughing"
+
+          alt="Someone Laughing Uncontrollably">
+        <!-- Smaller placeholder image --> </div>
+      <p>Click-O-Loco is your one-way ticket to a world where the unexpected is
+        the only expectation. With each click, you'll unleash a barrage of
+        bizarre facts, mind-bending events, and utterly ridiculous surprises
+        that will shatter your sense of normalcy (in a good way!).</p>
+    </section>
+    <section class="section">
+      <h2>What Awaits You Inside?</h2>
+      <ul>
+        <li>Mind-Blowing Facts That Will Make You Question Everything.</li>
+        <li>Hilariously Unpredictable Sound Effects.</li>
+        <li>Visual Chaos That Will Keep You on Your Toes.</li>
+        <li>A Chance to Escape the Mundane and Embrace the Absurd.</li>
+      </ul>
+    </section>
+    <section class="section user-guide-section">
+      <h3>Click-O-Loco: A Quick Guide to Navigating the Chaos</h3>
+      <p>New to Click-O-Loco? Don't worry, we've got you covered! Here's a
+        survival guide to help you navigate the beautiful madness:</p>
+      <h3>Key Features:</h3>
+      <ul>
+        <li><strong>Click Me Button:</strong> The source of all randomness.</li>
+        <li><strong>User Guide:</strong> Explains the fun and some madness that
+          will come.</li>
+        <li><strong>Randomness Warning:</strong> Can trigger some existential
+          crisis or uncontrolably laughter.</li>
+        <li><strong>Share:</strong> Connect with us via our platform!</li>
+      </ul>
+    </section>
+    <section class="section comments-section" id="comments">
+      <h2>What Others Are Saying About Click-O-Loco</h2>
+      <div class="comment active">
+        <div class="comment-author">Alice Wonderland <span class="comment-rating"><i
+
+              class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+              class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+        <div class="comment-date">October 26, 2023</div>
+        <div class="comment-text">"Click-O-Loco is my new happy place! It's like
+          a delightful descent into madness, and I can't get enough! 5/5 Stars!"</div>
+      </div>
+      <div class="comment">
+        <div class="comment-author">Bob The Builder <span class="comment-rating"><i
+
+              class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+              class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+        <div class="comment-date">October 25, 2023</div>
+        <div class="comment-text">"I never knew randomness could be so
+          inspiring! Click-O-Loco has helped me think outside the box (and
+          occasionally lose my sanity). 4/5 Stars!"</div>
+      </div>
+      <div class="comment">
+        <div class="comment-author">Cheshire Cat <span class="comment-rating">
+            <div class="fas fa-star"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="comment-date">October 24, 2023</div>
+            <div class="comment-text">"Click-O-Loco proves that we're all mad
+              here... in the best possible way! A purr-fectly random experience!
+              5/5 Stars!"</div>
+          </span></div>
+        <div class="comment">
+          <div class="comment-author">Mad Hatter <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          <div class="comment-date">October 23, 2023</div>
+          <div class="comment-text">"Just what I needed to make my tea parties
+            even more unpredictable. Brilliant! 4/5 Stars - could use more tea."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">White Rabbit <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          <div class="comment-date">October 22, 2023</div>
+          <div class="comment-text">"I'm late, I'm late, for a very important...
+            click! Click-O-Loco has made me even MORE late, because I can't
+            stop! 5/5 Stars!"</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Darth Vader <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          <div class="comment-date">October 21, 2023</div>
+          <div class="comment-text">"Disturbing... but in a good way. I find
+            your randomness... acceptable. 3/5 Stars."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Hermione Granger <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          <div class="comment-date">October 20, 2023</div>
+          <div class="comment-text">"Even with all my knowledge, Click-O-Loco
+            still surprises me! A brilliant and mind-expanding experience. 5/5
+            Stars!"</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Sherlock Holmes <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          <div class="comment-date">October 19, 2023</div>
+          <div class="comment-text">"Elementary, my dear Watson! The randomness
+            is not entirely random, but delightfully crafted. 4/5 Stars."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Bilbo Baggins <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          <div class="comment-date">October 18, 2023</div>
+          <div class="comment-text">"I'm going on an adventure! (Of clicking).
+            Who knew randomness could be so addictive! 5/5 Stars."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Daenerys Targaryen <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          <div class="comment-date">October 17, 2023</div>
+          <div class="comment-text">"Where were these dragons facts all my life?
+            A random adventure indeed! 3/5 Stars."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">Walter White <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          <div class="comment-date">October 16, 2023</div>
+          <div class="comment-text">"It's... acceptable. Makes you think about
+            chemistry in new ways. 4/5 Stars."</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">SpongeBob SquarePants <span class="comment-rating"><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+
+                class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          <div class="comment-date">October 15, 2023</div>
+          <div class="comment-text">"I'm ready! I'm ready! I'm ready for more
+            randomness! This is the most fun I've had since jellyfishing! 5/5
+            Stars!"</div>
+        </div>
+      </div>
+    </section>
+    <section class="section comment-form">
+      <h2>Share Your Thoughts!</h2>
+      <form id="commentForm" onsubmit="return submitComment()"> <input id="authorName"
+
+          placeholder="Your Name" required="" type="text"><br>
+        <textarea id="commentText" placeholder="Your Comment" rows="4" required=""></textarea><br>
+        <div id="recaptcha"></div>
+        <input value="Submit Comment" type="submit"> </form>
+    </section>
+    <section class="section">
+      <h2>Ready to Get Loco?</h2>
+      <p>Stop wondering and start clicking! Prepare for a world of randomness
+        that will challenge your perceptions and tickle your funny bone.</p>
+      <a href="https://app-click-o-loco.onrender.com" class="cta-button">Enter
+        Click-O-Loco Now!</a> </section>
+    <footer>
+      <p>© 2023 Click-O-Loco. All rights reserved. Embrace the ultimate
+        randomness!</p>
+      <p>Created with ❤️ by Flynn James P.</p>
+      <p>Contact: <a href="mailto:support@clickoloco.com">support@clickoloco.com</a></p>
+      <div class="social-icons"> <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a> <a href="#"
+
+          target="_blank"><i class="fab fa-instagram"></i></a> </div>
+    </footer>
+    <script>
+        // Function to open the popup
+        function openPopup() {
+            document.getElementById('persuasionPopup').style.display = 'block';
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('persuasionPopup').style.display = 'none';
+        }
+
+        // Show the popup after 3 seconds
+        setTimeout(openPopup, 3000);  // 3000 milliseconds = 3 seconds
+
+        // Comment Slideshow
+        let commentIndex = 0;
+        const comments = document.querySelectorAll('.comment');
+
+        function showComment() {
+            // Hide all comments
+            comments.forEach(comment => comment.classList.remove('active'));
+
+            // Show the next comment
+            comments[commentIndex].classList.add('active');
+
+            // Increment the index, and loop back to the start if necessary
+            commentIndex = (commentIndex + 1) % comments.length;
+        }
+
+        // Show the first comment immediately
+        showComment();
+
+        // Change comment every 5 seconds
+        setInterval(showComment, 5000);
+
+        // Submit comment function
+        function submitComment() {
+            event.preventDefault(); // Prevent the default form submission
+
+            const author = document.getElementById('authorName').value;
+            const comment = document.getElementById('commentText').value;
+            const recaptchaResponse = grecaptcha.getResponse();
+
+            if (!recaptchaResponse.length > 0) {
+              alert('Please complete the reCAPTCHA.');
+              return false;
+            }
+
+            // Create the new comment element
+            const newCommentDiv = document.createElement('div');
+            newCommentDiv.classList.add('comment');
+            newCommentDiv.innerHTML = `
+                <div class="comment-author">${author} <span class="comment-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+                <div class="comment-date">Just Now</div>
+                <div class="comment-text">${comment}</div>
+            `;
+
+            // Append the new comment to the comments section
+            const commentsSection = document.querySelector('.comments-section');
+            commentsSection.appendChild(newCommentDiv);
+
+            // Reset the form
+            document.getElementById('commentForm').reset();
+            grecaptcha.reset();
+
+            // Update the comments array
+            comments.forEach(comment => comment.classList.remove('active')); //Hide all comments
+
+            const newComments = document.querySelectorAll('.comment'); //Select all comments again (include newly made comment)
+
+            newComments.forEach(comment => comment.classList.remove('active')); //Hide all comments
+
+             //Update the `comments` NodeList
+            commentsSection.appendChild(newCommentDiv); // Add the new comment element to the DOM
+            comments.forEach(comment => comment.classList.remove('active'));
+
+            const newComments1 = document.querySelectorAll('.comment');
+             //Stop current timer
+            clearInterval(commentInterval);
+
+            // Restart slideshow with new elements:
+            commentIndex = 0;  // Reset to the beginning
+            const updatedComments = document.querySelectorAll('.comment');
+
+             //Show only first comment
+            showComment();
+
+            //Restart Timer:
+            commentInterval = setInterval(showComment, 5000);
+
+            showComment();
+
+            return true;
+        }
+
+        let commentInterval = setInterval(showComment, 5000);
+
+    </script>
+  </body>
 </html>
