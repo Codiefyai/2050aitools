@@ -166,11 +166,29 @@
         const allSounds = [...funnySounds, ...horrorSounds, ...shockingSounds];
 
 
-        function playSound(soundURL) { const audio = new Audio(soundURL); audio.play(); }
+        function playSound(soundURL) {
+            const audio = new Audio(soundURL);
+            // Add random volume for each sound played
+            audio.volume = Math.random(); // Volume between 0 (silent) and 1 (full volume)
+
+            // Introduce a slight chance to play sound at double speed or half speed for extra weirdness
+            const speedRandomizer = Math.random();
+            if (speedRandomizer < 0.1) {
+                audio.playbackRate = 0.5; // 10% chance of playing at half speed
+            } else if (speedRandomizer > 0.9) {
+                audio.playbackRate = 1.5 + Math.random(); // 10% chance of playing at 1.5x to 2.5x speed
+            } else {
+                audio.playbackRate = 1; // Normal speed
+            }
+            audio.play();
+        }
 
         function getRandomGif() {
-            const giphy = { apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes", baseURL: "https://api.giphy.com/v1/gifs/", tag: "funny memes", type: "random", rating: "pg-13" };
-            let giphyURL = encodeURI(giphy.baseURL + giphy.type + "?api_key=" + giphy.apiKey + "&tag=" + giphy.tag + "&rating=" + giphy.rating);
+            const giphy = { apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes", baseURL: "https://api.giphy.com/v1/gifs/",
+                           tags: ["funny memes", "weird", "absurd", "crazy", "random", "unexpected", "silly", "goofy"], // More tags for varied GIFs
+                           type: "random", rating: "pg-13" };
+            const randomTag = giphy.tags[Math.floor(Math.random() * giphy.tags.length)]; // Random tag selection
+            let giphyURL = encodeURI(giphy.baseURL + giphy.type + "?api_key=" + giphy.apiKey + "&tag=" + randomTag + "&rating=" + giphy.rating);
             $.getJSON(giphyURL, function(json) {
                 if (json?.data?.images?.original?.url) { $(gifContainer).css({ "background-image": 'url("' + json.data.images.original.url + '")' }); }
                 else { console.error("Error: Invalid Giphy data received."); $(gifContainer).text("Error loading GIF."); }
@@ -178,37 +196,233 @@
         }
 
         function randomEvent() {
-            playSound(allSounds[Math.floor(Math.random() * allSounds.length)]);
+            // Add probability for sound to play or not to add to unpredictability
+            if (Math.random() < 0.95) { // 95% chance to play a sound, 5% chance of silence
+                playSound(allSounds[Math.floor(Math.random() * allSounds.length)]);
+            }
+
             let actions = [
-                () => { bodyElement.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16); }, () => {}, // Empty function
-                () => { outputElement.innerText = "You suddenly feel watched 👀"; }, () => { outputElement.innerText = "A weird fact: Bananas are berries, but strawberries aren’t!"; },
-                () => { bodyElement.classList.add("shake"); setTimeout(() => bodyElement.classList.remove("shake"), 500); }, getRandomGif, // No need for () => { getRandomGif(); }
-                () => { outputElement.innerText = outputElement.innerText.split("").reverse().join(""); setTimeout(() => outputElement.innerText = outputElement.innerText.split("").reverse().join(""), 5000);},
-                () => { document.body.classList.toggle("tilted"); setTimeout(() => document.body.classList.toggle("tilted"), 7000);},
-                () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), 5000);},
-                () => { bodyElement.style.cursor = 'url("https://findicons.com/files/icons/2779/simple_icons/128/cursor.png"), auto'; setTimeout(() => bodyElement.style.cursor = 'default', 5000); },
-                () => { bodyElement.style.filter = 'invert(100%)'; setTimeout(() => bodyElement.style.filter = 'none', 3000); },
-                () => { const errorDiv = document.getElementById("errorDiv") || document.createElement("div"); errorDiv.id = "errorDiv"; errorDiv.style.cssText = "position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(255,0,0,0.8); color: white; padding: 10px; font-family: monospace; font-size: 0.8em; text-align: left;"; errorDiv.innerHTML = "Uncaught TypeError: Cannot read property 'undefined' of null (anonymous function)"; document.body.appendChild(errorDiv); setTimeout(() => { if (document.getElementById("errorDiv")) document.body.removeChild(errorDiv); }, 5000); },
-                () => { const originalText = buttonElement.innerText; buttonElement.innerText = "Redirecting..."; setTimeout(() => { buttonElement.innerText = originalText; }, 3000); },
-                () => { let width = 0; const loadingBar = document.getElementById("loadingBar"); const interval = setInterval(() => { width += 1; loadingBar.style.width = width + '%'; if (width >= 90) clearInterval(interval); }, 50); setTimeout(() => { clearInterval(interval); loadingBar.style.width = '0%'; }, 8000); },
-                () => { buttonElement.style.position = 'absolute'; buttonElement.style.left = Math.random() * (window.innerWidth - buttonElement.offsetWidth) + 'px'; buttonElement.style.top = Math.random() * (window.innerHeight - buttonElement.offsetHeight) + 'px'; setTimeout(() => { buttonElement.style.position = 'static'; buttonElement.style.left = 'auto'; buttonElement.style.top = 'auto'; }, 5000); },
-                () => { const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT"]; bodyElement.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)]; setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, 5000); },
-                () => { const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"]; const randomStyle = borderStyles[Math.floor(Math.random() * borderStyles.length)]; const randomWidth = Math.floor(Math.random() * 10) + 1; bodyElement.style.border = `${randomWidth}px ${randomStyle} yellow`; setTimeout(() => { bodyElement.style.border = "none"; }, 5000); },
-                () => { const ridiculousTexts = ["Don't Click Me!", "Danger!", "Self-Destruct", "Click at Your Own Risk", "May Cause Sanity Loss"]; const originalText = buttonElement.innerText; buttonElement.innerText = ridiculousTexts[Math.floor(Math.random() * ridiculousTexts.length)]; setTimeout(() => { buttonElement.innerText = originalText; }, 5000); },
-                () => { const randomRotation = Math.floor(Math.random() * 360) - 180; bodyElement.style.transform = `rotate(${randomRotation}deg)`; setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, 5000); },
-                () => { bodyElement.classList.add("blinking"); setTimeout(() => bodyElement.classList.remove("blinking"), 5000); },
-                () => { outputElement.innerText = Math.floor(Math.random() * 1000); setTimeout(() => { outputElement.innerText = ""; }, 2000); },
-                () => { const randomTop = Math.random() * 80 + "vh"; const marquee = document.querySelector("marquee"); marquee.style.position = "fixed"; marquee.style.top = randomTop; setTimeout(() => { marquee.style.position = "static"; marquee.style.top = "auto"; }, 5000); },
-                () => { bodyElement.style.letterSpacing = Math.random() * 10 + "px"; setTimeout(() => { bodyElement.style.letterSpacing = "2px"; }, 5000); },
-                () => { const imageURLs = ["https://i.imgur.com/XXX.png", "https://i.imgur.com/YYY.gif", "https://i.imgur.com/ZZZ.jpg", "https://i.imgur.com/AAA.png"]; const randomImageURL = imageURLs[Math.floor(Math.random() * imageURLs.length)]; const img = document.createElement("img"); img.src = randomImageURL; img.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; object-fit:contain; pointer-events:none; z-index:999;"; document.body.appendChild(img); setTimeout(() => document.body.removeChild(img), 5000); },
-                () => { const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange']; const color1 = colors[Math.floor(Math.random() * colors.length)]; const color2 = colors[Math.floor(Math.random() * colors.length)]; bodyElement.style.backgroundImage = `linear-gradient(to right, ${color1}, ${color2})`; setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, 5000); },
-                () => { const scrollX = Math.random() * document.body.scrollWidth; const scrollY = Math.random() * document.body.scrollHeight; window.scrollTo(scrollX, scrollY); setTimeout(() => { window.scrollTo(0, 0); }, 3000); },
-                () => { if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { if (bodyElement.requestFullscreen) { bodyElement.requestFullscreen(); } else if (bodyElement.msRequestFullscreen) { bodyElement.msRequestFullscreen(); } else if (bodyElement.mozRequestFullScreen) { bodyElement.mozRequestFullScreen(); } else if (bodyElement.webkitRequestFullscreen) { bodyElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); } setTimeout(() => { if (document.exitFullscreen) { document.exitFullscreen(); } else if (document.msExitFullscreen) { document.msExitFullscreen(); } else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } }, 7000); } },
-                () => { const allElements = document.querySelectorAll('*'); allElements.forEach(element => { element.style.fontWeight = 'bold'; }); setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, 5000); },
-                () => {  crackedScreenOverlay.classList.add('show'); setTimeout(() => crackedScreenOverlay.classList.remove('show'), 3000); }, // Show cracked screen overlay
-                () => { bodyElement.style.perspective = '500px'; setTimeout(() => bodyElement.style.perspective = 'none', 3000); }, // 3D perspective
-                () => { bodyElement.style.transformStyle = 'preserve-3d'; setTimeout(() =>  bodyElement.style.transformStyle = 'flat', 3000); }, // 3D transform style
-                () => { document.querySelector('marquee').stop(); setTimeout(() => document.querySelector('marquee').start(), 3000); } // Stop/start marquee
+                () => { bodyElement.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16); },
+                () => {}, // Empty function - sometimes do nothing for surprise
+                () => { outputElement.innerText = "You suddenly feel watched 👀"; },
+                () => {
+                    const facts = [
+                        "Bananas are berries, but strawberries aren’t!",
+                        "Honey never spoils.",
+                        "A group of flamingos is called a flamboyance.",
+                        "Your tongue print is as unique as your fingerprint.",
+                        "Octopuses have three hearts."
+                    ];
+                    outputElement.innerText = "Weird fact: " + facts[Math.floor(Math.random() * facts.length)];
+                 },
+                () => { bodyElement.classList.add("shake"); setTimeout(() => bodyElement.classList.remove("shake"), 500); },
+                getRandomGif,
+                () => {
+                    let currentText = outputElement.innerText;
+                    if (currentText) {
+                        outputElement.innerText = currentText.split("").reverse().join("");
+                        setTimeout(() => {
+                            outputElement.innerText = currentText; // Revert to original after delay
+                        }, Math.random() * 5000 + 2000); // Random revert time between 2 to 7 seconds
+                    }
+                },
+                () => { bodyElement.classList.toggle("tilted"); setTimeout(() => bodyElement.classList.toggle("tilted"), Math.random() * 7000 + 3000);}, // Random tilt duration
+                () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), Math.random() * 5000 + 2000);}, // Random hidden message duration
+                () => {
+                    const cursorURLs = [
+                        'url("https://findicons.com/files/icons/2779/simple_icons/128/cursor.png"), auto',
+                        'url("https://i.imgur.com/ZWZt00v.png"), auto', // Example custom cursor - replace with your own funny cursor URLs
+                        'url("https://i.imgur.com/rSpR37F.png"), auto',
+                        'default' // Sometimes revert to default cursor
+                    ];
+                    bodyElement.style.cursor = cursorURLs[Math.floor(Math.random() * cursorURLs.length)];
+                    setTimeout(() => bodyElement.style.cursor = 'default', Math.random() * 5000 + 3000); // Random cursor duration
+                },
+                () => { bodyElement.style.filter = 'invert(100%)'; setTimeout(() => bodyElement.style.filter = 'none', Math.random() * 3000 + 1000); }, // Random invert duration
+                () => {
+                    // Error message event - slightly modified for randomness in error type
+                    const errorTypes = ["TypeError", "ReferenceError", "SyntaxError", "CustomLocoError"];
+                    const randomErrorType = errorTypes[Math.floor(Math.random() * errorTypes.length)];
+                    const errorDiv = document.getElementById("errorDiv") || document.createElement("div");
+                    errorDiv.id = "errorDiv";
+                    errorDiv.style.cssText = "position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(255,0,0,0.8); color: white; padding: 10px; font-family: monospace; font-size: 0.8em; text-align: left;";
+                    errorDiv.innerHTML = `Uncaught ${randomErrorType}: Something went terribly wrong! (Click-O-Loco)`;
+                    document.body.appendChild(errorDiv);
+                    setTimeout(() => { if (document.getElementById("errorDiv")) document.body.removeChild(errorDiv); }, Math.random() * 5000 + 2000); // Random error display time
+                },
+                () => { const originalText = buttonElement.innerText; buttonElement.innerText = "Redirecting... Please Wait... Just Kidding!"; setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 3000 + 1500); }, // More dramatic redirect text
+                () => {
+                    let width = 0;
+                    const loadingBar = document.getElementById("loadingBar");
+                    const intervalDuration = Math.random() * 50 + 20; // Random interval speed
+                    const interval = setInterval(() => {
+                        width += Math.random() * 3 + 1; // Random increment speed
+                        loadingBar.style.width = width + '%';
+                        if (width >= 100) clearInterval(interval);
+                    }, intervalDuration);
+                    setTimeout(() => { clearInterval(interval); loadingBar.style.width = '0%'; }, Math.random() * 8000 + 3000); // Random loading bar duration
+                },
+                () => {
+                    buttonElement.style.position = 'absolute';
+                    buttonElement.style.left = Math.random() * (window.innerWidth - buttonElement.offsetWidth) + 'px';
+                    buttonElement.style.top = Math.random() * (window.innerHeight - buttonElement.offsetHeight) + 'px';
+                    setTimeout(() => {
+                        buttonElement.style.position = 'static';
+                        buttonElement.style.left = 'auto';
+                        buttonElement.style.top = 'auto';
+                    }, Math.random() * 5000 + 2000); // Random button move duration
+                },
+                () => {
+                    const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT", "Impact", "Comic Sans MS"]; // Added more fonts
+                    bodyElement.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
+                    setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, Math.random() * 5000 + 2000); // Random font duration
+                },
+                () => {
+                    const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset", "none"]; // Added 'none'
+                    const randomStyle = borderStyles[Math.floor(Math.random() * borderStyles.length)];
+                    const randomWidth = Math.floor(Math.random() * 15) + 1; // Wider range of widths
+                    const colors = ['yellow', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange']; // More colors
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    bodyElement.style.border = `${randomWidth}px ${randomStyle} ${randomColor}`;
+                    setTimeout(() => { bodyElement.style.border = "none"; }, Math.random() * 5000 + 2000); // Random border duration
+                },
+                () => {
+                    const ridiculousTexts = ["Don't Click Me... Again!", "Danger Zone!", "Warning: May Explode", "Click for Disappointment", "Sanity Not Guaranteed", "Error 404: Fun Not Found"]; // More texts
+                    const originalText = buttonElement.innerText;
+                    buttonElement.innerText = ridiculousTexts[Math.floor(Math.random() * ridiculousTexts.length)];
+                    setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 5000 + 2000); // Random button text duration
+                },
+                () => {
+                    const randomRotation = Math.floor(Math.random() * 720) - 360; // Wider rotation range
+                    bodyElement.style.transform = `rotate(${randomRotation}deg)`;
+                    setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, Math.random() * 5000 + 2000); // Random rotation duration
+                },
+                () => {
+                     if (Math.random() < 0.7) { // 70% chance of regular blinking, 30% chance of fast blinking
+                        bodyElement.classList.add("blinking");
+                        setTimeout(() => bodyElement.classList.remove("blinking"), Math.random() * 5000 + 2000); // Random blinking duration
+                     } else {
+                        bodyElement.classList.add("blinking-fast"); // Introduce a new 'blinking-fast' class in CSS
+                        setTimeout(() => bodyElement.classList.remove("blinking-fast"), Math.random() * 3000 + 1000); // Faster blinking, shorter duration
+                     }
+                 },
+                () => { outputElement.innerText = Math.floor(Math.random() * 10000); setTimeout(() => { outputElement.innerText = ""; }, Math.random() * 3000 + 1000); }, // Larger random number, random clear time
+                () => {
+                    const randomTop = Math.random() * 90 + "vh"; // Marquee can go closer to bottom
+                    const marquee = document.querySelector("marquee");
+                    marquee.style.position = "fixed";
+                    marquee.style.top = randomTop;
+                    marquee.style.fontSize =  (1 + Math.random() * 0.5) + "em"; // Random font size for marquee
+                    setTimeout(() => {
+                        marquee.style.position = "static";
+                        marquee.style.top = "auto";
+                        marquee.style.fontSize = "1.3em"; // Reset font size
+                    }, Math.random() * 5000 + 2000); // Random marquee position duration
+                },
+                () => { bodyElement.style.letterSpacing = Math.random() * 15 + "px"; setTimeout(() => { bodyElement.style.letterSpacing = "3px"; }, Math.random() * 5000 + 2000); }, // Wider letter spacing, random duration
+                () => {
+                    const imageURLs = ["https://i.imgur.com/XXX.png", "https://i.imgur.com/YYY.gif", "https://i.imgur.com/ZZZ.jpg", "https://i.imgur.com/AAA.png", "https://i.imgur.com/BBB.gif", "https://i.imgur.com/CCC.png"]; // More image URLs
+                    const randomImageURL = imageURLs[Math.floor(Math.random() * imageURLs.length)];
+                    const img = document.createElement("img");
+                    img.src = randomImageURL;
+                    img.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; object-fit:contain; pointer-events:none; z-index:999;";
+                    document.body.appendChild(img);
+                    setTimeout(() => document.body.removeChild(img), Math.random() * 5000 + 2000); // Random image duration
+                },
+                () => {
+                    const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'lime']; // Even more colors
+                    const color1 = colors[Math.floor(Math.random() * colors.length)];
+                    const color2 = colors[Math.floor(Math.random() * colors.length)];
+                    const gradientType = Math.random() < 0.5 ? 'to right' : 'to bottom right'; // Random gradient direction
+                    bodyElement.style.backgroundImage = `linear-gradient(${gradientType}, ${color1}, ${color2})`;
+                    setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, Math.random() * 5000 + 2000); // Random gradient duration
+                },
+                () => {
+                    const scrollX = Math.random() * document.body.scrollWidth;
+                    const scrollY = Math.random() * document.body.scrollHeight;
+                    window.scrollTo(scrollX, scrollY);
+                    setTimeout(() => { window.scrollTo(0, 0); }, Math.random() * 3000 + 1000); // Random scroll duration
+                },
+                () => {
+                    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                        if (bodyElement.requestFullscreen) { bodyElement.requestFullscreen(); }
+                        else if (bodyElement.msRequestFullscreen) { bodyElement.msRequestFullscreen(); }
+                        else if (bodyElement.mozRequestFullScreen) { bodyElement.mozRequestFullScreen(); }
+                        else if (bodyElement.webkitRequestFullscreen) { bodyElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); }
+                        setTimeout(() => {
+                            if (document.exitFullscreen) { document.exitFullscreen(); }
+                            else if (document.msExitFullscreen) { document.msExitFullscreen(); }
+                            else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); }
+                            else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+                        }, Math.random() * 7000 + 3000); // Random fullscreen duration
+                    }
+                },
+                () => {
+                    const allElements = document.querySelectorAll('*');
+                    const fontWeights = ['bold', 'bolder', 'lighter', 'normal', 'initial']; // More font weights
+                    allElements.forEach(element => { element.style.fontWeight = fontWeights[Math.floor(Math.random() * fontWeights)]; }); // Apply random font weight
+                    setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, Math.random() * 5000 + 2000); // Random bold duration
+                },
+                () => {  crackedScreenOverlay.classList.add('show'); setTimeout(() => crackedScreenOverlay.classList.remove('show'), Math.random() * 3000 + 1000); }, // Random cracked screen duration
+                () => { bodyElement.style.perspective = `${Math.random() * 1000 + 200}px`; setTimeout(() => bodyElement.style.perspective = 'none', Math.random() * 3000 + 1000); }, // Random perspective
+                () => { bodyElement.style.transformStyle = 'preserve-3d'; setTimeout(() =>  bodyElement.style.transformStyle = 'flat', Math.random() * 3000 + 1000); }, // Random 3D style duration
+                () => { document.querySelector('marquee').stop(); setTimeout(() => document.querySelector('marquee').start(), Math.random() * 3000 + 1000); }, // Random marquee stop duration
+                () => {
+                    // New event: Change button shape randomly
+                    const shapes = ['8px', '50%', '0', '20px 5px']; // Example shapes (pixel, circle, square, funky)
+                    buttonElement.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
+                    setTimeout(() => { buttonElement.style.borderRadius = '8px'; }, Math.random() * 5000 + 2000);
+                },
+                () => {
+                    // New event: Add random text shadow to body
+                    const shadowColors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
+                    const shadowColor = shadowColors[Math.floor(Math.random() * shadowColors.length)];
+                    const hShadow = Math.floor(Math.random() * 10);
+                    const vShadow = Math.floor(Math.random() * 10);
+                    const blur = Math.floor(Math.random() * 10);
+                    bodyElement.style.textShadow = `${hShadow}px ${vShadow}px ${blur}px ${shadowColor}`;
+                    setTimeout(() => { bodyElement.style.textShadow = 'none'; }, Math.random() * 5000 + 2000);
+                },
+                () => {
+                    // New event: Jiggle the button randomly
+                    buttonElement.classList.add('shake');
+                    setTimeout(() => buttonElement.classList.remove('shake'), Math.random() * 1000 + 500); // Shorter shake duration
+                },
+                () => {
+                    // New event:  Change button color and text color randomly
+                    const buttonColors = ['yellow', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange'];
+                    const buttonBgColor = buttonColors[Math.floor(Math.random() * buttonColors.length)];
+                    let buttonTextColor = 'black'; // Default text color
+                    if (['yellow', 'lime', 'cyan'].includes(buttonBgColor)) {
+                        buttonTextColor = 'black'; // Ensure contrast for light backgrounds
+                    } else {
+                        buttonTextColor = 'white';
+                    }
+                    buttonElement.style.backgroundColor = buttonBgColor;
+                    buttonElement.style.color = buttonTextColor;
+                    setTimeout(() => {
+                        buttonElement.style.backgroundColor = 'yellow'; // Reset to default colors
+                        buttonElement.style.color = 'black';
+                    }, Math.random() * 5000 + 2000);
+                },
+                () => {
+                    // New event: Add a random border to the button
+                    const borderStylesButton = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"];
+                    const randomButtonStyle = borderStylesButton[Math.floor(Math.random() * borderStylesButton.length)];
+                    const randomButtonWidth = Math.floor(Math.random() * 8) + 1;
+                    const buttonBorderColors = ['black', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange'];
+                    const randomButtonColor = buttonBorderColors[Math.floor(Math.random() * buttonBorderColors.length)];
+
+                    buttonElement.style.border = `${randomButtonWidth}px ${randomButtonStyle} ${randomButtonColor}`;
+                    setTimeout(() => { buttonElement.style.border = 'none'; }, Math.random() * 5000 + 2000);
+                },
+                 () => {
+                    // New event: Change button font size
+                    const fontSizes = ['1.5em', '2em', '2.5em', '3em', '1.2em'];
+                    buttonElement.style.fontSize = fontSizes[Math.floor(Math.random() * fontSizes.length)];
+                    setTimeout(() => { buttonElement.style.fontSize = '24px'; }, Math.random() * 5000 + 2000);
+                }
+
            ];
 
             let randomIndex = Math.floor(Math.random() * actions.length);
@@ -233,6 +447,25 @@
             }, 3000);
         });
     </script>
+
+    <style>
+        /* Add blinking-fast class */
+        .blinking-fast {
+            animation: blinkerFast 0.5s infinite steps(2, start);
+        }
+
+        @keyframes blinkerFast {
+            to { visibility: hidden; }
+        }
+
+        .blinking {
+            animation: blinker 1s infinite steps(2, start);
+        }
+
+        @keyframes blinker {
+            to { visibility: hidden; }
+        }
+    </style>
 
 </body>
 </html>
