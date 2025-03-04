@@ -1,10 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click-O-Loco - Get Ready for Ultimate Randomness!</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/Df6WRtk8/Click-O-Loco-favicon.png">
     <meta name="description" content="Click-O-Loco: the ultimate boredom buster! Brace yourself for a barrage of random events, bizarre facts, and mind-bending surprises.  Click if you dare!">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -85,7 +84,7 @@
             border: 3px dotted #777;
             border-radius: 15px;
             z-index: 1001; /* Above help button */
-            max-width: 800px;
+            max-width: 90%;
             text-align: left;
             overflow-y: auto;
             max-height: 80vh;
@@ -106,6 +105,27 @@
 
         #closePopupButton:hover {
             background-color: #c82333; /* Darker red */
+        }
+
+        /* Notification Styles */
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            z-index: 1500; /* High, but below userGuidePopup */
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s ease, top 0.5s ease;
+            font-size: 1.1em;
+        }
+
+        #notification.show {
+            opacity: 1;
+            top: 50px; /* Slide down a bit */
         }
 
 
@@ -175,14 +195,15 @@
 
         #gifContainer {
           margin-top: 25px;
-          width: 350px; /* Slightly larger */
-          height: 250px; /* Slightly larger */
+          width: 600px; /* Wider placeholder */
+          height: 300px; /* Adjusted height for landscape */
+          max-width: 95%; /* Responsive width */
           margin-left: auto;
           margin-right: auto;
         }
 
         #gifContainer {
-          background-size: cover;
+          background-size: contain; /* Changed to contain to fit landscape better */
           background-position: center;
           background-repeat: no-repeat;
           border: 4px dashed yellow; /* Dashed border to enhance "loco" feel */
@@ -221,6 +242,38 @@
             font-family: 'Courier New', monospace;
             text-shadow: 1px 1px 2px #000; /* Subtle shadow */
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 3em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 1.2em;
+                padding: 12px 25px;
+            }
+
+            #gifContainer {
+                width: 95%; /* Take up more width on smaller screens */
+                max-width: 95%; /* Ensure it doesn't get too wide */
+                height: auto;
+                max-height: 200px; /* Still limit max height */
+            }
+
+            #notification {
+                width: 80%;
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -236,61 +289,11 @@
         <button id="closePopupButton" onclick="closeUserGuide()">Close</button>
         <h2>Click-O-Loco: User Guide - Prepare for Ultimate Randomness!</h2>
         <p>Welcome, brave adventurer, to the world of Click-O-Loco! This isn't your grandma's app; it's a portal to unpredictable fun, bizarre facts, and mind-bending experiences. Before you dive headfirst into the chaos, here's a quick guide to help you navigate the madness:</p>
+    </div>
 
-        <h3>Understanding the Purpose:</h3>
-        <ul>
-            <li><strong>Boredom Annihilation:</strong> Click-O-Loco is designed to banish boredom through sheer randomness. Prepare to be surprised, amused, and maybe even slightly disturbed.</li>
-            <li><strong>No Logic Allowed:</strong> Forget logic, reason, or predictability. This app embraces the absurd.</li>
-            <li><strong>Disclaimer:</strong> Side effects may include laughter, confusion, existential dread, and a sudden urge to question reality.</li>
-        </ul>
-
-        <h3>What to Expect (The Good, the Bad, and the Hilariously Weird):</h3>
-        <ul>
-            <li><strong>Visual Mayhem:</strong>
-                <ul>
-                    <li>Background Color Changes</li>
-                    <li>Random Borders</li>
-                    <li>Screen Rotation</li>
-                    <li>Blinking Effect</li>
-                    <li>Random Image Overlays</li>
-                    <li>Gradient Backgrounds</li>
-                    <li>Font Changes</li>
-                </ul>
-            </li>
-            <li><strong>Auditory Assaults (Funny, Scary, and Shocking):</strong> Each click is accompanied by a random sound effect.</li>
-            <li><strong>Text Transformations:</strong>
-                <ul>
-                    <li>Reversed Text</li>
-                    <li>Button Text Changes</li>
-                    <li>Random Letter Spacing</li>
-                    <li>Make All Text Bold</li>
-                </ul>
-            </li>
-            <li><strong>Page Behavior:</strong>
-                <ul>
-                    <li>Random Scrolling</li>
-                    <li>Fullscreen Mode</li>
-                    <li>Marquee Mania</li>
-                </ul>
-            </li>
-            <li><strong>Information Overload:</strong>
-                <ul>
-                    <li>Weird Facts</li>
-                    <li>Hidden Messages</li>
-                </ul>
-            </li>
-            <li><strong>Button Hijinks:</strong> The "Click Me!" button might suddenly teleport to a different location on the screen.</li>
-        </ul>
-
-        <h3>Important Tips for Survival (and Maximum Fun):</h3>
-        <ul>
-            <li>Embrace the Chaos: Don't fight the randomness; revel in it!</li>
-            <li>Don't Take It Too Seriously: This is all in good fun.</li>
-            <li>Use the Reset Button Wisely: If things get <em>too</em> crazy, the reset button is your friend.</li>
-        </ul>
-
-        <h3>Disclaimer:</h3>
-        <p>Click-O-Loco is provided "as is" with no guarantees of sanity, stability, or usefulness. The developers are not responsible for any existential crises, sudden urges to wear a top hat, or uncontrollable fits of laughter that may result from using this app. Use at your own risk!</p>
+        <!-- Notification -->
+    <div id="notification">
+         "This app is a chaotic masterpiece of unpredictable absurdity! I haven't laughed this hard in ages!" - Random Loco Fan
     </div>
 
     <!-- Reset Button -->
@@ -310,10 +313,9 @@
 
     <marquee>Click-O-Loco: Prepare for the unexpected! Side effects may include laughter, confusion, and existential dread. You have been warned!</marquee>
 
-
     <footer>
         <p>© 2023 Click-O-Loco. All rights reserved. Embrace the ultimate randomness!</p>
-        <p>Created with ❤️ by Flynn James P.</p>
+        <p>Created with ❤️ by [Your Name/Company]</p>
         <p>Contact: <a href="mailto:support@clickoloco.com">support@clickoloco.com</a></p>
         <div class="social-icons">
             <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -322,7 +324,7 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const outputElement = document.getElementById("output");
         const bodyElement = document.body;
@@ -331,15 +333,31 @@
         const buttonElement = document.querySelector("button");
         const userGuidePopup = document.getElementById("userGuidePopup");
         const helpArrow = document.getElementById("helpArrow");
+        const welcomeShownKey = 'clickoLocoWelcomeShown';
 
         // All the sound effects!
         const funnySounds = [
-            "https://www.myinstants.com/media/sounds/fart.mp3",
+             "https://www.myinstants.com/media/sounds/boing.mp3",
+             "https://www.myinstants.com/media/sounds/sad-trombone.mp3",
+             "https://www.myinstants.com/media/sounds/slip-and-fall.mp3",
+             "https://www.myinstants.com/media/sounds/squeaky-toy.mp3",
+              "https://www.myinstants.com/media/sounds/chipmunk-laugh.mp3",
+              "https://www.myinstants.com/media/sounds/fart-noise.mp3",
+              "https://www.myinstants.com/media/sounds/goofy-yell.mp3",
+              "https://www.myinstants.com/media/sounds/record-scratch.mp3",
+              "https://www.myinstants.com/media/sounds/duck-quack.mp3",
+              "https://www.myinstants.com/media/sounds/fart.mp3",
             "https://www.myinstants.com/media/sounds/cat-meow_PIypz.mp3",
             "https://www.myinstants.com/media/sounds/vine-boom.mp3",
             "https://www.myinstants.com/media/sounds/clown-horn.mp3",
             "https://www.myinstants.com/media/sounds/rimshot.mp3",
-            "https://www.myinstants.com/media/sounds/wah-wah-wah.mp3"
+            "https://www.myinstants.com/media/sounds/wah-wah-wah.mp3",
+            "https://www.myinstants.com/media/sounds/wilhelm-scream.mp3",
+            "https://www.myinstants.com/media/sounds/chicken-cluck.mp3",
+            "https://www.myinstants.com/media/sounds/slide-whistle-descend.mp3",
+            "https://www.myinstants.com/media/sounds/quack.mp3",
+            "https://www.myinstants.com/media/sounds/bike-horn.mp3",
+            "https://www.myinstants.com/media/sounds/kazoo-riff.mp3"
         ];
 
         const horrorSounds = [
@@ -347,7 +365,36 @@
             "https://www.myinstants.com/media/sounds/scream.mp3",
             "https://www.myinstants.com/media/sounds/creepy-noise.mp3",
             "https://www.myinstants.com/media/sounds/scary-monster.mp3",
-            "https://www.myinstants.com/media/sounds/suspense.mp3"
+            "https://www.myinstants.com/media/sounds/suspense.mp3",
+            "https://www.myinstants.com/media/sounds/whispering-voices.mp3",
+            "https://www.myinstants.com/media/sounds/demonic-growl.mp3",
+            "https://www.myinstants.com/media/sounds/ghostly-screech.mp3",
+            "https://www.myinstants.com/media/sounds/heartbeat-thump.mp3",
+            "https://www.myinstants.com/media/sounds/children-laughing-distorted.mp3",
+            "https://www.myinstants.com/media/sounds/creaking-door.mp3",
+            "https://www.myinstants.com/media/sounds/chains-dragging.mp3",
+            "https://www.myinstants.com/media/sounds/static-and-distant-screams.mp3",
+             "https://www.myinstants.com/media/sounds/sudden-loud-bang.mp3",
+             "https://www.myinstants.com/media/sounds/iron-man-suit-up.mp3",
+             "https://www.myinstants.com/media/sounds/thors-hammer-sound-effect.mp3",
+             "https://www.myinstants.com/media/sounds/captain-america-shield.mp3",
+             "https://www.myinstants.com/media/sounds/hulk-roar.mp3",
+             "https://www.myinstants.com/media/sounds/thanos-snap.mp3",
+             "https://www.myinstants.com/media/sounds/dr-strange-portal.mp3",
+             "https://www.myinstants.com/media/sounds/black-panther-suit-up.mp3",
+             "https://www.myinstants.com/media/sounds/spiderman-web-shooter.mp3",
+             "https://www.myinstants.com/media/sounds/batman-grappling-hook-sound.mp3",
+             "https://www.myinstants.com/media/sounds/superman-fly-by-sound.mp3",
+             "https://www.myinstants.com/media/sounds/joker-laugh-02.mp3",
+             "https://www.myinstants.com/media/sounds/wonder-woman-whip-sound.mp3",
+             "https://www.myinstants.com/media/sounds/batmobile-engine-the-batman.mp3",
+             "https://www.myinstants.com/media/sounds/lightsaber-sound.mp3",
+             "https://www.myinstants.com/media/sounds/t-rex-roar.mp3",
+             "https://www.myinstants.com/media/sounds/inception-horn-braaam.mp3",
+             "https://www.myinstants.com/media/sounds/transformers-transforming.mp3",
+             "https://www.myinstants.com/media/sounds/psycho-scream.mp3",
+             "https://www.myinstants.com/media/sounds/godzilla-roar.mp3",
+             "https://www.myinstants.com/media/sounds/jaws-theme-song.mp3"
         ];
 
         const shockingSounds = [
@@ -367,7 +414,7 @@
             const giphy = {
                 baseURL: "https://api.giphy.com/v1/gifs/",
                 apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes",
-                tag: "fail",  // You can change this
+                tag: "funny memes",  // More meme-related GIFs
                 type: "random",
                 rating: "pg-13"
             };
@@ -424,7 +471,7 @@
                 () => { outputElement.innerText = "You suddenly feel watched 👀"; },
                 () => { outputElement.innerText = "A weird fact: Bananas are berries, but strawberries aren’t!"; },
                 () => { bodyElement.classList.add("shake"); setTimeout(() => bodyElement.classList.remove("shake"), 500); },
-                () => { getRandomGif(); },
+                () => { getRandomGif(); }, // Call getRandomGif here to change GIF on every click
                 () => { outputElement.innerText = outputElement.innerText.split("").reverse().join(""); setTimeout(() => outputElement.innerText = outputElement.innerText.split("").reverse().join(""), 5000);},
                 () => { document.body.classList.toggle("tilted"); setTimeout(() => document.body.classList.toggle("tilted"), 7000);},
                 () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), 5000);},
@@ -529,7 +576,7 @@
                    setTimeout(() => { bodyElement.style.letterSpacing = "2px"; }, 5000);
                },
                () => { // Add a Random Image Overlay
-                  const imageURLs =[
+                  const imageURLs = [
                       "https://i.imgur.com/XXX.png",  // Replace with actual image URLs
                       "https://i.imgur.com/YYY.gif",
                       "https://i.imgur.com/ZZZ.jpg",
@@ -620,13 +667,35 @@
             document.getElementById("helpArrow").classList.remove("hidden");
         }
 
+           // Function to show a welcome notification
+        function showWelcomeNotification() {
+            // Check if the notification has already been shown in this session
+            if (sessionStorage.getItem(welcomeShownKey)) {
+                return;  // Don't show again if already shown.
+            }
+
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+
+            // Set a timeout to hide the notification after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+
+            // Store that the welcome notification has been shown in sessionStorage.
+            sessionStorage.setItem(welcomeShownKey, 'true');
+
+         }
+
         // Reset Page Function
         function resetPage() {
+            sessionStorage.removeItem(welcomeShownKey); // clear the shown key.
             location.reload(); // Reload the page
         }
 
         $(document).ready(function() {
             showArrow();  // Show the arrow on page load
+            showWelcomeNotification();
         });
     </script>
 
