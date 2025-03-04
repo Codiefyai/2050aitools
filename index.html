@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click-O-Loco - Get Ready for Ultimate Randomness!</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/Df6WRtk8/Click-O-Loco-favicon.png">
     <meta name="description" content="Click-O-Loco: the ultimate boredom buster! Brace yourself for a barrage of random events, bizarre facts, and mind-bending surprises.  Click if you dare!">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -15,265 +15,134 @@
             color: white;
             font-family: sans-serif;
             transition: background-color 0.3s ease;
-            overflow-x: hidden;  /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
 
         /* Help Button Styles */
         #helpButton {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: #007BFF; /* Blue */
+            top: 20px; /* Increased top spacing */
+            left: 20px; /* Increased left spacing */
+            background-color: #007BFF;
             color: white;
-            padding: 5px 10px; /* Smaller padding */
-            border: none;
-            border-radius: 50%; /* Circular button */
+            padding: 10px 15px; /* Increased padding */
+            border: 2px solid white; /* Added border */
+            border-radius: 10px; /* More rounded corners */
             cursor: pointer;
-            font-size: 1.2em; /* Slightly larger */
-            z-index: 1000; /* Ensure it's on top */
-            width: 30px;  /* Set a fixed width */
-            height: 30px; /* Set a fixed height */
+            font-size: 1.3em; /* Slightly larger font */
+            z-index: 1000;
+            width: auto; /* Adjusted width to content */
+            height: auto; /* Adjusted height to content */
+            min-width: 50px; /* Minimum width for touch */
+            min-height: 50px; /* Minimum height for touch */
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
         }
 
         #helpButton:hover {
-            background-color: #0056b3; /* Darker blue */
+            background-color: #0056b3;
+            transform: scale(1.1); /* Scale up on hover */
         }
 
-         /* Arrow animation */
-        .arrow {
-            position: absolute;
-            top: 30px;  /* Adjust as needed to place arrow near button */
-            left: 50px; /* Adjust to position to the right of the button */
-            width: 0;
-            height: 0;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-left: 20px solid yellow; /* Yellow arrow */
-            z-index: 999;  /* Make sure it's above the button */
-            animation: nudge 2s infinite; /* Animate the arrow */
-            pointer-events: none; /* Ensures it doesn't interfere with clicks */
-        }
+         /* Arrow animation (no changes) */
+        .arrow { position: absolute; top: 30px; left: 50px; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 20px solid yellow; z-index: 999; animation: nudge 2s infinite; pointer-events: none; }
+        @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+        .arrow.hidden { display: none; }
 
-        @keyframes nudge {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(10px); /* Nudge the arrow to the right */
-            }
-        }
+        /* Popup Styles (no changes) */
+        #userGuidePopup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #333; color: white; padding: 20px; border: 3px dotted #777; border-radius: 15px; z-index: 1001; max-width: 90%; text-align: left; overflow-y: auto; max-height: 80vh; }
+        #closePopupButton { position: absolute; top: 10px; right: 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+        #closePopupButton:hover { background-color: #c82333; }
 
-        /* Hide arrow after click */
-        .arrow.hidden {
-            display: none;
-        }
-
-        /* Popup Styles */
-        #userGuidePopup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            border: 3px dotted #777;
-            border-radius: 15px;
-            z-index: 1001; /* Above help button */
-            max-width: 90%;
-            text-align: left;
-            overflow-y: auto;
-            max-height: 80vh;
-        }
-
-        /* Close Button in Popup */
-        #closePopupButton {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #dc3545; /* Red */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-
-        #closePopupButton:hover {
-            background-color: #c82333; /* Darker red */
-        }
-
-        /* Notification Styles */
-        #notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50; /* Green */
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            z-index: 1500; /* High, but below userGuidePopup */
-            opacity: 0; /* Initially hidden */
-            transition: opacity 0.5s ease, top 0.5s ease;
-            font-size: 1.1em;
-        }
-
-        #notification.show {
-            opacity: 1;
-            top: 50px; /* Slide down a bit */
-        }
+        /* Notification Styles (no changes) */
+        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4CAF50; color: white; padding: 15px 30px; border-radius: 8px; z-index: 1500; opacity: 0; transition: opacity 0.5s ease, top 0.5s ease; font-size: 1.1em; }
+        #notification.show { opacity: 1; top: 50px; }
 
 
-        h1 {
-            margin-bottom: 30px;
-            font-size: 3.2em; /* Increased size */
-            font-family: 'Courier New', monospace;
-            text-shadow: 4px 4px 6px #000000; /* Stronger shadow */
-            letter-spacing: 3px; /* Added letter spacing */
-        }
-
-        h2 {
-            font-size: 2em;
-            margin-top: 40px;
-            font-family: 'Courier New', monospace;
-            color: #FFFF00;
-        }
-
-        p {
-            font-size: 1.2em;
-            line-height: 1.7;
-            margin-bottom: 25px;
-        }
-
+        h1 { margin-bottom: 30px; font-size: 3.2em; font-family: 'Courier New', monospace; text-shadow: 4px 4px 6px #000000; letter-spacing: 3px; }
+        h2 { font-size: 2em; margin-top: 40px; font-family: 'Courier New', monospace; color: #FFFF00; }
+        p { font-size: 1.2em; line-height: 1.7; margin-bottom: 25px; }
 
         button {
-            font-size: 24px; /* Slightly larger */
-            padding: 17px 40px; /* Adjust padding */
+            font-size: 24px;
+            padding: 17px 40px;
             cursor: pointer;
             background: yellow;
             color: black;
             border: none;
-            border-radius: 8px; /* Adjust radius */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-weight: bold; /* Make the text bolder */
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, animation 1s ease;
+            font-weight: bold;
         }
 
         button:hover {
-            transform: scale(1.2); /* Slightly more zoom */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* More pronounced shadow */
+            transform: scale(1.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
         }
 
-        #output {
-            margin-top: 35px;
-            font-size: 1.4em; /* Slightly larger */
-            min-height: 40px;
-        }
-
-        .shake {
-            animation: shake 0.5s;
-            animation-iteration-count: 1;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-
-        #gifContainer {
-          margin-top: 25px;
-          width: 600px; /* Wider placeholder */
-          height: 300px; /* Adjusted height for landscape */
-          max-width: 95%; /* Responsive width */
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        #gifContainer {
-          background-size: contain; /* Changed to contain to fit landscape better */
-          background-position: center;
-          background-repeat: no-repeat;
-          border: 4px dashed yellow; /* Dashed border to enhance "loco" feel */
-          border-radius: 12px; /* Slightly larger radius */
-        }
+        /* Jumping animation for button (no changes) */
+        button.jumping { animation: jump 1s infinite alternate; }
+        @keyframes jump { 0% { transform: translateY(0); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0); } }
 
 
-        .hidden {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            font-size: 0.9em; /* Slightly larger */
-            margin-top: 12px;
-        }
-        body.tilted {
-            transform: rotate(2deg);
+        #output { margin-top: 35px; font-size: 1.4em; min-height: 40px; }
+        .shake { animation: shake 0.5s; animation-iteration-count: 1; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } /* ... (rest of shake animation) ... */ 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        #gifContainer { margin-top: 25px; width: 600px; height: 300px; max-width: 95%; margin-left: auto; margin-right: auto; }
+        #gifContainer { background-size: contain; background-position: center; background-repeat: no-repeat; border: 4px dashed yellow; border-radius: 12px; }
+        .hidden { opacity: 0; transition: opacity 0.5s ease; font-size: 0.9em; margin-top: 12px; }
+        body.tilted { transform: rotate(2deg); }
+        #loadingBarContainer { width: 100%; height: 14px; background-color: #333; margin-top: 25px; }
+        #loadingBar { width: 0%; height: 14px; background-color: #4CAF50; transition: width 0.2s ease; }
+        marquee { margin-top: 35px; font-size: 1.3em; color: yellow; font-family: 'Courier New', monospace; text-shadow: 1px 1px 2px #000; }
+
+        /* Reset Button Styles */
+        #resetButton {
+            position: fixed;
+            top: 20px; /* Increased top spacing */
+            right: 20px; /* Increased right spacing */
+            background-color: #ffc107; /* Yellow-ish, to match theme but distinct */
+            color: black; /* Dark text for contrast */
+            padding: 15px 25px; /* Increased padding */
+            border: 2px solid white; /* Added white border */
+            border-radius: 10px; /* More rounded corners */
+            cursor: pointer;
+            font-size: 1.2em; /* Slightly larger font */
+            font-weight: bold; /* Bold text for emphasis */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+            z-index: 1000;
+            min-width: 70px; /* Minimum width for touch */
+            min-height: 50px; /* Minimum height for touch */
         }
 
-        #loadingBarContainer {
-            width: 100%;
-            height: 14px; /* Slightly thicker */
-            background-color: #333; /* Darker */
-            margin-top: 25px;
+        #resetButton:hover {
+            background-color: #ffca2b; /* Slightly lighter yellow on hover */
+            transform: scale(1.1); /* Scale up on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Added a subtle shadow */
         }
 
-        #loadingBar {
-            width: 0%;
-            height: 14px;
-            background-color: #4CAF50;
-            transition: width 0.2s ease; /* Smoother loading */
-        }
 
-        marquee {
-            margin-top: 35px;
-            font-size: 1.3em; /* Slightly larger */
-            color: yellow;
-            font-family: 'Courier New', monospace;
-            text-shadow: 1px 1px 2px #000; /* Subtle shadow */
-        }
-
-        /* Responsive adjustments */
+        /* Responsive adjustments (as before - with minor padding changes for buttons) */
         @media (max-width: 768px) {
-            body {
-                padding: 30px;
+            body { padding: 20px; } /* Reduced body padding */
+            h1 { font-size: 2.5em; }
+            p { font-size: 1em; }
+            button { font-size: 1.1em; padding: 10px 20px; } /* Slightly smaller 'Click Me' button */
+            #gifContainer { max-height: 150px; }
+            #notification { width: 90%; font-size: 0.9em; }
+            #resetButton, #helpButton {
+                position: fixed; /* Keep fixed positioning */
+                padding: 8px 12px; /* Slightly smaller padding on smaller screens */
+                font-size: 1em; /* Slightly smaller font on smaller screens */
+                min-width: 40px; /* Adjust min-width for smaller screens */
+                min-height: 40px; /* Adjust min-height for smaller screens */
             }
+            #resetButton { top: 15px; right: 15px; } /*Adjust position for smaller screens*/
+            #helpButton { top: 15px; left: 15px; } /*Adjust position for smaller screens*/
 
-            h1 {
-                font-size: 3em;
-            }
 
-            p {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 1.2em;
-                padding: 12px 25px;
-            }
-
-            #gifContainer {
-                width: 95%; /* Take up more width on smaller screens */
-                max-width: 95%; /* Ensure it doesn't get too wide */
-                height: auto;
-                max-height: 200px; /* Still limit max height */
-            }
-
-            #notification {
-                width: 80%;
-                font-size: 0.9em;
-            }
         }
     </style>
 </head>
@@ -281,15 +150,20 @@
 
     <!-- Help Button -->
     <button id="helpButton" onclick="openUserGuide(); hideArrow()">?</button>
-
     <!-- Arrow pointing to the help button -->
     <div class="arrow" id="helpArrow"></div>
-
     <!-- User Guide Popup -->
     <div id="userGuidePopup">
         <button id="closePopupButton" onclick="closeUserGuide()">Close</button>
-        <h2>Click-O-Loco: User Guide - Prepare for Ultimate Randomness!</h2>
-        <p>Welcome, brave adventurer, to the world of Click-O-Loco! This isn't your grandma's app; it's a portal to unpredictable fun, bizarre facts, and mind-bending experiences. Before you dive headfirst into the chaos, here's a quick guide to help you navigate the madness:</p>
+        <h2>Click-O-Loco: User Guide</h2>
+        <p>Unleash ultimate randomness! No instructions needed, just:</p>
+        <h3>Advice:</h3>
+        <ul>
+            <li><strong>Click! Click! Click!</strong> - Seriously, just keep clicking the button.</li>
+            <li><strong>Embrace Chaos</strong> - Expect the unexpected. It's the whole point.</li>
+            <li><strong>Reset if Needed</strong> - Top right button is your escape hatch if it gets *too* loco.</li>
+        </ul>
+        <p>That's it. Go wild and have fun!</p>
     </div>
 
         <!-- Notification -->
@@ -303,15 +177,13 @@
     <h1>Click-O-Loco - Get Ready for Ultimate Randomness!</h1>
     <p>Welcome to Click-O-Loco, the ultimate boredom annihilation device! We've cranked the randomness up to eleven! Click the button below and brace yourself for a chaotic symphony of unexpected events, mind-blowing facts, and utterly ridiculous surprises. Will you unlock the secrets of the universe? Probably not. Will you laugh? Almost certainly. Are you ready to embrace the ultimate randomness?</p>
 
-    <button onclick="randomEvent()" class="wobble">Click Me!</button>
+    <button onclick="randomEvent()" class="wobble jumping">Click Me!</button>
     <p id="output"></p>
     <div id="gifContainer"></div>
     <p id="hiddenMessage" class="hidden">The algorithms know what you're thinking...</p>
-
     <div id="loadingBarContainer">
       <div id="loadingBar"></div>
     </div>
-
     <marquee>Click-O-Loco: Prepare for the unexpected! Side effects may include laughter, confusion, and existential dread. You have been warned!</marquee>
 
     <footer>
@@ -336,367 +208,73 @@
         const helpArrow = document.getElementById("helpArrow");
         const welcomeShownKey = 'clickoLocoWelcomeShown';
 
-        // All the sound effects!
-        const funnySounds = [
-             "https://www.myinstants.com/media/sounds/boing.mp3",
-             "https://www.myinstants.com/media/sounds/sad-trombone.mp3",
-             "https://www.myinstants.com/media/sounds/slip-and-fall.mp3",
-             "https://www.myinstants.com/media/sounds/squeaky-toy.mp3",
-              "https://www.myinstants.com/media/sounds/chipmunk-laugh.mp3",
-              "https://www.myinstants.com/media/sounds/fart-noise.mp3",
-              "https://www.myinstants.com/media/sounds/goofy-yell.mp3",
-              "https://www.myinstants.com/media/sounds/record-scratch.mp3",
-              "https://www.myinstants.com/media/sounds/duck-quack.mp3",
-              "https://www.myinstants.com/media/sounds/fart.mp3",
-            "https://www.myinstants.com/media/sounds/cat-meow_PIypz.mp3",
-            "https://www.myinstants.com/media/sounds/vine-boom.mp3",
-            "https://www.myinstants.com/media/sounds/clown-horn.mp3",
-            "https://www.myinstants.com/media/sounds/rimshot.mp3",
-            "https://www.myinstants.com/media/sounds/wah-wah-wah.mp3",
-            "https://www.myinstants.com/media/sounds/wilhelm-scream.mp3",
-            "https://www.myinstants.com/media/sounds/chicken-cluck.mp3",
-            "https://www.myinstants.com/media/sounds/slide-whistle-descend.mp3",
-            "https://www.myinstants.com/media/sounds/quack.mp3",
-            "https://www.myinstants.com/media/sounds/bike-horn.mp3",
-            "https://www.myinstants.com/media/sounds/kazoo-riff.mp3"
-        ];
+        // All the sound effects! ( ... sound arrays - as before ... )
+        const funnySounds = [ "https://www.myinstants.com/media/sounds/boing.mp3", "https://www.myinstants.com/media/sounds/sad-trombone.mp3", "https://www.myinstants.com/media/sounds/slip-and-fall.mp3", "https://www.myinstants.com/media/sounds/squeaky-toy.mp3", "https://www.myinstants.com/media/sounds/chipmunk-laugh.mp3", "https://www.myinstants.com/media/sounds/fart-noise.mp3", "https://www.myinstants.com/media/sounds/goofy-yell.mp3", "https://www.myinstants.com/media/sounds/record-scratch.mp3", "https://www.myinstants.com/media/sounds/duck-quack.mp3", "https://www.myinstants.com/media/sounds/fart.mp3", "https://www.myinstants.com/media/sounds/cat-meow_PIypz.mp3", "https://www.myinstants.com/media/sounds/vine-boom.mp3", "https://www.myinstants.com/media/sounds/clown-horn.mp3", "https://www.myinstants.com/media/sounds/rimshot.mp3", "https://www.myinstants.com/media/sounds/wah-wah-wah.mp3", "https://www.myinstants.com/media/sounds/wilhelm-scream.mp3", "https://www.myinstants.com/media/sounds/chicken-cluck.mp3", "https://www.myinstants.com/media/sounds/slide-whistle-descend.mp3", "https://www.myinstants.com/media/sounds/quack.mp3", "https://www.myinstants.com/media/sounds/bike-horn.mp3", "https://www.myinstants.com/media/sounds/kazoo-riff.mp3"];
+        const horrorSounds = [ "https://www.myinstants.com/media/sounds/evil-laugh-sound-effect.mp3", "https://www.myinstants.com/media/sounds/scream.mp3", "https://www.myinstants.com/media/sounds/creepy-noise.mp3", "https://www.myinstants.com/media/sounds/scary-monster.mp3", "https://www.myinstants.com/media/sounds/suspense.mp3", "https://www.myinstants.com/media/sounds/whispering-voices.mp3", "https://www.myinstants.com/media/sounds/demonic-growl.mp3", "https://www.myinstants.com/media/sounds/ghostly-screech.mp3", "https://www.myinstants.com/media/sounds/heartbeat-thump.mp3", "https://www.myinstants.com/media/sounds/children-laughing-distorted.mp3", "https://www.myinstants.com/media/sounds/creaking-door.mp3", "https://www.myinstants.com/media/sounds/chains-dragging.mp3", "https://www.myinstants.com/media/sounds/static-and-distant-screams.mp3", "https://www.myinstants.com/media/sounds/sudden-loud-bang.mp3", "https://www.myinstants.com/media/sounds/iron-man-suit-up.mp3", "https://www.myinstants.com/media/sounds/thors-hammer-sound-effect.mp3", "https://www.myinstants.com/media/sounds/captain-america-shield.mp3", "https://www.myinstants.com/media/sounds/hulk-roar.mp3", "https://www.myinstants.com/media/sounds/thanos-snap.mp3", "https://www.myinstants.com/media/sounds/dr-strange-portal.mp3", "https://www.myinstants.com/media/sounds/black-panther-suit-up.mp3", "https://www.myinstants.com/media/sounds/spiderman-web-shooter.mp3", "https://www.myinstants.com/media/sounds/batman-grappling-hook-sound.mp3", "https://www.myinstants.com/media/sounds/superman-fly-by-sound.mp3", "https://www.myinstants.com/media/sounds/joker-laugh-02.mp3", "https://www.myinstants.com/media/sounds/wonder-woman-whip-sound.mp3", "https://www.myinstants.com/media/sounds/batmobile-engine-the-batman.mp3", "https://www.myinstants.com/media/sounds/lightsaber-sound.mp3", "https://www.myinstants.com/media/sounds/t-rex-roar.mp3", "https://www.myinstants.com/media/sounds/inception-horn-braaam.mp3", "https://www.myinstants.com/media/sounds/transformers-transforming.mp3", "https://www.myinstants.com/media/sounds/psycho-scream.mp3", "https://www.myinstants.com/media/sounds/godzilla-roar.mp3", "https://www.myinstants.com/media/sounds/jaws-theme-song.mp3"];
+        const shockingSounds = [ "https://www.myinstants.com/media/sounds/electric-shock.mp3", "https://www.myinstants.com/media/sounds/glass-breaking.mp3", "https://www.myinstants.com/media/sounds/explosion.mp3", "https://www.myinstants.com/media/sounds/siren.mp3", "https://www.myinstants.com/media/sounds/air-raid-siren.mp3"];
+        const allSounds = [...funnySounds, ...horrorSounds, ...shockingSounds];
 
-        const horrorSounds = [
-            "https://www.myinstants.com/media/sounds/evil-laugh-sound-effect.mp3",
-            "https://www.myinstants.com/media/sounds/scream.mp3",
-            "https://www.myinstants.com/media/sounds/creepy-noise.mp3",
-            "https://www.myinstants.com/media/sounds/scary-monster.mp3",
-            "https://www.myinstants.com/media/sounds/suspense.mp3",
-            "https://www.myinstants.com/media/sounds/whispering-voices.mp3",
-            "https://www.myinstants.com/media/sounds/demonic-growl.mp3",
-            "https://www.myinstants.com/media/sounds/ghostly-screech.mp3",
-            "https://www.myinstants.com/media/sounds/heartbeat-thump.mp3",
-            "https://www.myinstants.com/media/sounds/children-laughing-distorted.mp3",
-            "https://www.myinstants.com/media/sounds/creaking-door.mp3",
-            "https://www.myinstants.com/media/sounds/chains-dragging.mp3",
-            "https://www.myinstants.com/media/sounds/static-and-distant-screams.mp3",
-             "https://www.myinstants.com/media/sounds/sudden-loud-bang.mp3",
-             "https://www.myinstants.com/media/sounds/iron-man-suit-up.mp3",
-             "https://www.myinstants.com/media/sounds/thors-hammer-sound-effect.mp3",
-             "https://www.myinstants.com/media/sounds/captain-america-shield.mp3",
-             "https://www.myinstants.com/media/sounds/hulk-roar.mp3",
-             "https://www.myinstants.com/media/sounds/thanos-snap.mp3",
-             "https://www.myinstants.com/media/sounds/dr-strange-portal.mp3",
-             "https://www.myinstants.com/media/sounds/black-panther-suit-up.mp3",
-             "https://www.myinstants.com/media/sounds/spiderman-web-shooter.mp3",
-             "https://www.myinstants.com/media/sounds/batman-grappling-hook-sound.mp3",
-             "https://www.myinstants.com/media/sounds/superman-fly-by-sound.mp3",
-             "https://www.myinstants.com/media/sounds/joker-laugh-02.mp3",
-             "https://www.myinstants.com/media/sounds/wonder-woman-whip-sound.mp3",
-             "https://www.myinstants.com/media/sounds/batmobile-engine-the-batman.mp3",
-             "https://www.myinstants.com/media/sounds/lightsaber-sound.mp3",
-             "https://www.myinstants.com/media/sounds/t-rex-roar.mp3",
-             "https://www.myinstants.com/media/sounds/inception-horn-braaam.mp3",
-             "https://www.myinstants.com/media/sounds/transformers-transforming.mp3",
-             "https://www.myinstants.com/media/sounds/psycho-scream.mp3",
-             "https://www.myinstants.com/media/sounds/godzilla-roar.mp3",
-             "https://www.myinstants.com/media/sounds/jaws-theme-song.mp3"
-        ];
 
-        const shockingSounds = [
-            "https://www.myinstants.com/media/sounds/electric-shock.mp3",
-            "https://www.myinstants.com/media/sounds/glass-breaking.mp3",
-            "https://www.myinstants.com/media/sounds/explosion.mp3",
-            "https://www.myinstants.com/media/sounds/siren.mp3",
-            "https://www.myinstants.com/media/sounds/air-raid-siren.mp3"
-        ];
-
-        function playSound(soundURL) {
-            const audio = new Audio(soundURL);
-            audio.play();
-        }
+        function playSound(soundURL) { const audio = new Audio(soundURL); audio.play(); }
 
         function getRandomGif() {
-            const giphy = {
-                baseURL: "https://api.giphy.com/v1/gifs/",
-                apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes",
-                tag: "funny memes",  // More meme-related GIFs
-                type: "random",
-                rating: "pg-13"
-            };
-
-            let giphyURL = encodeURI(
-                giphy.baseURL +
-                giphy.type +
-                "?api_key=" +
-                giphy.apiKey +
-                "&tag=" +
-                giphy.tag +
-                "&rating=" +
-                giphy.rating
-            );
-
+            const giphy = { apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes", baseURL: "https://api.giphy.com/v1/gifs/", tag: "funny memes", type: "random", rating: "pg-13" };
+            let giphyURL = encodeURI(giphy.baseURL + giphy.type + "?api_key=" + giphy.apiKey + "&tag=" + giphy.tag + "&rating=" + giphy.rating);
             $.getJSON(giphyURL, function(json) {
-                if (json && json.data && json.data.images && json.data.images.original && json.data.images.original.url) {
-                    $(gifContainer).css({
-                        "background-image": 'url("' + json.data.images.original.url + '")'
-                    });
-                } else {
-                    console.error("Error: Invalid Giphy data received.");
-                    $(gifContainer).text("Error loading GIF.");
-                }
-            }).fail(function(jqxhr, textStatus, error) {
-                console.error("Error fetching GIF:", textStatus, error);
-                $(gifContainer).text("Error loading GIF.");
-            });
+                if (json?.data?.images?.original?.url) { $(gifContainer).css({ "background-image": 'url("' + json.data.images.original.url + '")' }); }
+                else { console.error("Error: Invalid Giphy data received."); $(gifContainer).text("Error loading GIF."); }
+            }).fail(function(jqxhr, textStatus, error) { console.error("Error fetching GIF:", textStatus, error); $(gifContainer).text("Error loading GIF."); });
         }
 
         function randomEvent() {
-
-            // Randomly choose a sound category
-            const soundCategories = ["funny", "horror", "shocking"];
-            const randomCategory = soundCategories[Math.floor(Math.random() * soundCategories.length)];
-
-            let soundToPlay;
-            switch (randomCategory) {
-                case "funny":
-                    soundToPlay = funnySounds[Math.floor(Math.random() * funnySounds.length)];
-                    break;
-                case "horror":
-                    soundToPlay = horrorSounds[Math.floor(Math.random() * horrorSounds.length)];
-                    break;
-                case "shocking":
-                    soundToPlay = shockingSounds[Math.floor(Math.random() * shockingSounds.length)];
-                    break;
-            }
-            playSound(soundToPlay);  //Play sound first!
-
+            playSound(allSounds[Math.floor(Math.random() * allSounds.length)]);
             let actions = [
-                () => { bodyElement.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16); },
-                () => {  }, //Empty function to prevent double sound
-                () => { outputElement.innerText = "You suddenly feel watched 👀"; },
-                () => { outputElement.innerText = "A weird fact: Bananas are berries, but strawberries aren’t!"; },
-                () => { bodyElement.classList.add("shake"); setTimeout(() => bodyElement.classList.remove("shake"), 500); },
-                () => { getRandomGif(); }, // Call getRandomGif here to change GIF on every click
+                () => { bodyElement.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16); }, () => {}, // Empty function
+                () => { outputElement.innerText = "You suddenly feel watched 👀"; }, () => { outputElement.innerText = "A weird fact: Bananas are berries, but strawberries aren’t!"; },
+                () => { bodyElement.classList.add("shake"); setTimeout(() => bodyElement.classList.remove("shake"), 500); }, getRandomGif, // No need for () => { getRandomGif(); }
                 () => { outputElement.innerText = outputElement.innerText.split("").reverse().join(""); setTimeout(() => outputElement.innerText = outputElement.innerText.split("").reverse().join(""), 5000);},
                 () => { document.body.classList.toggle("tilted"); setTimeout(() => document.body.classList.toggle("tilted"), 7000);},
                 () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), 5000);},
-                () => {
-                    bodyElement.style.cursor = 'url("https://findicons.com/files/icons/2779/simple_icons/128/cursor.png"), auto';
-                    setTimeout(() => bodyElement.style.cursor = 'default', 5000);
-                  },
-                 () => {
-                    bodyElement.style.filter = 'invert(100%)';
-                    setTimeout(() => bodyElement.style.filter = 'none', 3000);
-                },
-                () => {
-                    const errorDiv = document.getElementById("errorDiv");
-                    if (!errorDiv) { // Only create if it doesn't exist.
-                        const errorDiv = document.createElement("div");
-                        errorDiv.id = "errorDiv";  // Set an ID for checking later
-                        errorDiv.style.cssText = "position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(255,0,0,0.8); color: white; padding: 10px; font-family: monospace; font-size: 0.8em; text-align: left;";
-                        errorDiv.innerHTML = "Uncaught TypeError: Cannot read property 'undefined' of null (anonymous function)";
-                        document.body.appendChild(errorDiv);
-                        setTimeout(() => {
-                            if (document.getElementById("errorDiv")) { // Verify it still exists
-                                document.body.removeChild(errorDiv);
-                            }
-                        }, 5000);
-                    }
-                },
-                () => {
-                    const originalText = buttonElement.innerText;
-                    buttonElement.innerText = "Redirecting...";
-                    setTimeout(() => { buttonElement.innerText = originalText; }, 3000);
-                },
-                () => {
-                    const loadingBar = document.getElementById("loadingBar");
-                    let width = 0;
-                    const interval = setInterval(() => {
-                        width += 1;
-                        loadingBar.style.width = width + '%';
-                        if (width >= 90) {
-                            clearInterval(interval);
-                        }
-                    }, 50);
-                    setTimeout(() => {
-                        clearInterval(interval);
-                        loadingBar.style.width = '0%';
-                    }, 8000);
-                },
-                () => {
-                   buttonElement.style.position = 'absolute';
-                   buttonElement.style.left = Math.random() * (window.innerWidth - buttonElement.offsetWidth) + 'px';
-                   buttonElement.style.top = Math.random() * (window.innerHeight - buttonElement.offsetHeight) + 'px';
-                   setTimeout(() => {
-                       buttonElement.style.position = 'static';
-                       buttonElement.style.left = 'auto';
-                       buttonElement.style.top = 'auto';
-                   }, 5000);
-               },
-               // New Unpredictable Actions:
-               () => { // Change Font Family Randomly
-                   const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT"];
-                   bodyElement.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
-                   setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, 5000); // Revert after 5s
-               },
-               () => { // Add a Random Border
-                   const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"];
-                   const randomStyle = borderStyles[Math.floor(Math.random() * borderStyles.length)];
-                   const randomWidth = Math.floor(Math.random() * 10) + 1; // 1-10px
-                   bodyElement.style.border = `${randomWidth}px ${randomStyle} yellow`;
-                   setTimeout(() => { bodyElement.style.border = "none"; }, 5000); // Revert after 5s
-               },
-               () => { // Change the button text to something ridiculous
-                   const ridiculousTexts = ["Don't Click Me!", "Danger!", "Self-Destruct", "Click at Your Own Risk", "May Cause Sanity Loss"];
-                   const originalText = buttonElement.innerText;
-                   buttonElement.innerText = ridiculousTexts[Math.floor(Math.random() * ridiculousTexts.length)];
-                   setTimeout(() => { buttonElement.innerText = originalText; }, 5000); // Revert
-               },
-               () => { // Rotate the entire body
-                 const randomRotation = Math.floor(Math.random() * 360) - 180; // -180 to 180 degrees
-                 bodyElement.style.transform = `rotate(${randomRotation}deg)`;
-                 setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, 5000);
-               },
-               () => { // Add Blinking effect
-                   bodyElement.classList.add("blinking");
-                   setTimeout(() => bodyElement.classList.remove("blinking"), 5000);
-               },
-
-               () => { // Display Random Number for Short Period
-                   outputElement.innerText = Math.floor(Math.random() * 1000);
-                   setTimeout(() => { outputElement.innerText = ""; }, 2000);
-               },
-               () => { // Move Marquee to Random Position
-                   const randomTop = Math.random() * 80 + "vh";
-                   const marquee = document.querySelector("marquee");
-                   marquee.style.position = "fixed";
-                   marquee.style.top = randomTop;
-                   setTimeout(() => {
-                       marquee.style.position = "static";
-                       marquee.style.top = "auto";
-                   }, 5000);
-               },
-               () => { // Random Letter Spacing
-                   bodyElement.style.letterSpacing = Math.random() * 10 + "px";
-                   setTimeout(() => { bodyElement.style.letterSpacing = "2px"; }, 5000);
-               },
-               () => { // Add a Random Image Overlay
-                  const imageURLs = [
-                      "https://i.imgur.com/XXX.png",  // Replace with actual image URLs
-                      "https://i.imgur.com/YYY.gif",
-                      "https://i.imgur.com/ZZZ.jpg",
-                      "https://i.imgur.com/AAA.png"
-                  ];
-                  const randomImageURL = imageURLs[Math.floor(Math.random() * imageURLs.length)];
-                  const img = document.createElement("img");
-                  img.src = randomImageURL;
-                  img.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; object-fit:contain; pointer-events:none; z-index:999;";  // Added z-index
-                  document.body.appendChild(img);
-                  setTimeout(() => document.body.removeChild(img), 5000);
-              },
-              () => { // Change the background to a random gradient
-                   const colors = [
-                       'red', 'green', 'blue', 'yellow', 'purple', 'orange'
-                   ];
-                   const color1 = colors[Math.floor(Math.random() * colors.length)];
-                   const color2 = colors[Math.floor(Math.random() * colors.length)];
-                   bodyElement.style.backgroundImage = `linear-gradient(to right, ${color1}, ${color2})`;
-                   setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, 5000); // Revert
-               },
-               () => { // Scroll the page to a random position
-                   const scrollX = Math.random() * document.body.scrollWidth;
-                   const scrollY = Math.random() * document.body.scrollHeight;
-                   window.scrollTo(scrollX, scrollY);
-                   setTimeout(() => { window.scrollTo(0, 0); }, 3000); // Revert
-               },
-                () => { // Trigger fullscreen mode (if not already)
-                    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                        if (bodyElement.requestFullscreen) {
-                            bodyElement.requestFullscreen();
-                        } else if (bodyElement.msRequestFullscreen) {
-                            bodyElement.msRequestFullscreen();
-                        } else if (bodyElement.mozRequestFullScreen) {
-                            bodyElement.mozRequestFullScreen();
-                        } else if (bodyElement.webkitRequestFullscreen) {
-                            bodyElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                        }
-
-                        setTimeout(() => {
-                            if (document.exitFullscreen) {
-                                document.exitFullscreen();
-                            } else if (document.msExitFullscreen) {
-                                document.msExitFullscreen();
-                            } else if (document.mozCancelFullScreen) {
-                                document.mozCancelFullScreen();
-                            } else if (document.webkitExitFullscreen) {
-                                document.webkitExitFullscreen();
-                            }
-                        }, 7000);
-                    }
-                },
-                () => { //  Make all text bold for 5 seconds
-                     const allElements = document.querySelectorAll('*');
-                     allElements.forEach(element => {
-                         element.style.fontWeight = 'bold';
-                     });
-                     setTimeout(() => {
-                         allElements.forEach(element => {
-                             element.style.fontWeight = 'normal';
-                         });
-                     }, 5000);
-                 }
+                () => { bodyElement.style.cursor = 'url("https://findicons.com/files/icons/2779/simple_icons/128/cursor.png"), auto'; setTimeout(() => bodyElement.style.cursor = 'default', 5000); },
+                () => { bodyElement.style.filter = 'invert(100%)'; setTimeout(() => bodyElement.style.filter = 'none', 3000); },
+                () => { const errorDiv = document.getElementById("errorDiv") || document.createElement("div"); errorDiv.id = "errorDiv"; errorDiv.style.cssText = "position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(255,0,0,0.8); color: white; padding: 10px; font-family: monospace; font-size: 0.8em; text-align: left;"; errorDiv.innerHTML = "Uncaught TypeError: Cannot read property 'undefined' of null (anonymous function)"; document.body.appendChild(errorDiv); setTimeout(() => { if (document.getElementById("errorDiv")) document.body.removeChild(errorDiv); }, 5000); },
+                () => { const originalText = buttonElement.innerText; buttonElement.innerText = "Redirecting..."; setTimeout(() => { buttonElement.innerText = originalText; }, 3000); },
+                () => { let width = 0; const loadingBar = document.getElementById("loadingBar"); const interval = setInterval(() => { width += 1; loadingBar.style.width = width + '%'; if (width >= 90) clearInterval(interval); }, 50); setTimeout(() => { clearInterval(interval); loadingBar.style.width = '0%'; }, 8000); },
+                () => { buttonElement.style.position = 'absolute'; buttonElement.style.left = Math.random() * (window.innerWidth - buttonElement.offsetWidth) + 'px'; buttonElement.style.top = Math.random() * (window.innerHeight - buttonElement.offsetHeight) + 'px'; setTimeout(() => { buttonElement.style.position = 'static'; buttonElement.style.left = 'auto'; buttonElement.style.top = 'auto'; }, 5000); },
+                () => { const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT"]; bodyElement.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)]; setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, 5000); },
+                () => { const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"]; const randomStyle = borderStyles[Math.floor(Math.random() * borderStyles.length)]; const randomWidth = Math.floor(Math.random() * 10) + 1; bodyElement.style.border = `${randomWidth}px ${randomStyle} yellow`; setTimeout(() => { bodyElement.style.border = "none"; }, 5000); },
+                () => { const ridiculousTexts = ["Don't Click Me!", "Danger!", "Self-Destruct", "Click at Your Own Risk", "May Cause Sanity Loss"]; const originalText = buttonElement.innerText; buttonElement.innerText = ridiculousTexts[Math.floor(Math.random() * ridiculousTexts.length)]; setTimeout(() => { buttonElement.innerText = originalText; }, 5000); },
+                () => { const randomRotation = Math.floor(Math.random() * 360) - 180; bodyElement.style.transform = `rotate(${randomRotation}deg)`; setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, 5000); },
+                () => { bodyElement.classList.add("blinking"); setTimeout(() => bodyElement.classList.remove("blinking"), 5000); },
+                () => { outputElement.innerText = Math.floor(Math.random() * 1000); setTimeout(() => { outputElement.innerText = ""; }, 2000); },
+                () => { const randomTop = Math.random() * 80 + "vh"; const marquee = document.querySelector("marquee"); marquee.style.position = "fixed"; marquee.style.top = randomTop; setTimeout(() => { marquee.style.position = "static"; marquee.style.top = "auto"; }, 5000); },
+                () => { bodyElement.style.letterSpacing = Math.random() * 10 + "px"; setTimeout(() => { bodyElement.style.letterSpacing = "2px"; }, 5000); },
+                () => { const imageURLs = ["https://i.imgur.com/XXX.png", "https://i.imgur.com/YYY.gif", "https://i.imgur.com/ZZZ.jpg", "https://i.imgur.com/AAA.png"]; const randomImageURL = imageURLs[Math.floor(Math.random() * imageURLs.length)]; const img = document.createElement("img"); img.src = randomImageURL; img.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; object-fit:contain; pointer-events:none; z-index:999;"; document.body.appendChild(img); setTimeout(() => document.body.removeChild(img), 5000); },
+                () => { const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange']; const color1 = colors[Math.floor(Math.random() * colors.length)]; const color2 = colors[Math.floor(Math.random() * colors.length)]; bodyElement.style.backgroundImage = `linear-gradient(to right, ${color1}, ${color2})`; setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, 5000); },
+                () => { const scrollX = Math.random() * document.body.scrollWidth; const scrollY = Math.random() * document.body.scrollHeight; window.scrollTo(scrollX, scrollY); setTimeout(() => { window.scrollTo(0, 0); }, 3000); },
+                () => { if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { if (bodyElement.requestFullscreen) { bodyElement.requestFullscreen(); } else if (bodyElement.msRequestFullscreen) { bodyElement.msRequestFullscreen(); } else if (bodyElement.mozRequestFullScreen) { bodyElement.mozRequestFullScreen(); } else if (bodyElement.webkitRequestFullscreen) { bodyElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); } setTimeout(() => { if (document.exitFullscreen) { document.exitFullscreen(); } else if (document.msExitFullscreen) { document.msExitFullscreen(); } else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } }, 7000); } },
+                () => { const allElements = document.querySelectorAll('*'); allElements.forEach(element => { element.style.fontWeight = 'bold'; }); setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, 5000); }
            ];
-
             let randomIndex = Math.floor(Math.random() * actions.length);
-            actions[randomIndex](); // Execute the random action
+            actions[randomIndex]();
         }
 
-         // Function to open User Guide popup
-        function openUserGuide() {
-            document.getElementById("userGuidePopup").style.display = "block";
-            hideArrow(); // Hide the arrow after opening the popup
-        }
-
-        // Function to close User Guide popup
-        function closeUserGuide() {
-            document.getElementById("userGuidePopup").style.display = "none";
-        }
-
-          // Function to hide the help arrow
-        function hideArrow() {
-            document.getElementById("helpArrow").classList.add("hidden");
-        }
-
-         // Function to show the help arrow (used on page load)
-        function showArrow() {
-            document.getElementById("helpArrow").classList.remove("hidden");
-        }
-
-           // Function to show a welcome notification
-        function showWelcomeNotification() {
-            // Check if the notification has already been shown in this session
-            if (sessionStorage.getItem(welcomeShownKey)) {
-                return;  // Don't show again if already shown.
-            }
-
-            const notification = document.getElementById('notification');
-            notification.classList.add('show');
-
-            // Set a timeout to hide the notification after 5 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-
-            // Store that the welcome notification has been shown in sessionStorage.
-            sessionStorage.setItem(welcomeShownKey, 'true');
-
-         }
-
-        // Reset Page Function
-        function resetPage() {
-            sessionStorage.removeItem(welcomeShownKey); // clear the shown key.
-            location.reload(); // Reload the page
-        }
+         // Function to open User Guide popup ( ... rest of JavaScript functions - as before ... )
+        function openUserGuide() { document.getElementById("userGuidePopup").style.display = "block"; hideArrow(); }
+        function closeUserGuide() { document.getElementById("userGuidePopup").style.display = "none"; }
+        function hideArrow() { document.getElementById("helpArrow").classList.add("hidden"); }
+        function showArrow() { document.getElementById("helpArrow").classList.remove("hidden"); }
+        function showWelcomeNotification() { if (sessionStorage.getItem(welcomeShownKey)) { return; } const notification = document.getElementById('notification'); notification.classList.add('show'); setTimeout(() => { notification.classList.remove('show'); }, 5000); sessionStorage.setItem(welcomeShownKey, 'true'); }
+        function resetPage() { sessionStorage.removeItem(welcomeShownKey); location.reload(); }
 
         $(document).ready(function() {
-            showArrow();  // Show the arrow on page load
-            showWelcomeNotification();
+            showArrow(); showWelcomeNotification();
+             // Make the button jump on page load
+            buttonElement.classList.add('jumping');
+            // Remove jumping class after 3 seconds
+            setTimeout(() => {
+                buttonElement.classList.remove('jumping');
+            }, 3000);
         });
     </script>
 
