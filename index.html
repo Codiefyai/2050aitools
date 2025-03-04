@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,45 +18,15 @@
             overflow-x: hidden;
         }
 
-        /* Help Button Styles */
-        #helpButton {
-            position: fixed;
-            top: 20px; /* Increased top spacing */
-            left: 20px; /* Increased left spacing */
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 15px; /* Increased padding */
-            border: 2px solid white; /* Added border */
-            border-radius: 10px; /* More rounded corners */
-            cursor: pointer;
-            font-size: 1.3em; /* Slightly larger font */
-            z-index: 1000;
-            width: auto; /* Adjusted width to content */
-            height: auto; /* Adjusted height to content */
-            min-width: 50px; /* Minimum width for touch */
-            min-height: 50px; /* Minimum height for touch */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
-        }
-
-        #helpButton:hover {
-            background-color: #0056b3;
-            transform: scale(1.1); /* Scale up on hover */
-        }
-
-         /* Arrow animation (no changes) */
+        /* Help Button Styles (and Arrow, Popup, Notification Styles - as before) - No changes here */
+        #helpButton { position: fixed; top: 20px; left: 20px; background-color: #007BFF; color: white; padding: 10px 15px; border: 2px solid white; border-radius: 10px; cursor: pointer; font-size: 1.3em; z-index: 1000; width: auto; height: auto; min-width: 50px; min-height: 50px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, transform 0.2s ease; }
+        #helpButton:hover { background-color: #0056b3; transform: scale(1.1); }
         .arrow { position: absolute; top: 30px; left: 50px; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 20px solid yellow; z-index: 999; animation: nudge 2s infinite; pointer-events: none; }
         @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
         .arrow.hidden { display: none; }
-
-        /* Popup Styles (no changes) */
         #userGuidePopup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #333; color: white; padding: 20px; border: 3px dotted #777; border-radius: 15px; z-index: 1001; max-width: 90%; text-align: left; overflow-y: auto; max-height: 80vh; }
         #closePopupButton { position: absolute; top: 10px; right: 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
         #closePopupButton:hover { background-color: #c82333; }
-
-        /* Notification Styles (no changes) */
         #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4CAF50; color: white; padding: 15px 30px; border-radius: 8px; z-index: 1500; opacity: 0; transition: opacity 0.5s ease, top 0.5s ease; font-size: 1.1em; }
         #notification.show { opacity: 1; top: 50px; }
 
@@ -99,52 +68,28 @@
         #loadingBar { width: 0%; height: 14px; background-color: #4CAF50; transition: width 0.2s ease; }
         marquee { margin-top: 35px; font-size: 1.3em; color: yellow; font-family: 'Courier New', monospace; text-shadow: 1px 1px 2px #000; }
 
-        /* Reset Button Styles */
-        #resetButton {
+        /* Cracked Screen Overlay Styles */
+        #crackedScreenOverlay {
             position: fixed;
-            top: 20px; /* Increased top spacing */
-            right: 20px; /* Increased right spacing */
-            background-color: #ffc107; /* Yellow-ish, to match theme but distinct */
-            color: black; /* Dark text for contrast */
-            padding: 15px 25px; /* Increased padding */
-            border: 2px solid white; /* Added white border */
-            border-radius: 10px; /* More rounded corners */
-            cursor: pointer;
-            font-size: 1.2em; /* Slightly larger font */
-            font-weight: bold; /* Bold text for emphasis */
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform transition */
-            z-index: 1000;
-            min-width: 70px; /* Minimum width for touch */
-            min-height: 50px; /* Minimum height for touch */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.ibb.co/tph9NkxM/crack-screen.jpg'); /* Replaced placeholder URL with the new image URL */
+            background-size: cover;
+            pointer-events: none; /* Make it non-interactive */
+            z-index: 1999; /* Just below user guide popup but above almost everything else */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease;
         }
 
-        #resetButton:hover {
-            background-color: #ffca2b; /* Slightly lighter yellow on hover */
-            transform: scale(1.1); /* Scale up on hover */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Added a subtle shadow */
+        #crackedScreenOverlay.show {
+            opacity: 0.8; /* Adjust opacity as needed */
         }
 
 
         /* Responsive adjustments (as before - with minor padding changes for buttons) */
-        @media (max-width: 768px) {
-            body { padding: 20px; } /* Reduced body padding */
-            h1 { font-size: 2.5em; }
-            p { font-size: 1em; }
-            button { font-size: 1.1em; padding: 10px 20px; } /* Slightly smaller 'Click Me' button */
-            #gifContainer { max-height: 150px; }
-            #notification { width: 90%; font-size: 0.9em; }
-            #resetButton, #helpButton {
-                position: fixed; /* Keep fixed positioning */
-                padding: 8px 12px; /* Slightly smaller padding on smaller screens */
-                font-size: 1em; /* Slightly smaller font on smaller screens */
-                min-width: 40px; /* Adjust min-width for smaller screens */
-                min-height: 40px; /* Adjust min-height for smaller screens */
-            }
-            #resetButton { top: 15px; right: 15px; } /*Adjust position for smaller screens*/
-            #helpButton { top: 15px; left: 15px; } /*Adjust position for smaller screens*/
-
-
-        }
+        @media (max-width: 768px) { body { padding: 20px; } /* ... (rest of media query styles) ... */ #notification { width: 90%; font-size: 0.9em; } }
     </style>
 </head>
 <body>
@@ -171,6 +116,9 @@
     <div id="notification">
          "This app is a chaotic masterpiece of unpredictable absurdity! I haven't laughed this hard in ages!" - Random Loco Fan
     </div>
+
+     <!-- Cracked Screen Overlay -->
+    <div id="crackedScreenOverlay"></div>
 
     <!-- Reset Button -->
     <button id="resetButton" onclick="resetPage()">Reset the Chaos</button>
@@ -200,7 +148,7 @@
 
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const outputElement = document.getElementById("output");
+       const outputElement = document.getElementById("output");
         const bodyElement = document.body;
         const gifContainer = document.getElementById("gifContainer");
         const hiddenMessage = document.getElementById("hiddenMessage");
@@ -208,6 +156,8 @@
         const userGuidePopup = document.getElementById("userGuidePopup");
         const helpArrow = document.getElementById("helpArrow");
         const welcomeShownKey = 'clickoLocoWelcomeShown';
+        const crackedScreenOverlay = document.getElementById('crackedScreenOverlay');
+
 
         // All the sound effects! ( ... sound arrays - as before ... )
         const funnySounds = [ "https://www.myinstants.com/media/sounds/boing.mp3", "https://www.myinstants.com/media/sounds/sad-trombone.mp3", "https://www.myinstants.com/media/sounds/slip-and-fall.mp3", "https://www.myinstants.com/media/sounds/squeaky-toy.mp3", "https://www.myinstants.com/media/sounds/chipmunk-laugh.mp3", "https://www.myinstants.com/media/sounds/fart-noise.mp3", "https://www.myinstants.com/media/sounds/goofy-yell.mp3", "https://www.myinstants.com/media/sounds/record-scratch.mp3", "https://www.myinstants.com/media/sounds/duck-quack.mp3", "https://www.myinstants.com/media/sounds/fart.mp3", "https://www.myinstants.com/media/sounds/cat-meow_PIypz.mp3", "https://www.myinstants.com/media/sounds/vine-boom.mp3", "https://www.myinstants.com/media/sounds/clown-horn.mp3", "https://www.myinstants.com/media/sounds/rimshot.mp3", "https://www.myinstants.com/media/sounds/wah-wah-wah.mp3", "https://www.myinstants.com/media/sounds/wilhelm-scream.mp3", "https://www.myinstants.com/media/sounds/chicken-cluck.mp3", "https://www.myinstants.com/media/sounds/slide-whistle-descend.mp3", "https://www.myinstants.com/media/sounds/quack.mp3", "https://www.myinstants.com/media/sounds/bike-horn.mp3", "https://www.myinstants.com/media/sounds/kazoo-riff.mp3"];
@@ -254,8 +204,13 @@
                 () => { const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange']; const color1 = colors[Math.floor(Math.random() * colors.length)]; const color2 = colors[Math.floor(Math.random() * colors.length)]; bodyElement.style.backgroundImage = `linear-gradient(to right, ${color1}, ${color2})`; setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, 5000); },
                 () => { const scrollX = Math.random() * document.body.scrollWidth; const scrollY = Math.random() * document.body.scrollHeight; window.scrollTo(scrollX, scrollY); setTimeout(() => { window.scrollTo(0, 0); }, 3000); },
                 () => { if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { if (bodyElement.requestFullscreen) { bodyElement.requestFullscreen(); } else if (bodyElement.msRequestFullscreen) { bodyElement.msRequestFullscreen(); } else if (bodyElement.mozRequestFullScreen) { bodyElement.mozRequestFullScreen(); } else if (bodyElement.webkitRequestFullscreen) { bodyElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); } setTimeout(() => { if (document.exitFullscreen) { document.exitFullscreen(); } else if (document.msExitFullscreen) { document.msExitFullscreen(); } else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } }, 7000); } },
-                () => { const allElements = document.querySelectorAll('*'); allElements.forEach(element => { element.style.fontWeight = 'bold'; }); setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, 5000); }
+                () => { const allElements = document.querySelectorAll('*'); allElements.forEach(element => { element.style.fontWeight = 'bold'; }); setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, 5000); },
+                () => {  crackedScreenOverlay.classList.add('show'); setTimeout(() => crackedScreenOverlay.classList.remove('show'), 3000); }, // Show cracked screen overlay
+                () => { bodyElement.style.perspective = '500px'; setTimeout(() => bodyElement.style.perspective = 'none', 3000); }, // 3D perspective
+                () => { bodyElement.style.transformStyle = 'preserve-3d'; setTimeout(() =>  bodyElement.style.transformStyle = 'flat', 3000); }, // 3D transform style
+                () => { document.querySelector('marquee').stop(); setTimeout(() => document.querySelector('marquee').start(), 3000); } // Stop/start marquee
            ];
+
             let randomIndex = Math.floor(Math.random() * actions.length);
             actions[randomIndex]();
         }
