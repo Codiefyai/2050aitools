@@ -20,34 +20,34 @@
     <style>
         body {
             text-align: center;
-            padding: 50px;
+            padding: 20px; /* Reduced default padding */
             background-color: black;
             color: white;
             font-family: sans-serif;
             transition: background-color 0.3s ease;
             overflow-x: hidden;
+            line-height: 1.6; /* Improved default line height for readability */
         }
 
-        /* Help Button Styles (and Arrow, Popup, Notification Styles - as before) - No changes here */
-        #helpButton { position: fixed; top: 20px; left: 20px; background-color: #007BFF; color: white; padding: 10px 15px; border: 2px solid white; border-radius: 10px; cursor: pointer; font-size: 1.3em; z-index: 1000; width: auto; height: auto; min-width: 50px; min-height: 50px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, transform 0.2s ease; }
-        #helpButton:hover { background-color: #0056b3; transform: scale(1.1); }
-        .arrow { position: absolute; top: 30px; left: 50px; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 20px solid yellow; z-index: 999; animation: nudge 2s infinite; pointer-events: none; }
-        @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+        /* Help Button Styles */
+        #helpButton { position: fixed; top: 15px; left: 15px; background-color: #007BFF; color: white; padding: 8px 12px; border: 2px solid white; border-radius: 8px; cursor: pointer; font-size: 1.1em; z-index: 1000; min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, transform 0.2s ease; } /* Slightly smaller and repositioned */
+        #helpButton:hover { background-color: #0056b3; transform: scale(1.05); } /* Reduced scale on hover */
+        .arrow { position: absolute; top: 25px; left: 45px; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 15px solid yellow; z-index: 999; animation: nudge 2s infinite; pointer-events: none; } /* Smaller arrow */
+        @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } } /* Reduced nudge distance */
         .arrow.hidden { display: none; }
-        #userGuidePopup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #333; color: white; padding: 20px; border: 3px dotted #777; border-radius: 15px; z-index: 1001; max-width: 90%; text-align: left; overflow-y: auto; max-height: 80vh; }
-        #closePopupButton { position: absolute; top: 10px; right: 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+        #userGuidePopup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #333; color: white; padding: 20px; border: 3px dotted #777; border-radius: 15px; z-index: 1001; max-width: 95%; text-align: left; overflow-y: auto; max-height: 85vh; font-size: 0.95em; } /* Slightly smaller popup, better max-height */
+        #closePopupButton { position: absolute; top: 10px; right: 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 4px 8px; font-size: 0.9em; } /* Smaller close button */
         #closePopupButton:hover { background-color: #c82333; }
-        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4CAF50; color: white; padding: 15px 30px; border-radius: 8px; z-index: 1500; opacity: 0; transition: opacity 0.5s ease, top 0.5s ease; font-size: 1.1em; }
-        #notification.show { opacity: 1; top: 50px; }
+        #notification { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: #4CAF50; color: white; padding: 12px 25px; border-radius: 8px; z-index: 1500; opacity: 0; transition: opacity 0.5s ease, top 0.5s ease; font-size: 1em; } /* Slightly smaller notification */
+        #notification.show { opacity: 1; top: 40px; } /* Lower show position */
 
-
-        h1 { margin-bottom: 30px; font-size: 3.2em; font-family: 'Courier New', monospace; text-shadow: 4px 4px 6px #000000; letter-spacing: 3px; }
-        h2 { font-size: 2em; margin-top: 40px; font-family: 'Courier New', monospace; color: #FFFF00; }
-        p { font-size: 1.2em; line-height: 1.7; margin-bottom: 25px; }
+        h1 { margin-bottom: 20px; font-size: 2.8em; font-family: 'Courier New', monospace; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px; } /* Slightly smaller h1 */
+        h2 { font-size: 1.8em; margin-top: 30px; font-family: 'Courier New', monospace; color: #FFFF00; } /* Slightly smaller h2 */
+        p { font-size: 1.1em; line-height: 1.6; margin-bottom: 20px; } /* Slightly smaller p */
 
         button {
-            font-size: 24px;
-            padding: 17px 40px;
+            font-size: 20px; /* Slightly smaller button font */
+            padding: 14px 30px; /* Slightly smaller button padding */
             cursor: pointer;
             background: yellow;
             color: black;
@@ -55,28 +55,29 @@
             border-radius: 8px;
             transition: transform 0.2s ease, box-shadow 0.2s ease, animation 1s ease;
             font-weight: bold;
+            margin-bottom: 10px; /* Added margin below buttons */
         }
 
         button:hover {
-            transform: scale(1.2);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            transform: scale(1.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Reduced shadow */
         }
 
         /* Jumping animation for button (no changes) */
         button.jumping { animation: jump 1s infinite alternate; }
-        @keyframes jump { 0% { transform: translateY(0); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0); } }
+        @keyframes jump { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } } /* Reduced jump height */
 
 
-        #output { margin-top: 35px; font-size: 1.4em; min-height: 40px; }
+        #output { margin-top: 30px; font-size: 1.2em; min-height: 30px; } /* Slightly smaller output */
         .shake { animation: shake 0.5s; animation-iteration-count: 1; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } /* ... (rest of shake animation) ... */ 100% { transform: translate(1px, -2px) rotate(-1deg); } }
-        #gifContainer { margin-top: 25px; width: 600px; height: 300px; max-width: 95%; margin-left: auto; margin-right: auto; }
+        #gifContainer { margin-top: 20px; width: 90%; max-width: 500px; height: auto; min-height: 200px; margin-left: auto; margin-right: auto; } /* Responsive GIF container */
         #gifContainer { background-size: contain; background-position: center; background-repeat: no-repeat; border: 4px dashed yellow; border-radius: 12px; }
-        .hidden { opacity: 0; transition: opacity 0.5s ease; font-size: 0.9em; margin-top: 12px; }
-        body.tilted { transform: rotate(2deg); }
-        #loadingBarContainer { width: 100%; height: 14px; background-color: #333; margin-top: 25px; }
-        #loadingBar { width: 0%; height: 14px; background-color: #4CAF50; transition: width 0.2s ease; }
-        marquee { margin-top: 35px; font-size: 1.3em; color: yellow; font-family: 'Courier New', monospace; text-shadow: 1px 1px 2px #000; }
+        .hidden { opacity: 0; transition: opacity 0.5s ease; font-size: 0.9em; margin-top: 10px; } /* Slightly smaller hidden message */
+        body.tilted { transform: rotate(1.5deg); } /* Reduced tilt */
+        #loadingBarContainer { width: 100%; height: 10px; background-color: #333; margin-top: 20px; } /* Smaller loading bar */
+        #loadingBar { width: 0%; height: 10px; background-color: #4CAF50; transition: width 0.2s ease; }
+        marquee { margin-top: 25px; font-size: 1.1em; color: yellow; font-family: 'Courier New', monospace; text-shadow: 1px 1px 2px #000; } /* Slightly smaller marquee */
 
         /* Cracked Screen Overlay Styles */
         #crackedScreenOverlay {
@@ -85,21 +86,119 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://i.ibb.co/tph9NkxM/crack-screen.jpg'); /* Replaced placeholder URL with the new image URL */
+            background-image: url('https://i.ibb.co/tph9NkxM/crack-screen.jpg');
             background-size: cover;
-            pointer-events: none; /* Make it non-interactive */
-            z-index: 1999; /* Just below user guide popup but above almost everything else */
-            opacity: 0; /* Hidden by default */
+            pointer-events: none;
+            z-index: 1999;
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         #crackedScreenOverlay.show {
-            opacity: 0.8; /* Adjust opacity as needed */
+            opacity: 0.8;
         }
 
+        /* Audio Control Styles */
+        #audioControls {
+            position: fixed;
+            top: 15px; /* Adjusted top position */
+            right: 15px; /* Adjusted right position */
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
 
-        /* Responsive adjustments (as before - with minor padding changes for buttons) */
-        @media (max-width: 768px) { body { padding: 20px; } /* ... (rest of media query styles) ... */ #notification { width: 90%; font-size: 0.9em; } }
+        #muteButton, #volumeDownButton, #volumeUpButton {
+            background: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3em; /* Slightly smaller audio icons */
+            margin-left: 8px; /* Reduced margin */
+            padding: 4px; /* Reduced padding */
+            opacity: 0.7;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+        }
+
+        #muteButton:hover, #volumeDownButton:hover, #volumeUpButton:hover {
+            opacity: 1;
+            transform: scale(1.05); /* Reduced scale on hover */
+        }
+
+        /* Volume Popup Note */
+        #volumePopupNote {
+            position: absolute;
+            top: -30px; /* Adjusted top position */
+            right: 0;
+            background-color: rgba(50, 50, 50, 0.8);
+            color: white;
+            padding: 4px 8px; /* Smaller padding */
+            border-radius: 5px;
+            font-size: 0.85em; /* Smaller font size */
+            opacity: 0;
+            transition: opacity 0.3s ease, top 0.3s ease;
+            pointer-events: none;
+        }
+
+        #volumePopupNote.show {
+            opacity: 1;
+            top: -20px; /* Adjusted shown top position */
+        }
+
+        /* Volume Bars */
+        #volumeBars {
+            display: flex;
+            align-items: center;
+            margin-left: 8px; /* Reduced margin */
+            width: 40px; /* Reduced width */
+            height: 8px; /* Reduced height */
+            background-color: #555;
+            border-radius: 4px; /* Smaller border radius */
+            overflow: hidden;
+        }
+
+        .volumeBarLevel {
+            height: 100%;
+            background-color: yellow;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body { padding: 15px; } /* Further reduced padding for medium screens */
+            h1 { font-size: 2.4em; margin-bottom: 15px; text-shadow: 2px 2px 4px #000000; letter-spacing: 2px; } /* Smaller h1 for medium screens */
+            h2 { font-size: 1.6em; margin-top: 25px; } /* Smaller h2 for medium screens */
+            p { font-size: 1em; margin-bottom: 18px; } /* Smaller p for medium screens */
+            button { font-size: 18px; padding: 12px 25px; } /* Smaller buttons for medium screens */
+            #output { margin-top: 30px; font-size: 1.1em; } /* Smaller output for medium screens */
+            marquee { font-size: 1em; margin-top: 30px; } /* Smaller marquee for medium screens */
+            #notification { font-size: 0.95em; padding: 10px 20px; top: 35px; } /* Slightly smaller notification for medium screens */
+            #helpButton { top: 10px; left: 10px; font-size: 1em; padding: 6px 10px; } /* Smaller help button for medium screens */
+            .arrow { top: 20px; left: 40px; border-top-width: 8px; border-bottom-width: 8px; border-left-width: 12px; } /* Smaller arrow for medium screens */
+            #audioControls { top: 10px; right: 10px; } /* Repositioned audio controls for medium screens */
+            #muteButton, #volumeDownButton, #volumeUpButton { font-size: 1.2em; margin-left: 6px; padding: 3px; } /* Smaller audio icons for medium screens */
+            #volumePopupNote { font-size: 0.8em; top: -25px; padding: 3px 6px; } /* Smaller volume popup for medium screens */
+            #volumeBars { width: 35px; height: 7px; margin-left: 6px; } /* Smaller volume bars for medium screens */
+        }
+
+        @media (max-width: 480px) { /* Styles for even smaller screens (phones) */
+            body { padding: 10px; } /* Minimal padding for small screens */
+            h1 { font-size: 2em; margin-bottom: 10px; text-shadow: 1.5px 1.5px 3px #000000; letter-spacing: 1px; } /* Even smaller h1 for small screens */
+            h2 { font-size: 1.4em; margin-top: 20px; } /* Even smaller h2 for small screens */
+            p { font-size: 0.95em; margin-bottom: 15px; } /* Even smaller p for small screens */
+            button { font-size: 16px; padding: 10px 20px; } /* Even smaller buttons for small screens */
+            #output { margin-top: 25px; font-size: 1em; } /* Even smaller output for small screens */
+            marquee { font-size: 0.9em; margin-top: 25px; } /* Even smaller marquee for small screens */
+            #notification { font-size: 0.9em; padding: 8px 16px; top: 30px; } /* Even smaller notification for small screens */
+            #helpButton { top: 5px; left: 5px; font-size: 0.9em; padding: 5px 8px; } /* Minimal help button for small screens */
+            .arrow { top: 15px; left: 30px; border-top-width: 6px; border-bottom-width: 6px; border-left-width: 10px; } /* Minimal arrow for small screens */
+            #audioControls { top: 5px; right: 5px; } /* Repositioned audio controls for small screens */
+            #muteButton, #volumeDownButton, #volumeUpButton { font-size: 1.1em; margin-left: 4px; padding: 2px; } /* Minimal audio icons for small screens */
+            #volumePopupNote { font-size: 0.75em; top: -20px; padding: 3px 5px; } /* Minimal volume popup for small screens */
+            #volumeBars { width: 30px; height: 6px; margin-left: 4px; } /* Minimal volume bars for small screens */
+            #resetButton { font-size: 16px; padding: 10px 20px; } /* Ensure reset button is also smaller if needed */
+        }
     </style>
 </head>
 <body>
@@ -145,6 +244,15 @@
     </div>
     <marquee>Click-O-Loco: Prepare for the unexpected! Side effects may include laughter, confusion, and existential dread. You have been warned!</marquee>
 
+    <!-- Audio Controls -->
+    <div id="audioControls">
+        <span id="volumePopupNote">Volume: 50%</span>  <!-- Volume Popup Note -->
+        <button id="muteButton"><i class="fas fa-volume-up"></i></button>
+        <button id="volumeDownButton"><i class="fas fa-minus"></i></button>
+        <button id="volumeUpButton"><i class="fas fa-plus"></i></button>
+        <div id="volumeBars"><div class="volumeBarLevel"></div></div> <!-- Volume Bars -->
+    </div>
+
     <footer>
         <p>© 2023 Click-O-Loco. All rights reserved. Embrace the ultimate randomness!</p>
         <p>Created with ❤️ by Flynn James P.</p>
@@ -167,6 +275,19 @@
         const helpArrow = document.getElementById("helpArrow");
         const welcomeShownKey = 'clickoLocoWelcomeShown';
         const crackedScreenOverlay = document.getElementById('crackedScreenOverlay');
+        const muteButton = document.getElementById('muteButton');
+        const volumeDownButton = document.getElementById('volumeDownButton');
+        const volumeUpButton = document.getElementById('volumeUpButton');
+        const volumePopupNote = document.getElementById('volumePopupNote');
+        const volumeBarLevel = document.querySelector('.volumeBarLevel');
+        const notification = document.getElementById('notification');
+
+        let isMuted = false;
+        let volumeLevel = 0.5; // Default volume
+
+        // Initial volume bar setup
+        updateVolumeBars();
+        updateVolumePopupNote();
 
 
         // All the sound effects! ( ... sound arrays - as before ... )
@@ -177,9 +298,12 @@
 
 
         function playSound(soundURL) {
+            if (isMuted) {
+                return; // Do not play sound if muted
+            }
             const audio = new Audio(soundURL);
-            // Add random volume for each sound played
-            audio.volume = Math.random(); // Volume between 0 (silent) and 1 (full volume)
+            // Apply current volume level and random volume variation
+            audio.volume = volumeLevel * Math.random();
 
             // Introduce a slight chance to play sound at double speed or half speed for extra weirdness
             const speedRandomizer = Math.random();
@@ -195,9 +319,9 @@
 
         function getRandomGif() {
             const giphy = { apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes", baseURL: "https://api.giphy.com/v1/gifs/",
-                           tags: ["funny memes", "weird", "absurd", "crazy", "random", "unexpected", "silly", "goofy"], // More tags for varied GIFs
+                           tags: ["funny memes", "weird", "absurd", "crazy", "random", "unexpected", "silly", "goofy"],
                            type: "random", rating: "pg-13" };
-            const randomTag = giphy.tags[Math.floor(Math.random() * giphy.tags.length)]; // Random tag selection
+            const randomTag = giphy.tags[Math.floor(Math.random() * giphy.tags.length)];
             let giphyURL = encodeURI(giphy.baseURL + giphy.type + "?api_key=" + giphy.apiKey + "&tag=" + randomTag + "&rating=" + giphy.rating);
             $.getJSON(giphyURL, function(json) {
                 if (json?.data?.images?.original?.url) { $(gifContainer).css({ "background-image": 'url("' + json.data.images.original.url + '")' }); }
@@ -232,25 +356,24 @@
                     if (currentText) {
                         outputElement.innerText = currentText.split("").reverse().join("");
                         setTimeout(() => {
-                            outputElement.innerText = currentText; // Revert to original after delay
-                        }, Math.random() * 5000 + 2000); // Random revert time between 2 to 7 seconds
+                            outputElement.innerText = currentText;
+                        }, Math.random() * 5000 + 2000);
                     }
                 },
-                () => { bodyElement.classList.toggle("tilted"); setTimeout(() => bodyElement.classList.toggle("tilted"), Math.random() * 7000 + 3000);}, // Random tilt duration
-                () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), Math.random() * 5000 + 2000);}, // Random hidden message duration
+                () => { bodyElement.classList.toggle("tilted"); setTimeout(() => bodyElement.classList.toggle("tilted"), Math.random() * 7000 + 3000);},
+                () => { hiddenMessage.classList.remove("hidden"); setTimeout(() => hiddenMessage.classList.add("hidden"), Math.random() * 5000 + 2000);},
                 () => {
                     const cursorURLs = [
                         'url("https://findicons.com/files/icons/2779/simple_icons/128/cursor.png"), auto',
-                        'url("https://i.imgur.com/ZWZt00v.png"), auto', // Example custom cursor - replace with your own funny cursor URLs
+                        'url("https://i.imgur.com/ZWZt00v.png"), auto',
                         'url("https://i.imgur.com/rSpR37F.png"), auto',
-                        'default' // Sometimes revert to default cursor
+                        'default'
                     ];
                     bodyElement.style.cursor = cursorURLs[Math.floor(Math.random() * cursorURLs.length)];
-                    setTimeout(() => bodyElement.style.cursor = 'default', Math.random() * 5000 + 3000); // Random cursor duration
+                    setTimeout(() => bodyElement.style.cursor = 'default', Math.random() * 5000 + 3000);
                 },
-                () => { bodyElement.style.filter = 'invert(100%)'; setTimeout(() => bodyElement.style.filter = 'none', Math.random() * 3000 + 1000); }, // Random invert duration
+                () => { bodyElement.style.filter = 'invert(100%)'; setTimeout(() => bodyElement.style.filter = 'none', Math.random() * 3000 + 1000); },
                 () => {
-                    // Error message event - slightly modified for randomness in error type
                     const errorTypes = ["TypeError", "ReferenceError", "SyntaxError", "CustomLocoError"];
                     const randomErrorType = errorTypes[Math.floor(Math.random() * errorTypes.length)];
                     const errorDiv = document.getElementById("errorDiv") || document.createElement("div");
@@ -258,19 +381,19 @@
                     errorDiv.style.cssText = "position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(255,0,0,0.8); color: white; padding: 10px; font-family: monospace; font-size: 0.8em; text-align: left;";
                     errorDiv.innerHTML = `Uncaught ${randomErrorType}: Something went terribly wrong! (Click-O-Loco)`;
                     document.body.appendChild(errorDiv);
-                    setTimeout(() => { if (document.getElementById("errorDiv")) document.body.removeChild(errorDiv); }, Math.random() * 5000 + 2000); // Random error display time
+                    setTimeout(() => { if (document.getElementById("errorDiv")) document.body.removeChild(errorDiv); }, Math.random() * 5000 + 2000);
                 },
-                () => { const originalText = buttonElement.innerText; buttonElement.innerText = "Redirecting... Please Wait... Just Kidding!"; setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 3000 + 1500); }, // More dramatic redirect text
+                () => { const originalText = buttonElement.innerText; buttonElement.innerText = "Redirecting... Please Wait... Just Kidding!"; setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 3000 + 1500); },
                 () => {
                     let width = 0;
                     const loadingBar = document.getElementById("loadingBar");
-                    const intervalDuration = Math.random() * 50 + 20; // Random interval speed
+                    const intervalDuration = Math.random() * 50 + 20;
                     const interval = setInterval(() => {
-                        width += Math.random() * 3 + 1; // Random increment speed
+                        width += Math.random() * 3 + 1;
                         loadingBar.style.width = width + '%';
                         if (width >= 100) clearInterval(interval);
                     }, intervalDuration);
-                    setTimeout(() => { clearInterval(interval); loadingBar.style.width = '0%'; }, Math.random() * 8000 + 3000); // Random loading bar duration
+                    setTimeout(() => { clearInterval(interval); loadingBar.style.width = '0%'; }, Math.random() * 8000 + 3000);
                 },
                 () => {
                     buttonElement.style.position = 'absolute';
@@ -280,78 +403,78 @@
                         buttonElement.style.position = 'static';
                         buttonElement.style.left = 'auto';
                         buttonElement.style.top = 'auto';
-                    }, Math.random() * 5000 + 2000); // Random button move duration
+                    }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT", "Impact", "Comic Sans MS"]; // Added more fonts
+                    const fontFamilies = ["Arial", "Verdana", "Times New Roman", "Georgia", "Courier New", "Brush Script MT", "Impact", "Comic Sans MS"];
                     bodyElement.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
-                    setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, Math.random() * 5000 + 2000); // Random font duration
+                    setTimeout(() => { bodyElement.style.fontFamily = "sans-serif"; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset", "none"]; // Added 'none'
+                    const borderStyles = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset", "none"];
                     const randomStyle = borderStyles[Math.floor(Math.random() * borderStyles.length)];
-                    const randomWidth = Math.floor(Math.random() * 15) + 1; // Wider range of widths
-                    const colors = ['yellow', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange']; // More colors
+                    const randomWidth = Math.floor(Math.random() * 15) + 1;
+                    const colors = ['yellow', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange'];
                     const randomColor = colors[Math.floor(Math.random() * colors.length)];
                     bodyElement.style.border = `${randomWidth}px ${randomStyle} ${randomColor}`;
-                    setTimeout(() => { bodyElement.style.border = "none"; }, Math.random() * 5000 + 2000); // Random border duration
+                    setTimeout(() => { bodyElement.style.border = "none"; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    const ridiculousTexts = ["Don't Click Me... Again!", "Danger Zone!", "Warning: May Explode", "Click for Disappointment", "Sanity Not Guaranteed", "Error 404: Fun Not Found"]; // More texts
+                    const ridiculousTexts = ["Don't Click Me... Again!", "Danger Zone!", "Warning: May Explode", "Click for Disappointment", "Sanity Not Guaranteed", "Error 404: Fun Not Found"];
                     const originalText = buttonElement.innerText;
                     buttonElement.innerText = ridiculousTexts[Math.floor(Math.random() * ridiculousTexts.length)];
-                    setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 5000 + 2000); // Random button text duration
+                    setTimeout(() => { buttonElement.innerText = originalText; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    const randomRotation = Math.floor(Math.random() * 720) - 360; // Wider rotation range
+                    const randomRotation = Math.floor(Math.random() * 720) - 360;
                     bodyElement.style.transform = `rotate(${randomRotation}deg)`;
-                    setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, Math.random() * 5000 + 2000); // Random rotation duration
+                    setTimeout(() => { bodyElement.style.transform = 'rotate(0deg)'; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                     if (Math.random() < 0.7) { // 70% chance of regular blinking, 30% chance of fast blinking
+                     if (Math.random() < 0.7) {
                         bodyElement.classList.add("blinking");
-                        setTimeout(() => bodyElement.classList.remove("blinking"), Math.random() * 5000 + 2000); // Random blinking duration
+                        setTimeout(() => bodyElement.classList.remove("blinking"), Math.random() * 5000 + 2000);
                      } else {
-                        bodyElement.classList.add("blinking-fast"); // Introduce a new 'blinking-fast' class in CSS
-                        setTimeout(() => bodyElement.classList.remove("blinking-fast"), Math.random() * 3000 + 1000); // Faster blinking, shorter duration
+                        bodyElement.classList.add("blinking-fast");
+                        setTimeout(() => bodyElement.classList.remove("blinking-fast"), Math.random() * 3000 + 1000);
                      }
                  },
-                () => { outputElement.innerText = Math.floor(Math.random() * 10000); setTimeout(() => { outputElement.innerText = ""; }, Math.random() * 3000 + 1000); }, // Larger random number, random clear time
+                () => { outputElement.innerText = Math.floor(Math.random() * 10000); setTimeout(() => { outputElement.innerText = ""; }, Math.random() * 3000 + 1000); },
                 () => {
-                    const randomTop = Math.random() * 90 + "vh"; // Marquee can go closer to bottom
+                    const randomTop = Math.random() * 90 + "vh";
                     const marquee = document.querySelector("marquee");
                     marquee.style.position = "fixed";
                     marquee.style.top = randomTop;
-                    marquee.style.fontSize =  (1 + Math.random() * 0.5) + "em"; // Random font size for marquee
+                    marquee.style.fontSize =  (1 + Math.random() * 0.5) + "em";
                     setTimeout(() => {
                         marquee.style.position = "static";
                         marquee.style.top = "auto";
-                        marquee.style.fontSize = "1.3em"; // Reset font size
-                    }, Math.random() * 5000 + 2000); // Random marquee position duration
+                        marquee.style.fontSize = "1.3em";
+                    }, Math.random() * 5000 + 2000);
                 },
-                () => { bodyElement.style.letterSpacing = Math.random() * 15 + "px"; setTimeout(() => { bodyElement.style.letterSpacing = "3px"; }, Math.random() * 5000 + 2000); }, // Wider letter spacing, random duration
+                () => { bodyElement.style.letterSpacing = Math.random() * 15 + "px"; setTimeout(() => { bodyElement.style.letterSpacing = "3px"; }, Math.random() * 5000 + 2000); },
                 () => {
-                    const imageURLs = ["https://i.imgur.com/XXX.png", "https://i.imgur.com/YYY.gif", "https://i.imgur.com/ZZZ.jpg", "https://i.imgur.com/AAA.png", "https://i.imgur.com/BBB.gif", "https://i.imgur.com/CCC.png"]; // More image URLs
+                    const imageURLs = ["https://i.imgur.com/XXX.png", "https://i.imgur.com/YYY.gif", "https://i.imgur.com/ZZZ.jpg", "https://i.imgur.com/AAA.png", "https://i.imgur.com/BBB.gif", "https://i.imgur.com/CCC.png"];
                     const randomImageURL = imageURLs[Math.floor(Math.random() * imageURLs.length)];
                     const img = document.createElement("img");
                     img.src = randomImageURL;
                     img.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; object-fit:contain; pointer-events:none; z-index:999;";
                     document.body.appendChild(img);
-                    setTimeout(() => document.body.removeChild(img), Math.random() * 5000 + 2000); // Random image duration
+                    setTimeout(() => document.body.removeChild(img), Math.random() * 5000 + 2000);
                 },
                 () => {
-                    const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'lime']; // Even more colors
+                    const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'lime'];
                     const color1 = colors[Math.floor(Math.random() * colors.length)];
                     const color2 = colors[Math.floor(Math.random() * colors.length)];
-                    const gradientType = Math.random() < 0.5 ? 'to right' : 'to bottom right'; // Random gradient direction
+                    const gradientType = Math.random() < 0.5 ? 'to right' : 'to bottom right';
                     bodyElement.style.backgroundImage = `linear-gradient(${gradientType}, ${color1}, ${color2})`;
-                    setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, Math.random() * 5000 + 2000); // Random gradient duration
+                    setTimeout(() => { bodyElement.style.backgroundImage = 'none'; bodyElement.style.backgroundColor = 'black'; }, Math.random() * 5000 + 2000);
                 },
                 () => {
                     const scrollX = Math.random() * document.body.scrollWidth;
                     const scrollY = Math.random() * document.body.scrollHeight;
                     window.scrollTo(scrollX, scrollY);
-                    setTimeout(() => { window.scrollTo(0, 0); }, Math.random() * 3000 + 1000); // Random scroll duration
+                    setTimeout(() => { window.scrollTo(0, 0); }, Math.random() * 3000 + 1000);
                 },
                 () => {
                     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
@@ -364,27 +487,25 @@
                             else if (document.msExitFullscreen) { document.msExitFullscreen(); }
                             else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); }
                             else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
-                        }, Math.random() * 7000 + 3000); // Random fullscreen duration
+                        }, Math.random() * 7000 + 3000);
                     }
                 },
                 () => {
                     const allElements = document.querySelectorAll('*');
-                    const fontWeights = ['bold', 'bolder', 'lighter', 'normal', 'initial']; // More font weights
-                    allElements.forEach(element => { element.style.fontWeight = fontWeights[Math.floor(Math.random() * fontWeights)]; }); // Apply random font weight
-                    setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, Math.random() * 5000 + 2000); // Random bold duration
+                    const fontWeights = ['bold', 'bolder', 'lighter', 'normal', 'initial'];
+                    allElements.forEach(element => { element.style.fontWeight = fontWeights[Math.floor(Math.random() * fontWeights)]; });
+                    setTimeout(() => { allElements.forEach(element => { element.style.fontWeight = 'normal'; }); }, Math.random() * 5000 + 2000);
                 },
-                () => {  crackedScreenOverlay.classList.add('show'); setTimeout(() => crackedScreenOverlay.classList.remove('show'), Math.random() * 3000 + 1000); }, // Random cracked screen duration
-                () => { bodyElement.style.perspective = `${Math.random() * 1000 + 200}px`; setTimeout(() => bodyElement.style.perspective = 'none', Math.random() * 3000 + 1000); }, // Random perspective
-                () => { bodyElement.style.transformStyle = 'preserve-3d'; setTimeout(() =>  bodyElement.style.transformStyle = 'flat', Math.random() * 3000 + 1000); }, // Random 3D style duration
-                () => { document.querySelector('marquee').stop(); setTimeout(() => document.querySelector('marquee').start(), Math.random() * 3000 + 1000); }, // Random marquee stop duration
+                () => {  crackedScreenOverlay.classList.add('show'); setTimeout(() => crackedScreenOverlay.classList.remove('show'), Math.random() * 3000 + 1000); },
+                () => { bodyElement.style.perspective = `${Math.random() * 1000 + 200}px`; setTimeout(() => bodyElement.style.perspective = 'none', Math.random() * 3000 + 1000); },
+                () => { bodyElement.style.transformStyle = 'preserve-3d'; setTimeout(() =>  bodyElement.style.transformStyle = 'flat', Math.random() * 3000 + 1000); },
+                () => { document.querySelector('marquee').stop(); setTimeout(() => document.querySelector('marquee').start(), Math.random() * 3000 + 1000); },
                 () => {
-                    // New event: Change button shape randomly
-                    const shapes = ['8px', '50%', '0', '20px 5px']; // Example shapes (pixel, circle, square, funky)
+                    const shapes = ['8px', '50%', '0', '20px 5px'];
                     buttonElement.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
                     setTimeout(() => { buttonElement.style.borderRadius = '8px'; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    // New event: Add random text shadow to body
                     const shadowColors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
                     const shadowColor = shadowColors[Math.floor(Math.random() * shadowColors.length)];
                     const hShadow = Math.floor(Math.random() * 10);
@@ -394,29 +515,26 @@
                     setTimeout(() => { bodyElement.style.textShadow = 'none'; }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    // New event: Jiggle the button randomly
                     buttonElement.classList.add('shake');
-                    setTimeout(() => buttonElement.classList.remove('shake'), Math.random() * 1000 + 500); // Shorter shake duration
+                    setTimeout(() => buttonElement.classList.remove('shake'), Math.random() * 1000 + 500);
                 },
                 () => {
-                    // New event:  Change button color and text color randomly
                     const buttonColors = ['yellow', 'red', 'blue', 'lime', 'magenta', 'cyan', 'orange'];
                     const buttonBgColor = buttonColors[Math.floor(Math.random() * buttonColors.length)];
-                    let buttonTextColor = 'black'; // Default text color
+                    let buttonTextColor = 'black';
                     if (['yellow', 'lime', 'cyan'].includes(buttonBgColor)) {
-                        buttonTextColor = 'black'; // Ensure contrast for light backgrounds
+                        buttonTextColor = 'black';
                     } else {
                         buttonTextColor = 'white';
                     }
                     buttonElement.style.backgroundColor = buttonBgColor;
                     buttonElement.style.color = buttonTextColor;
                     setTimeout(() => {
-                        buttonElement.style.backgroundColor = 'yellow'; // Reset to default colors
+                        buttonElement.style.backgroundColor = 'yellow';
                         buttonElement.style.color = 'black';
                     }, Math.random() * 5000 + 2000);
                 },
                 () => {
-                    // New event: Add a random border to the button
                     const borderStylesButton = ["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"];
                     const randomButtonStyle = borderStylesButton[Math.floor(Math.random() * borderStylesButton.length)];
                     const randomButtonWidth = Math.floor(Math.random() * 8) + 1;
@@ -427,7 +545,6 @@
                     setTimeout(() => { buttonElement.style.border = 'none'; }, Math.random() * 5000 + 2000);
                 },
                  () => {
-                    // New event: Change button font size
                     const fontSizes = ['1.5em', '2em', '2.5em', '3em', '1.2em'];
                     buttonElement.style.fontSize = fontSizes[Math.floor(Math.random() * fontSizes.length)];
                     setTimeout(() => { buttonElement.style.fontSize = '24px'; }, Math.random() * 5000 + 2000);
@@ -445,7 +562,63 @@
         function hideArrow() { document.getElementById("helpArrow").classList.add("hidden"); }
         function showArrow() { document.getElementById("helpArrow").classList.remove("hidden"); }
         function showWelcomeNotification() { if (sessionStorage.getItem(welcomeShownKey)) { return; } const notification = document.getElementById('notification'); notification.classList.add('show'); setTimeout(() => { notification.classList.remove('show'); }, 5000); sessionStorage.setItem(welcomeShownKey, 'true'); }
-        function resetPage() { sessionStorage.removeItem(welcomeShownKey); location.reload(); }
+        function resetPage() {
+            notification.textContent = "Resetting the Chaos...";
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+                sessionStorage.removeItem(welcomeShownKey);
+                location.reload();
+            }, 2000);
+        }
+
+        // Volume indication update functions
+        function updateVolumePopupNote() {
+            const volumePercentage = Math.round(volumeLevel * 100);
+            volumePopupNote.textContent = `Volume: ${volumePercentage}%`;
+        }
+
+        function showVolumePopupNote() {
+            volumePopupNote.classList.add('show');
+            setTimeout(() => {
+                volumePopupNote.classList.remove('show');
+            }, 1500);
+        }
+
+
+        function updateVolumeBars() {
+            const volumePercentage = volumeLevel * 100;
+            volumeBarLevel.style.width = `${volumePercentage}%`;
+        }
+
+
+        // Mute Functionality
+        muteButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                muteButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                muteButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        });
+
+        // Volume Control Functionality
+        volumeUpButton.addEventListener('click', () => {
+            volumeLevel = Math.min(1, volumeLevel + 0.1);
+            updateVolume();
+        });
+
+        volumeDownButton.addEventListener('click', () => {
+            volumeLevel = Math.max(0, volumeLevel - 0.1);
+            updateVolume();
+        });
+
+        function updateVolume() {
+            updateVolumeBars();
+            updateVolumePopupNote();
+            showVolumePopupNote();
+        }
+
 
         $(document).ready(function() {
             showArrow(); showWelcomeNotification();
