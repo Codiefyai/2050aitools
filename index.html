@@ -1,645 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Lead Nitchie</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/7xV1frmH/LN-LOGO.png">
     <style>
-        /* General Styles (same as before) */
         body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
             line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+            color: #333; /* Consistent body text color */
+            background-color: #f9f9f9; /* Light gray background for page consistency, adjust if needed */
         }
-
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
+            max-width: 960px;
+            margin: 20px auto; /* Increased top/bottom margin for better spacing */
+            padding: 30px; /* Increased padding for a more contained feel */
+            background-color: #fff; /* White container background - consistent with form */
+            border-radius: 8px; /* Slightly rounded corners for a softer look */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
         }
-
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
+        h1, h2, h3 {
+            color: #3333ff; /* Primary accent color - consistent with landing page */
+        }
+        h1 {
+            font-size: 2.5em; /* Larger title */
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            font-size: 1.4em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p, ul, ol {
+            margin-bottom: 15px;
+            color: #555; /* Slightly lighter than body text for visual hierarchy */
+        }
+        a {
+            color: #3333ff; /* Primary accent color for links */
             text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
+            font-weight: bold; /* Make links stand out a bit more */
         }
-
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
+        a:hover {
+            text-decoration: underline; /* Standard underline on hover */
         }
-
-        .top-bar.menu-open {
-            background-color: #333;
+        ul, ol {
+            padding-left: 25px;
         }
-
-        .top-bar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Add more specific styles if needed to match finer details of the landing page */
+        strong {
+            font-weight: 600; /* Slightly bolder strong text */
+            color: #333; /* Strong text color closer to body text for emphasis */
         }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
+        .last-updated {
+            font-style: italic;
+            color: #777; /* Muted color for last updated date */
+            margin-bottom: 20px;
+            display: block; /* Ensure it takes full width */
+            text-align: right; /* Align to the right */
         }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top */
-        }
-
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
-        }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
-            display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
-        }
-
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
-        }
-
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
-        }
-
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
-        }
-
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
-        }
-
-
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Privacy Policy for Lead Nitchie</h1>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
-        </div>
+        <span class="last-updated"><strong>Last Updated:</strong> October 26, 2023</span>
+
+        <p>Welcome to Lead Nitchie. We are committed to protecting your privacy and ensuring you have a positive experience on our website and when using our services. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of your information when you use our website <a href="https://lead-nitchie-b2b.onrender.com">www.leadnitchie.com</a> and related services.</p>
+
+        <h2>1. Information We Collect</h2>
+
+        <p>We collect information to provide and improve our services and to communicate with you effectively. The types of information we collect include:</p>
+
+        <h3>1.1 Information You Provide Directly</h3>
+        <p>When you interact with our website, such as when you fill out a form to request a consultation or contact us, you may provide us with information including:</p>
+        <ul>
+            <li><strong>Contact Information:</strong> This may include your first and last name, work email address, phone number, and company website URL.</li>
+            <li><strong>Website URL:</strong> We collect your website URL to understand your business and tailor our services to your needs.</li>
+            <li><strong>Communications:</strong> If you contact us directly, we may keep a record of that correspondence.</li>
+        </ul>
+
+        <h3>1.2 Information Collected Automatically</h3>
+        <p>When you browse our website, we may automatically collect certain information about your visit, such as:</p>
+        <ul>
+            <li><strong>Usage Data:</strong> Information about how you use our website, including pages visited, time spent on pages, clickstream data, and navigation paths.</li>
+            <li><strong>Device Information:</strong> Information about the device you use to access our website, including the device type, operating system, browser type, IP address, and unique device identifiers.</li>
+            <li><strong>Cookies and Tracking Technologies:</strong> We use cookies and similar tracking technologies to track activity on our website and hold certain information. You can control the use of cookies at the individual browser level. Please see our <a href="#cookies">Cookie Policy</a> section below for more details.</li>
+        </ul>
+
+        <h2>2. How We Use Your Information</h2>
+
+        <p>We use the information we collect for various purposes, including:</p>
+        <ul>
+            <li><strong>To Provide and Maintain our Service:</strong> To operate our website, provide the services you request (such as lead generation consultations), and personalize your experience.</li>
+            <li><strong>To Communicate with You:</strong> To respond to your inquiries, provide customer support, send you information about our services, and communicate important updates.</li>
+            <li><strong>For Marketing Purposes:</strong> With your consent where required, we may use your contact information to send you marketing communications about our services that we believe may be of interest to you. You will always have the option to opt-out of receiving these communications.</li>
+            <li><strong>To Improve Our Website and Services:</strong> To analyze website usage, understand trends, and improve the functionality and user experience of our website and services.</li>
+            <li><strong>For Legal Compliance:</strong> To comply with applicable laws, regulations, legal processes, or governmental requests.</li>
+        </ul>
+
+        <h2>3. Sharing of Your Information</h2>
+
+        <p>We may share your information in the following circumstances:</p>
+        <ul>
+            <li><strong>With Service Providers:</strong> We may employ third-party companies and individuals to facilitate our service, provide services on our behalf, perform website-related services (e.g., website hosting, data analysis, email delivery, CRM integration), or assist us in analyzing how our website is used. These third parties have access to your Personal Information only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.</li>
+            <li><strong>For Business Transfers:</strong> In the event of a merger, acquisition, reorganization, sale of assets, or bankruptcy, your information may be transferred or disclosed as part of that transaction. We will notify you via email and/or a prominent notice on our website of any change in ownership or uses of your personal information, as well as any choices you may have regarding your personal information.</li>
+            <li><strong>For Legal Reasons:</strong> We may disclose your information if required to do so by law or in response to valid requests by public authorities (e.g., a court or a government agency).</li>
+            <li><strong>With Your Consent:</strong> We may share your information with third parties when we have your consent to do so.</li>
+        </ul>
+
+        <p><strong>We do not sell, rent, or trade your personal information to third parties for their marketing purposes.</strong></p>
+
+        <h2>4. Data Security</h2>
+
+        <p>We are committed to protecting the security of your information. We use a variety of security technologies and procedures to help protect your personal information from unauthorized access, use, or disclosure. These measures are designed to provide a level of security appropriate to the risk of processing your personal information. However, no method of transmission over the internet or method of electronic storage is completely secure. Therefore, while we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.</p>
+
+        <h2>5. Data Retention</h2>
+
+        <p>We will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy, including for as long as needed to provide you with our services, comply with our legal obligations, resolve disputes, and enforce our agreements.</p>
+
+        <h2>6. Your Rights</h2>
+
+        <p>You have certain rights regarding your personal information, including:</p>
+        <ul>
+            <li><strong>Access and Rectification:</strong> You have the right to access the personal information we hold about you and to request that we correct any inaccuracies.</li>
+            <li><strong>Erasure:</strong> You have the right to request that we delete your personal information, subject to certain exceptions under applicable law.</li>
+            <li><strong>Objection to Processing:</strong> You have the right to object to the processing of your personal information for certain purposes, including marketing.</li>
+            <li><strong>Restriction of Processing:</strong> You have the right to request that we restrict the processing of your personal information in certain circumstances.</li>
+        </ul>
+        <p>To exercise any of these rights, please contact us using the contact information provided below.</p>
+
+        <h2 id="cookies">7. Cookie Policy</h2>
+
+        <p>We use cookies and similar tracking technologies to collect and use information as described in this policy. Cookies are small text files that are placed on your device to track your activities and preferences. We use cookies for purposes such as:</p>
+        <ul>
+            <li><strong>Essential Cookies:</strong> Necessary for the website to function properly and to provide basic functionalities.</li>
+            <li><strong>Analytics Cookies:</strong> To understand how visitors interact with our website, which helps us improve our website and services. (e.g., Google Analytics)</li>
+            <li><strong>Functionality Cookies:</strong> To remember your preferences and settings, such as language preferences.</li>
+        </ul>
+        <p>You can manage your cookie preferences through your browser settings. Most browsers allow you to refuse to accept cookies and to delete cookies. Please note that if you disable cookies, some features of our website may not function properly.</p>
+
+        <h2>8. Third-Party Links</h2>
+
+        <p>Our website may contain links to other websites that are not operated by us. If you click on a third-party link, you will be directed to that third party's website. We strongly advise you to review the Privacy Policy of every website you visit. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party websites or services.</p>
+
+        <h2>9. Children's Privacy</h2>
+
+        <p>Our website and services are not directed to children under the age of 16, and we do not knowingly collect personal information from children under 16. If we become aware that we have collected personal information from a child under 16 without verification of parental consent, we will take steps to remove that information from our servers.</p>
+
+        <h2>10. Changes to This Privacy Policy</h2>
+
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date at the top of this Privacy Policy. We encourage you to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+
+        <h2>11. Contact Us</h2>
+
+        <p>If you have any questions or concerns about this Privacy Policy or our privacy practices, please contact us at:</p>
+
+        <p><strong>Lead Nitchie</strong><br>
+       <br>
+        Email: <a href="mailto:[lead@nitchiebotai.online]">lead@nitchiebotai.online</a><br>
+        Phone: <a href="tel:+639306359306">+63 9306 359 306</a></p>
+
+        <p>Thank you for trusting Lead Nitchie with your personal information.</p>
     </div>
-
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
-
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
-        </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
-                </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
-
-    <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                }
-            }
-
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
-
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
-
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
-
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
-
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
-            });
-
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
-
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
-
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
-                });
-            }
-
-
-        })();
-    </script>
 </body>
 </html>
