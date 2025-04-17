@@ -1,645 +1,1809 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K&F Progress Tracker</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> {/* Keep this */}
     <style>
-        /* General Styles (same as before) */
+        /* --- Root Variables --- */
+        :root {
+            --primary: #2c3e50; /* Navy */
+            --secondary: #3498db; /* Blue */
+            --accent: #e67e22; /* Orange */
+            --success: #27ae60; /* Green */
+            --warning: #f39c12; /* Yellow */
+            --danger: #e74c3c; /* Red */
+            --light: #ecf0f1; /* Light Gray */
+            --medium-light: #bdc3c7; /* Medium Light Gray */
+            --dark: #34495e; /* Dark Gray/Blue */
+            --white: #ffffff;
+            --sidebar-bg: #2c3e50; /* Navy */
+            --sidebar-text: #ecf0f1;
+            --sidebar-hover: #34495e;
+            --content-bg: #f4f7f9;
+            --card-bg: var(--white);
+            --border-color: #e1e4e8;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --nm-blue: #00205b; /* Northwestern Mutual blue */
+            --sort-indicator-color: #a0b2c3;
+            --main-header-bg: var(--nm-blue); /* Header background */
+            --main-header-text: var(--white);
+            --auth-bg: #f4f7f9; /* Background for auth page */
+        }
+
+        /* --- Global Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
         body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: var(--content-bg); /* Default background */
+            color: var(--dark);
             line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+            display: flex; /* Use flex for the main app layout */
+            font-size: 16px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
-        }
-
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-
-        .top-bar.menu-open {
-            background-color: #333;
-        }
-
-        .top-bar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* --- Authentication UI Styles --- */
+        #auth-container {
+            display: none; /* Hidden by default, shown via JS */
             width: 100%;
             height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            background-color: var(--auth-bg);
+            position: fixed; /* Cover the whole screen */
+            top: 0;
+            left: 0;
+            z-index: 5000;
+            padding: 20px; /* Add padding for smaller screens */
         }
-
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative; /* For robot positioning */
+        #auth-container.active {
+            display: flex; /* Show when active */
         }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
-            display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
-        }
-
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
-        }
-
-
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
+        .auth-box {
+            background-color: var(--white);
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
-
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
+        .auth-box h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .auth-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .auth-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .auth-form input[type="email"],
+        .auth-form input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+        .auth-form input[type="email"]:focus,
+        .auth-form input[type="password"]:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        .auth-form button[type="submit"] { /* Target only submit buttons */
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        .auth-toggle-link {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        .auth-toggle-link button { /* Specific button style for toggle */
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            display: inline; /* Make it behave like a link */
+            width: auto; /* Override default button width */
+            margin-top: 0; /* Override default button margin */
+        }
+        .auth-toggle-link button:hover {
+            color: var(--primary);
+        }
+        .auth-error, .auth-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+        .auth-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .auth-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        /* --- Hide Main App by default --- */
+        #sidebar, #main-content {
+            display: none; /* Hidden initially */
         }
 
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
-        }
+        /* --- Show Main App when user is logged in --- */
+         #sidebar.active {
+            display: flex; /* Original display type */
+            flex-direction: column;
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px 0 0 0;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 5px var(--shadow-color);
+            z-index: 100;
+            transition: width 0.3s ease;
+         }
+          @media (max-width: 992px) {
+              #sidebar.active { width: 70px; }
+              #sidebar.active .sidebar-header { padding: 0 5px; }
+              #sidebar.active .logo-container { width: 50px; margin-bottom: 10px; }
+              #sidebar.active nav li a span { display: none; opacity: 0; }
+              #sidebar.active nav li a i { margin-right: 0; font-size: 1.3rem; }
+              #sidebar.active nav li a { justify-content: center; padding: 15px 0;}
+              /* Sidebar Footer Collapse */
+               #sidebar.active .sidebar-footer #user-email span,
+               #sidebar.active .sidebar-footer #logout-button span { display: none; }
+               #sidebar.active .sidebar-footer #logout-button { text-align: center; }
+               #sidebar.active .sidebar-footer { padding: 15px 0; }
+          }
+          @media (max-width: 576px) {
+              #sidebar.active { width: 60px; }
+               #sidebar.active nav li a i { font-size: 1.2rem; }
+          }
 
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
-        }
 
+         #main-content.active {
+            display: flex; /* Original display type */
+            flex-direction: column;
+            flex-grow: 1;
+            margin-left: 250px; /* Original margin */
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease;
+         }
+          @media (max-width: 992px) {
+             #main-content.active { margin-left: 70px; }
+         }
+          @media (max-width: 576px) {
+             #main-content.active { margin-left: 60px; }
+          }
+
+        /* --- Sidebar Footer for Logout --- */
+        .sidebar-footer {
+            margin-top: auto; /* Pushes to the bottom */
+            padding: 15px 20px;
+            border-top: 1px solid var(--sidebar-hover);
+            font-size: 0.85rem;
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+        .sidebar-footer #user-email {
+            display: flex; /* Use flex for icon alignment */
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--light);
+            word-break: break-all; /* Handle long emails */
+            text-align: left; /* Align left for consistency */
+        }
+         .sidebar-footer #user-email i {
+             flex-shrink: 0;
+         }
+        .sidebar-footer #logout-button {
+            width: 100%;
+            padding: 8px 10px;
+            background-color: var(--danger);
+            font-size: 0.9rem;
+            justify-content: center; /* Center icon and text */
+        }
+         .sidebar-footer #logout-button:hover {
+             background-color: #c0392b;
+         }
+         /* Responsive handled within #sidebar.active @media rules */
+
+
+        /* --- Existing Styles --- */
+        /* --- Paste ALL your other existing CSS rules here --- */
+        /* --- (Make sure they don't conflict with the new auth/active styles) --- */
+        /* --- Sidebar --- */
+         #sidebar .sidebar-header {
+            padding: 0 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center; /* Center logo */
+        }
+         #sidebar .logo-container {
+             width: 150px; /* Adjust as needed */
+         }
+         #sidebar .logo-container img {
+             width: 100%;
+             height: auto;
+         }
+        /* --- Sidebar Navigation --- */
+        #sidebar nav {
+             flex-grow: 1; /* Allows footer to push down */
+             overflow-y: auto; /* Scroll if needed */
+        }
+        #sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        #sidebar nav li a { display: flex; align-items: center; padding: 12px 20px; color: var(--sidebar-text); text-decoration: none; transition: background-color 0.3s ease, color 0.3s ease; border-left: 4px solid transparent; white-space: nowrap; overflow: hidden; }
+        #sidebar nav li a:hover { background-color: var(--sidebar-hover); }
+        #sidebar nav li a.active { background-color: var(--content-bg); color: var(--primary); font-weight: bold; border-left-color: var(--secondary); }
+        #sidebar nav li a i { margin-right: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+        #sidebar nav li a span { transition: opacity 0.2s ease; }
+
+        /* --- Main Content Area --- */
+        /* Main content display/margin handled by #main-content.active */
+
+        /* --- NEW Main Header Bar --- */
+        .main-header { background-color: var(--main-header-bg); color: var(--main-header-text); padding: 12px 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; z-index: 50; flex-shrink: 0; position: sticky; top: 0; }
+        .main-header h1 { margin: 0; font-size: 1.6rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .main-header h1 i { font-size: 1.4rem; }
+
+        /* --- Container for actual page content below header --- */
+        .main-content-inner { padding: 25px; flex-grow: 1; }
+
+        /* --- Page Views --- */
+        .content-view { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .content-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Page Header --- */
+        .page-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .page-header h2 { color: var(--primary); font-size: 1.8rem; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .action-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        /* --- Dashboard --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; margin-bottom: 30px; }
+        .summary-card, .upcoming-tasks-card { background-color: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
+        .summary-card h3, .upcoming-tasks-card h3 { color: var(--primary); margin-top: 0; margin-bottom: 18px; font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .summary-card h3 i, .upcoming-tasks-card h3 i { color: var(--secondary); }
+        .stat { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 12px 10px; border-radius: 5px; background-color: var(--light); font-size: 0.95rem; border: 1px solid #e0e6ed; }
+        .stat span:first-child { display: flex; align-items: center; gap: 8px; color: var(--dark); }
+        .stat i { color: var(--secondary); width: 16px; text-align: center; }
+        .stat .fa-linkedin { color: #0A66C2; }
+        .stat .fa-envelope { color: var(--warning); }
+        .stat .fa-phone-alt { color: var(--accent); }
+        .stat .fa-calendar-check { color: var(--success); }
+        .stat .fa-exclamation-triangle { color: var(--danger); }
+        .stat-value { font-weight: bold; background-color: var(--secondary); color: var(--white); padding: 3px 10px; border-radius: 12px; font-size: 0.9rem; min-width: 30px; text-align: center; }
+        .task-list { list-style: none; max-height: 350px; overflow-y: auto; padding-right: 5px; }
+        .task-list::-webkit-scrollbar { width: 6px; }
+        .task-list::-webkit-scrollbar-thumb { background-color: var(--medium-light); border-radius: 3px; }
+        .task-item { padding: 12px 15px; border-left: 4px solid var(--secondary); margin-bottom: 10px; background-color: var(--card-bg); border-radius: 5px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; border: 1px solid var(--border-color); transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+        .task-item:hover { background-color: #f8f9fa; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .task-item.urgent { border-left-color: var(--danger); background-color: #fff6f6; }
+        .task-item.warning { border-left-color: var(--warning); background-color: #fffbf2; }
+        .task-info { flex-grow: 1; flex-basis: 200px; }
+        .task-info strong { display: block; margin-bottom: 3px; color: var(--primary); }
+        .task-info span { font-size: 0.85rem; color: var(--dark); }
+        .task-due { font-size: 0.9rem; color: var(--dark); font-weight: bold; min-width: 90px; text-align: right; flex-shrink: 0; }
+        .task-due.overdue { color: var(--danger); }
+        .task-due.due-soon { color: var(--accent); }
+        .task-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .task-actions button { padding: 4px 8px; font-size: 0.8rem; }
+         .empty-task-item { list-style: none; padding: 15px; text-align: center; color: #6c757d; font-style: italic;}
+
+        /* --- Table Styles --- */
+        .table-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .search-container { display: flex; align-items: center; gap: 8px; }
+        .search-container input[type="search"] { padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; min-width: 200px; }
+        .search-container label { margin-bottom: 0; font-size: 0.9rem; }
+        .import-export-buttons { display: flex; flex-wrap: wrap; gap: 10px; flex-grow: 1; justify-content: flex-end; }
+        .table-container { background-color: var(--card-bg); border-radius: 8px; padding: 10px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 0.9rem; white-space: nowrap; }
+        td.wrap, td.wrap-mobile { white-space: normal; }
+        th { background-color: var(--primary); color: white; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; z-index: 10; cursor: default; }
+        th.sortable { cursor: pointer; position: relative; padding-right: 25px; }
+        th.sortable:hover { background-color: var(--sidebar-hover); }
+        th .sort-icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 0.8em; color: var(--sort-indicator-color); opacity: 0.5; transition: opacity 0.2s ease; }
+        th.sortable:hover .sort-icon { opacity: 0.8; }
+        th.sorted .sort-icon { opacity: 1; color: var(--white); }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e9ecef; }
+        .empty-row td { text-align: center !important; padding: 25px !important; color: #6c757d; font-style: italic; background-color: var(--content-bg) !important; }
+        .status { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: white; text-align: center; display: inline-block; min-width: 75px; text-transform: capitalize; white-space: normal; line-height: 1.3; }
+        /* Consolidated Status Classes */
+        .status-active, .status-confirmed, .status-pending, .status-new-connection, .status-connected-positive, .status-responded-positive, .status-appointment-booked, .status-waiting-for-confirmation { background-color: var(--success); }
+        .status-waiting, .status-follow-up-later, .status-left-voicemail, .status-no-answer, .status-waiting-for-response-1, .status-waiting-for-response-2, .status-connected-needs-follow-up, .status-follow-up-needed { background-color: var(--warning); color: var(--dark); }
+        .status-message-1-sent, .status-message-2-sent, .status-final-message-sent, .status-call-back-requested { background-color: var(--secondary); }
+        .status-rescheduled, .status-booked-call { background-color: var(--accent); }
+        .status-cancelled, .status-rejected, .status-closed, .status-wrong-number, .status-responded-negative, .status-no-show, .status-connected-negative { background-color: var(--danger); }
+        .status-completed { background-color: var(--medium-light); color: var(--dark); }
+        .status-unknown, .status-na { background-color: var(--light); color: var(--dark); }
+        /* End Status Classes */
+        .action-cell { white-space: nowrap; text-align: right; min-width: 80px; }
+        .icon-btn { background: none; border: none; cursor: pointer; font-size: 1.0em; padding: 5px 7px; color: var(--dark); transition: color 0.3s ease, transform 0.2s ease; border-radius: 4px; vertical-align: middle; }
+        .icon-btn:hover { transform: scale(1.1); background-color: var(--light); }
+        .edit-btn:hover { color: var(--secondary); }
+        .delete-btn:hover { color: var(--danger); }
+        .complete-btn:hover { color: var(--success); }
+        .workflow-btn:hover { color: var(--accent); }
+        .snooze-btn:hover { color: var(--accent); }
+
+        /* --- Forms & Modals --- */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary); font-size: 0.9rem;}
+        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.95rem; background-color: var(--white); transition: border-color 0.2s ease; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2); }
+        textarea { resize: vertical; min-height: 80px;}
+        input[readonly] { background-color: var(--light); cursor: not-allowed; border-color: var(--medium-light); }
+        input[readonly]:focus { box-shadow: none; border-color: var(--medium-light); }
+        button { padding: 9px 18px; background-color: var(--secondary); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background-color 0.3s ease, box-shadow 0.2s ease, opacity 0.2s ease; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+        button:hover { background-color: #2980b9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        button i { line-height: 1; }
+        button.success-btn { background-color: var(--success); }
+        button.success-btn:hover { background-color: #229954; }
+        button.warning-btn { background-color: var(--warning); color: var(--dark); }
+        button.warning-btn:hover { background-color: #d68910; }
+        button.danger-btn { background-color: var(--danger); }
+        button.danger-btn:hover { background-color: #c0392b; }
+        button.secondary-btn { background-color: var(--dark); }
+        button.secondary-btn:hover { background-color: var(--primary); }
+        button:disabled { background-color: var(--medium-light); cursor: not-allowed; box-shadow: none; opacity: 0.7;}
+        button.loading { opacity: 0.8; cursor: wait; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
+        .modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
+        .modal-content { background-color: var(--card-bg); padding: 25px; border-radius: 8px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .modal-header h3 { color: var(--primary); font-size: 1.4rem; }
+        .close-modal { font-size: 1.8rem; cursor: pointer; color: var(--dark); transition: color 0.2s ease; background: none; border: none; padding: 0 5px;}
+        .close-modal:hover { color: var(--danger); }
+
+        /* --- Misc Elements --- */
+        .notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 20px; color: white; border-radius: 5px; box-shadow: 0 3px 10px var(--shadow-color); opacity: 0; visibility: hidden; z-index: 3000; font-size: 0.95rem; max-width: 90%; text-align: center; transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color 0.3s ease; }
+        .notification.show { opacity: 1; visibility: visible; transition: opacity 0.3s ease, background-color 0.3s ease; }
+        .notification.success { background-color: var(--success); }
+        .notification.error { background-color: var(--danger); }
+        .notification.warning { background-color: var(--warning); color: var(--dark);}
+        .notification.info { background-color: var(--secondary); }
+        .reminder-bell { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: var(--danger); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1000; transition: background-color 0.3s ease, opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
+        .reminder-bell.show { opacity: 1; visibility: visible; }
+        .reminder-bell:hover { background-color: #c0392b; }
+        .reminder-bell .badge { position: absolute; top: -5px; right: -5px; background-color: white; color: var(--danger); border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; font-weight: bold; border: 1px solid var(--danger); }
+
+        /* --- Report View --- */
+        .report-form-container { background-color: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
+        #report-output { margin-top: 25px; padding: 20px; background-color: #f8f9fa; border-radius: 5px; display: none; border: 1px solid var(--border-color); line-height: 1.7; font-size: 0.95rem; }
+        #report-output h4 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 1.2rem;}
+        #report-output p { margin-bottom: 12px; }
+        #report-output strong { color: var(--dark); display: block; margin-bottom: 4px;}
+        #report-output em { color: #6c757d; }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) {
+            .main-header { padding-left: 20px; padding-right: 20px;}
+            .main-content-inner { padding: 20px; }
+            .page-header h2 { font-size: 1.6rem; }
+            .search-container input[type="search"] { min-width: 180px; }
+        }
+        @media (max-width: 992px) {
+            /* Sidebar/Main content width/margins handled by .active rules */
+            .main-header { padding-left: 15px; padding-right: 15px; }
+             .main-header h1 { font-size: 1.4rem; }
+            .main-content-inner { padding: 15px; }
+            .page-header h2 { font-size: 1.5rem; }
+            .table-controls { flex-direction: column; align-items: stretch; }
+            .import-export-buttons { justify-content: flex-start; }
+            .search-container { width: 100%; }
+            .search-container input[type="search"] { width: 100%; min-width: auto;}
+            th, td { font-size: 0.85rem; padding: 8px 10px; }
+            .status { font-size: 0.7rem; min-width: 70px; padding: 3px 8px;}
+            .icon-btn { font-size: 1.0em; padding: 4px 6px;}
+            .action-cell { min-width: 70px; }
+            button { font-size: 0.85rem; padding: 8px 15px; }
+             #content-creation-btn { padding: 7px 12px; font-size: 0.8rem; }
+        }
+        @media (max-width: 576px) {
+            body { font-size: 15px; }
+            /* Sidebar/Main content width/margins handled by .active rules */
+            .main-header { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 8px; position: static; /* Simpler layout on mobile */ }
+            .main-header h1 { font-size: 1.25rem; }
+             #content-creation-btn { align-self: flex-end; padding: 6px 10px; font-size: 0.75rem; margin-top: 5px; }
+            .main-content-inner { padding: 10px; }
+            .page-header { padding-bottom: 10px; margin-bottom: 15px; flex-direction: column; align-items: flex-start;}
+            .page-header h2 { font-size: 1.3rem; }
+            .action-buttons { gap: 5px; width: 100%; justify-content: flex-start; }
+            button { font-size: 0.8rem; padding: 7px 12px; gap: 5px;}
+            .dashboard-grid { gap: 15px; }
+            .summary-card, .upcoming-tasks-card { padding: 15px; }
+            .summary-card h3, .upcoming-tasks-card h3 { font-size: 1.1rem; margin-bottom: 15px;}
+            .stat { padding: 10px 8px; font-size: 0.9rem;}
+            .stat-value { font-size: 0.8rem; padding: 2px 8px; min-width: 25px;}
+            .table-container { padding: 5px; }
+            th, td { font-size: 0.8rem; padding: 6px 8px; }
+            td.wrap-mobile { white-space: normal; }
+            .status { font-size: 0.65rem; min-width: 65px; padding: 2px 6px;}
+            .action-cell { min-width: 60px; }
+            .icon-btn { font-size: 0.9em; padding: 3px 5px;}
+            .modal-content { padding: 15px; max-width: 95%; }
+            .modal-header h3 { font-size: 1.2rem; }
+            .close-modal { font-size: 1.6rem; }
+            label { font-size: 0.85rem;}
+            input, select, textarea { font-size: 0.9rem; padding: 8px 10px;}
+            .notification { font-size: 0.9rem; padding: 10px 15px; bottom: 15px; max-width: 95%;}
+            .reminder-bell { width: 45px; height: 45px; right: 15px; bottom: 15px;}
+            .reminder-bell i { font-size: 1.1rem; }
+            .reminder-bell .badge { width: 20px; height: 20px; font-size: 0.7rem; }
+            .auth-box { padding: 25px 20px; } /* Responsive auth box */
+        }
 
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
+    <!-- ======================== -->
+    <!-- Authentication Container -->
+    <!-- ======================== -->
+    <div id="auth-container"> <!-- Initially hidden via CSS, shown by JS -->
+        <div class="auth-box">
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <h2>Login</h2>
+                 <div id="login-message" class="auth-message"></div>
+                 <div id="login-error" class="auth-error"></div>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="success-btn">Login</button>
+                <p class="auth-toggle-link">
+                    Need an account? <button type="button" id="show-signup">Sign Up</button>
+                </p>
+            </form>
+
+            <!-- Signup Form (Hidden initially) -->
+            <form id="signup-form" class="auth-form" style="display: none;">
+                <h2>Sign Up</h2>
+                 <div id="signup-message" class="auth-message"></div>
+                 <div id="signup-error" class="auth-error"></div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required autocomplete="new-password" minlength="6">
+                     <small style="font-size: 0.8rem; color: #6c757d; margin-top: 4px; display: block;">Minimum 6 characters</small>
+                </div>
+                <button type="submit" class="success-btn">Sign Up</button>
+                 <p class="auth-toggle-link">
+                     Already have an account? <button type="button" id="show-login">Login</button>
+                 </p>
+            </form>
         </div>
     </div>
 
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
 
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
+    <!-- ====================================== -->
+    <!-- Sidebar Navigation (Initially Hidden)  -->
+    <!-- ====================================== -->
+    <aside id="sidebar"> <!-- Initially hidden via CSS, shown by JS -->
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <!-- Make sure the image path is correct or use an absolute URL -->
+                <img src="https://www.pngkey.com/png/detail/142-1420424_northwestern-mutual-logo-white-northwestern-mutual-logo.png" alt="Northwestern Mutual Logo">
+            </div>
         </div>
-    </section>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-view="dashboard" title="Dashboard"><i class="fas fa-tachometer-alt fa-fw"></i> <span>Dashboard</span></a></li>
+                <li><a href="#" class="nav-link" data-view="leads" title="LinkedIn Leads"><i class="fab fa-linkedin fa-fw"></i> <span>LinkedIn Leads</span></a></li>
+                <li><a href="#" class="nav-link" data-view="calls" title="Call Tracking"><i class="fas fa-phone-alt fa-fw"></i> <span>Call Tracking</span></a></li>
+                <li><a href="#" class="nav-link" data-view="appointments" title="Appointments"><i class="fas fa-calendar-check fa-fw"></i> <span>Appointments</span></a></li>
+                <li><a href="#" class="nav-link" data-view="report" title="Daily Report"><i class="fas fa-chart-bar fa-fw"></i> <span>Daily Report</span></a></li>
+                <li><a href="#" class="nav-link" data-view="settings" title="Settings"><i class="fas fa-cog fa-fw"></i> <span>Settings</span></a></li>
+            </ul>
+        </nav>
+         <!-- Sidebar Footer for User Info and Logout -->
+        <div class="sidebar-footer">
+            <span id="user-email"> <!-- Populated by JS -->
+                <i class="fas fa-user-circle"></i> <span>Loading...</span>
+            </span>
+            <button id="logout-button" class="danger-btn">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </button>
+        </div>
+    </aside>
 
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
+    <!-- =================================== -->
+    <!-- Main Content Area (Initially Hidden)-->
+    <!-- =================================== -->
+    <main id="main-content"> <!-- Initially hidden via CSS, shown by JS -->
+        <!-- Main Header Bar -->
+        <div class="main-header">
+            <h1><i class="fas fa-clipboard-list"></i> Northwestern Mutual Daily Tracker</h1>
+            <button id="content-creation-btn" class="success-btn" title="Open Content Creation Tools"><i class="fas fa-pen-nib"></i> Create Content</button>
+        </div>
+
+        <!-- Inner Container for Page Content -->
+        <div class="main-content-inner">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="content-view active">
+                 <div class="page-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <div class="action-buttons">
+                         <button id="restore-data-btn" class="secondary-btn" disabled title="Restore data from the last automatic backup"><i class="fas fa-history"></i> Restore Last Update</button>
+                    </div>
                 </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
+                <div class="dashboard-grid">
+                     <div class="summary-card">
+                        <h3><i class="fas fa-chart-pie"></i>Today's Summary</h3>
+                        <div class="stat"><span><i class="fab fa-linkedin"></i> New Connections</span><span class="stat-value" id="summary-new-connections">0</span></div>
+                        <div class="stat"><span><i class="fas fa-envelope"></i> Messages to Send</span><span class="stat-value" id="summary-messages-to-send">0</span></div>
+                        <div class="stat"><span><i class="fas fa-phone-alt"></i> Calls to Log</span><span class="stat-value" id="summary-calls-to-log">0</span></div>
+                        <div class="stat"><span><i class="fas fa-calendar-check"></i> Appointments to Confirm</span><span class="stat-value" id="summary-appointments-to-confirm">0</span></div>
+                        <div class="stat"><span><i class="fas fa-exclamation-triangle"></i> Overdue Tasks</span><span class="stat-value" id="summary-overdue-tasks">0</span></div>
+                    </div>
+                    <div class="upcoming-tasks-card">
+                        <h3><i class="fas fa-tasks"></i> Upcoming / Overdue Tasks</h3>
+                        <ul class="task-list" id="dashboard-task-list">
+                            <li class="empty-task-item">Loading tasks...</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
-                </div>
-            </section>
-
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
-
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
+            <!-- LinkedIn Leads View -->
+            <div id="leads-view" class="content-view">
+                <div class="page-header">
+                     <h2><i class="fab fa-linkedin"></i> LinkedIn Leads</h2>
+                     <div class="action-buttons"> <button id="add-lead-btn" class="success-btn" title="Add a new LinkedIn connection record"><i class="fas fa-plus"></i> Add Connection</button> </div>
+                 </div>
+                 <div class="table-controls">
+                     <div class="search-container"><label for="search-leads"><i class="fas fa-search"></i></label><input type="search" id="search-leads" placeholder="Search leads..."></div>
+                     <div class="import-export-buttons">
+                         <button id="export-leads-btn" class="secondary-btn" title="Export filtered leads to a CSV file"><i class="fas fa-file-export"></i> Export Filtered</button>
+                         <input type="file" id="import-leads-file" accept=".csv" style="display: none;">
+                         <button id="import-leads-btn" class="secondary-btn" title="Import leads from a CSV file (will overwrite existing leads)"><i class="fas fa-file-import"></i> Import Leads</button>
+                     </div>
+                 </div>
+                 <div class="table-container"><table><thead><tr> <th class="sortable" data-sort="name">Name <span class="sort-icon"></span></th> <th class="sortable" data-sort="company">Company <span class="sort-icon"></span></th> <th class="sortable" data-sort="connectionDate">Date <span class="sort-icon"></span></th> <th class="sortable" data-sort="messageStage">Stage <span class="sort-icon"></span></th> <th>Next Action</th> <th class="sortable" data-sort="dueDate">Due <span class="sort-icon"></span></th> <th class="sortable" data-sort="status">Status <span class="sort-icon"></span></th> <th class="action-cell">Actions</th> </tr></thead><tbody id="leads-table-body"> <tr class="empty-row"><td colspan="8">Loading leads...</td></tr> </tbody></table></div>
             </div>
-        </footer>
+
+            <!-- Call Tracking View -->
+            <div id="calls-view" class="content-view">
+                <div class="page-header">
+                     <h2><i class="fas fa-phone-alt"></i> Call Tracking</h2>
+                     <div class="action-buttons"> <button id="add-call-btn" class="success-btn" title="Add a new call record"><i class="fas fa-plus"></i> Add Call</button> </div>
+                 </div>
+                 <div class="table-controls">
+                     <div class="search-container"><label for="search-calls"><i class="fas fa-search"></i></label><input type="search" id="search-calls" placeholder="Search calls..."></div>
+                     <div class="import-export-buttons">
+                         <button id="export-calls-btn" class="secondary-btn" title="Export filtered calls to a CSV file"><i class="fas fa-file-export"></i> Export Filtered</button>
+                         <input type="file" id="import-calls-file" accept=".csv" style="display: none;">
+                         <button id="import-calls-btn" class="secondary-btn" title="Import calls from a CSV file (will overwrite existing calls)"><i class="fas fa-file-import"></i> Import Calls</button>
+                     </div>
+                 </div>
+                  <div class="table-container"><table><thead><tr> <th class="sortable" data-sort="name">Name <span class="sort-icon"></span></th> <th class="sortable" data-sort="callDate">Date <span class="sort-icon"></span></th> <th class="sortable" data-sort="outcome">Outcome <span class="sort-icon"></span></th> <th>Next Step</th> <th class="wrap-mobile">Notes</th> <th class="action-cell">Actions</th> </tr></thead><tbody id="calls-table-body"> <tr class="empty-row"><td colspan="6">Loading call records...</td></tr> </tbody></table></div>
+            </div>
+
+            <!-- Appointments View -->
+            <div id="appointments-view" class="content-view">
+                 <div class="page-header">
+                     <h2><i class="fas fa-calendar-check"></i> Appointments</h2>
+                     <div class="action-buttons"> <button id="add-appointment-btn" class="success-btn" title="Schedule a new appointment"><i class="fas fa-plus"></i> Add Appointment</button> </div>
+                 </div>
+                 <div class="table-controls">
+                     <div class="search-container"><label for="search-appointments"><i class="fas fa-search"></i></label><input type="search" id="search-appointments" placeholder="Search appointments..."></div>
+                     <div class="import-export-buttons">
+                         <button id="export-appointments-btn" class="secondary-btn" title="Export filtered appointments to a CSV file"><i class="fas fa-file-export"></i> Export Filtered</button>
+                         <input type="file" id="import-appointments-file" accept=".csv" style="display: none;">
+                         <button id="import-appointments-btn" class="secondary-btn" title="Import appointments from a CSV file (will overwrite existing appointments)"><i class="fas fa-file-import"></i> Import Appointments</button>
+                     </div>
+                 </div>
+                  <div class="table-container"><table><thead><tr> <th class="sortable" data-sort="clientName">Client <span class="sort-icon"></span></th> <th class="sortable" data-sort="meetingDateTime">Meeting Time <span class="sort-icon"></span></th> <th class="sortable" data-sort="confirmationCallDate">Confirm Call <span class="sort-icon"></span></th> <th class="sortable" data-sort="textReminderDate">Text Reminder <span class="sort-icon"></span></th> <th class="sortable" data-sort="status">Status <span class="sort-icon"></span></th> <th class="wrap-mobile">Notes</th> <th class="action-cell">Actions</th> </tr></thead><tbody id="appointments-table-body"> <tr class="empty-row"><td colspan="7">Loading appointments...</td></tr> </tbody></table></div>
+            </div>
+
+            <!-- Daily Report View -->
+            <div id="report-view" class="content-view">
+                <div class="page-header">
+                     <h2><i class="fas fa-chart-bar"></i> Daily Report</h2>
+                     <div class="action-buttons"> <button id="generate-report-btn" class="success-btn" title="Save the current report details and update the display"><i class="fas fa-save"></i> Generate & Save</button> </div>
+                 </div>
+                <div class="report-form-container">
+                     <div class="import-export-buttons" style="justify-content: flex-start; margin-bottom: 20px;">
+                         <button id="export-report-btn" class="secondary-btn" title="Export the current daily report data to a CSV file"><i class="fas fa-file-export"></i> Export Report</button>
+                         <input type="file" id="import-report-file" accept=".csv" style="display: none;">
+                         <button id="import-report-btn" class="secondary-btn" title="Import daily report data from a CSV file (will overwrite current report)"><i class="fas fa-file-import"></i> Import Report</button>
+                     </div>
+                    <div class="form-group"><label for="report-date"><i class="fas fa-calendar-alt"></i> Report Date</label><input type="date" id="report-date"></div>
+                    <div class="form-group"><label for="report-linkedin-summary"><i class="fab fa-linkedin"></i> LinkedIn Connections Added / Progress</label><textarea id="report-linkedin-summary" rows="4" placeholder="List new connections and their current message stage..."></textarea></div>
+                    <div class="form-group"><label for="report-call-summary"><i class="fas fa-phone-volume"></i> Call Results</label><textarea id="report-call-summary" rows="4" placeholder="Summarize call results and next steps logged..."></textarea></div>
+                    <div class="form-group"><label for="report-appointment-summary"><i class="fas fa-calendar-check"></i> Appointments Status</label><textarea id="report-appointment-summary" rows="4" placeholder="List appointments confirmed, rescheduled, and reminders scheduled..."></textarea></div>
+                    <div class="form-group"><label for="report-followup-summary"><i class="fas fa-flag"></i> Follow-ups Needed / Blockers</label><textarea id="report-followup-summary" rows="4" placeholder="List any follow-ups, items needing attention, or blockers..."></textarea></div>
+                    <div id="report-output"></div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="content-view">
+                 <div class="page-header"><h2><i class="fas fa-cog"></i> Settings</h2></div>
+                <div style="background-color: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color);">
+                    <h3>Data Management</h3>
+                    <p>Manage your application data.</p>
+                     <p><strong style="color: var(--danger);">IMPORTANT:</strong> Currently, data (Leads, Calls, Appointments, Reports) is stored <strong>locally in your browser's localStorage</strong>. It is NOT automatically synced with your user account in Supabase or across different browsers/devices. Clearing your browser data WILL erase everything.</p>
+                     <p><small>To make data user-specific and cloud-synced, the application's `loadDataFromStorage` and `saveDataToStorage` functions need to be rewritten to interact with your Supabase database tables instead of localStorage.</small></p>
+                    <br>
+                    <div class="action-buttons">
+                         <button id="clear-all-data-btn" class="danger-btn" title="Permanently delete ALL LOCAL data stored in this browser!"><i class="fas fa-trash-alt"></i> Clear All Local Data</button>
+                         <button id="backup-now-btn" class="secondary-btn" title="Manually trigger a local backup of the current data state"><i class="fas fa-save"></i> Backup Local Data Now</button>
+                    </div>
+                     <p style="margin-top: 15px;"><small><strong>Warning:</strong> Clearing local data cannot be undone. Local backups are stored locally and will also be cleared if you manually clear browser site data. Use Export buttons in each section to save data externally.</small></p>
+                     <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);">
+                      <h3>Webhook Settings</h3>
+                      <div class="form-group"><label for="webhook-url-input">Webhook URL (Optional)</label><input type="url" id="webhook-url-input" placeholder="Enter your n8n or other webhook URL..."></div>
+                     <button id="save-webhook-url-btn" class="secondary-btn" title="Save the Webhook URL"><i class="fas fa-plug"></i> Save Webhook URL</button>
+                     <p style="margin-top: 10px;"><small>If set, notifications for key events (like adding leads/calls/appointments) will be sent here.</small></p>
+                </div>
+            </div>
+        </div> <!-- End .main-content-inner -->
+    </main>
+
+    <!-- Notification Element -->
+    <div class="notification" id="notification-area">Notification Message</div>
+
+    <!-- Reminder Bell -->
+    <div class="reminder-bell" id="reminder-bell" title="View Pending Tasks">
+        <span class="badge" id="reminder-count">0</span>
+        <i class="fas fa-bell fa-lg"></i>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" aria-modal="true" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button class="close-modal" title="Close" aria-label="Close modal">&times;</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
     </div>
 
 
     <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = 'https://tgppyxgawaojmujnyjgu.supabase.co'; // Your actual URL
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRncHB5eGdhd2Fvam11am55amd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTY3OTUsImV4cCI6MjA2MDQzMjc5NX0.eYx9VjPjUNIPRjPeVeNNiV4A-dAgCeHct8XIPPlXD9A'; // Your actual anon public key
+
+        // --- Initialize Supabase Client ---
+        let supabase = null;
+        try {
+            // Basic check if values seem valid (not default placeholders)
+            if (!SUPABASE_URL || SUPABASE_URL.includes('your-project') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('your-anon-key')) {
+                throw new Error("Supabase URL or Anon Key is not configured correctly. Please update the script with your project credentials.");
+            }
+            // Use supabase-js v2 syntax
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Supabase client initialized successfully.");
+        } catch (error) {
+            console.error("Error initializing Supabase:", error);
+            alert("Supabase configuration error. Authentication features will not work. Please check console and script configuration.");
+            // Attempt to show a persistent error message if auth UI exists
+             const authBox = document.querySelector('.auth-box');
+             if (authBox) {
+                 const errorDiv = document.createElement('div');
+                 errorDiv.className = 'auth-error';
+                 errorDiv.style.display = 'block';
+                 errorDiv.style.marginTop = '20px';
+                 errorDiv.textContent = 'Authentication service failed to initialize. Please check configuration.';
+                 authBox.prepend(errorDiv);
+             }
+             // Ensure Auth UI is shown if init fails
+             document.getElementById('auth-container')?.classList.add('active');
+             document.getElementById('sidebar')?.classList.remove('active');
+             document.getElementById('main-content')?.classList.remove('active');
+        }
+
+
+        // --- Auth UI Elements ---
+        const authContainer = document.getElementById('auth-container');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const signupEmailInput = document.getElementById('signup-email');
+        const signupPasswordInput = document.getElementById('signup-password');
+        const showSignupButton = document.getElementById('show-signup');
+        const showLoginButton = document.getElementById('show-login');
+        const loginErrorEl = document.getElementById('login-error');
+        const loginMessageEl = document.getElementById('login-message');
+        const signupErrorEl = document.getElementById('signup-error');
+        const signupMessageEl = document.getElementById('signup-message');
+        const logoutButton = document.getElementById('logout-button');
+        const userEmailEl = document.getElementById('user-email')?.querySelector('span'); // Target the span inside
+
+
+        // --- Main App UI Elements ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        // --- Auth Helper Functions ---
+        const showAuthError = (el, message) => {
+            if (!el) return;
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+        const showAuthMessage = (el, message) => {
+             if (!el) return;
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+        const clearAuthMessages = () => {
+            if (loginErrorEl) loginErrorEl.style.display = 'none';
+            if (loginMessageEl) loginMessageEl.style.display = 'none';
+            if (signupErrorEl) signupErrorEl.style.display = 'none';
+            if (signupMessageEl) signupMessageEl.style.display = 'none';
+            if (loginErrorEl) loginErrorEl.textContent = '';
+            if (loginMessageEl) loginMessageEl.textContent = '';
+            if (signupErrorEl) signupErrorEl.textContent = '';
+            if (signupMessageEl) signupMessageEl.textContent = '';
+        }
+
+        const toggleButtonLoading = (button, isLoading, originalHTMLContent = null) => {
+            if (!button) return;
+            if (isLoading) {
+                button.disabled = true;
+                button.classList.add('loading'); // Add loading class if you have styles for it
+                // Store original content only if not already stored
+                if (originalHTMLContent !== null && button.dataset.originalHTML === undefined) {
+                    button.dataset.originalHTML = originalHTMLContent;
+                }
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            } else {
+                button.disabled = false;
+                button.classList.remove('loading');
+                // Restore original content if stored
+                if (button.dataset.originalHTML !== undefined) {
+                    button.innerHTML = button.dataset.originalHTML;
+                    // Clean up dataset attribute
+                    delete button.dataset.originalHTML;
                 } else {
-                    document.body.classList.remove('dark-mode');
+                    // Fallback if original content wasn't properly stored (e.g. Login, Sign Up)
+                     if (button.closest('form')?.id === 'login-form') button.textContent = 'Login';
+                     else if (button.closest('form')?.id === 'signup-form') button.textContent = 'Sign Up';
+                     else if (button.id === 'logout-button') button.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>Logout</span>';
+                     else button.textContent = 'Submit'; // Generic fallback
                 }
             }
+        }
 
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
 
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
+        // --- Authentication Logic ---
+        const handleLogin = async (event) => {
+            event.preventDefault();
+            if (!supabase) { alert("Authentication service is unavailable."); return; }
+
+            clearAuthMessages();
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+            const button = loginForm.querySelector('button[type="submit"]');
+            const originalButtonHTML = button.innerHTML; // Store original HTML
+            toggleButtonLoading(button, true, originalButtonHTML);
+
+            try {
+                 // Use signInWithPassword (v2 syntax)
+                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+                 if (error) {
+                     console.error('Login error:', error.message);
+                     showAuthError(loginErrorEl, `Login failed: ${error.message}`);
+                 } else {
+                     console.log('Login successful, user:', data.user?.email);
+                     // The onAuthStateChange listener will handle UI updates
+                 }
+             } catch (catchError) {
+                 console.error('Unexpected error during login:', catchError);
+                 showAuthError(loginErrorEl, `An unexpected error occurred. Please try again.`);
+             } finally {
+                 toggleButtonLoading(button, false); // Restore button state
+             }
+        };
+
+        const handleSignup = async (event) => {
+            event.preventDefault();
+            if (!supabase) { alert("Authentication service is unavailable."); return; }
+
+            clearAuthMessages();
+            const email = signupEmailInput.value.trim();
+            const password = signupPasswordInput.value.trim();
+            const button = signupForm.querySelector('button[type="submit"]');
+            const originalButtonHTML = button.innerHTML; // Store original HTML
+            toggleButtonLoading(button, true, originalButtonHTML);
+
+            if (password.length < 6) {
+                 showAuthError(signupErrorEl, "Password must be at least 6 characters long.");
+                 toggleButtonLoading(button, false);
+                 return;
+             }
+
+            try {
+                 const { data, error } = await supabase.auth.signUp({ email, password });
+
+                 if (error) {
+                     console.error('Signup error:', error.message);
+                     showAuthError(signupErrorEl, `Signup failed: ${error.message}`);
+                 } else {
+                     console.log('Signup successful, user:', data.user?.email);
+                      // Check if user requires confirmation (depends on your Supabase project settings)
+                      if (data.user && !data.session) { // User created but not logged in = confirmation needed
+                          showAuthMessage(signupMessageEl, 'Signup successful! Please check your email to verify your account.');
+                      } else if (data.user && data.session) { // User created AND logged in = auto-login (confirmation disabled)
+                          showAuthMessage(signupMessageEl, 'Signup successful! Logging you in...');
+                           // onAuthStateChange will handle the UI switch
+                      } else {
+                           showAuthMessage(signupMessageEl, 'Signup successful!'); // Generic success if unsure
+                      }
+                     signupForm.reset();
+                     // Optionally switch back to login view after successful signup message
+                     // setTimeout(() => {
+                     //    signupForm.style.display = 'none';
+                     //    loginForm.style.display = 'block';
+                     //    clearAuthMessages();
+                     // }, 3000);
+                 }
+             } catch (catchError) {
+                 console.error('Unexpected error during signup:', catchError);
+                 showAuthError(signupErrorEl, `An unexpected error occurred. Please try again.`);
+             } finally {
+                 toggleButtonLoading(button, false);
+             }
+        };
+
+        const handleLogout = async () => {
+            if (!supabase) { alert("Authentication service is unavailable."); return; }
+            const originalButtonHTML = logoutButton.innerHTML; // Store original HTML
+            toggleButtonLoading(logoutButton, true, originalButtonHTML);
+
+            try {
+                 const { error } = await supabase.auth.signOut();
+                 if (error) {
+                     console.error('Logout error:', error.message);
+                     alert(`Logout failed: ${error.message}`);
+                     // Still try to reset UI even if Supabase logout failed locally
+                     showAuthUI();
+                 } else {
+                     console.log('Logout successful');
+                     // The onAuthStateChange listener will handle UI updates
+                 }
+             } catch (catchError) {
+                  console.error('Unexpected error during logout:', catchError);
+                  alert(`An unexpected error occurred during logout.`);
+                  showAuthUI(); // Attempt to reset UI
+             } finally {
+                  // Button loading state might be reset by UI switch, but good to ensure here
+                  // Check if logout button still exists before resetting
+                  const currentLogoutButton = document.getElementById('logout-button');
+                  if (currentLogoutButton) {
+                      // Use the specific fallback for the logout button
+                      toggleButtonLoading(currentLogoutButton, false);
+                  }
+             }
+        };
+
+        // --- UI Control ---
+        let isAppInitialized = false; // Flag to prevent multiple initializations of the core app
+
+        const showAuthUI = () => {
+            console.log("Showing Auth UI");
+             clearAuthMessages(); // Clear messages when switching UI
+             if (sidebar) sidebar.classList.remove('active');
+             if (mainContent) mainContent.classList.remove('active');
+             if (authContainer) authContainer.classList.add('active');
+              // Reset auth forms if needed
+              if (loginForm) loginForm.reset();
+              if (signupForm) signupForm.reset();
+              // Ensure correct form is shown (default to login)
+              if (loginForm) loginForm.style.display = 'block';
+              if (signupForm) signupForm.style.display = 'none';
+              // Reset loading states on auth buttons if they exist
+               const loginBtn = loginForm?.querySelector('button[type="submit"]');
+               const signupBtn = signupForm?.querySelector('button[type="submit"]');
+               if (loginBtn && loginBtn.classList.contains('loading')) toggleButtonLoading(loginBtn, false);
+               if (signupBtn && signupBtn.classList.contains('loading')) toggleButtonLoading(signupBtn, false);
+        }
+
+        const showAppUI = (user) => {
+            console.log("Showing Main App UI for user:", user?.email);
+            if (authContainer) authContainer.classList.remove('active');
+            if (sidebar) sidebar.classList.add('active');
+            if (mainContent) mainContent.classList.add('active');
+
+            // Update user email display in sidebar footer
+             if (userEmailEl && user) {
+                 userEmailEl.textContent = user.email; // Update the span's text
+                 userEmailEl.parentElement.title = `Logged in as ${user.email}`; // Add title to parent span
+             } else if (userEmailEl) {
+                  userEmailEl.textContent = 'Error loading email';
+                  userEmailEl.parentElement.title = '';
+             }
+             // Ensure logout button is not in loading state
+             const currentLogoutButton = document.getElementById('logout-button');
+             if (currentLogoutButton && currentLogoutButton.classList.contains('loading')) {
+                 toggleButtonLoading(currentLogoutButton, false);
+             }
+
+            // Initialize the main application logic ONLY if it hasn't been initialized yet
+            // and the `app` object with its methods exist
+            // Check for the existence of 'app' and its 'methods.init' function
+            if (!isAppInitialized && typeof app !== 'undefined' && app && app.methods && typeof app.methods.init === 'function') {
+                console.log("Initializing main application logic...");
+                try {
+                    app.methods.init(); // Call the init method of your existing app logic
+                    isAppInitialized = true;
+                    console.log("Main application initialized successfully.");
+                } catch (initError) {
+                     console.error("Error during main application initialization:", initError);
+                     alert("Failed to initialize the application components after login. Please check the console.");
+                     // Optional: Force logout or show an error state within the app UI
+                     handleLogout(); // Example: force logout on init failure
                 }
+            } else if (isAppInitialized && typeof app !== 'undefined' && app) {
+                // If already initialized, maybe just refresh data or views?
+                console.log("App already initialized, potentially refreshing views...");
+                 // Example: Re-render dashboard if the app object and method are available
+                 if (app.methods && typeof app.methods.renderDashboard === 'function') {
+                    try {
+                        app.methods.renderDashboard();
+                    } catch (renderError) {
+                        console.error("Error refreshing dashboard:", renderError);
+                    }
+                 }
+            } else if (!isAppInitialized) {
+                 // This case means the app object or its init method wasn't found
+                 console.error("CRITICAL: Main application object 'app' or 'app.methods.init' not found. Cannot initialize app after login.");
+                 alert("Core application logic seems to be missing or failed to load. Cannot proceed after login.");
+                 handleLogout(); // Force logout if core app isn't available
             }
+        }
 
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
+        // --- Event Listeners for Auth UI ---
+        loginForm?.addEventListener('submit', handleLogin);
+        signupForm?.addEventListener('submit', handleSignup);
+        logoutButton?.addEventListener('click', handleLogout);
 
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
+        showSignupButton?.addEventListener('click', () => {
+            clearAuthMessages();
+            if (loginForm) loginForm.style.display = 'none';
+            if (signupForm) signupForm.style.display = 'block';
+        });
 
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
-                });
-            }
-
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
-                }
-            });
-
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
-
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
-                }
-            }, 50); // Adjust interval for loading speed
-
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
-                });
-            }
+        showLoginButton?.addEventListener('click', () => {
+            clearAuthMessages();
+            if (signupForm) signupForm.style.display = 'none';
+            if (loginForm) loginForm.style.display = 'block';
+        });
 
 
-        })();
+        // --- Supabase Auth State Listener ---
+        // This runs once on page load and whenever the auth state changes (login, logout)
+         if (supabase) {
+             supabase.auth.onAuthStateChange(async (event, session) => {
+                 console.log('Supabase Auth State Changed:', event, session);
+                 const user = session?.user ?? null;
+
+                 // Note: 'INITIAL_SESSION' might trigger slightly after the first 'SIGNED_IN'
+                 // if the session is restored quickly. Handling both ensures robustness.
+                 if (event === 'SIGNED_IN' || (event === 'INITIAL_SESSION' && user)) {
+                     showAppUI(user);
+                 } else if (event === 'SIGNED_OUT' || (event === 'INITIAL_SESSION' && !user) || event === 'USER_DELETED') {
+                      // When signed out, reset the app initialization flag
+                     if (isAppInitialized) {
+                         console.log("User signed out or session ended, resetting app state.");
+                         isAppInitialized = false;
+                          // --- IMPORTANT ---
+                          // Since your app currently uses localStorage, logging out doesn't
+                          // automatically clear the data visible in the UI. The user would
+                          // see the previous user's data if they log back in without a page refresh
+                          // or manual clearing.
+                          // For now, we rely on the "Clear All Local Data" button.
+                          // If you migrate data storage to Supabase tables linked to the user_id,
+                          // you would fetch fresh data upon login, automatically solving this.
+                     }
+                     showAuthUI();
+                 }
+                  // Other events like 'PASSWORD_RECOVERY', 'USER_UPDATED', 'TOKEN_REFRESHED'
+                  // can be handled here if needed for specific features.
+                  // console.log(`Auth Event: ${event}`);
+             });
+         } else {
+             // If Supabase failed to initialize earlier, ensure Auth UI is shown
+             console.warn("Supabase client not available, showing Auth UI by default.");
+             showAuthUI();
+         }
+
+
+    // --- Existing Main Application Logic (IIFE) ---
+    // This defines the `app` object containing all the core functionality
+    // for managing leads, calls, appointments, etc.
+    // It's wrapped to avoid polluting the global scope.
+    // The app.methods.init() call is now triggered by the onAuthStateChange listener
+    // *after* a user is successfully signed in.
+
+    if (typeof app === 'undefined') { // Only define if not already defined
+        const app = (function() { // Start IIFE
+            'use strict';
+
+             // --- Application Configuration & Constants ---
+             const STORAGE_KEY_PREFIX = 'kfDailyProgress_v2_';
+             const STORAGE_KEYS = { LEADS: `${STORAGE_KEY_PREFIX}leads`, CALLS: `${STORAGE_KEY_PREFIX}calls`, APPOINTMENTS: `${STORAGE_KEY_PREFIX}appointments`, TASKS: `${STORAGE_KEY_PREFIX}tasks`, DAILY_REPORT: `${STORAGE_KEY_PREFIX}dailyReport`, LAST_BACKUP: `${STORAGE_KEY_PREFIX}lastBackup`, WEBHOOK_URL: `${STORAGE_KEY_PREFIX}webhookUrl`, SORT_STATE: `${STORAGE_KEY_PREFIX}sortState` };
+             const DEFAULT_WEBHOOK_URL = '';
+
+             // --- Central Application Object ---
+             // Using 'appInternal' to avoid conflicts within the IIFE vs the outer 'app' variable
+             const appInternal = {
+                 state: {
+                     leads: [], calls: [], appointments: [], dailyReportData: {}, webhookUrl: '',
+                     activeView: 'dashboard', notificationTimeout: null, backupTimestamp: null,
+                     sortState: {}, filterState: {}
+                 },
+                 elements: {
+                     // Lazy-load elements within methods or cache them in init if preferred
+                     // This avoids errors if elements aren't present when script initially runs
+                     // (e.g., before the main app UI is shown)
+                 },
+                 utils: {
+                    generateId: () => Date.now().toString(36) + Math.random().toString(36).substring(2, 9),
+                    createDateAdjusted: (dateInputString) => {
+                        if (!dateInputString) return null;
+                        try {
+                            if (dateInputString instanceof Date && !isNaN(dateInputString)) return dateInputString;
+                            const date = new Date(dateInputString);
+                            if (isNaN(date.getTime())) return null;
+                            // If it's just a date string (YYYY-MM-DD), adjust for timezone to avoid day shifts
+                            if (typeof dateInputString === 'string' && dateInputString.length === 10 && dateInputString.includes('-')) {
+                                date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+                            }
+                            return date;
+                        } catch (e) { console.error("Error creating adjusted date:", e, dateInputString); return null; }
+                    },
+                    formatDate: (dateInput) => {
+                        if (!dateInput) return '';
+                        const date = appInternal.utils.createDateAdjusted(dateInput);
+                        if (!date) return 'Invalid Date';
+                        try {
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const day = String(date.getDate()).padStart(2, '0');
+                            return `${year}-${month}-${day}`;
+                        } catch (e) { console.error("Error formatting date:", e, "Input:", dateInput); return 'Error'; }
+                    },
+                    formatDueDate: (dateStr) => {
+                        if (!dateStr) return 'No Due Date';
+                        const today = new Date(); today.setHours(0, 0, 0, 0);
+                        const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+                        const dueDate = appInternal.utils.createDateAdjusted(dateStr);
+                        if (!dueDate) return 'Invalid Date';
+                        dueDate.setHours(0, 0, 0, 0); // Compare dates only
+                        const formattedDate = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        if (dueDate < today) return `Overdue (${formattedDate})`;
+                        if (dueDate.getTime() === today.getTime()) return 'Due today';
+                        if (dueDate.getTime() === tomorrow.getTime()) return 'Due tomorrow';
+                        return `Due ${formattedDate}`;
+                    },
+                    getNextBusinessDay10AM: () => {
+                        const now = new Date(); let nextDay = new Date(now); nextDay.setDate(now.getDate() + 1); nextDay.setHours(10, 0, 0, 0);
+                        while (nextDay.getDay() === 0 || nextDay.getDay() === 6) { nextDay.setDate(nextDay.getDate() + 1); } return nextDay;
+                    },
+                    calculateReminderDates: (meetingDateTimeString) => {
+                        const meetingDate = appInternal.utils.createDateAdjusted(meetingDateTimeString);
+                        if (!meetingDate || isNaN(meetingDate)) return { confirmationCallDate: null, textReminderDate: null };
+                        let confirmCallDate = new Date(meetingDate); let daysToSubtractConfirm = 1; let attempts = 0;
+                        // Find previous *business* day for confirmation call (e.g., Monday meeting -> call Friday)
+                        do { confirmCallDate.setDate(meetingDate.getDate() - daysToSubtractConfirm); confirmCallDate.setHours(10, 0, 0, 0); daysToSubtractConfirm++; attempts++; } while ((confirmCallDate.getDay() === 0 || confirmCallDate.getDay() === 6) && attempts < 7); // Limit attempts
+                        // Text reminder on the *day of* the meeting
+                        let textReminderDate = new Date(meetingDate); textReminderDate.setHours(0, 0, 0, 0); // Start of the meeting day
+                        return { confirmationCallDate: attempts < 7 ? appInternal.utils.formatDate(confirmCallDate) : null, textReminderDate: appInternal.utils.formatDate(textReminderDate) };
+                    },
+                    formatDateTimeForInput: (date) => {
+                        if (!(date instanceof Date) || isNaN(date.getTime())) return '';
+                        try { const tzOffset = date.getTimezoneOffset() * 60000; return new Date(date - tzOffset).toISOString().slice(0, 16); }
+                        catch (e) { console.error("Error formatting date for input:", e, date); return ""; }
+                    },
+                    formatAppointmentDateTime: (dateTimeInput) => {
+                        if (!dateTimeInput) return 'N/A'; const date = appInternal.utils.createDateAdjusted(dateTimeInput); if (!date) return 'Invalid Date';
+                        try { return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }); }
+                        catch (e) { console.error("Error formatting appointment date/time:", e, dateTimeInput); return 'Error'; }
+                    },
+                    getTodayDateString: () => new Date().toISOString().split('T')[0],
+                    getTomorrowDateString: () => { const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); return tomorrow.toISOString().split('T')[0]; },
+                    sanitize: (str) => str ? String(str).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '',
+                    nl2br: (str) => appInternal.utils.sanitize(str).replace(/\n/g, '<br>'),
+                    toggleButtonLoading: (button, isLoading, loadingText = "Processing...") => { // Internal utility for app buttons
+                        if (!button) return;
+                        if (isLoading) { button.disabled = true; button.classList.add('loading'); if (!button.dataset.originalText) button.dataset.originalText = button.innerHTML; button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`; }
+                        else { button.disabled = false; button.classList.remove('loading'); if (button.dataset.originalText) { button.innerHTML = button.dataset.originalText; delete button.dataset.originalText; } }
+                    }
+                 }, // End utils
+
+                 methods: {
+                    // --- Data Storage ---
+                    // IMPORTANT: These currently use LOCAL STORAGE.
+                    // For a real multi-user/device app, replace these with Supabase DB calls.
+                    loadDataFromStorage: (key) => {
+                        console.warn(`Loading data for "${key}" from LOCAL STORAGE.`); // Keep warning
+                        const storedData = localStorage.getItem(key);
+                        try { if (storedData === "undefined" || storedData === null) return null; return JSON.parse(storedData); }
+                        catch (e) { console.error(`Error parsing localStorage key "${key}":`, e); appInternal.methods.showNotification(`Error loading local data for ${key}. Data might be corrupted.`, 'error'); return null; }
+                    },
+                    saveDataToStorage: (key, data) => {
+                        console.warn(`Saving data for "${key}" to LOCAL STORAGE.`); // Keep warning
+                        try { localStorage.setItem(key, JSON.stringify(data)); }
+                        catch (e) { console.error("Error saving to localStorage:", e); appInternal.methods.showNotification('Error saving local data. Storage might be full.', 'error'); }
+                    },
+                    saveSortState: () => { appInternal.methods.saveDataToStorage(STORAGE_KEYS.SORT_STATE, appInternal.state.sortState); },
+                    backupData: () => {
+                        console.log("Performing local backup...");
+                        try { // Add try-catch around backup logic
+                             if (!Array.isArray(appInternal.state.leads) || !Array.isArray(appInternal.state.calls) || !Array.isArray(appInternal.state.appointments)) { throw new Error("Core data structures are invalid."); }
+                             const backupTime = new Date().toISOString();
+                             const backup = { [STORAGE_KEYS.LEADS]: [...appInternal.state.leads], [STORAGE_KEYS.CALLS]: [...appInternal.state.calls], [STORAGE_KEYS.APPOINTMENTS]: [...appInternal.state.appointments], [STORAGE_KEYS.DAILY_REPORT]: {...appInternal.state.dailyReportData}, lastBackupTime: backupTime };
+                             appInternal.methods.saveDataToStorage(STORAGE_KEYS.LAST_BACKUP, backup); appInternal.state.backupTimestamp = backupTime; if (appInternal.elements.restoreDataBtn) appInternal.elements.restoreDataBtn.disabled = false; return true;
+                        } catch (error) {
+                             console.error("Backup failed:", error);
+                             appInternal.methods.showNotification("Local backup failed: " + error.message, "error");
+                             return false;
+                        }
+                    },
+                    restoreLastUpdate: () => {
+                        const lastBackup = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.LAST_BACKUP); if (!lastBackup || !lastBackup.lastBackupTime) { appInternal.methods.showNotification('No local backup found.', 'warning'); return; }
+                        const backupDate = new Date(lastBackup.lastBackupTime); const formattedTime = backupDate.toLocaleString();
+                        if (!confirm(`Restore LOCAL data from backup taken on ${formattedTime}? This overwrites current LOCAL data.`)) return;
+                        appInternal.utils.toggleButtonLoading(appInternal.elements.restoreDataBtn, true, "Restoring...");
+                        try {
+                            appInternal.state.leads = Array.isArray(lastBackup[STORAGE_KEYS.LEADS]) ? lastBackup[STORAGE_KEYS.LEADS] : [];
+                            appInternal.state.calls = Array.isArray(lastBackup[STORAGE_KEYS.CALLS]) ? lastBackup[STORAGE_KEYS.CALLS] : [];
+                            appInternal.state.appointments = Array.isArray(lastBackup[STORAGE_KEYS.APPOINTMENTS]) ? lastBackup[STORAGE_KEYS.APPOINTMENTS] : [];
+                            appInternal.state.dailyReportData = typeof lastBackup[STORAGE_KEYS.DAILY_REPORT] === 'object' && lastBackup[STORAGE_KEYS.DAILY_REPORT] !== null ? lastBackup[STORAGE_KEYS.DAILY_REPORT] : { reportDate: appInternal.utils.getTodayDateString(), linkedinSummary: '', callSummary: '', appointmentSummary: '', followupSummary: '' };
+                            appInternal.methods.saveDataToStorage(STORAGE_KEYS.LEADS, appInternal.state.leads); appInternal.methods.saveDataToStorage(STORAGE_KEYS.CALLS, appInternal.state.calls); appInternal.methods.saveDataToStorage(STORAGE_KEYS.APPOINTMENTS, appInternal.state.appointments); appInternal.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT, appInternal.state.dailyReportData);
+                            appInternal.state.backupTimestamp = lastBackup.lastBackupTime; appInternal.state.filterState = {}; appInternal.state.sortState = {}; appInternal.methods.saveSortState();
+                            // Clear search inputs
+                            ['search-leads', 'search-calls', 'search-appointments'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+                            appInternal.methods.renderAllViews(); appInternal.methods.showNotification(`Local data restored from ${formattedTime}.`, 'success');
+                        } catch (error) { console.error("Error during restore:", error); appInternal.methods.showNotification("Failed to restore local data.", "error"); }
+                        finally { appInternal.utils.toggleButtonLoading(appInternal.elements.restoreDataBtn, false); }
+                    },
+                    clearAllData: () => {
+                        if (confirm("DANGER! Delete ALL LOCAL data (leads, calls, appointments, reports, settings, backups)? This cannot be undone!")) {
+                            if (confirm("SECOND WARNING! Irreversible. Confirm again to delete all LOCAL data.")) {
+                                console.warn("Clearing all application LOCAL storage data!");
+                                Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+                                appInternal.state.leads = []; appInternal.state.calls = []; appInternal.state.appointments = []; appInternal.state.dailyReportData = { reportDate: appInternal.utils.getTodayDateString(), linkedinSummary: '', callSummary: '', appointmentSummary: '', followupSummary: '' }; appInternal.state.webhookUrl = DEFAULT_WEBHOOK_URL; appInternal.state.backupTimestamp = null; appInternal.state.sortState = {}; appInternal.state.filterState = {};
+                                if (appInternal.elements.webhookUrlInput) appInternal.elements.webhookUrlInput.value = appInternal.state.webhookUrl; if (appInternal.elements.restoreDataBtn) appInternal.elements.restoreDataBtn.disabled = true;
+                                // Clear search inputs
+                                ['search-leads', 'search-calls', 'search-appointments'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+                                appInternal.methods.renderAllViews(); appInternal.methods.showNotification('All local data cleared.', 'success');
+                            }
+                        }
+                    },
+                    saveWebhookUrl: () => {
+                        const newUrl = appInternal.elements.webhookUrlInput.value.trim();
+                        if (newUrl === '' || (newUrl.startsWith('http://') || newUrl.startsWith('https://'))) { appInternal.state.webhookUrl = newUrl; appInternal.methods.saveDataToStorage(STORAGE_KEYS.WEBHOOK_URL, appInternal.state.webhookUrl); appInternal.methods.showNotification(newUrl ? 'Webhook URL saved.' : 'Webhook URL cleared.', 'success'); }
+                        else { appInternal.methods.showNotification('Enter a valid Webhook URL (http:// or https://) or leave blank.', 'warning'); }
+                    },
+
+                    // --- UI & Navigation ---
+                    setActiveView: (viewId) => {
+                        console.log(`Switching to view: ${viewId}`);
+                        appInternal.state.activeView = viewId;
+                        // Update content views
+                        appInternal.elements.contentViews?.forEach(view => view.classList.toggle('active', view.id === `${viewId}-view`));
+                        // Update sidebar links
+                        appInternal.elements.sidebarLinks?.forEach(link => link.classList.toggle('active', link.dataset.view === viewId));
+                        // Trigger render/update for the specific view
+                        const renderMethodName = `render${viewId.charAt(0).toUpperCase() + viewId.slice(1)}View`;
+                        if (typeof appInternal.methods[renderMethodName] === 'function') { appInternal.methods[renderMethodName](); }
+                        else if (viewId.endsWith('s')) { // Try rendering table if it's plural (leads, calls, etc.)
+                             const renderTableMethodName = `render${viewId.charAt(0).toUpperCase() + viewId.slice(1)}Table`;
+                             if (typeof appInternal.methods[renderTableMethodName] === 'function') { appInternal.methods[renderTableMethodName](); }
+                        } else if (viewId === 'dashboard') { appInternal.methods.renderDashboard(); }
+                        // Specific actions for settings view
+                        if (viewId === 'settings' && appInternal.elements.webhookUrlInput) { appInternal.elements.webhookUrlInput.value = appInternal.state.webhookUrl; }
+                        // Scroll main content to top
+                        if (appInternal.elements.mainContent) appInternal.elements.mainContent.scrollTop = 0;
+                    },
+                    renderAllViews: () => {
+                        console.log("Rendering all views based on current state");
+                        appInternal.methods.renderDashboard();
+                        appInternal.methods.renderLeadsTable();
+                        appInternal.methods.renderCallsTable();
+                        appInternal.methods.renderAppointmentsTable();
+                        appInternal.methods.renderReportView();
+                        if (appInternal.state.activeView === 'settings' && appInternal.elements.webhookUrlInput) { appInternal.elements.webhookUrlInput.value = appInternal.state.webhookUrl; }
+                    },
+                    renderDashboard: () => { console.log("Rendering Dashboard"); appInternal.methods.renderDashboardTaskList(); appInternal.methods.updateDashboardSummary(); },
+                    renderReportView: () => { appInternal.methods.updateReportForm(); appInternal.methods.updateReportOutput(); },
+                    openModal: (title, content) => {
+                        if (!appInternal.elements.modalEl || !appInternal.elements.modalTitleEl || !appInternal.elements.modalBodyEl) return;
+                        appInternal.elements.modalTitleEl.textContent = title; appInternal.elements.modalBodyEl.innerHTML = content; appInternal.elements.modalEl.classList.add('active');
+                        setTimeout(() => { const focusable = appInternal.elements.modalBodyEl.querySelector('input:not([readonly]), select, textarea, button'); if (focusable) focusable.focus(); }, 100);
+                    },
+                    closeModal: () => { if (appInternal.elements.modalEl) appInternal.elements.modalEl.classList.remove('active'); setTimeout(() => { if (appInternal.elements.modalBodyEl) appInternal.elements.modalBodyEl.innerHTML = ''; }, 300); },
+                    showNotification: (message, type = 'info', duration = 3500) => {
+                        if (!appInternal.elements.notificationEl) return; console.log(`Notify: [${type}] ${message}`); clearTimeout(appInternal.state.notificationTimeout);
+                        appInternal.elements.notificationEl.textContent = message; appInternal.elements.notificationEl.className = `notification ${type}`; appInternal.elements.notificationEl.classList.add('show');
+                        appInternal.state.notificationTimeout = setTimeout(() => { appInternal.elements.notificationEl.classList.remove('show'); }, duration);
+                    },
+
+                    // --- Dashboard Specific ---
+                    updateDashboardSummary: () => {
+                         console.log("Updating Dashboard Summary...");
+                         const today = appInternal.utils.getTodayDateString(); let newConnectionsCount = 0; let pendingTasks = []; let overdueTasksCount = 0;
+                         try {
+                             newConnectionsCount = (appInternal.state.leads || []).filter(lead => appInternal.utils.formatDate(lead.connectionDate) === today).length;
+                             pendingTasks = appInternal.methods.generatePendingTasks();
+                             overdueTasksCount = pendingTasks.filter(task => task.dueDate && appInternal.utils.formatDate(task.dueDate) < today).length;
+                         } catch(e) { console.error("Error calculating summary:", e); appInternal.methods.showNotification("Error updating summary.", "error"); }
+                         const messagesToSendCount = pendingTasks.filter(task => task.category === 'LinkedIn Lead').length;
+                         const callsToLogCount = pendingTasks.filter(task => task.category === 'Call Follow-up').length;
+                         const appointmentsToConfirmCount = pendingTasks.filter(task => task.category === 'Appointment Prep').length;
+                         if (appInternal.elements.summaryEls?.newConnections) appInternal.elements.summaryEls.newConnections.textContent = newConnectionsCount;
+                         if (appInternal.elements.summaryEls?.messagesToSend) appInternal.elements.summaryEls.messagesToSend.textContent = messagesToSendCount;
+                         if (appInternal.elements.summaryEls?.callsToLog) appInternal.elements.summaryEls.callsToLog.textContent = callsToLogCount;
+                         if (appInternal.elements.summaryEls?.appointmentsToConfirm) appInternal.elements.summaryEls.appointmentsToConfirm.textContent = appointmentsToConfirmCount;
+                         if (appInternal.elements.summaryEls?.overdueTasks) appInternal.elements.summaryEls.overdueTasks.textContent = overdueTasksCount;
+                         console.log("Summary update complete.");
+                     },
+                     generatePendingTasks: () => {
+                        const tasks = []; const today = appInternal.utils.getTodayDateString();
+                        (appInternal.state.leads || []).forEach(lead => { if (lead.status === 'Active' || lead.status === 'Waiting') { let taskDesc = ''; switch (lead.messageStage) { case 'New Connection': taskDesc = `Send Message 1 to ${lead.name}`; break; case 'Waiting for Response 1': taskDesc = `Send Message 2 to ${lead.name}`; break; case 'Waiting for Response 2': taskDesc = `Send Final Message to ${lead.name}`; break; case 'Follow Up Later': taskDesc = `Follow up with ${lead.name}`; break; } if (lead.nextAction) taskDesc = `${lead.nextAction} for ${lead.name}`; if (taskDesc && lead.dueDate) tasks.push({ id: `lead-${lead.id}`, description: taskDesc, category: 'LinkedIn Lead', dueDate: lead.dueDate, status: 'pending', relatedItemId: lead.id, relatedItemType: 'lead' }); } });
+                        (appInternal.state.calls || []).forEach(call => { if (call.nextStep && call.nextStepDue) tasks.push({ id: `call-${call.id}`, description: `${call.nextStep} (from call with ${call.name})`, category: 'Call Follow-up', dueDate: call.nextStepDue, status: 'pending', relatedItemId: call.id, relatedItemType: 'call' }); });
+                        (appInternal.state.appointments || []).forEach(appt => { if (appt.status === 'Pending' || appt.status === 'Confirmed' || appt.status === 'Waiting for Confirmation') { if (appt.confirmationCallDate && appt.confirmationCallDate >= today) tasks.push({ id: `appt-conf-${appt.id}`, description: `Confirmation call for ${appt.clientName}'s meeting`, category: 'Appointment Prep', dueDate: appt.confirmationCallDate, status: 'pending', relatedItemId: appt.id, relatedItemType: 'appointment' }); if (appt.textReminderDate && appt.textReminderDate >= today) tasks.push({ id: `appt-text-${appt.id}`, description: `Send text reminder to ${appt.clientName}`, category: 'Appointment Prep', dueDate: appt.textReminderDate, status: 'pending', relatedItemId: appt.id, relatedItemType: 'appointment' }); } });
+                        return tasks.filter(task => { // Filter out completed/closed linked items
+                             if (task.relatedItemType === 'lead') { const lead = (appInternal.state.leads || []).find(l => l.id === task.relatedItemId); return lead && (lead.status === 'Active' || lead.status === 'Waiting'); }
+                             if (task.relatedItemType === 'appointment') { const appt = (appInternal.state.appointments || []).find(a => a.id === task.relatedItemId); return appt && !['Completed', 'Cancelled', 'No Show'].includes(appt.status); }
+                             return true; // Assume call tasks are valid unless explicitly cleared
+                        });
+                     },
+                    completeTask: (taskId) => {
+                        const taskInfo = taskId.split('-'); const type = taskInfo[0]; const id = taskInfo.slice(1).join('-'); let itemName = ''; let success = false;
+                        if (!appInternal.methods.backupData()) return;
+                        try {
+                            switch (type) {
+                                case 'lead': const leadIndex = (appInternal.state.leads || []).findIndex(l => l.id === id); if (leadIndex > -1) { itemName = appInternal.state.leads[leadIndex].name; appInternal.state.leads[leadIndex].nextAction = ''; appInternal.state.leads[leadIndex].dueDate = null; appInternal.methods.saveDataToStorage(STORAGE_KEYS.LEADS, appInternal.state.leads); success = true; } break;
+                                case 'call': const callIndex = (appInternal.state.calls || []).findIndex(c => c.id === id); if (callIndex > -1) { itemName = appInternal.state.calls[callIndex].name; appInternal.state.calls[callIndex].nextStep = ''; appInternal.state.calls[callIndex].nextStepDue = null; appInternal.methods.saveDataToStorage(STORAGE_KEYS.CALLS, appInternal.state.calls); success = true; } break;
+                                case 'appt': const apptIndex = (appInternal.state.appointments || []).findIndex(a => a.id === id); if (apptIndex > -1) { itemName = appInternal.state.appointments[apptIndex].clientName; success = true; /* Just acknowledge completion for appt tasks */ } break;
+                            }
+                            if (success) { appInternal.methods.showNotification(`Task for '${itemName || id}' marked complete.`, 'success'); appInternal.methods.renderDashboard(); if (type === 'lead') appInternal.methods.renderLeadsTable(); if (type === 'call') appInternal.methods.renderCallsTable(); if (type === 'appointment') appInternal.methods.renderAppointmentsTable(); }
+                            else { appInternal.methods.showNotification("Could not find item for task.", 'error'); }
+                        } catch (error) { console.error("Error completing task:", error); appInternal.methods.showNotification("Error completing task.", "error"); }
+                    },
+                    snoozeTask: (taskId) => {
+                        const taskInfo = taskId.split('-'); const type = taskInfo[0]; const id = taskInfo.slice(1).join('-'); let success = false; let itemName = ''; let currentDueDate = null;
+                        if (!appInternal.methods.backupData()) return;
+                        try {
+                            let updateStorageKey = null; let stateArrayName = null; let dateFieldToUpdate = null;
+                            switch (type) {
+                                case 'lead': const leadIndex = (appInternal.state.leads || []).findIndex(l => l.id === id); if (leadIndex > -1 && appInternal.state.leads[leadIndex].dueDate) { currentDueDate = appInternal.utils.createDateAdjusted(appInternal.state.leads[leadIndex].dueDate); itemName = appInternal.state.leads[leadIndex].name; updateStorageKey = STORAGE_KEYS.LEADS; stateArrayName = 'leads'; dateFieldToUpdate = 'dueDate'; } break;
+                                case 'call': const callIndex = (appInternal.state.calls || []).findIndex(c => c.id === id); if (callIndex > -1 && appInternal.state.calls[callIndex].nextStepDue) { currentDueDate = appInternal.utils.createDateAdjusted(appInternal.state.calls[callIndex].nextStepDue); itemName = appInternal.state.calls[callIndex].name; updateStorageKey = STORAGE_KEYS.CALLS; stateArrayName = 'calls'; dateFieldToUpdate = 'nextStepDue'; } break;
+                                case 'appt': const apptIndex = (appInternal.state.appointments || []).findIndex(a => a.id === id); if (apptIndex > -1) { itemName = appInternal.state.appointments[apptIndex].clientName; updateStorageKey = STORAGE_KEYS.APPOINTMENTS; stateArrayName = 'appointments'; if (taskId.includes('conf') && appInternal.state.appointments[apptIndex].confirmationCallDate) { currentDueDate = appInternal.utils.createDateAdjusted(appInternal.state.appointments[apptIndex].confirmationCallDate); dateFieldToUpdate = 'confirmationCallDate'; } else if (taskId.includes('text') && appInternal.state.appointments[apptIndex].textReminderDate) { currentDueDate = appInternal.utils.createDateAdjusted(appInternal.state.appointments[apptIndex].textReminderDate); dateFieldToUpdate = 'textReminderDate'; } } break;
+                            }
+                            if (currentDueDate && updateStorageKey && stateArrayName && dateFieldToUpdate) {
+                                currentDueDate.setDate(currentDueDate.getDate() + 1); // Snooze 1 day
+                                const targetIndex = appInternal.state[stateArrayName].findIndex(item => item.id === id);
+                                if (targetIndex > -1) { appInternal.state[stateArrayName][targetIndex][dateFieldToUpdate] = appInternal.utils.formatDate(currentDueDate); appInternal.methods.saveDataToStorage(updateStorageKey, appInternal.state[stateArrayName]); success = true; }
+                            }
+                            if (success) { appInternal.methods.showNotification(`Task for '${itemName || id}' snoozed 1 day.`, 'success'); appInternal.methods.renderDashboard(); if (type === 'lead') appInternal.methods.renderLeadsTable(); if (type === 'call') appInternal.methods.renderCallsTable(); if (type === 'appointment') appInternal.methods.renderAppointmentsTable(); }
+                            else { appInternal.methods.showNotification('Cannot snooze: Due date missing or item not found.', 'warning'); }
+                        } catch (error) { console.error("Error snoozing task:", error); appInternal.methods.showNotification("Error snoozing task.", "error"); }
+                    },
+                     renderDashboardTaskList: () => {
+                         if (!appInternal.elements.dashboardTaskList) return; appInternal.elements.dashboardTaskList.innerHTML = ''; const today = appInternal.utils.getTodayDateString(); const tomorrow = appInternal.utils.getTomorrowDateString(); let upcomingOrOverdueCount = 0;
+                         const pendingTasks = appInternal.methods.generatePendingTasks().sort((a, b) => (a.dueDate || '9999-12-31').localeCompare(b.dueDate || '9999-12-31'));
+                         if (pendingTasks.length === 0) { appInternal.elements.dashboardTaskList.innerHTML = '<li class="empty-task-item"><i class="fas fa-check-circle" style="color: var(--success); margin-right: 5px;"></i>No pending tasks.</li>'; if (appInternal.elements.reminderCountEl) appInternal.elements.reminderCountEl.textContent = 0; if (appInternal.elements.reminderBellEl) appInternal.elements.reminderBellEl.classList.remove('show'); return; }
+                         pendingTasks.forEach(task => { const taskEl = document.createElement('li'); taskEl.className = 'task-item'; let dueDateClass = ''; const formattedTaskDueDate = appInternal.utils.formatDate(task.dueDate); upcomingOrOverdueCount++; // Count all displayed tasks for badge
+                             if (formattedTaskDueDate) { if (formattedTaskDueDate < today) { taskEl.classList.add('urgent'); dueDateClass = 'overdue'; } else if (formattedTaskDueDate === today || formattedTaskDueDate === tomorrow) { taskEl.classList.add('warning'); dueDateClass = 'due-soon'; } }
+                             taskEl.innerHTML = ` <div class="task-info"><strong>${appInternal.utils.sanitize(task.description || '')}</strong><span><i class="fas fa-tag fa-xs" style="margin-right: 4px;"></i>${task.category || 'Task'}</span></div> <span class="task-due ${dueDateClass}">${appInternal.utils.formatDueDate(task.dueDate)}</span> <div class="task-actions"> <button class="icon-btn complete-btn success-btn" data-task-id="${task.id}" title="Complete Task"><i class="fas fa-check"></i></button> ${task.dueDate ? `<button class="icon-btn snooze-btn warning-btn" data-task-id="${task.id}" title="Snooze (1 day)"><i class="fas fa-clock"></i></button>` : ''} </div> `;
+                             appInternal.elements.dashboardTaskList.appendChild(taskEl);
+                         });
+                         // Event listeners (use event delegation on parent for efficiency)
+                         appInternal.elements.dashboardTaskList.removeEventListener('click', appInternal.methods.handleTaskListClick); // Remove old listener first
+                         appInternal.elements.dashboardTaskList.addEventListener('click', appInternal.methods.handleTaskListClick);
+                         // Update reminder bell
+                         if (appInternal.elements.reminderCountEl) appInternal.elements.reminderCountEl.textContent = upcomingOrOverdueCount; if (appInternal.elements.reminderBellEl) appInternal.elements.reminderBellEl.classList.toggle('show', upcomingOrOverdueCount > 0);
+                     },
+                     handleTaskListClick: (e) => { // Event delegation handler
+                        const completeBtn = e.target.closest('.complete-btn');
+                        const snoozeBtn = e.target.closest('.snooze-btn');
+                        if (completeBtn && completeBtn.dataset.taskId) { appInternal.methods.completeTask(completeBtn.dataset.taskId); }
+                        else if (snoozeBtn && snoozeBtn.dataset.taskId) { appInternal.methods.snoozeTask(snoozeBtn.dataset.taskId); }
+                    },
+
+
+                     // --- LinkedIn Leads ---
+                    addLead: () => {
+                        const formHtml = ` <div class="form-group"> <label for="lead-name">Full Name*</label> <input type="text" id="lead-name" required> </div> <div class="form-group"> <label for="lead-company">Company</label> <input type="text" id="lead-company"> </div> <div class="form-group"> <label for="lead-date">Connection Date*</label> <input type="date" id="lead-date" value="${appInternal.utils.getTodayDateString()}" required> </div> <div class="form-group"> <label for="lead-stage">Message Stage*</label> <select id="lead-stage" required> <option value="New Connection" selected>New Connection</option> <option value="Message 1 Sent">Message 1 Sent</option> <option value="Waiting for Response 1">Waiting for Response 1</option> <option value="Message 2 Sent">Message 2 Sent</option> <option value="Waiting for Response 2">Waiting for Response 2</option> <option value="Final Message Sent">Final Message Sent</option> <option value="Responded - Positive">Responded - Positive</option> <option value="Responded - Negative">Responded - Negative</option> <option value="Booked Call">Booked Call</option> <option value="Follow Up Later">Follow Up Later</option> <option value="Closed">Closed</option> </select> </div> <div class="form-group"> <label for="lead-next">Next Action</label> <input type="text" id="lead-next" placeholder="e.g., Send Message 2"> </div> <div class="form-group"> <label for="lead-due">Next Action Due Date</label> <input type="date" id="lead-due"> </div> <div class="form-group"> <label for="lead-status">Status*</label> <select id="lead-status" required> <option value="Active" selected>Active</option> <option value="Waiting">Waiting</option> <option value="Closed">Closed</option> </select> </div> <button id="save-lead-btn" class="success-btn"><i class="fas fa-save"></i> Save Lead</button> `;
+                        appInternal.methods.openModal('Add LinkedIn Connection', formHtml); document.getElementById('save-lead-btn')?.addEventListener('click', () => appInternal.methods.saveLead(null));
+                    },
+                    saveLead: (leadId = null) => {
+                        const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : ''; const name = document.getElementById(`${idPrefix}lead-name`)?.value.trim(); const company = document.getElementById(`${idPrefix}lead-company`)?.value.trim(); const connectionDate = document.getElementById(`${idPrefix}lead-date`)?.value; const messageStage = document.getElementById(`${idPrefix}lead-stage`)?.value; const nextAction = document.getElementById(`${idPrefix}lead-next`)?.value.trim(); const dueDate = document.getElementById(`${idPrefix}lead-due`)?.value || null; const status = document.getElementById(`${idPrefix}lead-status`)?.value;
+                        if (!name || !connectionDate || !messageStage || !status) { appInternal.methods.showNotification('Please fill in all required fields (*).', 'warning'); return; }
+                        if (!appInternal.methods.backupData()) return;
+                        const leadData = { name, company, connectionDate, messageStage, nextAction, dueDate, status }; let savedLeadData;
+                        try {
+                            if (isUpdate) { const leadIndex = (appInternal.state.leads || []).findIndex(l => l.id === leadId); if (leadIndex > -1) { savedLeadData = { ...appInternal.state.leads[leadIndex], ...leadData }; appInternal.state.leads[leadIndex] = savedLeadData; appInternal.methods.showNotification(`Lead '${name}' updated.`, 'success'); appInternal.methods.sendWebhookNotification('lead_updated', savedLeadData); } else { appInternal.methods.showNotification('Error: Lead not found.', 'error'); return; } }
+                            else { savedLeadData = { id: appInternal.utils.generateId(), ...leadData }; (appInternal.state.leads = appInternal.state.leads || []).push(savedLeadData); appInternal.methods.showNotification(`Lead '${name}' added.`, 'success'); appInternal.methods.sendWebhookNotification('lead_added', savedLeadData); }
+                            appInternal.methods.saveDataToStorage(STORAGE_KEYS.LEADS, appInternal.state.leads); appInternal.methods.renderLeadsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.closeModal();
+                        } catch(error) { console.error("Error saving lead:", error); appInternal.methods.showNotification("Error saving lead.", "error"); }
+                    },
+                    editLead: (id) => {
+                        const leadToEdit = (appInternal.state.leads || []).find(lead => lead.id === id); if (!leadToEdit) { appInternal.methods.showNotification('Lead not found.', 'error'); return; }
+                        const formHtml = ` <div class="form-group"> <label for="edit-lead-name">Full Name*</label> <input type="text" id="edit-lead-name" value="${appInternal.utils.sanitize(leadToEdit.name || '')}" required> </div> <div class="form-group"> <label for="edit-lead-company">Company</label> <input type="text" id="edit-lead-company" value="${appInternal.utils.sanitize(leadToEdit.company || '')}"> </div> <div class="form-group"> <label for="edit-lead-date">Connection Date*</label> <input type="date" id="edit-lead-date" value="${appInternal.utils.formatDate(leadToEdit.connectionDate) || ''}" required> </div> <div class="form-group"> <label for="edit-lead-stage">Message Stage*</label> <select id="edit-lead-stage" required> ${['New Connection', 'Message 1 Sent', 'Waiting for Response 1', 'Message 2 Sent', 'Waiting for Response 2', 'Final Message Sent', 'Responded - Positive', 'Responded - Negative', 'Booked Call', 'Follow Up Later', 'Closed'].map(s => `<option value="${s}" ${leadToEdit.messageStage === s ? 'selected' : ''}>${s}</option>`).join('')} </select> </div> <div class="form-group"> <label for="edit-lead-next">Next Action</label> <input type="text" id="edit-lead-next" value="${appInternal.utils.sanitize(leadToEdit.nextAction || '')}"> </div> <div class="form-group"> <label for="edit-lead-due">Next Action Due Date</label> <input type="date" id="edit-lead-due" value="${appInternal.utils.formatDate(leadToEdit.dueDate) || ''}"> </div> <div class="form-group"> <label for="edit-lead-status">Status*</label> <select id="edit-lead-status" required> ${['Active', 'Waiting', 'Closed'].map(s => `<option value="${s}" ${leadToEdit.status === s ? 'selected' : ''}>${s}</option>`).join('')} </select> </div> <button id="update-lead-btn" class="success-btn"><i class="fas fa-save"></i> Update Lead</button> `;
+                        appInternal.methods.openModal(`Edit Lead: ${appInternal.utils.sanitize(leadToEdit.name)}`, formHtml); document.getElementById('update-lead-btn')?.addEventListener('click', () => appInternal.methods.saveLead(leadToEdit.id));
+                    },
+                    deleteLead: (id) => {
+                        const leadToDelete = (appInternal.state.leads || []).find(l => l.id === id); const leadName = leadToDelete ? `'${appInternal.utils.sanitize(leadToDelete.name)}'` : 'this lead';
+                        if (confirm(`Delete ${leadName}? This cannot be undone.`)) {
+                            if (!appInternal.methods.backupData()) return;
+                            try {
+                                const deletedLeadInfo = { ...leadToDelete }; appInternal.state.leads = (appInternal.state.leads || []).filter(lead => lead.id !== id); appInternal.methods.saveDataToStorage(STORAGE_KEYS.LEADS, appInternal.state.leads); appInternal.methods.renderLeadsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.showNotification(`Lead ${leadName} deleted.`, 'success'); appInternal.methods.sendWebhookNotification('lead_deleted', deletedLeadInfo);
+                            } catch (error) { console.error("Error deleting lead:", error); appInternal.methods.showNotification("Error deleting lead.", "error"); }
+                        }
+                    },
+                    renderLeadsTable: () => {
+                        if (!appInternal.elements.leadsTableBody) return; const tableBody = appInternal.elements.leadsTableBody; tableBody.innerHTML = ''; let filteredLeads = [...(appInternal.state.leads || [])];
+                        const searchTerm = appInternal.state.filterState.leads || ''; if (searchTerm) { const lowerSearchTerm = searchTerm.toLowerCase(); filteredLeads = filteredLeads.filter(lead => Object.values(lead).some(val => String(val).toLowerCase().includes(lowerSearchTerm))); }
+                        const sortConfig = appInternal.state.sortState.leads; if (sortConfig?.column) { filteredLeads.sort((a, b) => { let valA = a[sortConfig.column]; let valB = b[sortConfig.column]; if (sortConfig.column.toLowerCase().includes('date')) { valA = valA ? new Date(appInternal.utils.createDateAdjusted(valA) || 0) : new Date(0); valB = valB ? new Date(appInternal.utils.createDateAdjusted(valB) || 0) : new Date(0); } else { valA = String(valA || '').toLowerCase(); valB = String(valB || '').toLowerCase(); } if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1; if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1; return 0; }); } else { filteredLeads.sort((a, b) => (b.connectionDate || '0').localeCompare(a.connectionDate || '0')); }
+                        appInternal.methods.updateSortIndicators('leads-view', sortConfig);
+                        if (filteredLeads.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="8">${searchTerm ? 'No leads match search.' : 'No LinkedIn leads found.'}</td></tr>`; return; }
+                        filteredLeads.forEach(lead => { const row = tableBody.insertRow(); const statusSpan = appInternal.methods.createStatusSpan(lead.status || 'Unknown', 'status'); const stageSpan = appInternal.methods.createStatusSpan(lead.messageStage || 'N/A', 'stage');
+                            row.innerHTML = ` <td class="wrap-mobile">${appInternal.utils.sanitize(lead.name || '')}</td> <td>${appInternal.utils.sanitize(lead.company || '-')}</td> <td>${appInternal.utils.formatDate(lead.connectionDate) || '-'}</td> <td>${stageSpan.outerHTML}</td> <td class="wrap-mobile">${appInternal.utils.sanitize(lead.nextAction || '-')}</td> <td>${appInternal.utils.formatDueDate(lead.dueDate)}</td> <td>${statusSpan.outerHTML}</td> <td class="action-cell"> ${appInternal.methods.createActionButton('fas fa-pencil-alt', 'Edit Lead', lead.id, 'edit-btn', `Edit ${lead.name}`)} ${appInternal.methods.createActionButton('fas fa-trash-alt', 'Delete Lead', lead.id, 'delete-btn', `Delete ${lead.name}`)} </td> `;
+                            // Add listeners via delegation in setupEventListeners
+                        });
+                    },
+
+                     // --- Call Tracking ---
+                    addCall: () => {
+                        const callOutcomes = ['Connected - Positive', 'Connected - Negative', 'Connected - Needs Follow-up', 'Left Voicemail', 'No Answer', 'Wrong Number', 'Call Back Requested', 'Appointment Booked', 'Follow-up Later'];
+                        const formHtml = ` <div class="form-group"> <label for="call-name">Contact Name*</label> <input type="text" id="call-name" required> </div> <div class="form-group"> <label for="call-date">Call Date*</label> <input type="date" id="call-date" value="${appInternal.utils.getTodayDateString()}" required> </div> <div class="form-group"> <label for="call-outcome">Outcome*</label> <select id="call-outcome" required> <option value="">Select outcome...</option> ${callOutcomes.map(o => `<option value="${o}">${o}</option>`).join('')} </select> </div> <div class="form-group"> <label for="call-next">Next Step</label> <input type="text" id="call-next"> </div> <div class="form-group"> <label for="call-next-due">Next Step Due Date</label> <input type="date" id="call-next-due"> </div> <div class="form-group"> <label for="call-notes">Notes</label> <textarea id="call-notes" rows="4"></textarea> </div> <button id="save-call-btn" class="success-btn"><i class="fas fa-save"></i> Save Call</button> `;
+                        appInternal.methods.openModal('Add Call Record', formHtml); document.getElementById('save-call-btn')?.addEventListener('click', () => appInternal.methods.saveCall(null));
+                    },
+                    saveCall: (callId = null) => {
+                        const isUpdate = !!callId; const idPrefix = isUpdate ? 'edit-' : ''; const name = document.getElementById(`${idPrefix}call-name`)?.value.trim(); const callDate = document.getElementById(`${idPrefix}call-date`)?.value; const outcome = document.getElementById(`${idPrefix}call-outcome`)?.value; const nextStep = document.getElementById(`${idPrefix}call-next`)?.value.trim(); const nextStepDue = document.getElementById(`${idPrefix}call-next-due`)?.value || null; const notes = document.getElementById(`${idPrefix}call-notes`)?.value.trim();
+                        if (!name || !callDate || !outcome) { appInternal.methods.showNotification('Please fill in all required fields (*).', 'warning'); return; }
+                        if (!appInternal.methods.backupData()) return;
+                        const callData = { name, callDate, outcome, nextStep, nextStepDue, notes }; let savedCallData;
+                        try {
+                            if (isUpdate) { const callIndex = (appInternal.state.calls || []).findIndex(c => c.id === callId); if (callIndex > -1) { savedCallData = { ...appInternal.state.calls[callIndex], ...callData }; appInternal.state.calls[callIndex] = savedCallData; appInternal.methods.showNotification(`Call for '${name}' updated.`, 'success'); appInternal.methods.sendWebhookNotification('call_updated', savedCallData); } else { appInternal.methods.showNotification('Error: Call not found.', 'error'); return; } }
+                            else { savedCallData = { id: appInternal.utils.generateId(), ...callData }; (appInternal.state.calls = appInternal.state.calls || []).push(savedCallData); appInternal.methods.showNotification(`Call for '${name}' added.`, 'success'); appInternal.methods.sendWebhookNotification('call_added', savedCallData); }
+                            appInternal.methods.saveDataToStorage(STORAGE_KEYS.CALLS, appInternal.state.calls); appInternal.methods.renderCallsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.closeModal();
+                        } catch (error) { console.error("Error saving call:", error); appInternal.methods.showNotification("Error saving call.", "error"); }
+                    },
+                    editCall: (id) => {
+                        const callToEdit = (appInternal.state.calls || []).find(call => call.id === id); if (!callToEdit) { appInternal.methods.showNotification('Call record not found.', 'error'); return; }
+                        const callOutcomes = ['Connected - Positive', 'Connected - Negative', 'Connected - Needs Follow-up', 'Left Voicemail', 'No Answer', 'Wrong Number', 'Call Back Requested', 'Appointment Booked', 'Follow-up Later'];
+                        const formHtml = ` <div class="form-group"> <label for="edit-call-name">Contact Name*</label> <input type="text" id="edit-call-name" value="${appInternal.utils.sanitize(callToEdit.name || '')}" required> </div> <div class="form-group"> <label for="edit-call-date">Call Date*</label> <input type="date" id="edit-call-date" value="${appInternal.utils.formatDate(callToEdit.callDate) || ''}" required> </div> <div class="form-group"> <label for="edit-call-outcome">Outcome*</label> <select id="edit-call-outcome" required> <option value="" ${!callToEdit.outcome ? 'selected' : ''}>Select...</option> ${callOutcomes.map(o => `<option value="${o}" ${callToEdit.outcome === o ? 'selected' : ''}>${o}</option>`).join('')} </select> </div> <div class="form-group"> <label for="edit-call-next">Next Step</label> <input type="text" id="edit-call-next" value="${appInternal.utils.sanitize(callToEdit.nextStep || '')}"> </div> <div class="form-group"> <label for="edit-call-next-due">Next Step Due Date</label> <input type="date" id="edit-call-next-due" value="${appInternal.utils.formatDate(callToEdit.nextStepDue) || ''}"> </div> <div class="form-group"> <label for="edit-call-notes">Notes</label> <textarea id="edit-call-notes" rows="4">${appInternal.utils.sanitize(callToEdit.notes || '')}</textarea> </div> <button id="update-call-btn" class="success-btn"><i class="fas fa-save"></i> Update Call</button> `;
+                        appInternal.methods.openModal(`Edit Call: ${appInternal.utils.sanitize(callToEdit.name)}`, formHtml); document.getElementById('update-call-btn')?.addEventListener('click', () => appInternal.methods.saveCall(callToEdit.id));
+                    },
+                    deleteCall: (id) => {
+                        const callToDelete = (appInternal.state.calls || []).find(c => c.id === id); const callName = callToDelete ? `for '${appInternal.utils.sanitize(callToDelete.name)}'` : 'this call';
+                        if (confirm(`Delete call record ${callName}?`)) {
+                            if (!appInternal.methods.backupData()) return;
+                            try { const deletedCallInfo = { ...callToDelete }; appInternal.state.calls = (appInternal.state.calls || []).filter(call => call.id !== id); appInternal.methods.saveDataToStorage(STORAGE_KEYS.CALLS, appInternal.state.calls); appInternal.methods.renderCallsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.showNotification(`Call record ${callName} deleted.`, 'success'); appInternal.methods.sendWebhookNotification('call_deleted', deletedCallInfo); }
+                            catch (error) { console.error("Error deleting call:", error); appInternal.methods.showNotification("Error deleting call.", "error"); }
+                        }
+                    },
+                    renderCallsTable: () => {
+                         if (!appInternal.elements.callsTableBody) return; const tableBody = appInternal.elements.callsTableBody; tableBody.innerHTML = ''; let filteredCalls = [...(appInternal.state.calls || [])];
+                         const searchTerm = appInternal.state.filterState.calls || ''; if (searchTerm) { const lowerSearchTerm = searchTerm.toLowerCase(); filteredCalls = filteredCalls.filter(call => Object.values(call).some(val => String(val).toLowerCase().includes(lowerSearchTerm))); }
+                         const sortConfig = appInternal.state.sortState.calls; if (sortConfig?.column) { filteredCalls.sort((a, b) => { let valA = a[sortConfig.column]; let valB = b[sortConfig.column]; if (sortConfig.column.toLowerCase().includes('date')) { valA = valA ? new Date(appInternal.utils.createDateAdjusted(valA) || 0) : new Date(0); valB = valB ? new Date(appInternal.utils.createDateAdjusted(valB) || 0) : new Date(0); } else { valA = String(valA || '').toLowerCase(); valB = String(valB || '').toLowerCase(); } if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1; if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1; return 0; }); } else { filteredCalls.sort((a, b) => (b.callDate || '0').localeCompare(a.callDate || '0')); }
+                         appInternal.methods.updateSortIndicators('calls-view', sortConfig);
+                         if (filteredCalls.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="6">${searchTerm ? 'No calls match search.' : 'No call records.'}</td></tr>`; return; }
+                         filteredCalls.forEach(call => { const row = tableBody.insertRow(); const outcomeSpan = appInternal.methods.createStatusSpan(call.outcome || 'N/A', 'outcome'); let nextStepDisplay = appInternal.utils.sanitize(call.nextStep || '-'); if (call.nextStepDue) { nextStepDisplay += ` <br><small style="color: #555;">(${appInternal.utils.formatDueDate(call.nextStepDue)})</small>`; }
+                             row.innerHTML = ` <td class="wrap-mobile">${appInternal.utils.sanitize(call.name || '')}</td> <td>${appInternal.utils.formatDate(call.callDate) || '-'}</td> <td>${outcomeSpan.outerHTML}</td> <td class="wrap-mobile">${nextStepDisplay}</td> <td class="wrap-mobile">${appInternal.utils.nl2br(call.notes || '-')}</td> <td class="action-cell"> ${appInternal.methods.createActionButton('fas fa-pencil-alt', 'Edit Call', call.id, 'edit-btn', `Edit call for ${call.name}`)} ${appInternal.methods.createActionButton('fas fa-trash-alt', 'Delete Call', call.id, 'delete-btn', `Delete call for ${call.name}`)} </td> `;
+                             // Add listeners via delegation in setupEventListeners
+                         });
+                     },
+
+                     // --- Appointments ---
+                    addAppointment: () => {
+                        const defaultMeetingTime = appInternal.utils.getNextBusinessDay10AM(); const defaultMeetingTimeString = appInternal.utils.formatDateTimeForInput(defaultMeetingTime); const { confirmationCallDate, textReminderDate } = appInternal.utils.calculateReminderDates(defaultMeetingTimeString);
+                        const statuses = ['Pending', 'Confirmed', 'Rescheduled', 'Cancelled', 'Completed', 'No Show', 'Waiting for Confirmation', 'Follow-up Needed'];
+                        const formHtml = ` <div class="form-group"> <label for="appointment-name">Client Name*</label> <input type="text" id="appointment-name" required> </div> <div class="form-group"> <label for="appointment-datetime">Meeting Date & Time*</label> <input type="datetime-local" id="appointment-datetime" value="${defaultMeetingTimeString}" required> </div> <div class="form-group"> <label for="appointment-status">Status*</label> <select id="appointment-status" required> ${statuses.map(s => `<option value="${s}" ${s === 'Pending' ? 'selected' : ''}>${s}</option>`).join('')} </select> </div> <div class="form-group"> <label for="appointment-confirm-call">Confirm Call Date (Auto)</label> <input type="date" id="appointment-confirm-call" value="${confirmationCallDate || ''}" readonly title="Auto-calculated: Previous business day"> </div> <div class="form-group"> <label for="appointment-text-reminder">Text Reminder Date (Auto)</label> <input type="date" id="appointment-text-reminder" value="${textReminderDate || ''}" readonly title="Auto-calculated: Day of meeting"> </div> <div class="form-group"> <label for="appointment-notes">Notes</label> <textarea id="appointment-notes" rows="3"></textarea> </div> <button id="save-appointment-btn" class="success-btn"><i class="fas fa-save"></i> Save Appointment</button> `;
+                        appInternal.methods.openModal('Add Appointment', formHtml);
+                        const meetingInput = document.getElementById('appointment-datetime'); const confirmCallInput = document.getElementById('appointment-confirm-call'); const textReminderInput = document.getElementById('appointment-text-reminder');
+                        meetingInput?.addEventListener('change', () => { const { confirmationCallDate: newConf, textReminderDate: newText } = appInternal.utils.calculateReminderDates(meetingInput.value); if (confirmCallInput) confirmCallInput.value = newConf || ''; if (textReminderInput) textReminderInput.value = newText || ''; });
+                        document.getElementById('save-appointment-btn')?.addEventListener('click', () => appInternal.methods.saveAppointment(null));
+                    },
+                    saveAppointment: (appointmentId = null) => {
+                        const isUpdate = !!appointmentId; const idPrefix = isUpdate ? 'edit-' : ''; const clientName = document.getElementById(`${idPrefix}appointment-name`)?.value.trim(); const meetingDateTime = document.getElementById(`${idPrefix}appointment-datetime`)?.value; const status = document.getElementById(`${idPrefix}appointment-status`)?.value; const notes = document.getElementById(`${idPrefix}appointment-notes`)?.value.trim();
+                        if (!clientName || !meetingDateTime || !status) { appInternal.methods.showNotification('Please fill in all required fields (*).', 'warning'); return; }
+                        if (!appInternal.methods.backupData()) return;
+                        const { confirmationCallDate, textReminderDate } = appInternal.utils.calculateReminderDates(meetingDateTime);
+                        const appointmentData = { clientName, meetingDateTime, status, notes, confirmationCallDate, textReminderDate }; let savedAppointmentData;
+                        try {
+                            if (isUpdate) { const appIndex = (appInternal.state.appointments || []).findIndex(a => a.id === appointmentId); if (appIndex > -1) { savedAppointmentData = { ...appInternal.state.appointments[appIndex], ...appointmentData }; appInternal.state.appointments[appIndex] = savedAppointmentData; appInternal.methods.showNotification(`Appt for '${clientName}' updated.`, 'success'); appInternal.methods.sendWebhookNotification('appointment_updated', savedAppointmentData); } else { appInternal.methods.showNotification('Error: Appt not found.', 'error'); return; } }
+                            else { savedAppointmentData = { id: appInternal.utils.generateId(), ...appointmentData }; (appInternal.state.appointments = appInternal.state.appointments || []).push(savedAppointmentData); appInternal.methods.showNotification(`Appt for '${clientName}' added.`, 'success'); appInternal.methods.sendWebhookNotification('appointment_added', savedAppointmentData); }
+                            appInternal.methods.saveDataToStorage(STORAGE_KEYS.APPOINTMENTS, appInternal.state.appointments); appInternal.methods.renderAppointmentsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.closeModal();
+                        } catch (error) { console.error("Error saving appointment:", error); appInternal.methods.showNotification("Error saving appointment.", "error"); }
+                    },
+                    editAppointment: (id) => {
+                        const appToEdit = (appInternal.state.appointments || []).find(app => app.id === id); if (!appToEdit) { appInternal.methods.showNotification('Appointment not found.', 'error'); return; }
+                        const { confirmationCallDate, textReminderDate } = appInternal.utils.calculateReminderDates(appToEdit.meetingDateTime);
+                         const statuses = ['Pending', 'Confirmed', 'Rescheduled', 'Cancelled', 'Completed', 'No Show', 'Waiting for Confirmation', 'Follow-up Needed'];
+                        const formHtml = ` <div class="form-group"> <label for="edit-appointment-name">Client Name*</label> <input type="text" id="edit-appointment-name" value="${appInternal.utils.sanitize(appToEdit.clientName || '')}" required> </div> <div class="form-group"> <label for="edit-appointment-datetime">Meeting Date & Time*</label> <input type="datetime-local" id="edit-appointment-datetime" value="${appInternal.utils.formatDateTimeForInput(new Date(appToEdit.meetingDateTime)) || ''}" required> </div> <div class="form-group"> <label for="edit-appointment-status">Status*</label> <select id="edit-appointment-status" required> ${statuses.map(s => `<option value="${s}" ${appToEdit.status === s ? 'selected' : ''}>${s}</option>`).join('')} </select> </div> <div class="form-group"> <label for="edit-appointment-confirm-call">Confirm Call Date (Auto)</label> <input type="date" id="edit-appointment-confirm-call" value="${confirmationCallDate || ''}" readonly> </div> <div class="form-group"> <label for="edit-appointment-text-reminder">Text Reminder Date (Auto)</label> <input type="date" id="edit-appointment-text-reminder" value="${textReminderDate || ''}" readonly> </div> <div class="form-group"> <label for="edit-appointment-notes">Notes</label> <textarea id="edit-appointment-notes" rows="3">${appInternal.utils.sanitize(appToEdit.notes || '')}</textarea> </div> <button id="update-appointment-btn" class="success-btn"><i class="fas fa-save"></i> Update Appointment</button> `;
+                        appInternal.methods.openModal(`Edit Appointment: ${appInternal.utils.sanitize(appToEdit.clientName)}`, formHtml);
+                        const meetingInput = document.getElementById('edit-appointment-datetime'); const confirmCallInput = document.getElementById('edit-appointment-confirm-call'); const textReminderInput = document.getElementById('edit-appointment-text-reminder');
+                        meetingInput?.addEventListener('change', () => { const { confirmationCallDate: newConf, textReminderDate: newText } = appInternal.utils.calculateReminderDates(meetingInput.value); if(confirmCallInput) confirmCallInput.value = newConf || ''; if(textReminderInput) textReminderInput.value = newText || ''; });
+                        document.getElementById('update-appointment-btn')?.addEventListener('click', () => appInternal.methods.saveAppointment(appToEdit.id));
+                    },
+                    deleteAppointment: (id) => {
+                        const appToDelete = (appInternal.state.appointments || []).find(a => a.id === id); const appName = appToDelete ? `for '${appInternal.utils.sanitize(appToDelete.clientName)}'` : 'this appointment';
+                        if (confirm(`Delete appointment ${appName}?`)) {
+                            if (!appInternal.methods.backupData()) return;
+                            try { const deletedAppInfo = { ...appToDelete }; appInternal.state.appointments = (appInternal.state.appointments || []).filter(app => app.id !== id); appInternal.methods.saveDataToStorage(STORAGE_KEYS.APPOINTMENTS, appInternal.state.appointments); appInternal.methods.renderAppointmentsTable(); appInternal.methods.updateDashboardSummary(); appInternal.methods.showNotification(`Appointment ${appName} deleted.`, 'success'); appInternal.methods.sendWebhookNotification('appointment_deleted', deletedAppInfo); }
+                            catch (error) { console.error("Error deleting appointment:", error); appInternal.methods.showNotification("Error deleting appointment.", "error"); }
+                        }
+                    },
+                    renderAppointmentsTable: () => {
+                        if (!appInternal.elements.appointmentsTableBody) return; const tableBody = appInternal.elements.appointmentsTableBody; tableBody.innerHTML = '';
+                        let filteredAppointments = [...(appInternal.state.appointments || [])];
+                        const searchTerm = appInternal.state.filterState.appointments || ''; if (searchTerm) { const lowerSearchTerm = searchTerm.toLowerCase(); filteredAppointments = filteredAppointments.filter(appt => Object.values(appt).some(val => String(val).toLowerCase().includes(lowerSearchTerm)) || appInternal.utils.formatAppointmentDateTime(appt.meetingDateTime).toLowerCase().includes(lowerSearchTerm)); }
+                        const sortConfig = appInternal.state.sortState.appointments; if (sortConfig?.column) { filteredAppointments.sort((a, b) => { let valA = a[sortConfig.column]; let valB = b[sortConfig.column]; if (sortConfig.column.toLowerCase().includes('date') || sortConfig.column.toLowerCase().includes('datetime')) { valA = valA ? new Date(appInternal.utils.createDateAdjusted(valA) || 0) : new Date(0); valB = valB ? new Date(appInternal.utils.createDateAdjusted(valB) || 0) : new Date(0); } else { valA = String(valA || '').toLowerCase(); valB = String(valB || '').toLowerCase(); } if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1; if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1; return 0; }); }
+                        else { filteredAppointments.sort((a, b) => (a.meetingDateTime || '0').localeCompare(b.meetingDateTime || '0')); }
+                        appInternal.methods.updateSortIndicators('appointments-view', sortConfig);
+                        if (filteredAppointments.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="7">${searchTerm ? 'No appointments match search.' : 'No appointments scheduled.'}</td></tr>`; return; }
+                        filteredAppointments.forEach(appt => { const row = tableBody.insertRow(); const statusSpan = appInternal.methods.createStatusSpan(appt.status || 'Unknown', 'status');
+                            row.innerHTML = ` <td class="wrap-mobile">${appInternal.utils.sanitize(appt.clientName || '')}</td> <td>${appInternal.utils.formatAppointmentDateTime(appt.meetingDateTime)}</td> <td>${appInternal.utils.formatDate(appt.confirmationCallDate) || '-'}</td> <td>${appInternal.utils.formatDate(appt.textReminderDate) || '-'}</td> <td>${statusSpan.outerHTML}</td> <td class="wrap-mobile">${appInternal.utils.nl2br(appt.notes || '-')}</td> <td class="action-cell"> ${appInternal.methods.createActionButton('fas fa-pencil-alt', 'Edit Appointment', appt.id, 'edit-btn', `Edit ${appt.clientName}`)} ${appInternal.methods.createActionButton('fas fa-trash-alt', 'Delete Appointment', appt.id, 'delete-btn', `Delete ${appt.clientName}`)} </td> `;
+                            // Add listeners via delegation in setupEventListeners
+                        });
+                    },
+
+                     // --- Daily Report ---
+                     generateAndSaveReport: () => {
+                        if (!appInternal.methods.backupData()) return;
+                        try {
+                            appInternal.state.dailyReportData = { reportDate: appInternal.elements.reportDateInput?.value || appInternal.utils.getTodayDateString(), linkedinSummary: appInternal.elements.linkedinSummaryTextarea?.value.trim() || '', callSummary: appInternal.elements.callSummaryTextarea?.value.trim() || '', appointmentSummary: appInternal.elements.appointmentSummaryTextarea?.value.trim() || '', followupSummary: appInternal.elements.followupSummaryTextarea?.value.trim() || '' };
+                            appInternal.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT, appInternal.state.dailyReportData); appInternal.methods.updateReportOutput(); appInternal.methods.showNotification('Daily report saved.', 'success'); appInternal.methods.sendWebhookNotification('daily_report_saved', appInternal.state.dailyReportData);
+                        } catch (error) { console.error("Error saving report:", error); appInternal.methods.showNotification("Error saving report.", "error"); }
+                     },
+                     updateReportOutput: () => {
+                        if (!appInternal.elements.reportOutputEl) return; const reportData = appInternal.state.dailyReportData; if (!reportData || !reportData.reportDate) { appInternal.elements.reportOutputEl.style.display = 'none'; return; }
+                        appInternal.elements.reportOutputEl.innerHTML = ` <h4><i class="fas fa-file-alt"></i> Daily Report - ${appInternal.utils.formatDate(reportData.reportDate)}</h4> <p><strong><i class="fab fa-linkedin"></i> LinkedIn Summary:</strong><br>${reportData.linkedinSummary ? appInternal.utils.nl2br(reportData.linkedinSummary) : '<em>N/A</em>'}</p> <p><strong><i class="fas fa-phone-volume"></i> Call Summary:</strong><br>${reportData.callSummary ? appInternal.utils.nl2br(reportData.callSummary) : '<em>N/A</em>'}</p> <p><strong><i class="fas fa-calendar-check"></i> Appointment Summary:</strong><br>${reportData.appointmentSummary ? appInternal.utils.nl2br(reportData.appointmentSummary) : '<em>N/A</em>'}</p> <p><strong><i class="fas fa-flag"></i> Follow-up Summary:</strong><br>${reportData.followupSummary ? appInternal.utils.nl2br(reportData.followupSummary) : '<em>N/A</em>'}</p> `;
+                        appInternal.elements.reportOutputEl.style.display = 'block';
+                     },
+                     updateReportForm: () => {
+                        const reportData = appInternal.state.dailyReportData || {}; if (appInternal.elements.reportDateInput) appInternal.elements.reportDateInput.value = reportData.reportDate || appInternal.utils.getTodayDateString(); if (appInternal.elements.linkedinSummaryTextarea) appInternal.elements.linkedinSummaryTextarea.value = reportData.linkedinSummary || ''; if (appInternal.elements.callSummaryTextarea) appInternal.elements.callSummaryTextarea.value = reportData.callSummary || ''; if (appInternal.elements.appointmentSummaryTextarea) appInternal.elements.appointmentSummaryTextarea.value = reportData.appointmentSummary || ''; if (appInternal.elements.followupSummaryTextarea) appInternal.elements.followupSummaryTextarea.value = reportData.followupSummary || '';
+                     },
+
+                     // --- Import/Export ---
+                     convertToCSV: (data, headers) => {
+                        if (!Array.isArray(data) || data.length === 0) return ''; const delim = ','; const line = '\n'; const actualHeaders = headers && headers.length > 0 ? headers : Object.keys(data[0]); if (!actualHeaders || actualHeaders.length === 0) return '';
+                        let csv = actualHeaders.map(h => `"${String(h).replace(/"/g, '""')}"`).join(delim) + line;
+                        data.forEach(item => { let row = actualHeaders.map(header => { let value = item[header]; value = (value === null || typeof value === 'undefined') ? '' : String(value); if (value.includes(delim) || value.includes(line) || value.includes('"')) value = `"${value.replace(/"/g, '""')}"`; return value; }).join(delim); csv += row + line; }); return csv;
+                     },
+                     exportCSVData: (data, filename, headers = [], buttonElement) => {
+                         const filteredData = (Array.isArray(data) ? data : [data]).filter(item => item && typeof item === 'object' && Object.keys(item).length > 0); // Ensure data is array of non-empty objects
+                         if (filteredData.length === 0) { appInternal.methods.showNotification('No data available to export.', 'warning'); return; }
+                         appInternal.utils.toggleButtonLoading(buttonElement, true, "Exporting...");
+                         setTimeout(() => { try { const csv = appInternal.methods.convertToCSV(filteredData, headers); if (!csv) throw new Error('CSV generation failed'); const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement('a'); const url = URL.createObjectURL(blob); link.setAttribute('href', url); link.setAttribute('download', filename); link.style.visibility = 'hidden'; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); appInternal.methods.showNotification(`${filteredData.length} records exported to ${filename}`, 'success'); } catch (error) { console.error("CSV Export Error:", error); appInternal.methods.showNotification(`Export failed: ${error.message}`, "error"); } finally { appInternal.utils.toggleButtonLoading(buttonElement, false); } }, 50);
+                     },
+                    parseCSV: (text) => { // Basic CSV parser, handles quotes and escaped quotes
+                         const lines = text.trim().replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n'); if (lines.length < 1) return { headers: [], data: [] };
+                         const parseLine = (line) => { const values = []; let currentVal = ''; let inQuotes = false; for (let i = 0; i < line.length; i++) { const char = line[i]; if (char === '"') { if (inQuotes && line[i + 1] === '"') { currentVal += '"'; i++; } else { inQuotes = !inQuotes; } } else if (char === ',' && !inQuotes) { values.push(currentVal.trim()); currentVal = ''; } else { currentVal += char; } } values.push(currentVal.trim()); return values; };
+                         const headersRaw = parseLine(lines[0]); const headers = headersRaw.map(h => h.toLowerCase().replace(/\s+/g, '')); const data = [];
+                         for (let i = 1; i < lines.length; i++) { if (!lines[i].trim()) continue; const values = parseLine(lines[i]); if (values.length === headers.length) { const obj = {}; headers.forEach((header, index) => { let val = values[index]; if (val.startsWith('"') && val.endsWith('"')) val = val.substring(1, val.length - 1).replace(/""/g, '"'); obj[header] = val === 'null' ? null : val; }); data.push(obj); } else { console.warn(`Skipping malformed CSV line ${i + 1}: Fields mismatch header count.`); } }
+                         return { headers, data };
+                     },
+                    handleImport: (event, storageKey, stateArrayName, renderFunction, requiredHeaders = [], buttonElement) => {
+                        const file = event.target.files?.[0]; if (!file) return; if (!confirm(`Importing will OVERWRITE all LOCAL ${stateArrayName}. Continue?`)) { event.target.value = ''; return; } if (!appInternal.methods.backupData()) { event.target.value = ''; return; }
+                        appInternal.utils.toggleButtonLoading(buttonElement, true, "Importing..."); const reader = new FileReader();
+                        reader.onload = (e) => { try { const text = e.target.result; const { headers: csvHeaders, data: parsedData } = appInternal.methods.parseCSV(text); if (!parsedData || parsedData.length === 0) throw new Error("CSV parsed as empty or invalid."); const normalizedRequired = requiredHeaders.map(h => h.toLowerCase().replace(/\s+/g, '')); const missingHeaders = normalizedRequired.filter(h => !csvHeaders.includes(h)); if (missingHeaders.length > 0) throw new Error(`Missing required columns: ${missingHeaders.join(', ')}.`);
+                                const processedData = parsedData.map(item => { const newItem = { id: appInternal.utils.generateId() }; csvHeaders.forEach(csvHeader => { const stateKey = appInternal.methods.findStateKey(stateArrayName, csvHeader); if (stateKey) { let value = item[csvHeader]; if (stateKey.toLowerCase().includes('date') && value) { value = appInternal.utils.formatDate(value) || null; } newItem[stateKey] = value; } }); return newItem; });
+                                appInternal.state[stateArrayName] = processedData; appInternal.methods.saveDataToStorage(storageKey, appInternal.state[stateArrayName]); appInternal.state.filterState[stateArrayName] = ''; appInternal.state.sortState[stateArrayName] = null; const searchInput = document.getElementById(`search-${stateArrayName}`); if(searchInput) searchInput.value = ''; appInternal.methods.saveSortState(); renderFunction(); appInternal.methods.updateDashboardSummary(); appInternal.methods.showNotification(`${processedData.length} ${stateArrayName} imported locally!`, 'success'); appInternal.methods.sendWebhookNotification(`${stateArrayName}_imported`, { count: processedData.length });
+                            } catch (error) { console.error(`CSV Import Error (${stateArrayName}):`, error); appInternal.methods.showNotification(`Import failed: ${error.message}`, 'error', 7000); }
+                            finally { event.target.value = ''; appInternal.utils.toggleButtonLoading(buttonElement, false); } };
+                        reader.onerror = () => { appInternal.methods.showNotification(`Error reading file for ${stateArrayName}.`, 'error'); event.target.value = ''; appInternal.utils.toggleButtonLoading(buttonElement, false); }; reader.readAsText(file);
+                     },
+                    handleReportImport: (event, buttonElement) => {
+                        const file = event.target.files?.[0]; if (!file) return; if (!confirm("Importing will OVERWRITE current daily report. Continue?")) { event.target.value = ''; return; } if (!appInternal.methods.backupData()) { event.target.value = ''; return; }
+                        appInternal.utils.toggleButtonLoading(buttonElement, true, "Importing..."); const reader = new FileReader();
+                        reader.onload = (e) => { try { const text = e.target.result; const { headers: csvHeaders, data: parsedData } = appInternal.methods.parseCSV(text); if (!parsedData || parsedData.length === 0) throw new Error("Report CSV is empty or invalid."); const importedReport = parsedData[0]; const requiredFields = ['reportdate', 'linkedinsummary', 'callsummary', 'appointmentsummary', 'followupsummary']; const hasAllFields = requiredFields.every(field => csvHeaders.includes(field)); if (!hasAllFields) throw new Error("Report CSV missing required fields.");
+                                appInternal.state.dailyReportData = { reportDate: appInternal.utils.formatDate(importedReport.reportdate) || appInternal.utils.getTodayDateString(), linkedinSummary: importedReport.linkedinsummary || '', callSummary: importedReport.callsummary || '', appointmentSummary: importedReport.appointmentsummary || '', followupSummary: importedReport.followupsummary || '' };
+                                appInternal.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT, appInternal.state.dailyReportData); appInternal.methods.updateReportForm(); appInternal.methods.updateReportOutput(); appInternal.methods.showNotification('Daily Report imported locally!', 'success');
+                            } catch(error) { console.error("Report Import Error:", error); appInternal.methods.showNotification(`Import failed: ${error.message}`, 'error', 7000); }
+                            finally { event.target.value = ''; appInternal.utils.toggleButtonLoading(buttonElement, false); } };
+                         reader.onerror = () => { appInternal.methods.showNotification('Error reading report file.', 'error'); appInternal.utils.toggleButtonLoading(buttonElement, false); }; reader.readAsText(file);
+                     },
+                    // Helper for import mapping
+                    findStateKey: (stateArrayName, csvHeader) => {
+                        // Define expected mappings (CSV header lowercase -> State key)
+                         const mappings = {
+                             leads: { fullname: 'name', connectiondate: 'connectionDate', messagestage: 'messageStage', nextaction: 'nextAction', nextactionduedate: 'dueDate', name: 'name', company: 'company', date: 'connectionDate', stage: 'messageStage', due: 'dueDate', status: 'status' },
+                             calls: { contactname: 'name', calldate: 'callDate', nextstep: 'nextStep', nextstepduedate: 'nextStepDue', name: 'name', date: 'callDate', outcome: 'outcome', notes: 'notes' },
+                             appointments: { clientname: 'clientName', meetingdatetime: 'meetingDateTime', meetingtime: 'meetingDateTime', confirmationcalldate: 'confirmationCallDate', confirmcall: 'confirmationCallDate', textreminderdate: 'textReminderDate', textreminder: 'textReminderDate', client: 'clientName', notes: 'notes', status: 'status'}
+                         };
+                         const map = mappings[stateArrayName];
+                         return map ? map[csvHeader] : null; // Return state key or null if not found
+                     },
+
+                     // --- Webhooks ---
+                     sendWebhookNotification: async (eventType, data) => {
+                        if (!appInternal.state.webhookUrl || !appInternal.state.webhookUrl.startsWith('http')) { console.log("Webhook URL not set, skipping notification."); return; }
+                        const payload = { event: eventType, timestamp: new Date().toISOString(), source: "KF_DailyTracker_v2", data: data || {} };
+                        console.log(`Sending webhook: ${eventType}`, payload);
+                        try { const response = await fetch(appInternal.state.webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) { console.error(`Webhook failed: ${response.status} ${response.statusText}`); appInternal.methods.showNotification(`Webhook failed: ${response.status}`, 'error'); } else { console.log(`Webhook sent for ${eventType}`); } } catch (error) { console.error(`Webhook error:`, error); appInternal.methods.showNotification(`Webhook network error.`, 'error'); }
+                     },
+
+                     // --- UI Helpers ---
+                    createStatusSpan: (text, type) => { const span = document.createElement('span'); const safeStatus = String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''); const statusClass = safeStatus ? `status-${safeStatus}` : 'status-unknown'; span.className = `status ${statusClass}`; span.textContent = text || (type === 'status' ? 'Unknown' : 'N/A'); return span; },
+                    createActionButton: (iconClass, title, dataId, btnClass = '', ariaLabel = '') => { return `<button class="icon-btn ${btnClass}" title="${title}" data-id="${dataId}" aria-label="${ariaLabel || title}"><i class="${iconClass}"></i></button>`; },
+                    updateSortIndicators: (viewId, sortConfig) => { const tableHeaders = document.querySelectorAll(`#${viewId} thead th.sortable`); tableHeaders.forEach(th => { const column = th.dataset.sort; const icon = th.querySelector('.sort-icon'); th.classList.remove('sorted', 'asc', 'desc'); if (icon) icon.innerHTML = ''; if (sortConfig?.column === column) { th.classList.add('sorted', sortConfig.direction); if (icon) icon.innerHTML = sortConfig.direction === 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>'; } }); },
+                    handleSortClick: (th, viewType) => { // Changed signature: pass TH element directly
+                         //const th = event.currentTarget; // No longer needed
+                         if (!th || !th.classList.contains('sortable')) return; const column = th.dataset.sort;
+                         const stateKey = viewType; // Assumes viewType matches state key (e.g., 'leads')
+                         const currentSort = appInternal.state.sortState[stateKey]; let direction = 'asc'; if (currentSort?.column === column && currentSort.direction === 'asc') { direction = 'desc'; }
+                         appInternal.state.sortState[stateKey] = { column, direction }; appInternal.methods.saveSortState();
+                         const renderFunctionName = `render${stateKey.charAt(0).toUpperCase() + stateKey.slice(1)}Table`; if (typeof appInternal.methods[renderFunctionName] === 'function') { appInternal.methods[renderFunctionName](); } else { console.error(`Render function not found for sort: ${renderFunctionName}`); }
+                     },
+                    handleSearchInput: (event, viewType) => {
+                         const stateKey = viewType; // Assumes viewType matches filter state key
+                         if (!appInternal.state.filterState.hasOwnProperty(stateKey)) { appInternal.state.filterState[stateKey] = ''; /* Initialize if missing */ }
+                         appInternal.state.filterState[stateKey] = event.target.value;
+                         const renderFunctionName = `render${stateKey.charAt(0).toUpperCase() + stateKey.slice(1)}Table`; if (typeof appInternal.methods[renderFunctionName] === 'function') { appInternal.methods[renderFunctionName](); } else { console.error(`Render function not found for search: ${renderFunctionName}`); }
+                     },
+                    setupTableEventListeners: () => {
+                        const tables = ['leads', 'calls', 'appointments'];
+                        tables.forEach(viewType => {
+                             const tableBody = appInternal.elements[`${viewType}TableBody`];
+                             const thead = document.querySelector(`#${viewType}-view thead`);
+
+                             // --- Event Delegation for Edit/Delete Buttons ---
+                             tableBody?.removeEventListener('click', appInternal.methods.handleTableActionClick); // Remove previous listener
+                             tableBody?.addEventListener('click', appInternal.methods.handleTableActionClick);
+
+                            // --- Event Listener for Sorting ---
+                             thead?.removeEventListener('click', appInternal.methods.handleTableSortClick); // Remove previous listener
+                             thead?.addEventListener('click', appInternal.methods.handleTableSortClick);
+                        });
+                    },
+                    // Generic handler for table action buttons (Edit/Delete)
+                    handleTableActionClick: (event) => {
+                        const editBtn = event.target.closest('.edit-btn');
+                        const deleteBtn = event.target.closest('.delete-btn');
+                        const tableBody = event.currentTarget; // The tbody element
+                        if (!tableBody || !tableBody.id) return;
+                        let viewType = tableBody.id.split('-')[0]; // e.g., 'leads'
+
+                        if (editBtn && editBtn.dataset.id) {
+                            // Derive method name, e.g., 'editLead' from 'leads'
+                            const editMethodName = `edit${viewType.charAt(0).toUpperCase() + viewType.slice(1, -1)}`;
+                            if (typeof appInternal.methods[editMethodName] === 'function') {
+                                appInternal.methods[editMethodName](editBtn.dataset.id);
+                            } else { console.error(`Edit method not found: ${editMethodName}`); }
+                        } else if (deleteBtn && deleteBtn.dataset.id) {
+                             // Derive method name, e.g., 'deleteLead' from 'leads'
+                            const deleteMethodName = `delete${viewType.charAt(0).toUpperCase() + viewType.slice(1, -1)}`;
+                             if (typeof appInternal.methods[deleteMethodName] === 'function') {
+                                appInternal.methods[deleteMethodName](deleteBtn.dataset.id);
+                            } else { console.error(`Delete method not found: ${deleteMethodName}`); }
+                        }
+                    },
+                    // Generic handler for table header sorting
+                    handleTableSortClick: (event) => {
+                         const th = event.target.closest('th.sortable');
+                         if (th) {
+                             const viewContentDiv = th.closest('.content-view'); // Find parent view container
+                             if (!viewContentDiv || !viewContentDiv.id) return;
+                             const viewType = viewContentDiv.id.split('-')[0]; // e.g., 'leads' from 'leads-view'
+                             appInternal.methods.handleSortClick(th, viewType); // Pass TH and viewType
+                         }
+                    },
+
+
+                     // --- Event Listener Setup ---
+                    setupEventListeners: () => {
+                        console.log("Setting up MAIN APP event listeners...");
+                        // Cache elements needed for listeners now that UI is potentially visible
+                        appInternal.methods.cacheElements();
+
+                        // Navigation
+                        appInternal.elements.sidebarLinks?.forEach(link => { link.removeEventListener('click', appInternal.methods.handleNavLinkClick); link.addEventListener('click', appInternal.methods.handleNavLinkClick); });
+                        // Content Creation Button
+                        appInternal.elements.contentCreationBtn?.removeEventListener('click', appInternal.methods.handleContentCreationClick); appInternal.elements.contentCreationBtn?.addEventListener('click', appInternal.methods.handleContentCreationClick);
+                        // Modal Closing
+                        appInternal.elements.closeModalBtn?.removeEventListener('click', appInternal.methods.closeModal); appInternal.elements.closeModalBtn?.addEventListener('click', appInternal.methods.closeModal);
+                        appInternal.elements.modalEl?.removeEventListener('click', appInternal.methods.handleModalBackdropClick); appInternal.elements.modalEl?.addEventListener('click', appInternal.methods.handleModalBackdropClick);
+                        document.removeEventListener('keydown', appInternal.methods.handleModalEscape); document.addEventListener('keydown', appInternal.methods.handleModalEscape); // Listen globally for Escape
+                        // Add Buttons
+                        document.getElementById('add-lead-btn')?.removeEventListener('click', appInternal.methods.addLead); document.getElementById('add-lead-btn')?.addEventListener('click', appInternal.methods.addLead);
+                        document.getElementById('add-call-btn')?.removeEventListener('click', appInternal.methods.addCall); document.getElementById('add-call-btn')?.addEventListener('click', appInternal.methods.addCall);
+                        document.getElementById('add-appointment-btn')?.removeEventListener('click', appInternal.methods.addAppointment); document.getElementById('add-appointment-btn')?.addEventListener('click', appInternal.methods.addAppointment);
+                        // Report Button
+                        document.getElementById('generate-report-btn')?.removeEventListener('click', appInternal.methods.generateAndSaveReport); document.getElementById('generate-report-btn')?.addEventListener('click', appInternal.methods.generateAndSaveReport);
+                        // Data Management Buttons
+                        appInternal.elements.restoreDataBtn?.removeEventListener('click', appInternal.methods.restoreLastUpdate); appInternal.elements.restoreDataBtn?.addEventListener('click', appInternal.methods.restoreLastUpdate);
+                        document.getElementById('backup-now-btn')?.removeEventListener('click', appInternal.methods.handleBackupClick); document.getElementById('backup-now-btn')?.addEventListener('click', appInternal.methods.handleBackupClick);
+                        document.getElementById('clear-all-data-btn')?.removeEventListener('click', appInternal.methods.clearAllData); document.getElementById('clear-all-data-btn')?.addEventListener('click', appInternal.methods.clearAllData);
+                        document.getElementById('save-webhook-url-btn')?.removeEventListener('click', appInternal.methods.saveWebhookUrl); document.getElementById('save-webhook-url-btn')?.addEventListener('click', appInternal.methods.saveWebhookUrl);
+                        // Reminder Bell
+                        appInternal.elements.reminderBellEl?.removeEventListener('click', appInternal.methods.handleReminderBellClick); appInternal.elements.reminderBellEl?.addEventListener('click', appInternal.methods.handleReminderBellClick);
+                        // Export Buttons
+                        appInternal.methods.setupExportButtonListener('export-leads-btn', 'leads', ['id', 'name', 'company', 'connectionDate', 'messageStage', 'nextAction', 'dueDate', 'status']);
+                        appInternal.methods.setupExportButtonListener('export-calls-btn', 'calls', ['id', 'name', 'callDate', 'outcome', 'nextStep', 'nextStepDue', 'notes']);
+                        appInternal.methods.setupExportButtonListener('export-appointments-btn', 'appointments', ['id', 'clientName', 'meetingDateTime', 'confirmationCallDate', 'textReminderDate', 'status', 'notes']);
+                        appInternal.methods.setupExportButtonListener('export-report-btn', 'dailyReportData', ['reportDate', 'linkedinSummary', 'callSummary', 'appointmentSummary', 'followupSummary']);
+                        // Import Buttons & File Inputs
+                        appInternal.methods.setupImportButtonListener('import-leads-btn', 'import-leads-file');
+                        appInternal.methods.setupImportButtonListener('import-calls-btn', 'import-calls-file');
+                        appInternal.methods.setupImportButtonListener('import-appointments-btn', 'import-appointments-file');
+                        appInternal.methods.setupImportButtonListener('import-report-btn', 'import-report-file');
+                        appInternal.methods.setupImportFileListener('import-leads-file', STORAGE_KEYS.LEADS, 'leads', appInternal.methods.renderLeadsTable, ['name', 'connectionDate', 'messageStage', 'status'], 'import-leads-btn');
+                        appInternal.methods.setupImportFileListener('import-calls-file', STORAGE_KEYS.CALLS, 'calls', appInternal.methods.renderCallsTable, ['name', 'callDate', 'outcome'], 'import-calls-btn');
+                        appInternal.methods.setupImportFileListener('import-appointments-file', STORAGE_KEYS.APPOINTMENTS, 'appointments', appInternal.methods.renderAppointmentsTable, ['clientName', 'meetingDateTime', 'status'], 'import-appointments-btn');
+                        appInternal.methods.setupImportFileListener('import-report-file', null, 'report', appInternal.methods.renderReportView, [], 'import-report-btn', appInternal.methods.handleReportImport); // Special handler for report
+                        // Table Search Event Listeners
+                        appInternal.methods.setupSearchListener('search-leads', 'leads');
+                        appInternal.methods.setupSearchListener('search-calls', 'calls');
+                        appInternal.methods.setupSearchListener('search-appointments', 'appointments');
+                         // Table Action/Sort Listeners (using delegation)
+                        appInternal.methods.setupTableEventListeners();
+                        // Periodic Refresh (Consider if really needed, might be resource intensive)
+                        // setInterval(() => { if (appInternal.state.activeView === 'dashboard') { appInternal.methods.renderDashboardTaskList(); } appInternal.methods.updateDashboardSummary(); }, 5 * 60 * 1000);
+                        console.log("Main App listeners set up.");
+                    },
+
+                     // --- Listener Helpers ---
+                     // These helpers manage adding/removing listeners to avoid duplicates if init runs multiple times
+                     handleNavLinkClick: (e) => { e.preventDefault(); if (e.currentTarget.dataset.view) appInternal.methods.setActiveView(e.currentTarget.dataset.view); },
+                     handleContentCreationClick: () => { appInternal.methods.showNotification('Content Creation Tools (Not Implemented)', 'info'); },
+                     handleModalBackdropClick: (e) => { if (e.target === appInternal.elements.modalEl) appInternal.methods.closeModal(); },
+                     handleModalEscape: (e) => { if (e.key === 'Escape' && appInternal.elements.modalEl?.classList.contains('active')) appInternal.methods.closeModal(); },
+                     handleBackupClick: (e) => { appInternal.utils.toggleButtonLoading(e.currentTarget, true, "Backing up..."); setTimeout(() => { if (appInternal.methods.backupData()) { appInternal.methods.showNotification(`Local data backed up at ${new Date(appInternal.state.backupTimestamp).toLocaleTimeString()}.`, "success"); } appInternal.utils.toggleButtonLoading(e.currentTarget, false); }, 50); },
+                     handleReminderBellClick: () => { const count = parseInt(appInternal.elements.reminderCountEl?.textContent || '0'); if (count > 0) { appInternal.methods.showNotification(`You have ${count} pending tasks!`, 'warning'); } else { appInternal.methods.showNotification('No urgent tasks.', 'success'); } appInternal.methods.setActiveView('dashboard'); },
+                     setupExportButtonListener: (buttonId, dataType, headers) => { const btn = document.getElementById(buttonId); if (btn) { const handler = (e) => appInternal.methods.exportCSVData(dataType === 'dailyReportData' ? appInternal.state.dailyReportData : appInternal.methods.getFilteredData(dataType), `kf_${dataType}_export.csv`, headers, e.currentTarget); btn.removeEventListener('click', handler); btn.addEventListener('click', handler); } },
+                     setupImportButtonListener: (buttonId, fileInputId) => { const btn = document.getElementById(buttonId); const fileInput = document.getElementById(fileInputId); if (btn && fileInput) { const handler = () => fileInput.click(); btn.removeEventListener('click', handler); btn.addEventListener('click', handler); } },
+                     setupImportFileListener: (fileInputId, storageKey, stateArrayName, renderFn, reqHeaders, btnId, specialHandler = null) => { const fileInput = document.getElementById(fileInputId); if (fileInput) { const handler = (e) => { const importBtn = document.getElementById(btnId); if (specialHandler) { specialHandler(e, importBtn); } else { appInternal.methods.handleImport(e, storageKey, stateArrayName, renderFn, reqHeaders, importBtn); } }; fileInput.removeEventListener('change', handler); fileInput.addEventListener('change', handler); } },
+                     setupSearchListener: (inputId, viewType) => { const input = document.getElementById(inputId); if (input) { const handler = (e) => appInternal.methods.handleSearchInput(e, viewType); input.removeEventListener('input', handler); input.addEventListener('input', handler); } },
+                    getFilteredData: (viewType) => {
+                        let data = []; let stateKey = viewType;
+                        if (viewType === 'dailyReportData') return [appInternal.state.dailyReportData]; // Handle report separately
+                         if (!appInternal.state[stateKey] || !Array.isArray(appInternal.state[stateKey])) { console.warn(`State array not found or not an array: ${stateKey}`); return []; }
+                        data = [...appInternal.state[stateKey]];
+                        const searchTerm = appInternal.state.filterState[viewType] || '';
+                        if (searchTerm) { const lowerSearchTerm = searchTerm.toLowerCase(); data = data.filter(item => Object.values(item).some(val => String(val).toLowerCase().includes(lowerSearchTerm)) ); }
+                        return data;
+                    },
+                    // Helper to cache DOM elements used frequently or by listeners
+                    cacheElements: () => {
+                        console.log("Caching core app DOM elements...");
+                        const els = appInternal.elements;
+                        // Sidebar/Nav
+                        els.sidebar = document.getElementById('sidebar');
+                        els.sidebarLinks = document.querySelectorAll('#sidebar .nav-link');
+                        // Main Content
+                        els.mainContent = document.getElementById('main-content');
+                        els.mainContentInner = document.querySelector('.main-content-inner');
+                        els.contentViews = document.querySelectorAll('.main-content-inner .content-view');
+                        els.contentCreationBtn = document.getElementById('content-creation-btn');
+                        // Dashboard
+                        els.dashboardTaskList = document.getElementById('dashboard-task-list');
+                        els.summaryEls = { newConnections: document.getElementById('summary-new-connections'), messagesToSend: document.getElementById('summary-messages-to-send'), callsToLog: document.getElementById('summary-calls-to-log'), appointmentsToConfirm: document.getElementById('summary-appointments-to-confirm'), overdueTasks: document.getElementById('summary-overdue-tasks') };
+                        els.restoreDataBtn = document.getElementById('restore-data-btn');
+                        // Leads
+                        els.leadsTableBody = document.getElementById('leads-table-body');
+                        els.searchLeadsInput = document.getElementById('search-leads');
+                        // Calls
+                        els.callsTableBody = document.getElementById('calls-table-body');
+                        els.searchCallsInput = document.getElementById('search-calls');
+                        // Appointments
+                        els.appointmentsTableBody = document.getElementById('appointments-table-body');
+                        els.searchAppointmentsInput = document.getElementById('search-appointments');
+                        // Report
+                        els.reportDateInput = document.getElementById('report-date');
+                        els.linkedinSummaryTextarea = document.getElementById('report-linkedin-summary');
+                        els.callSummaryTextarea = document.getElementById('report-call-summary');
+                        els.appointmentSummaryTextarea = document.getElementById('report-appointment-summary');
+                        els.followupSummaryTextarea = document.getElementById('report-followup-summary');
+                        els.reportOutputEl = document.getElementById('report-output');
+                        // Settings
+                        els.webhookUrlInput = document.getElementById('webhook-url-input');
+                        // Global
+                        els.notificationEl = document.getElementById('notification-area');
+                        els.reminderBellEl = document.getElementById('reminder-bell');
+                        els.reminderCountEl = document.getElementById('reminder-count');
+                        els.modalEl = document.getElementById('modal');
+                        els.modalTitleEl = document.getElementById('modal-title');
+                        els.modalBodyEl = document.getElementById('modal-body');
+                        els.closeModalBtn = document.querySelector('.close-modal');
+                        console.log("Finished caching elements.");
+                    },
+
+                    // --- Initialization ---
+                    init: () => {
+                        console.log("Initializing K&F Tracker Core App...");
+                         // Cache elements first, as they are needed by subsequent methods
+                         appInternal.methods.cacheElements();
+
+                        // *** Load data from LOCAL STORAGE ***
+                        // !!! Replace with Supabase DB fetch for user-specific data !!!
+                        appInternal.state.leads = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.LEADS) || [];
+                        appInternal.state.calls = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.CALLS) || [];
+                        appInternal.state.appointments = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.APPOINTMENTS) || [];
+                        appInternal.state.dailyReportData = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.DAILY_REPORT) || { reportDate: appInternal.utils.getTodayDateString(), linkedinSummary: '', callSummary: '', appointmentSummary: '', followupSummary: '' };
+                        appInternal.state.webhookUrl = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.WEBHOOK_URL) || DEFAULT_WEBHOOK_URL;
+                        appInternal.state.sortState = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.SORT_STATE) || {};
+                         // Initialize filter state from scratch or potentially load if saved
+                         appInternal.state.filterState = { leads: '', calls: '', appointments: '' }; // Start fresh
+                        // Check backup status
+                        const lastBackup = appInternal.methods.loadDataFromStorage(STORAGE_KEYS.LAST_BACKUP);
+                        appInternal.state.backupTimestamp = lastBackup?.lastBackupTime || null;
+                        if (appInternal.elements.restoreDataBtn) appInternal.elements.restoreDataBtn.disabled = !appInternal.state.backupTimestamp;
+
+                        appInternal.methods.setupEventListeners(); // Setup listeners for the main app UI
+                        appInternal.methods.setActiveView('dashboard'); // Set initial view (calls render methods)
+
+                        // No need for renderAllViews here, setActiveView handles the initial render
+                        console.log("Core App Initialized and first view rendered.");
+                    } // End init
+                 } // End methods
+             }; // End appInternal object
+
+             // Expose the internal object to the scope outside the IIFE
+             return appInternal;
+
+        })(); // End IIFE
+
+        // Assign to global scope if needed (e.g., for debugging in console)
+        window.app = app;
+
+    } else {
+        console.warn("Main application 'app' object already defined. Skipping re-definition.");
+    } // End if (typeof app === 'undefined')
+
     </script>
 </body>
 </html>
