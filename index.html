@@ -158,7 +158,7 @@
             margin-left: 250px; /* Space for the fixed sidebar */
             height: 100vh; /* Use viewport height */
             display: flex;
-            flex-direction: column; /* Stack header and content */
+            flex-direction: column; /* Stack header, content, and footer */
             transition: margin-left 0.3s ease;
             overflow: hidden; /* Prevent main content itself from scrolling horizontally */
         }
@@ -680,6 +680,24 @@
         #report-output strong { color: var(--dark); display: block; margin-bottom: 4px;}
         #report-output em { color: #6c757d; }
 
+
+        /* --- Footer --- */
+        #app-footer {
+            background-color: var(--light); /* Subtle background */
+            color: var(--dark);
+            text-align: center;
+            padding: 10px 25px; /* Match main content padding */
+            border-top: 1px solid var(--border-color); /* Separator */
+            font-size: 0.85rem;
+            margin-top: auto; /* Push to bottom of flex container (#main-content) */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #app-footer p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+
         /* --- Responsive --- */
 
         /* Medium screens (Tablets, smaller laptops) */
@@ -733,6 +751,12 @@
              .import-export-buttons { justify-content: flex-start; } /* Align buttons left */
 
              th, td { font-size: 0.8rem; padding: 8px; }
+
+             /* Footer adjustment for smaller screens */
+            #app-footer {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
         }
 
         /* Extra small screens (Phones) */
@@ -771,6 +795,12 @@
              .notification { bottom: 10px; max-width: 95%; font-size: 0.9rem; }
              .reminder-bell { width: 45px; height: 45px; bottom: 15px; right: 15px; }
              .reminder-bell .badge { width: 20px; height: 20px; font-size: 0.7rem; }
+
+              /* Footer adjustment for extra small screens */
+             #app-footer {
+                 font-size: 0.75rem; /* Even smaller text */
+                 padding: 6px 10px;
+             }
         }
 
     </style>
@@ -783,7 +813,6 @@
             <div class="logo-container">
                 <img src="https://www.pngkey.com/png/detail/142-1420424_northwestern-mutual-logo-white-northwestern-mutual-logo.png" alt="Northwestern Mutual Logo">
             </div>
-            <!-- Can add user info here for collapsed view if needed -->
         </div>
         <nav>
              <ul>
@@ -804,29 +833,24 @@
         <div class="main-header">
             <h1><i class="fas fa-clipboard-list"></i> NM Daily Tracker</h1>
             <div class="header-actions">
-                 <!-- === User Guide Button === -->
                  <button id="user-guide-btn" title="Open User Guide" style="background: none; border: none; color: var(--white); font-size: 1.3rem; cursor: pointer; padding: 0 5px; vertical-align: middle;">
                      <i class="fas fa-question-circle"></i>
                  </button>
-                 <!-- === End User Guide Button === -->
-
-                 <!-- === Authentication Section === -->
                  <div class="auth-section">
-                     <button id="google-signin-btn" style="display: none;" disabled> <!-- Start disabled -->
+                     <button id="google-signin-btn" style="display: none;" disabled>
                          <i class="fab fa-google"></i>
-                         <span>Sign In</span> <!-- Shortened text -->
+                         <span>Sign In</span>
                          <i class="loading-spinner" style="border-top-color: var(--primary);"></i>
                      </button>
                      <div id="user-profile" style="display: none;">
                          <img id="profile-pic" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="User">
                          <span id="user-name"></span>
-                         <button id="signout-btn" disabled> <!-- Start disabled -->
+                         <button id="signout-btn" disabled>
                              <span>Sign Out</span>
                              <i class="loading-spinner"></i>
                          </button>
                      </div>
                  </div>
-                 <!-- === End Authentication Section === -->
             </div>
         </div>
 
@@ -837,7 +861,6 @@
             <div id="dashboard-view" class="content-view active">
                 <div class="page-header">
                     <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-                    <!-- Action buttons could go here if needed -->
                 </div>
                  <div class="dashboard-grid">
                      <div class="summary-card">
@@ -1093,7 +1116,13 @@
 
         </div> <!-- End .main-content-inner -->
 
-    </main>
+        <!-- ===== FOOTER ===== -->
+        <footer id="app-footer">
+            <p>&copy; <span id="footer-year"></span> Developed by Flynn J.P</p>
+        </footer>
+        <!-- ===== END FOOTER ===== -->
+
+    </main> <!-- End #main-content -->
 
     <!-- Notification Element -->
     <div class="notification" id="notification-area">Notification Message</div>
@@ -1290,7 +1319,9 @@
                 modalBodyEl: document.getElementById('modal-body'),
                 closeModalBtn: document.querySelector('.close-modal'),
                 // User Guide
-                userGuideBtn: document.getElementById('user-guide-btn'), // Added User Guide Button
+                userGuideBtn: document.getElementById('user-guide-btn'),
+                // Footer
+                footerYearSpan: document.getElementById('footer-year'),
             },
 
             // Utility Functions
@@ -2805,6 +2836,12 @@
                      `;
                      app.methods.openModal('User Guide', guideContent);
                  },
+                 // --- Footer Year Setup ---
+                 setFooterYear: () => {
+                    if (app.elements.footerYearSpan) {
+                        app.elements.footerYearSpan.textContent = new Date().getFullYear();
+                    }
+                 },
 
                 // --- Event Listener Setup ---
                 setupEventListeners: () => {
@@ -2924,13 +2961,15 @@
                     app.state.backupTimestamp = lastBackup?.lastBackupTime || null;
                     app.state.dailyReportData = app.methods.loadDataFromStorage(STORAGE_KEYS.DAILY_REPORT_CACHE) || { reportDate: app.utils.getTodayDateString(), id: app.utils.getTodayDateString() };
                     app.state.webhookUrl = app.methods.loadDataFromStorage(STORAGE_KEYS.WEBHOOK_URL_CACHE) || DEFAULT_WEBHOOK_URL;
-                    // 3. Setup Event Listeners
+                    // 3. Set Footer Year
+                    app.methods.setFooterYear(); // <-- ADDED CALL HERE
+                    // 4. Setup Event Listeners
                     app.methods.setupEventListeners();
-                    // 4. Set initial UI states
+                    // 5. Set initial UI states
                      app.elements.reportDateInput.value = app.state.dailyReportData.reportDate || app.utils.getTodayDateString(); // Ensure report date is set
                      app.methods.setActiveView('dashboard'); // Set initial view but render happens after auth
                     app.methods.renderSettingsView(); // Set initial readonly states etc.
-                    // 5. Setup Auth Listener (triggers UI, listeners, and initial render)
+                    // 6. Setup Auth Listener (triggers UI, listeners, and initial render)
                     if (auth) {
                         console.log("Setting up Auth listener...");
                         auth.onAuthStateChanged((user) => {
