@@ -198,7 +198,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 15px; /* Increased gap slightly */
             flex-shrink: 0; /* Prevent actions shrinking */
         }
 
@@ -289,6 +289,23 @@
             opacity: 0.7;
             cursor: not-allowed;
         }
+
+        /* User Guide Button */
+        #user-guide-btn {
+             background: none;
+             border: none;
+             color: var(--white);
+             font-size: 1.3rem; /* Slightly larger */
+             cursor: pointer;
+             padding: 0 5px;
+             vertical-align: middle;
+             opacity: 0.8;
+             transition: opacity 0.2s ease, color 0.2s ease;
+         }
+         #user-guide-btn:hover {
+             opacity: 1;
+             color: var(--light);
+         }
 
 
         /* --- Container for actual page content below header --- */
@@ -556,6 +573,48 @@
         }
         .close-modal:hover { color: var(--danger); }
 
+        /* User Guide Modal Content Styling */
+         #modal-body .user-guide h4 {
+             margin-top: 15px;
+             margin-bottom: 8px;
+             color: var(--primary);
+             border-bottom: 1px solid var(--border-color);
+             padding-bottom: 5px;
+             font-size: 1.1rem;
+         }
+          #modal-body .user-guide p, #modal-body .user-guide ul {
+             margin-bottom: 12px;
+             font-size: 0.95rem;
+             line-height: 1.5;
+             color: var(--dark);
+          }
+          #modal-body .user-guide ul {
+             padding-left: 25px; /* Indent lists */
+             list-style: disc;
+          }
+           #modal-body .user-guide li {
+             margin-bottom: 5px;
+           }
+          #modal-body .user-guide code {
+             background-color: var(--light);
+             padding: 2px 5px;
+             border-radius: 4px;
+             font-size: 0.85em;
+             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+             color: var(--danger);
+          }
+          #modal-body .user-guide strong {
+             color: var(--primary);
+             font-weight: 600;
+          }
+           #modal-body .user-guide i { /* Style icons within the guide */
+                width: 1.1em;
+                text-align: center;
+                margin-right: 4px;
+                color: var(--secondary);
+            }
+
+
         /* Notification */
         .notification {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -685,6 +744,7 @@
             .header-actions { gap: 10px; } /* Reduce gap */
              #google-signin-btn, #signout-btn { padding: 6px 10px; font-size: 0.8rem; }
              #profile-pic { width: 32px; height: 32px; }
+             #user-guide-btn { font-size: 1.2rem; } /* Adjust guide icon size */
 
              .page-header h2 { font-size: 1.4rem; }
              .action-buttons button { padding: 8px 12px; font-size: 0.85rem; } /* Smaller buttons */
@@ -744,6 +804,12 @@
         <div class="main-header">
             <h1><i class="fas fa-clipboard-list"></i> NM Daily Tracker</h1>
             <div class="header-actions">
+                 <!-- === User Guide Button === -->
+                 <button id="user-guide-btn" title="Open User Guide" style="background: none; border: none; color: var(--white); font-size: 1.3rem; cursor: pointer; padding: 0 5px; vertical-align: middle;">
+                     <i class="fas fa-question-circle"></i>
+                 </button>
+                 <!-- === End User Guide Button === -->
+
                  <!-- === Authentication Section === -->
                  <div class="auth-section">
                      <button id="google-signin-btn" style="display: none;" disabled> <!-- Start disabled -->
@@ -1223,6 +1289,8 @@
                 modalTitleEl: document.getElementById('modal-title'),
                 modalBodyEl: document.getElementById('modal-body'),
                 closeModalBtn: document.querySelector('.close-modal'),
+                // User Guide
+                userGuideBtn: document.getElementById('user-guide-btn'), // Added User Guide Button
             },
 
             // Utility Functions
@@ -1491,8 +1559,8 @@
                                 app.methods.renderAllViews(); // Perform initial full render
                                 app.state.initialRenderComplete = true;
                             } else {
-                                // Subsequent updates might have already triggered renders via the modified listener
-                                // Ensure dashboard is always up-to-date though
+                                // Subsequent updates are handled by the listener now
+                                // But still update dashboard summary/tasks just in case
                                 app.methods.updateDashboardSummary();
                                 app.methods.renderDashboardTaskList();
                             }
@@ -1508,16 +1576,14 @@
                             app.state[stateKey] = updatedData; // Update state
                             app.methods.applyInitialSort(stateKey); // Apply sorting to the new state
 
-                            // --- MODIFICATION START ---
-                            // Always render the specific table view to keep it up-to-date in the background.
-                            // The active view check is removed here for table rendering.
+                            // Always render the specific table view to reflect changes immediately.
                             if (renderFunc) {
                                 renderFunc(); // Call the specific render function (e.g., renderLeadsTable)
                             }
-                            // Always update dashboard components as they might be visible.
+                            // Always update dashboard components as they might be visible or depend on this data.
                             app.methods.updateDashboardSummary();
                             app.methods.renderDashboardTaskList();
-                            // --- MODIFICATION END ---
+
 
                             if (!initialLoads[loadKey]) { initialLoads[loadKey] = true; checkAllLoaded(); }
                         }, error => {
@@ -1528,7 +1594,7 @@
                         detachListeners.push(listener);
                     };
 
-                    // Create listeners (Functions remain the same, but the internal callback logic changed)
+                    // Create listeners
                     createListener(FIRESTORE_LEADS_COLLECTION, "createdAt", "desc", 'leads', app.methods.renderLeadsTable, 'leads');
                     createListener(FIRESTORE_CALLS_COLLECTION, "callDate", "desc", 'calls', app.methods.renderCallsTable, 'calls');
                     createListener(FIRESTORE_APPOINTMENTS_COLLECTION, "meetingDateTime", "asc", 'appointments', app.methods.renderAppointmentsTable, 'appointments');
@@ -2002,8 +2068,7 @@
                      }).join('');
                  },
                  saveLead: (leadId = null, saveBtnElement) => {
-                     // console.log(`Attempting to save lead. ID: ${leadId}`); // Debug log
-                     const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : 'add-'; // Adjusted prefix for IDs
+                     const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : 'add-';
                      const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                      if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
                      try {
@@ -2019,26 +2084,21 @@
                          if (!connectionDate || (dueDateStr && !dueDate)) { app.methods.showNotification('Invalid date format.', 'warning'); stopLoading(); return; }
                          const leadData = { name, company, connectionDate, messageStage, nextAction, dueDate, status, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                          let actionPromise;
-                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true); // Start loading indicator
-                         // console.log("Lead data prepared:", leadData); // Debug log
+                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
                          if (isUpdate) {
-                             // console.log(`Updating lead ${leadId} in Firestore...`); // Debug log
                              actionPromise = db.collection(FIRESTORE_LEADS_COLLECTION).doc(leadId).update(leadData);
                          } else {
                              leadData.createdBy = app.state.user.email || app.state.user.uid; leadData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                             // console.log("Adding new lead to Firestore..."); // Debug log
                              actionPromise = db.collection(FIRESTORE_LEADS_COLLECTION).add(leadData);
                          }
                          actionPromise.then((docRefOrVoid) => {
                              const savedId = isUpdate ? leadId : docRefOrVoid.id;
-                             // console.log(`Lead ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                              app.methods.showNotification(`Lead '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                              app.methods.closeModal();
-                             // Webhook data prep
                              const webhookData = { ...leadData, id: savedId, connectionDate: app.utils.formatDate(connectionDate), dueDate: app.utils.formatDate(dueDate) };
-                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt; // Remove server timestamps
+                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
                              app.methods.sendWebhookNotification(isUpdate ? 'lead_updated' : 'lead_added', webhookData);
-                             // No need to manually re-render; the listener will handle it.
+                             // The listener should automatically update the UI.
                          }).catch(error => { console.error("Error saving lead:", error); app.methods.showNotification(`Error saving lead: ${error.message}`, 'error'); stopLoading(); });
                      } catch (error) { console.error("Error preparing lead data:", error); app.methods.showNotification("Error preparing lead data.", "error"); stopLoading(); }
                  },
@@ -2051,23 +2111,23 @@
                         .then(() => {
                             app.methods.showNotification(`Lead deleted.`, 'success');
                             app.methods.sendWebhookNotification('lead_deleted', { id: id, name: leadToDelete.name });
-                            // No need to manually re-render; the listener will handle it.
+                            // The listener should automatically update the UI.
                          })
                         .catch(error => { console.error("Error deleting lead:", error); app.methods.showNotification(`Error deleting lead: ${error.message}`, 'error'); });
                  },
                  renderLeadsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.leadsTableBody; if (!tableBody) return;
-                     // console.log("Rendering leads table..."); // More detailed log if needed
+                     // console.log("Rendering leads table...");
                      const leadsToRender = app.methods.getFilteredData('leads');
-                     const cols = 8; // Update if columns change
+                     const cols = 8;
                      let emptyMsg = "Loading leads...";
-                     if (app.state.authReady) { // Only show other messages once auth state is known
+                     if (app.state.authReady) {
                          if (!app.state.user) emptyMsg = "Please sign in to view leads.";
                          else if (app.state.filterState.leads && leadsToRender.length === 0) emptyMsg = "No leads found matching your search.";
-                         else if (leadsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No leads recorded yet. Click 'Add Connection'."; // Check if initialized
-                         else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; // Or similar
+                         else if (leadsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No leads recorded yet. Click 'Add Connection'.";
+                         else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database...";
                      }
-                     if (forceEmptyState && !app.state.user) emptyMsg = "Please sign in to view leads."; // Explicit empty state for sign out
+                     if (forceEmptyState && !app.state.user) emptyMsg = "Please sign in to view leads.";
 
                      if (leadsToRender.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="${cols}">${emptyMsg}</td></tr>`; return; }
 
@@ -2177,7 +2237,6 @@
                      }).join('');
                  },
                  saveCall: (callId = null, saveBtnElement) => {
-                    // console.log(`Attempting to save call. ID: ${callId}`); // Debug log
                     const isUpdate = !!callId; const idPrefix = isUpdate ? 'edit-' : 'add-';
                     const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                     if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
@@ -2195,24 +2254,20 @@
                         const callData = { name, callDate, outcome, nextStep, nextStepDueDate, notes, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                         let actionPromise;
                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
-                        // console.log("Call data prepared:", callData); // Debug log
                         if (isUpdate) {
-                             // console.log(`Updating call ${callId} in Firestore...`); // Debug log
                             actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).doc(callId).update(callData);
                         } else {
                             callData.createdBy = app.state.user.email || app.state.user.uid; callData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                             // console.log("Adding new call to Firestore..."); // Debug log
                             actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).add(callData);
                         }
                         actionPromise.then((docRefOrVoid) => {
                             const savedId = isUpdate ? callId : docRefOrVoid.id;
-                             // console.log(`Call ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                             app.methods.showNotification(`Call record for '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
                             const webhookData = { ...callData, id: savedId, callDate: app.utils.formatDate(callDate), nextStepDueDate: app.utils.formatDate(nextStepDueDate) };
                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
                             app.methods.sendWebhookNotification(isUpdate ? 'call_updated' : 'call_added', webhookData);
-                            // No need to manually re-render; the listener will handle it.
+                             // The listener should automatically update the UI.
                         }).catch(error => { console.error("Error saving call:", error); app.methods.showNotification(`Error saving call: ${error.message}`, 'error'); stopLoading(); });
                     } catch (error) { console.error("Error preparing call data:", error); app.methods.showNotification("Error preparing call data.", "error"); stopLoading(); }
                 },
@@ -2225,13 +2280,13 @@
                         .then(() => {
                             app.methods.showNotification(`Call record deleted.`, 'success');
                             app.methods.sendWebhookNotification('call_deleted', { id: id, name: callToDelete.name });
-                             // No need to manually re-render; the listener will handle it.
+                             // The listener should automatically update the UI.
                         })
                         .catch(error => { console.error("Error deleting call:", error); app.methods.showNotification(`Error deleting call: ${error.message}`, 'error'); });
                  },
                  renderCallsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.callsTableBody; if (!tableBody) return;
-                     // console.log("Rendering calls table..."); // More detailed log if needed
+                     // console.log("Rendering calls table...");
                      const callsToRender = app.methods.getFilteredData('calls');
                      const cols = 6; let emptyMsg = "Loading calls...";
                      if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view calls."; else if (app.state.filterState.calls && callsToRender.length === 0) emptyMsg = "No calls found matching search."; else if (callsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No calls recorded yet. Click 'Add Call'."; else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; }
@@ -2346,16 +2401,12 @@
                      if(reminderInput) reminderInput.value = reminderDates.textReminderDate;
                   },
                  saveAppointment: (apptId = null, saveBtnElement) => {
-                    // console.log(`Attempting to save appointment. ID: ${apptId}`); // Debug log
                     const isUpdate = !!apptId; const idPrefix = isUpdate ? 'edit-' : 'add-';
                     const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                     if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
                     try {
                         const clientName = document.getElementById(`${idPrefix}appointment-client`)?.value.trim();
                         const meetingDateTimeStr = document.getElementById(`${idPrefix}appointment-meeting-time`)?.value;
-                        // Don't read reminder dates from the (readonly) form, recalculate instead
-                        // const confirmationCallDateStr = document.getElementById(`${idPrefix}appointment-confirm-date`)?.value;
-                        // const textReminderDateStr = document.getElementById(`${idPrefix}appointment-reminder-date`)?.value;
                         const status = document.getElementById(`${idPrefix}appointment-status`)?.value;
                         const notes = document.getElementById(`${idPrefix}appointment-notes`)?.value.trim();
 
@@ -2364,58 +2415,43 @@
                         const meetingDateTime = app.utils.createDateAdjusted(meetingDateTimeStr);
                         if (!meetingDateTime) { app.methods.showNotification('Invalid meeting date/time format.', 'warning'); stopLoading(); return; }
 
-                        // Re-calculate reminders based on final meeting time to ensure accuracy
                         const reminderDates = app.utils.calculateReminderDates(meetingDateTime);
                         const confirmationCallDate = reminderDates.confirmationCallDate ? app.utils.createDateAdjusted(reminderDates.confirmationCallDate) : null;
                         const textReminderDate = reminderDates.textReminderDate ? app.utils.createDateAdjusted(reminderDates.textReminderDate) : null;
 
                         const appointmentData = {
                             clientName, meetingDateTime, confirmationCallDate, textReminderDate, status, notes,
-                            // textReminderSent: false, // Default handled below
                             lastUpdatedBy: app.state.user.email || app.state.user.uid,
                             lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                         };
                         let actionPromise;
                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
-                        // console.log("Appointment data prepared:", appointmentData); // Debug log
 
                         if (isUpdate) {
-                            // console.log(`Updating appointment ${apptId} in Firestore...`); // Debug log
                             const docRef = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(apptId);
-                            // Get existing data to preserve fields like 'textReminderSent' if not explicitly changed by logic
                             actionPromise = docRef.get().then(doc => {
                                 const existingData = doc.data() || {};
-                                // Merge existing data with new data, potentially overwriting all fields except maybe creation time/user
-                                const finalData = {
-                                    ...existingData, // Keep old fields like createdBy, createdAt, textReminderSent
-                                    ...appointmentData // Overwrite with new values
-                                };
-                                // If status changes *away* from pending/confirmed/booked, maybe reset textReminderSent? Optional.
-                                // if (!['pending', 'confirmed', 'booked-call'].includes(finalData.status)) {
-                                //     finalData.textReminderSent = false; // Or null?
-                                // }
+                                const finalData = { ...existingData, ...appointmentData };
                                 return docRef.update(finalData);
                             });
                         } else {
                             appointmentData.createdBy = app.state.user.email || app.state.user.uid;
                             appointmentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            appointmentData.textReminderSent = false; // Ensure default on creation
-                             // console.log("Adding new appointment to Firestore..."); // Debug log
+                            appointmentData.textReminderSent = false; // Default on creation
                             actionPromise = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).add(appointmentData);
                         }
                         actionPromise.then((docRefOrVoid) => {
                             const savedId = isUpdate ? apptId : docRefOrVoid.id;
-                            // console.log(`Appointment ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                             app.methods.showNotification(`Appointment for '${app.utils.sanitize(clientName)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
                             const webhookData = { ...appointmentData, id: savedId,
-                                meetingDateTime: meetingDateTime ? meetingDateTime.toISOString() : null, // Send ISO
-                                confirmationCallDate: app.utils.formatDate(confirmationCallDate), // Send YYYY-MM-DD
-                                textReminderDate: app.utils.formatDate(textReminderDate) // Send YYYY-MM-DD
+                                meetingDateTime: meetingDateTime ? meetingDateTime.toISOString() : null,
+                                confirmationCallDate: app.utils.formatDate(confirmationCallDate),
+                                textReminderDate: app.utils.formatDate(textReminderDate)
                             };
                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
                             app.methods.sendWebhookNotification(isUpdate ? 'appointment_updated' : 'appointment_added', webhookData);
-                             // No need to manually re-render; the listener will handle it.
+                             // The listener should automatically update the UI.
                         }).catch(error => { console.error("Error saving appointment:", error); app.methods.showNotification(`Error saving appointment: ${error.message}`, 'error'); stopLoading(); });
                     } catch (error) { console.error("Error preparing appointment data:", error); app.methods.showNotification("Error preparing appointment data.", "error"); stopLoading(); }
                  },
@@ -2428,13 +2464,13 @@
                         .then(() => {
                             app.methods.showNotification(`Appointment deleted.`, 'success');
                             app.methods.sendWebhookNotification('appointment_deleted', { id: id, clientName: apptToDelete.clientName });
-                             // No need to manually re-render; the listener will handle it.
+                             // The listener should automatically update the UI.
                         })
                         .catch(error => { console.error("Error deleting appointment:", error); app.methods.showNotification(`Error deleting appointment: ${error.message}`, 'error'); });
                  },
                  renderAppointmentsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.appointmentsTableBody; if (!tableBody) return;
-                     // console.log("Rendering appointments table..."); // More detailed log if needed
+                     // console.log("Rendering appointments table...");
                      const apptsToRender = app.methods.getFilteredData('appointments');
                      const cols = 7; let emptyMsg = "Loading appointments...";
                      if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view appointments."; else if (app.state.filterState.appointments && apptsToRender.length === 0) emptyMsg = "No appointments found matching search."; else if (apptsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No appointments recorded yet. Click 'Add Appointment'."; else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; }
@@ -2573,12 +2609,13 @@
                  },
                  parseCSV: (text) => {
                      const lines = text.split(/\r?\n/); if (lines.length < 2) return [];
-                     const headers = lines[0].split(',').map(h => JSON.parse(h));
+                     const headers = lines[0].split(',').map(h => { try { return JSON.parse(h); } catch { return h.trim(); } }); // Trim headers
                      const data = [];
                      for (let i = 1; i < lines.length; i++) {
                          if (!lines[i].trim()) continue; // Skip empty lines
-                         const values = lines[i].split(',').map(v => { try { return JSON.parse(v); } catch { return v; } }); // Basic CSV parsing (might need library for complex CSV)
-                         if (values.length !== headers.length) { console.warn(`Skipping row ${i+1}: Mismatched column count`); continue; }
+                         // Basic CSV parsing - assumes no commas within quoted fields
+                         const values = lines[i].split(',').map(v => { try { return JSON.parse(v); } catch { return v.trim(); } }); // Trim values
+                         if (values.length !== headers.length) { console.warn(`Skipping row ${i+1}: Mismatched column count (${values.length} vs ${headers.length})`); continue; }
                          let row = {}; headers.forEach((header, index) => { row[header] = values[index]; }); data.push(row);
                      } return data;
                  },
@@ -2680,11 +2717,6 @@
                         app.methods.getFilteredData(viewType); // This applies the sort internally
                         app.methods.updateSortIndicators(viewType, app.state.sortState[viewType]);
                      }
-                     // Add default sorts here if desired, e.g.:
-                     // else if (viewType === 'leads' && !app.state.sortState.leads) {
-                     //    app.state.sortState.leads = { key: 'connectionDate', dir: 'desc'};
-                     //    app.methods.updateSortIndicators('leads', app.state.sortState.leads);
-                     // }
                  },
                 handleSortClick: (thElement, viewType) => {
                     const sortKey = thElement.dataset.sort; let currentSort = app.state.sortState[viewType] || {}; let newDir = 'asc';
@@ -2699,6 +2731,79 @@
                     // Add debounce here if performance becomes an issue with large datasets
                     // Re-render the specific table, which will use the new filter state
                     app.methods[`render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`]();
+                 },
+                 // --- User Guide Method ---
+                showUserGuide: () => {
+                     const guideContent = `
+                        <div class="user-guide">
+                            <h4><i class="fas fa-tachometer-alt"></i> Dashboard</h4>
+                            <p>Provides a quick overview of today's activity and upcoming/overdue tasks.</p>
+                            <ul>
+                                <li><strong>Today's Summary:</strong> Shows counts of new connections, messages due, calls due, appointments to confirm, and overdue tasks based on current data.</li>
+                                <li><strong>Upcoming / Overdue:</strong> Lists specific tasks needing attention (e.g., lead follow-ups, appointment confirmations). Click <i class="fas fa-check"></i> to mark complete or <i class="fas fa-clock"></i> to snooze to the next business day.</li>
+                                <li>The <i class="fas fa-bell"></i> icon (bottom right) also indicates pending tasks and navigates here.</li>
+                            </ul>
+
+                            <h4><i class="fab fa-linkedin"></i> LinkedIn Leads</h4>
+                            <p>Track your LinkedIn connections and messaging workflow.</p>
+                            <ul>
+                                <li>Click <strong><i class="fas fa-plus"></i> Add Connection</strong> to add a new lead. Data is saved to the shared cloud database.</li>
+                                <li>Use the <i class="fas fa-search"></i> <strong>Search</strong> bar to filter leads by any field.</li>
+                                <li>Click column headers (<i class="fas fa-sort"></i>) to sort the table.</li>
+                                <li>Click <i class="fas fa-edit"></i> to edit or <i class="fas fa-trash-alt"></i> to delete a lead.</li>
+                                <li><strong>Export:</strong> Exports the currently filtered view to a CSV file.</li>
+                                <li><strong>Import (Local):</strong> Loads data from a CSV file into the table view <strong>only in your browser</strong>. It does <strong>NOT</strong> save this imported data to the cloud. Useful for temporary viewing or checking formats.</li>
+                            </ul>
+
+                            <h4><i class="fas fa-phone-alt"></i> Call Tracking</h4>
+                            <p>Log calls made to leads or clients.</p>
+                            <ul>
+                                <li>Similar functionality to Leads: Add, Edit (<i class="fas fa-edit"></i>), Delete (<i class="fas fa-trash-alt"></i>), Search (<i class="fas fa-search"></i>), Sort (<i class="fas fa-sort"></i>), Export, and Import (Local).</li>
+                                <li>Record call outcomes and any next steps.</li>
+                            </ul>
+
+                             <h4><i class="fas fa-calendar-check"></i> Appointments</h4>
+                             <p>Manage scheduled appointments.</p>
+                             <ul>
+                                 <li>Similar functionality to Leads/Calls: Add, Edit (<i class="fas fa-edit"></i>), Delete (<i class="fas fa-trash-alt"></i>), Search (<i class="fas fa-search"></i>), Sort (<i class="fas fa-sort"></i>), Export, and Import (Local).</li>
+                                 <li>Enter the <strong>Meeting Date & Time</strong>. The <strong>Confirmation Call Date</strong> (2 business days prior) and <strong>Text Reminder Date</strong> (1 business day prior) are calculated automatically. These dates trigger tasks on the Dashboard.</li>
+                                 <li>Set the appointment status (Pending, Confirmed, etc.).</li>
+                             </ul>
+
+                             <h4><i class="fas fa-chart-bar"></i> Daily Report</h4>
+                             <p>Summarize daily activities.</p>
+                             <ul>
+                                <li>Select a <strong>Report Date</strong> to load or save a report for that day.</li>
+                                <li>Fill in the summary text areas for LinkedIn, Calls, Appointments, and Follow-ups/Blockers.</li>
+                                <li>Click <strong><i class="fas fa-save"></i> Save Report</strong> to save the content to the shared cloud database for the selected date.</li>
+                                <li><strong>Export View:</strong> Exports the currently displayed report data to CSV.</li>
+                                <li><strong>Import (Local):</strong> Loads a single report row from CSV into the form view <strong>only in your browser</strong>. Does <strong>NOT</strong> save to the cloud.</li>
+                             </ul>
+
+                             <h4><i class="fas fa-cog"></i> Settings</h4>
+                             <p>Manage application settings.</p>
+                             <ul>
+                                 <li><strong>Shared Webhook:</strong> (Optional) Enter a webhook URL (e.g., from n8n, Zapier) to receive notifications when data is added/updated/deleted. This setting is shared by all users. Requires sign-in to update.</li>
+                                 <li><strong>Local Browser Data:</strong> Manage data stored <i>only in your current browser</i>.
+                                    <ul>
+                                        <li><strong>Backup Local:</strong> Saves a snapshot of your current local settings (sort preferences, cached report/webhook) to browser storage.</li>
+                                        <li><strong>Restore Local:</strong> Replaces your current local settings with the last backup. Does <strong>NOT</strong> affect cloud data.</li>
+                                        <li><strong>Clear Local Data:</strong> <strong style="color:var(--danger)">DANGER!</strong> Deletes all application data stored locally in this browser (cache, backups, preferences). Does <strong>NOT</strong> affect cloud data.</li>
+                                    </ul>
+                                 </li>
+                                 <li><strong>Cloud Sync:</strong> (Optional/Future Feature) Intended for user-specific preferences if implemented later.</li>
+                             </ul>
+
+                             <h4><i class="fas fa-sign-in-alt"></i> Authentication</h4>
+                             <p>Sign in with your Google account to access and save shared data (Leads, Calls, Appointments, Reports, Shared Settings). Most features require you to be signed in.</p>
+                             <ul>
+                                 <li>Click the <i class="fab fa-google"></i> <strong>Sign In</strong> button.</li>
+                                 <li>Once signed in, your profile picture and name appear. Click <strong>Sign Out</strong> to disconnect.</li>
+                                 <li>Data is saved automatically to the shared Firestore database when you Add/Edit/Delete items while signed in.</li>
+                             </ul>
+                         </div>
+                     `;
+                     app.methods.openModal('User Guide', guideContent);
                  },
 
                 // --- Event Listener Setup ---
@@ -2776,6 +2881,8 @@
                     setupTableActionListeners('leads-table-body', app.methods.editLead, app.methods.deleteLead);
                     setupTableActionListeners('calls-table-body', app.methods.editCall, app.methods.deleteCall);
                     setupTableActionListeners('appointments-table-body', app.methods.editAppointment, app.methods.deleteAppointment);
+                    // User Guide Button Listener
+                    app.elements.userGuideBtn?.addEventListener('click', app.methods.showUserGuide);
 
                     console.log("Event listeners setup complete.");
                 },
