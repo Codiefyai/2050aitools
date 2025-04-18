@@ -885,7 +885,7 @@
                  <div class="page-header">
                      <h2><i class="fab fa-linkedin"></i> LinkedIn Leads</h2>
                      <div class="action-buttons">
-                         <button id="add-lead-btn" class="success-btn" title="Add new connection (saves to shared cloud database)"><i class="fas fa-plus"></i> Add Connection</button>
+                         <button id="add-lead-btn" class="success-btn" title="Add new connection (saves to shared cloud database)" disabled><i class="fas fa-plus"></i> Add Connection</button>
                      </div>
                  </div>
                  <div class="table-controls">
@@ -929,7 +929,7 @@
                  <div class="page-header">
                      <h2><i class="fas fa-phone-alt"></i> Call Tracking</h2>
                      <div class="action-buttons">
-                         <button id="add-call-btn" class="success-btn" title="Add call record (saves to shared cloud database)"><i class="fas fa-plus"></i> Add Call</button>
+                         <button id="add-call-btn" class="success-btn" title="Add call record (saves to shared cloud database)" disabled><i class="fas fa-plus"></i> Add Call</button>
                      </div>
                  </div>
                   <div class="table-controls">
@@ -971,7 +971,7 @@
                 <div class="page-header">
                      <h2><i class="fas fa-calendar-check"></i> Appointments</h2>
                      <div class="action-buttons">
-                         <button id="add-appointment-btn" class="success-btn" title="Add appointment (saves to shared cloud database)"><i class="fas fa-plus"></i> Add Appointment</button>
+                         <button id="add-appointment-btn" class="success-btn" title="Add appointment (saves to shared cloud database)" disabled><i class="fas fa-plus"></i> Add Appointment</button>
                      </div>
                  </div>
                   <div class="table-controls">
@@ -1014,7 +1014,7 @@
                 <div class="page-header">
                      <h2><i class="fas fa-chart-bar"></i> Daily Report</h2>
                      <div class="action-buttons">
-                         <button id="generate-report-btn" class="success-btn" title="Save the current report content to the shared cloud database for the selected date">
+                         <button id="generate-report-btn" class="success-btn" title="Save the current report content to the shared cloud database for the selected date" disabled>
                             <i class="fas fa-save"></i> <span>Save Report</span><i class="loading-spinner"></i>
                         </button>
                      </div>
@@ -1166,9 +1166,8 @@
             projectId: "kf-tracker", // 🔥 REPLACE
             storageBucket: "kf-tracker.firebasestorage.app", // 🔥 REPLACE
             messagingSenderId: "442039973322", // 🔥 REPLACE
-            appId: "1:442039973322:web:6ee8e95332f34a647b4b33", // 🔥 REPLACE
+            appId: "1:442039973322:web:6ee8e95332f34a647b4b33" // 🔥 REPLACE
             // Optional: measurementId: "G-NW26FEGLS8"
-            // databaseURL: "https://kf-tracker-default-rtdb.firebaseio.com" // Only needed for Realtime Database (v8 SDK)
         };
         //
         // 2. FIRESTORE RULES: You MUST set security rules in your Firebase Console
@@ -1185,7 +1184,8 @@
                 match /appointments/{docId} { allow read, write: if request.auth != null; }
                 match /dailyReports/{docId} { allow read, write: if request.auth != null; }
 
-                // Shared Config: Allow read by anyone (or signed-in), write only by signed-in users
+                // Shared Config: Allow read by signed-in, write only by signed-in users
+                // (Consider if non-signed-in users should read this - likely not needed)
                 match /config/sharedSettings {
                   allow read: if request.auth != null; // More secure: only signed-in can read
                   allow write: if request.auth != null;
@@ -1331,37 +1331,51 @@
                     // Robust date parsing (handles Timestamps, Date objects, ISO, YYYY-MM-DD)
                     if (!dateInputString) return null;
                     try {
+                        // Handle Firestore Timestamp objects
                         if (dateInputString && typeof dateInputString.toDate === 'function') {
                             const date = dateInputString.toDate(); return isNaN(date.getTime()) ? null : date;
                         }
+                        // Handle existing JS Date objects
                         if (dateInputString instanceof Date && !isNaN(dateInputString)) { return dateInputString; }
+                        // Handle ISO strings (including 'T' or 'Z'), YYYY-MM-DD, or common string formats
                         if (typeof dateInputString === 'string') {
-                            if (dateInputString.includes('T') || dateInputString.includes(':') || dateInputString.includes('Z') || dateInputString.match(/^\d{4}-\d{2}-\d{2}/)) {
-                                if (dateInputString.match(/^\d{4}-\d{2}-\d{2}$/)) { // YYYY-MM-DD only
-                                    const parts = dateInputString.split('-');
-                                    const utcDate = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
-                                    return isNaN(utcDate.getTime()) ? null : utcDate;
-                                }
-                                const date = new Date(dateInputString); return isNaN(date.getTime()) ? null : date;
+                            // Handle YYYY-MM-DD specifically to avoid timezone interpretation issues
+                            // Create a UTC date to represent the *start* of that day regardless of local timezone
+                            if (dateInputString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                                const parts = dateInputString.split('-');
+                                // Month is 0-indexed in Date.UTC
+                                const utcDate = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+                                return isNaN(utcDate.getTime()) ? null : utcDate;
                             }
+                            // Try parsing other string formats directly
+                            const date = new Date(dateInputString);
+                            return isNaN(date.getTime()) ? null : date;
                         }
-                        const date = new Date(dateInputString); return isNaN(date.getTime()) ? null : date;
+                         // Handle numbers (assuming milliseconds since epoch)
+                        if (typeof dateInputString === 'number') {
+                            const date = new Date(dateInputString);
+                            return isNaN(date.getTime()) ? null : date;
+                        }
+                        // Fallback for unexpected types
+                        return null;
                     } catch (e) { console.error("Error creating adjusted date:", e, "Input:", dateInputString); return null; }
                 },
-                formatDate: (dateInput) => { // Output: YYYY-MM-DD
+                formatDate: (dateInput) => { // Output: YYYY-MM-DD (using UTC to avoid timezone shifts for date-only fields)
                     if (!dateInput) return '';
                     const date = app.utils.createDateAdjusted(dateInput); if (!date) return '';
                     try {
+                        // Use UTC methods for date-only fields to prevent timezone shifts
                         const year = date.getUTCFullYear();
                         const month = String(date.getUTCMonth() + 1).padStart(2, '0');
                         const day = String(date.getUTCDate()).padStart(2, '0');
                         return `${year}-${month}-${day}`;
                     } catch (e) { console.error("Error formatting date (YYYY-MM-DD):", e); return 'Error'; }
                 },
-                formatDateTimeForInput: (dateInput) => { // Output: YYYY-MM-DDTHH:mm
+                formatDateTimeForInput: (dateInput) => { // Output: YYYY-MM-DDTHH:mm (using local time)
                     if (!dateInput) return '';
                     const date = app.utils.createDateAdjusted(dateInput); if (!date) return '';
                     try {
+                        // Use local time methods for datetime-local input
                         const year = date.getFullYear();
                         const month = String(date.getMonth() + 1).padStart(2, '0');
                         const day = String(date.getDate()).padStart(2, '0');
@@ -1370,10 +1384,11 @@
                         return `${year}-${month}-${day}T${hours}:${minutes}`;
                     } catch (e) { console.error("Error formatting datetime for input:", e); return ''; }
                 },
-                formatAppointmentDateTime: (dateTimeInput) => { // Output: User-friendly locale string
+                formatAppointmentDateTime: (dateTimeInput) => { // Output: User-friendly locale string (local time)
                     if (!dateTimeInput) return 'Not Set';
                     const date = app.utils.createDateAdjusted(dateTimeInput); if (!date) return 'Invalid Date';
                     try {
+                        // Use local time formatting for display
                         return date.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
                     } catch (e) { console.error("Error formatting appointment datetime:", e); return 'Error'; }
                 },
@@ -1382,9 +1397,10 @@
                     const dueDate = app.utils.createDateAdjusted(dateInput);
                     if (!dueDate) return '<span style="color: var(--danger);">Invalid Date</span>';
 
+                    // Compare based on the start of the day in the *local* timezone for user relevance
                     const today = new Date(); today.setHours(0, 0, 0, 0);
                     const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
-                    const dueDateStartOfDay = new Date(dueDate); dueDateStartOfDay.setHours(0, 0, 0, 0);
+                    const dueDateStartOfDay = new Date(dueDate); dueDateStartOfDay.setHours(0, 0, 0, 0); // Ensure comparison is day-based
 
                     const formattedDate = dueDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); // E.g., "Mon, Jan 1"
 
@@ -1395,35 +1411,62 @@
                 },
                 getNextBusinessDay10AM: () => {
                     const now = new Date(); let nextDay = new Date(now);
-                    nextDay.setDate(now.getDate() + 1);
-                    while (nextDay.getDay() === 0 || nextDay.getDay() === 6) { nextDay.setDate(nextDay.getDate() + 1); }
-                    nextDay.setHours(10, 0, 0, 0); return nextDay;
+                    nextDay.setDate(now.getDate() + 1); // Start checking from tomorrow
+                    // Find the next weekday (Mon-Fri)
+                    while (nextDay.getDay() === 0 || nextDay.getDay() === 6) { // 0 = Sunday, 6 = Saturday
+                        nextDay.setDate(nextDay.getDate() + 1);
+                    }
+                    nextDay.setHours(10, 0, 0, 0); // Set time to 10:00 AM
+                    return nextDay;
                 },
                  calculateReminderDates: (meetingDateTimeInput) => {
+                     // Calculates confirmation (2 biz days before) and reminder (1 biz day before) dates
                      const meetingDate = app.utils.createDateAdjusted(meetingDateTimeInput);
                      if (!meetingDate || isNaN(meetingDate)) return { confirmationCallDate: '', textReminderDate: '' };
+
                      const subtractBusinessDays = (startDate, daysToSubtract) => {
-                         let currentDate = new Date(startDate); let subtractedDays = 0;
-                         while (subtractedDays < daysToSubtract) {
+                         let currentDate = new Date(startDate);
+                         let subtractedDays = 0;
+                         let iterations = 0; // Safety break
+                         while (subtractedDays < daysToSubtract && iterations < (daysToSubtract * 3 + 5)) { // Limit iterations
                              currentDate.setDate(currentDate.getDate() - 1);
-                             const dayOfWeek = currentDate.getDay();
-                             if (dayOfWeek !== 0 && dayOfWeek !== 6) { subtractedDays++; }
-                         } return currentDate;
+                             const dayOfWeek = currentDate.getDay(); // 0=Sun, 6=Sat
+                             if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                                 subtractedDays++;
+                             }
+                             iterations++;
+                         }
+                         // If it couldn't find enough days (e.g., meeting is too soon), return null
+                         return subtractedDays === daysToSubtract ? currentDate : null;
                      };
-                     let confirmCallDate = subtractBusinessDays(meetingDate, 2); confirmCallDate.setHours(10, 0, 0, 0);
-                     let textReminderDate = subtractBusinessDays(meetingDate, 1); textReminderDate.setHours(10, 0, 0, 0);
+
+                     // Calculate potential dates
+                     let confirmCallDate = subtractBusinessDays(meetingDate, 2);
+                     let textReminderDate = subtractBusinessDays(meetingDate, 1);
+
+                     // Set time to 10 AM
+                     if (confirmCallDate) confirmCallDate.setHours(10, 0, 0, 0);
+                     if (textReminderDate) textReminderDate.setHours(10, 0, 0, 0);
+
+                     // Don't schedule reminders in the past
                      const today10AM = new Date(); today10AM.setHours(10,0,0,0);
-                     if (confirmCallDate < today10AM) confirmCallDate = null;
-                     if (textReminderDate < today10AM) textReminderDate = null;
-                     return { confirmationCallDate: confirmCallDate ? app.utils.formatDate(confirmCallDate) : '', textReminderDate: textReminderDate ? app.utils.formatDate(textReminderDate) : '' };
+                     if (confirmCallDate && confirmCallDate < today10AM) confirmCallDate = null;
+                     if (textReminderDate && textReminderDate < today10AM) textReminderDate = null;
+
+                     return {
+                         confirmationCallDate: confirmCallDate ? app.utils.formatDate(confirmCallDate) : '',
+                         textReminderDate: textReminderDate ? app.utils.formatDate(textReminderDate) : ''
+                     };
                  },
-                getTodayDateString: () => app.utils.formatDate(new Date()),
+                getTodayDateString: () => app.utils.formatDate(new Date()), // Gets YYYY-MM-DD for today
                 sanitize: (str) => {
+                    // Basic sanitization to prevent XSS via textContent assignment
                     if (str === null || typeof str === 'undefined') return '';
                     const temp = document.createElement('div');
-                    temp.textContent = String(str); return temp.innerHTML;
+                    temp.textContent = String(str); // Assign as text, not HTML
+                    return temp.innerHTML; // Read back the encoded HTML
                 },
-                nl2br: (str) => app.utils.sanitize(str).replace(/\n/g, '<br>'),
+                nl2br: (str) => app.utils.sanitize(str).replace(/\n/g, '<br>'), // Convert newlines to <br> after sanitizing
                 toggleButtonLoading: (button, isLoading, loadingText = "Processing...") => {
                     if (!button) return;
                     const originalTextSpan = button.querySelector('span');
@@ -1608,7 +1651,7 @@
                             app.methods.applyInitialSort(stateKey); // Apply sorting to the new state
 
                             // Always render the specific table view to reflect changes immediately.
-                            if (renderFunc) {
+                            if (renderFunc && app.state.activeView === stateKey) { // Only render if view is active
                                 renderFunc(); // Call the specific render function (e.g., renderLeadsTable)
                             }
                             // Always update dashboard components as they might be visible or depend on this data.
@@ -1681,9 +1724,9 @@
                     try {
                         const backupData = {
                             dailyReportData: app.state.dailyReportData, // Backup current report view
-                            webhookUrl: app.state.webhookUrl,
+                            webhookUrl: app.state.webhookUrl, // Backup cached webhook
                             sortState: app.state.sortState,
-                            filterState: app.state.filterState,
+                            filterState: app.state.filterState, // Backup search terms
                             lastBackupTime: new Date().toISOString()
                         };
                         app.methods.saveDataToStorage(STORAGE_KEYS.LAST_BACKUP, backupData);
@@ -1717,6 +1760,11 @@
                              app.methods.saveDataToStorage(STORAGE_KEYS.WEBHOOK_URL_CACHE, app.state.webhookUrl);
                              app.methods.saveSortState();
 
+                             // Apply restored filters to UI inputs
+                             app.elements.searchLeadsInput.value = app.state.filterState.leads || '';
+                             app.elements.searchCallsInput.value = app.state.filterState.calls || '';
+                             app.elements.searchAppointmentsInput.value = app.state.filterState.appointments || '';
+
                              // Re-render UI
                              app.methods.renderAllViews();
                              app.methods.showNotification('Local settings restored from backup.', 'success');
@@ -1742,6 +1790,12 @@
                          app.state.webhookUrl = DEFAULT_WEBHOOK_URL;
                          app.state.sortState = {}; app.state.filterState = {};
                          app.state.backupTimestamp = null;
+
+                         // Reset UI Inputs
+                         app.elements.searchLeadsInput.value = '';
+                         app.elements.searchCallsInput.value = '';
+                         app.elements.searchAppointmentsInput.value = '';
+
                          // Update UI
                          app.elements.restoreDataBtn.disabled = true;
                          app.methods.renderAllViews();
@@ -1758,12 +1812,14 @@
                     const webhookInput = app.elements.webhookUrlInput;
                     if (!db || !app.state.user) { app.methods.showNotification("Must be signed in to update.", "warning"); return; }
                     const newUrl = webhookInput.value.trim();
-                    if (newUrl !== '' && !newUrl.match(/^https?:\/\/.+/)) { app.methods.showNotification('Invalid URL format.', 'warning'); return; }
+                    // Basic URL validation (optional, but recommended)
+                    if (newUrl !== '' && !newUrl.match(/^https?:\/\/.+/)) { app.methods.showNotification('Invalid URL format. Must start with http:// or https://', 'warning'); return; }
 
                     app.utils.toggleButtonLoading(saveButton, true, "Saving...");
                     webhookInput.readOnly = true;
                     try {
                         const settingsRef = db.collection(FIRESTORE_CONFIG_COLLECTION).doc("sharedSettings");
+                        // Use set with merge to create/update the document
                         await settingsRef.set({ webhookUrl: newUrl }, { merge: true });
                         // Listener will update local state/cache, but force UI update just in case
                         app.state.webhookUrl = newUrl;
@@ -1773,7 +1829,7 @@
                     } catch (error) {
                         console.error("Error saving webhook URL:", error);
                         app.methods.showNotification(`Failed to save URL: ${error.message}`, 'error');
-                        webhookInput.value = app.state.webhookUrl; // Revert on error
+                        webhookInput.value = app.state.webhookUrl; // Revert input on error
                     } finally {
                         app.utils.toggleButtonLoading(saveButton, false);
                         webhookInput.readOnly = !app.state.user; // Reset readOnly based on login
@@ -1783,12 +1839,20 @@
                 // --- View Management & Rendering ---
                 setActiveView: (viewId) => {
                     if (!viewId || app.state.activeView === viewId) return;
-                    app.state.activeView = viewId; console.log("Set active view:", viewId);
+                    const previousView = app.state.activeView;
+                    app.state.activeView = viewId; console.log(`Set active view: ${viewId} (from ${previousView})`);
                     app.elements.sidebarLinks.forEach(link => link.classList.toggle('active', link.dataset.view === viewId));
                     app.elements.contentViews.forEach(view => view.classList.toggle('active', view.id === `${viewId}-view`));
-                    // Re-render the newly activated view to ensure it displays the latest data
-                    // which should already be in the state thanks to the modified listener.
-                    app.methods[`render${viewId.charAt(0).toUpperCase() + viewId.slice(1)}View`]();
+
+                    // Ensure the data for the new view is rendered correctly
+                    const renderMethodName = `render${viewId.charAt(0).toUpperCase() + viewId.slice(1)}View`;
+                     if (app.methods[renderMethodName]) {
+                         console.log(`Rendering active view: ${renderMethodName}`);
+                         app.methods[renderMethodName]();
+                     } else {
+                         console.warn(`Render method not found for view: ${viewId}`);
+                     }
+
                     if (app.elements.mainContentInner) app.elements.mainContentInner.scrollTop = 0; // Scroll to top
                 },
                 renderAllViews: (forceEmptyState = false) => { // Render all tables/static content areas
@@ -1814,33 +1878,44 @@
                     // console.log("Rendering Settings View"); // Less noisy log
                     const webhookInput = app.elements.webhookUrlInput;
                     const saveWebhookBtn = app.elements.saveWebhookBtn;
-                    const canInteract = app.state.firestoreInitialized && app.state.user;
-                    if (webhookInput) { webhookInput.value = app.state.webhookUrl; webhookInput.readOnly = !canInteract; }
-                    if (saveWebhookBtn) { saveWebhookBtn.disabled = !canInteract; }
-                    app.elements.restoreDataBtn.disabled = !app.state.backupTimestamp;
+                    const canInteractCloud = app.state.firestoreInitialized && app.state.user;
+                    const canInteractLocal = true; // Local actions always available
+
+                    if (webhookInput) { webhookInput.value = app.state.webhookUrl; webhookInput.readOnly = !canInteractCloud; }
+                    if (saveWebhookBtn) { saveWebhookBtn.disabled = !canInteractCloud; }
+
+                    app.elements.backupNowBtn.disabled = !canInteractLocal;
+                    app.elements.restoreDataBtn.disabled = !canInteractLocal || !app.state.backupTimestamp;
+                    app.elements.clearAllDataBtn.disabled = !canInteractLocal;
                     // Optional: Display last backup time if element exists
-                    // document.getElementById('last-backup-display').textContent = app.state.backupTimestamp ? `Last: ${new Date(app.state.backupTimestamp).toLocaleString()}` : 'Never';
+                    // const backupDisplay = document.getElementById('last-backup-display');
+                    // if(backupDisplay) backupDisplay.textContent = app.state.backupTimestamp ? `Last: ${new Date(app.state.backupTimestamp).toLocaleString()}` : 'Never';
                  },
 
                 // --- Modal & Notifications ---
                 openModal: (title, content) => {
                     app.elements.modalTitleEl.textContent = title;
-                    app.elements.modalBodyEl.innerHTML = content;
+                    app.elements.modalBodyEl.innerHTML = content; // Assumes content is safe HTML or sanitized before calling
                     app.elements.modalEl.classList.add('active');
+                    // Focus the first focusable element in the modal for accessibility
                     const firstFocusable = app.elements.modalBodyEl.querySelector('input, select, textarea, button');
-                    if(firstFocusable) setTimeout(() => firstFocusable.focus(), 50); // Delay focus slightly
+                    if(firstFocusable) setTimeout(() => firstFocusable.focus(), 50); // Delay focus slightly for transition
                 },
                 closeModal: () => {
                     app.elements.modalEl.classList.remove('active');
-                    app.elements.modalTitleEl.textContent = ''; app.elements.modalBodyEl.innerHTML = '';
+                    // Clear content after transition finishes (optional, prevents flash)
+                    setTimeout(() => {
+                        app.elements.modalTitleEl.textContent = ''; app.elements.modalBodyEl.innerHTML = '';
+                    }, 300); // Match modal transition duration
                 },
                 showNotification: (message, type = 'info', duration = 3500) => {
                     const el = app.elements.notificationEl;
                     if (!el) return;
+                    // Clear existing timeout if any
                     if (app.state.notificationTimeout) clearTimeout(app.state.notificationTimeout);
                     el.className = `notification ${type}`; // Reset classes
                     el.textContent = message;
-                    void el.offsetWidth; // Force reflow
+                    void el.offsetWidth; // Force reflow to restart animation if needed
                     el.classList.add('show');
                     app.state.notificationTimeout = setTimeout(() => {
                         el.classList.remove('show'); app.state.notificationTimeout = null;
@@ -1849,24 +1924,33 @@
 
                 // --- Dashboard Tasks ---
                 updateDashboardSummary: () => {
-                     const todayStr = app.utils.getTodayDateString();
-                     const todayStart = app.utils.createDateAdjusted(todayStr); // Use UTC start of day
-                     if (!todayStart) return; // Safety check
+                     const today = new Date(); today.setHours(0, 0, 0, 0); // Start of today, local time
+                     const todayStr = app.utils.getTodayDateString(); // YYYY-MM-DD string
 
-                     const getCount = (data, filterFn) => (data || []).filter(filterFn).length; // Add check for undefined data
+                     const getCount = (data, filterFn) => (data || []).filter(filterFn).length;
 
+                     // New Connections: Connection date is today
                      const newConnectionsToday = getCount(app.state.leads, l => app.utils.formatDate(l.connectionDate) === todayStr);
-                     // Messages Due: Due date is today or earlier, and status indicates waiting for response/follow-up
+
+                     // Messages Due: Lead due date is today or earlier, and status indicates needing action
+                     const leadActionStatuses = ['new-connection', 'waiting-for-response-1', 'waiting-for-response-2', 'follow-up-later', 'connected-needs-follow-up'];
                      const messagesToSend = getCount(app.state.leads, l => {
                         const dueDate = app.utils.createDateAdjusted(l.dueDate);
-                        return dueDate && dueDate <= todayStart && ['waiting-for-response-1', 'waiting-for-response-2', 'follow-up-later'].includes(l.status);
+                        // Check if due date exists, is today or in the past, AND status requires action
+                        return dueDate && dueDate <= today && leadActionStatuses.includes(l.status?.toLowerCase());
                      });
-                     const callsToLog = 0; // Placeholder - define logic if needed
-                     // Appointments to Confirm: Confirmation date is today or earlier, and status is pending/booked
+
+                     const callsToLog = 0; // Placeholder - Define logic: e.g., calls scheduled for today?
+
+                     // Appointments to Confirm: Confirmation date is today or earlier, status is pending/booked
+                     const apptConfirmNeededStatuses = ['pending', 'booked-call'];
                      const appointmentsToConfirm = getCount(app.state.appointments, a => {
                         const confirmDate = app.utils.createDateAdjusted(a.confirmationCallDate);
-                        return confirmDate && confirmDate <= todayStart && ['pending', 'booked-call'].includes(a.status?.toLowerCase());
+                        // Check if confirm date exists, is today or earlier, AND status requires confirmation
+                        return confirmDate && confirmDate <= today && apptConfirmNeededStatuses.includes(a.status?.toLowerCase());
                      });
+
+                     // Overdue Tasks: Count tasks generated by generatePendingTasks with isOverdue flag
                      const overdueTasks = app.methods.generatePendingTasks(true).length; // Get only overdue
 
                      app.elements.summaryEls.newConnections.textContent = newConnectionsToday;
@@ -1876,49 +1960,68 @@
                      app.elements.summaryEls.overdueTasks.textContent = overdueTasks;
                 },
                 generatePendingTasks: (overdueOnly = false) => {
-                    const tasks = []; const today = new Date(); today.setHours(0, 0, 0, 0);
-                    // Leads: Check dueDate
-                    (app.state.leads || []).forEach(lead => { // Add check for undefined state
-                        const dueDate = app.utils.createDateAdjusted(lead.dueDate);
-                        if (dueDate) {
-                             const dueDateStart = new Date(dueDate); dueDateStart.setHours(0,0,0,0);
-                             const isOverdue = dueDateStart < today; const isDueToday = dueDateStart.getTime() === today.getTime();
-                             if (isDueToday || isOverdue) { // Only show due or overdue
-                                if (!overdueOnly || isOverdue) {
-                                     tasks.push({ id: `lead-${lead.id}`, title: `Lead Follow-up: ${app.utils.sanitize(lead.name)}`, description: app.utils.sanitize(lead.nextAction || 'Check status'), dueDate, isOverdue, isDueToday, type: 'lead', sourceId: lead.id });
-                                }
-                             }
-                        }
-                    });
-                    // Appointments: Check confirmationCallDate and textReminderDate
-                     (app.state.appointments || []).forEach(appt => { // Add check for undefined state
-                        const checkDate = (dateField, dateValue, taskType, titlePrefix, description) => {
-                            const checkDt = app.utils.createDateAdjusted(dateValue);
-                            if (checkDt) {
-                                const checkDtStart = new Date(checkDt); checkDtStart.setHours(0,0,0,0);
-                                const isOverdue = checkDtStart < today; const isDueToday = checkDtStart.getTime() === today.getTime();
-                                if (isDueToday || isOverdue) {
-                                    if (!overdueOnly || isOverdue) {
-                                        tasks.push({ id: `appt-${appt.id}-${taskType}`, title: `${titlePrefix}: ${app.utils.sanitize(appt.clientName)}`, description, dueDate: checkDt, isOverdue, isDueToday, type: 'appointment', sourceId: appt.id });
-                                    }
+                    const tasks = [];
+                    const today = new Date(); today.setHours(0, 0, 0, 0); // Start of today, local time
+
+                    // Helper to check date and add task if conditions met
+                    const checkAndAddTask = (item, dateField, dateValue, taskType, titlePrefix, description, itemType, itemId) => {
+                        const checkDt = app.utils.createDateAdjusted(dateValue);
+                        if (checkDt) {
+                            const checkDtStart = new Date(checkDt); checkDtStart.setHours(0, 0, 0, 0);
+                            const isOverdue = checkDtStart < today;
+                            const isDueToday = checkDtStart.getTime() === today.getTime();
+
+                            if (isDueToday || isOverdue) { // Only show due today or overdue
+                                if (!overdueOnly || isOverdue) { // Apply overdue filter if requested
+                                    tasks.push({
+                                        id: `${itemType}-${itemId}-${taskType}`, // Unique ID
+                                        title: `${titlePrefix}: ${app.utils.sanitize(item.name || item.clientName)}`,
+                                        description: app.utils.sanitize(description),
+                                        dueDate: checkDt,
+                                        isOverdue,
+                                        isDueToday,
+                                        type: itemType,
+                                        sourceId: itemId
+                                    });
                                 }
                             }
-                        };
-                        const apptStatus = appt.status?.toLowerCase();
-                        if (apptStatus === 'pending' || apptStatus === 'booked-call') {
-                            checkDate('confirm', appt.confirmationCallDate, 'confirm', 'Confirm Appt', `Call to confirm meeting: ${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}`);
                         }
-                        // Check if text reminder is due and hasn't been marked sent (needs a field like `textReminderSent: boolean/timestamp`)
-                         const reminderNeeded = !appt.textReminderSent; // Assumes field exists
-                        if (reminderNeeded && (apptStatus === 'pending' || apptStatus === 'confirmed' || apptStatus === 'booked-call')) {
-                            checkDate('text', appt.textReminderDate, 'text', 'Text Reminder', `Send text for meeting: ${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}`);
+                    };
+
+                    // Leads: Check dueDate for actionable statuses
+                    const leadActionStatuses = ['new-connection', 'waiting-for-response-1', 'waiting-for-response-2', 'follow-up-later', 'connected-needs-follow-up'];
+                    (app.state.leads || []).forEach(lead => {
+                        if (leadActionStatuses.includes(lead.status?.toLowerCase())) {
+                            checkAndAddTask(lead, 'dueDate', lead.dueDate, 'followup', 'Lead Follow-up', lead.nextAction || 'Check status', 'lead', lead.id);
                         }
                     });
-                    tasks.sort((a, b) => (a.dueDate || 0) - (b.dueDate || 0)); // Sort by due date ascending
-                    // Update Reminder Bell Count (only if needed - might be too noisy)
-                    const pendingCount = tasks.length;
-                    app.elements.reminderCountEl.textContent = pendingCount;
-                    app.elements.reminderBellEl.classList.toggle('show', pendingCount > 0);
+
+                    // Appointments: Check confirmationCallDate and textReminderDate for relevant statuses
+                    const apptConfirmNeededStatuses = ['pending', 'booked-call'];
+                    const apptReminderNeededStatuses = ['pending', 'confirmed', 'booked-call']; // Add 'confirmed' for reminders
+                     (app.state.appointments || []).forEach(appt => {
+                        const apptStatus = appt.status?.toLowerCase();
+                        // Check confirmation call
+                        if (apptConfirmNeededStatuses.includes(apptStatus)) {
+                            checkAndAddTask(appt, 'confirmDate', appt.confirmationCallDate, 'confirm', 'Confirm Appt', `Call for meeting on ${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}`, 'appt', appt.id);
+                        }
+                        // Check text reminder IF not already sent
+                        const reminderNeeded = !appt.textReminderSent; // Assumes field exists
+                        if (reminderNeeded && apptReminderNeededStatuses.includes(apptStatus)) {
+                            checkAndAddTask(appt, 'reminderDate', appt.textReminderDate, 'text', 'Text Reminder', `Send text for meeting on ${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}`, 'appt', appt.id);
+                        }
+                    });
+
+                    // Sort tasks by due date (earliest first)
+                    tasks.sort((a, b) => (a.dueDate?.getTime() || 0) - (b.dueDate?.getTime() || 0));
+
+                    // Update Reminder Bell Count (only if not filtering for overdue)
+                    if (!overdueOnly) {
+                         const pendingCount = tasks.length;
+                         app.elements.reminderCountEl.textContent = pendingCount;
+                         app.elements.reminderBellEl.classList.toggle('show', pendingCount > 0);
+                    }
+
                     return tasks;
                 },
                 completeTask: (taskId) => { // Saves completion status to Firestore
@@ -1930,11 +2033,12 @@
 
                     if (sourceType === 'lead') {
                         docRef = db.collection(FIRESTORE_LEADS_COLLECTION).doc(sourceId);
-                        updates = { dueDate: null, nextAction: 'Follow-up completed', ...updateMeta }; itemName = 'Lead Task';
+                        // Determine appropriate status change, e.g., move to 'completed' or remove due date
+                        updates = { dueDate: null, nextAction: 'Follow-up completed', /* Consider changing status here too? */ ...updateMeta }; itemName = 'Lead Task';
                     } else if (sourceType === 'appt') {
                          docRef = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(sourceId);
-                         if (taskType === 'confirm') { updates = { status: 'confirmed', ...updateMeta }; itemName = 'Appt Confirmation'; }
-                         else if (taskType === 'text') { updates = { textReminderSent: true, ...updateMeta }; itemName = 'Appt Reminder'; } // Assumes 'textReminderSent' field
+                         if (taskType === 'confirm') { updates = { status: 'confirmed', confirmationCallDate: null, /* Clear date? */ ...updateMeta }; itemName = 'Appt Confirmation'; }
+                         else if (taskType === 'text') { updates = { textReminderSent: true, textReminderDate: null, /* Clear date? */ ...updateMeta }; itemName = 'Appt Reminder'; } // Assumes 'textReminderSent' field
                          else { app.methods.showNotification(`Unknown appt task type '${taskType}'.`, "warning"); return; }
                     } else { app.methods.showNotification(`Unknown task source type '${sourceType}'.`, "warning"); return; }
 
@@ -1971,12 +2075,13 @@
                  },
                  renderDashboardTaskList: () => {
                      const taskListEl = app.elements.dashboardTaskList; if (!taskListEl) return;
-                     const tasks = app.methods.generatePendingTasks();
+                     const tasks = app.methods.generatePendingTasks(); // Get all pending tasks (not just overdue)
                      if (tasks.length === 0) {
                          taskListEl.innerHTML = `<li class="empty-task-item">No pending tasks found.</li>`; return;
                      }
                      taskListEl.innerHTML = tasks.map(task => {
                          const itemClass = task.isOverdue ? 'urgent' : (task.isDueToday ? 'warning' : '');
+                         // Use FontAwesome icons for actions
                          return `
                             <li class="task-item ${itemClass}" data-task-id="${task.id}">
                                 <div class="task-info"><strong>${app.utils.sanitize(task.title)}</strong><span>${app.utils.sanitize(task.description)}</span></div>
@@ -2092,7 +2197,7 @@
                      }).join('');
                  },
                  generateLeadStatusOptions: (selectedValue) => { // Consolidated/simplified example
-                     const statuses = ['New Connection', 'Waiting for Response 1', 'Waiting for Response 2', 'Connected - Positive', 'Connected - Negative', 'Call Booked', 'Follow-up Later', 'Closed - No Response', 'Closed - Negative', 'Wrong Person/Number'];
+                     const statuses = ['New Connection', 'Waiting for Response 1', 'Waiting for Response 2', 'Connected - Positive', 'Connected - Negative', 'Call Booked', 'Follow-up Later', 'Closed - No Response', 'Closed - Negative', 'Wrong Person/Number', 'Connected - Needs Follow-up'];
                       return statuses.map(status => {
                          const value = status.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Generate consistent value
                          return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${status}</option>`;
@@ -2126,8 +2231,9 @@
                              const savedId = isUpdate ? leadId : docRefOrVoid.id;
                              app.methods.showNotification(`Lead '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                              app.methods.closeModal();
+                             // Prepare data for webhook (convert dates, remove server timestamps)
                              const webhookData = { ...leadData, id: savedId, connectionDate: app.utils.formatDate(connectionDate), dueDate: app.utils.formatDate(dueDate) };
-                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
+                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt; delete webhookData.lastUpdatedBy; delete webhookData.createdBy;
                              app.methods.sendWebhookNotification(isUpdate ? 'lead_updated' : 'lead_added', webhookData);
                              // The listener should automatically update the UI.
                          }).catch(error => { console.error("Error saving lead:", error); app.methods.showNotification(`Error saving lead: ${error.message}`, 'error'); stopLoading(); });
@@ -2295,8 +2401,9 @@
                             const savedId = isUpdate ? callId : docRefOrVoid.id;
                             app.methods.showNotification(`Call record for '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
+                            // Prepare webhook data
                             const webhookData = { ...callData, id: savedId, callDate: app.utils.formatDate(callDate), nextStepDueDate: app.utils.formatDate(nextStepDueDate) };
-                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
+                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt; delete webhookData.lastUpdatedBy; delete webhookData.createdBy;
                             app.methods.sendWebhookNotification(isUpdate ? 'call_updated' : 'call_added', webhookData);
                              // The listener should automatically update the UI.
                         }).catch(error => { console.error("Error saving call:", error); app.methods.showNotification(`Error saving call: ${error.message}`, 'error'); stopLoading(); });
@@ -2422,9 +2529,9 @@
                          return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${status}</option>`;
                      }).join('');
                  },
-                  handleMeetingTimeChange: (dateTimeValue) => { // Helper to update reminder dates
+                  handleMeetingTimeChange: (dateTimeValue) => { // Helper to update reminder dates in the modal form
                      const reminderDates = app.utils.calculateReminderDates(dateTimeValue);
-                     // Determine if we are in add or edit modal
+                     // Determine if we are in add or edit modal by checking form IDs
                      const idPrefix = document.getElementById('add-appointment-form') ? 'add-' : 'edit-';
                      const confirmInput = document.getElementById(`${idPrefix}appointment-confirm-date`);
                      const reminderInput = document.getElementById(`${idPrefix}appointment-reminder-date`);
@@ -2446,6 +2553,7 @@
                         const meetingDateTime = app.utils.createDateAdjusted(meetingDateTimeStr);
                         if (!meetingDateTime) { app.methods.showNotification('Invalid meeting date/time format.', 'warning'); stopLoading(); return; }
 
+                        // Recalculate reminder dates on save based on the final meeting time
                         const reminderDates = app.utils.calculateReminderDates(meetingDateTime);
                         const confirmationCallDate = reminderDates.confirmationCallDate ? app.utils.createDateAdjusted(reminderDates.confirmationCallDate) : null;
                         const textReminderDate = reminderDates.textReminderDate ? app.utils.createDateAdjusted(reminderDates.textReminderDate) : null;
@@ -2459,13 +2567,21 @@
                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
 
                         if (isUpdate) {
+                            // Get existing data to preserve fields like 'createdAt', 'createdBy', 'textReminderSent' unless explicitly changed
                             const docRef = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(apptId);
                             actionPromise = docRef.get().then(doc => {
-                                const existingData = doc.data() || {};
-                                const finalData = { ...existingData, ...appointmentData };
+                                const existingData = doc.exists ? doc.data() : {};
+                                // Merge new data over existing, keeping necessary old fields
+                                const finalData = {
+                                    ...existingData, // Keep createdAt, createdBy etc.
+                                    ...appointmentData // Overwrite with new form values
+                                };
+                                // If status changed from reminder-needed to something else, maybe reset textReminderSent?
+                                // Example: if (existingData.status !== 'completed' && finalData.status === 'completed') finalData.textReminderSent = true;
                                 return docRef.update(finalData);
                             });
                         } else {
+                            // Add creation fields for new appointments
                             appointmentData.createdBy = app.state.user.email || app.state.user.uid;
                             appointmentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                             appointmentData.textReminderSent = false; // Default on creation
@@ -2475,12 +2591,22 @@
                             const savedId = isUpdate ? apptId : docRefOrVoid.id;
                             app.methods.showNotification(`Appointment for '${app.utils.sanitize(clientName)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
+                            // Prepare webhook data
                             const webhookData = { ...appointmentData, id: savedId,
-                                meetingDateTime: meetingDateTime ? meetingDateTime.toISOString() : null,
+                                meetingDateTime: meetingDateTime ? meetingDateTime.toISOString() : null, // Use ISO string for webhook
                                 confirmationCallDate: app.utils.formatDate(confirmationCallDate),
                                 textReminderDate: app.utils.formatDate(textReminderDate)
                             };
-                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
+                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt; delete webhookData.lastUpdatedBy; delete webhookData.createdBy;
+                             // Add textReminderSent for webhook context if it exists
+                             if (appointmentData.hasOwnProperty('textReminderSent')) {
+                                webhookData.textReminderSent = appointmentData.textReminderSent;
+                             } else if (isUpdate) {
+                                // If updating, try to get it from state if possible
+                                const currentAppt = app.state.appointments.find(a => a.id === savedId);
+                                webhookData.textReminderSent = currentAppt?.textReminderSent ?? null;
+                             }
+
                             app.methods.sendWebhookNotification(isUpdate ? 'appointment_updated' : 'appointment_added', webhookData);
                              // The listener should automatically update the UI.
                         }).catch(error => { console.error("Error saving appointment:", error); app.methods.showNotification(`Error saving appointment: ${error.message}`, 'error'); stopLoading(); });
@@ -2509,7 +2635,7 @@
 
                      if (apptsToRender.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="${cols}">${emptyMsg}</td></tr>`; return; }
                      tableBody.innerHTML = apptsToRender.map(appt => `
-                         <tr data-id="${appt.id}"><td>${app.utils.sanitize(appt.clientName)}</td><td>${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}</td><td>${appt.confirmationCallDate ? app.utils.formatDate(appt.confirmationCallDate) : 'N/A'}</td><td>${appt.textReminderDate ? app.utils.formatDate(appt.textReminderDate) : 'N/A'}</td><td>${app.methods.createStatusSpan(appt.status)}</td><td class="wrap-mobile">${app.utils.nl2br(appt.notes || '')}</td><td class="action-cell">${app.methods.createActionButton('fas fa-edit edit-btn', 'Edit Appointment', appt.id, 'edit', 'appointment')}${app.methods.createActionButton('fas fa-trash-alt delete-btn', 'Delete Appointment', appt.id, 'delete', 'appointment')}</td></tr>`).join('');
+                         <tr data-id="${appt.id}"><td>${app.utils.sanitize(appt.clientName)}</td><td>${app.utils.formatAppointmentDateTime(appt.meetingDateTime)}</td><td>${appt.confirmationCallDate ? app.utils.formatDate(appt.confirmationCallDate) : 'N/A'}</td><td>${appt.textReminderDate ? app.utils.formatDate(appt.textReminderDate) : 'N/A'} ${appt.textReminderSent ? '(Sent)' : ''}</td><td>${app.methods.createStatusSpan(appt.status)}</td><td class="wrap-mobile">${app.utils.nl2br(appt.notes || '')}</td><td class="action-cell">${app.methods.createActionButton('fas fa-edit edit-btn', 'Edit Appointment', appt.id, 'edit', 'appointment')}${app.methods.createActionButton('fas fa-trash-alt delete-btn', 'Delete Appointment', appt.id, 'delete', 'appointment')}</td></tr>`).join('');
                      app.methods.updateSortIndicators('appointments', app.state.sortState.appointments);
                  },
 
@@ -2539,7 +2665,7 @@
                                 app.methods.showNotification(`Daily report for ${reportDate} saved.`, 'success');
                                 app.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT_CACHE, app.state.dailyReportData); // Update cache
                                 // Webhook
-                                const webhookData = { ...reportData, generatedAt: new Date().toISOString() }; delete webhookData.generatedAt; // Send ISO string
+                                const webhookData = { ...reportData, generatedAt: new Date().toISOString() }; delete webhookData.generatedAt; delete webhookData.savedBy; // Send ISO string
                                 app.methods.sendWebhookNotification('daily_report_saved', webhookData);
                             }).catch(error => { console.error("Error saving report:", error); app.methods.showNotification(`Error saving report: ${error.message}`, 'error');
                             }).finally(() => { app.utils.toggleButtonLoading(saveButton, false); });
@@ -2588,7 +2714,9 @@
                  updateReportOutput: () => {
                      const outputEl = app.elements.reportOutputEl; const data = app.state.dailyReportData;
                      if (!outputEl || !data || !data.reportDate) { if(outputEl) outputEl.style.display = 'none'; return; }
-                     const savedInfo = data.generatedAt ? `<em>Saved by: ${app.utils.sanitize(data.savedBy || 'N/A')} on ${app.utils.formatAppointmentDateTime(data.generatedAt)}</em><br><br>` : '';
+                      // Try converting generatedAt if it's a Firestore Timestamp
+                      const generatedAtDate = app.utils.createDateAdjusted(data.generatedAt);
+                     const savedInfo = generatedAtDate ? `<em>Saved by: ${app.utils.sanitize(data.savedBy || 'N/A')} on ${app.utils.formatAppointmentDateTime(generatedAtDate)}</em><br><br>` : '';
                      outputEl.innerHTML = `<h4><i class="fas fa-file-alt"></i> Report for ${app.utils.sanitize(data.reportDate)}</h4>${savedInfo}<p><strong><i class="fab fa-linkedin"></i> LinkedIn:</strong> ${app.utils.nl2br(data.linkedinSummary) || '<em>-</em>'}</p><p><strong><i class="fas fa-phone-volume"></i> Calls:</strong> ${app.utils.nl2br(data.callSummary) || '<em>-</em>'}</p><p><strong><i class="fas fa-calendar-check"></i> Appts:</strong> ${app.utils.nl2br(data.appointmentSummary) || '<em>-</em>'}</p><p><strong><i class="fas fa-flag"></i> Follow-ups:</strong> ${app.utils.nl2br(data.followupSummary) || '<em>-</em>'}</p>`;
                      outputEl.style.display = 'block';
                  },
@@ -2604,52 +2732,105 @@
                 // --- Import/Export Methods ---
                 convertToCSV: (data, headers) => {
                      if (!data || data.length === 0) return '';
-                     const processedData = data.map(row => {
+                     // Ensure data is an array
+                     const dataArray = Array.isArray(data) ? data : [data];
+                     // Process data to handle complex types (like Timestamps)
+                     const processedData = dataArray.map(row => {
                          let newRow = {};
                          for (const key in row) {
+                             let value = row[key];
                              // Convert Firestore Timestamps or JS Dates to ISO strings for consistency
-                             if (row[key] instanceof Date) newRow[key] = row[key].toISOString();
-                             else if (row[key] && typeof row[key].toDate === 'function') newRow[key] = row[key].toDate().toISOString();
-                             else newRow[key] = row[key];
+                             if (value instanceof Date) { value = value.toISOString(); }
+                             else if (value && typeof value.toDate === 'function') { value = value.toDate().toISOString(); }
+                             // Handle potential objects/arrays - basic stringification
+                             else if (typeof value === 'object' && value !== null) { value = JSON.stringify(value); }
+                             newRow[key] = value;
                          } return newRow;
                      });
-                    const actualHeaders = headers.length > 0 ? headers : Object.keys(processedData[0]);
-                    const csvRows = [actualHeaders.map(h => JSON.stringify(h)).join(',')]; // Header row
+                    // Use provided headers or derive from the first processed row
+                    const actualHeaders = headers && headers.length > 0 ? headers : (processedData.length > 0 ? Object.keys(processedData[0]) : []);
+                    if (actualHeaders.length === 0) return ''; // No headers, no CSV
+
+                    const csvRows = [actualHeaders.map(h => JSON.stringify(h)).join(',')]; // Header row (quoted)
                     processedData.forEach(row => {
-                        const values = actualHeaders.map(header => JSON.stringify(row[header] === undefined || row[header] === null ? '' : row[header]));
+                        const values = actualHeaders.map(header => {
+                            const value = row[header];
+                            // Quote values to handle commas, newlines etc.
+                            return JSON.stringify(value === undefined || value === null ? '' : value);
+                        });
                         csvRows.push(values.join(','));
                     });
                     return csvRows.join('\n');
                  },
                  exportCSVData: (data, filename, headers = [], buttonElement) => {
-                     if (!data || data.length === 0) { app.methods.showNotification('No data to export.', 'warning'); return; }
+                     if (!data || (Array.isArray(data) && data.length === 0)) { // Check if array data is empty
+                         app.methods.showNotification('No data to export.', 'warning'); return;
+                     }
                      const exportBtn = buttonElement;
                      if (exportBtn) app.utils.toggleButtonLoading(exportBtn, true, 'Exporting...');
                      try {
                          const csvContent = app.methods.convertToCSV(data, headers);
+                         if (!csvContent) throw new Error("Failed to generate CSV content.");
+
                          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                          const link = document.createElement("a");
                          const url = URL.createObjectURL(blob);
                          link.setAttribute("href", url);
                          link.setAttribute("download", filename);
                          link.style.visibility = 'hidden'; document.body.appendChild(link);
-                         link.click(); document.body.removeChild(link);
+                         link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); // Clean up blob URL
                          app.methods.showNotification('Export complete.', 'success');
-                     } catch (error) { console.error("Error exporting CSV:", error); app.methods.showNotification('Export failed.', 'error');
+                     } catch (error) { console.error("Error exporting CSV:", error); app.methods.showNotification(`Export failed: ${error.message}`, 'error');
                      } finally { if (exportBtn) app.utils.toggleButtonLoading(exportBtn, false); }
                  },
                  parseCSV: (text) => {
-                     const lines = text.split(/\r?\n/); if (lines.length < 2) return [];
-                     const headers = lines[0].split(',').map(h => { try { return JSON.parse(h); } catch { return h.trim(); } }); // Trim headers
-                     const data = [];
-                     for (let i = 1; i < lines.length; i++) {
-                         if (!lines[i].trim()) continue; // Skip empty lines
-                         // Basic CSV parsing - assumes no commas within quoted fields
-                         const values = lines[i].split(',').map(v => { try { return JSON.parse(v); } catch { return v.trim(); } }); // Trim values
-                         if (values.length !== headers.length) { console.warn(`Skipping row ${i+1}: Mismatched column count (${values.length} vs ${headers.length})`); continue; }
-                         let row = {}; headers.forEach((header, index) => { row[header] = values[index]; }); data.push(row);
-                     } return data;
-                 },
+                      // More robust CSV parsing: handles quoted fields with commas/newlines
+                      // Basic implementation, might need library for complex edge cases
+                      const lines = text.split(/\r?\n/);
+                      if (lines.length < 1) return [];
+
+                      const parseLine = (line) => {
+                          const values = [];
+                          let currentVal = '';
+                          let inQuotes = false;
+                          for (let i = 0; i < line.length; i++) {
+                              const char = line[i];
+                              if (char === '"' && (i === 0 || line[i - 1] !== '\\')) { // Handle quote escaping later if needed
+                                  inQuotes = !inQuotes;
+                              } else if (char === ',' && !inQuotes) {
+                                  values.push(currentVal.trim());
+                                  currentVal = '';
+                              } else {
+                                  currentVal += char;
+                              }
+                          }
+                          values.push(currentVal.trim()); // Add the last value
+                          // Unquote values (simple unquoting)
+                          return values.map(v => (v.startsWith('"') && v.endsWith('"')) ? v.slice(1, -1).replace(/""/g, '"') : v);
+                      };
+
+                      const headers = parseLine(lines[0]);
+                      const data = [];
+
+                      for (let i = 1; i < lines.length; i++) {
+                          if (!lines[i].trim()) continue; // Skip empty lines
+                          const values = parseLine(lines[i]);
+                          if (values.length !== headers.length && values.length > 0) { // Allow empty trailing lines but warn on mismatch
+                              console.warn(`Skipping row ${i + 1}: Mismatched column count (${values.length} vs ${headers.length})`);
+                              continue;
+                          }
+                          if (values.length === headers.length) { // Only process rows with correct column count
+                              let row = {};
+                              headers.forEach((header, index) => {
+                                   // Attempt to parse JSON for potential structured data, otherwise keep as string
+                                   try { row[header] = JSON.parse(values[index]); }
+                                   catch { row[header] = values[index]; }
+                              });
+                              data.push(row);
+                          }
+                      }
+                      return data;
+                  },
                  handleImport: (event, stateKey, renderFunction, requiredHeaders = [], buttonElement) => {
                      const file = event.target.files[0]; const importBtn = buttonElement; if (!file) return;
                      if (!confirm(`Importing loads data into the LOCAL table view ONLY.\n\n🚨 IT DOES NOT SAVE TO THE SHARED CLOUD DATABASE. 🚨\n\nExisting data in the table will be replaced locally.\n\nContinue loading '${file.name}' into the local view?`)) { event.target.value = ''; return; }
@@ -2658,9 +2839,10 @@
                      reader.onload = (e) => {
                          try {
                              const text = e.target.result; const importedData = app.methods.parseCSV(text);
-                             if (importedData.length === 0) throw new Error("CSV file is empty or invalid.");
+                             if (importedData.length === 0) throw new Error("CSV file is empty or contains no valid data rows.");
                              const firstRow = importedData[0]; const missingHeaders = requiredHeaders.filter(h => !(h in firstRow));
-                             if (missingHeaders.length > 0) throw new Error(`Missing headers: ${missingHeaders.join(', ')}`);
+                             if (missingHeaders.length > 0) throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+                             // Process imported data, attempting date conversions
                              app.state[stateKey] = importedData.map(item => ({
                                  ...item,
                                  connectionDate: item.connectionDate ? app.utils.createDateAdjusted(item.connectionDate) : null,
@@ -2670,9 +2852,9 @@
                                  meetingDateTime: item.meetingDateTime ? app.utils.createDateAdjusted(item.meetingDateTime) : null,
                                  confirmationCallDate: item.confirmationCallDate ? app.utils.createDateAdjusted(item.confirmationCallDate) : null,
                                  textReminderDate: item.textReminderDate ? app.utils.createDateAdjusted(item.textReminderDate) : null,
-                                 id: item.id || `imported-${app.utils.generateId()}`
+                                 id: item.id || `imported-${app.utils.generateId()}` // Assign temporary ID if missing
                              }));
-                             renderFunction();
+                             renderFunction(); // Re-render the table with the local data
                              app.methods.showNotification(`${importedData.length} records loaded into local view. NOT saved to cloud.`, 'success', 6000);
                          } catch (error) { console.error("Error importing CSV:", error); app.methods.showNotification(`Import failed: ${error.message}`, 'error', 6000);
                          } finally { event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); }
@@ -2689,10 +2871,22 @@
                           try {
                               const text = e.target.result; const importedData = app.methods.parseCSV(text);
                               if (importedData.length !== 1) throw new Error("Report CSV must contain exactly one data row.");
-                              const report = importedData[0]; if (!report.reportDate) throw new Error("CSV missing 'reportDate'.");
-                              app.state.dailyReportData = { reportDate: report.reportDate, linkedinSummary: report.linkedinSummary || '', callSummary: report.callSummary || '', appointmentSummary: report.appointmentSummary || '', followupSummary: report.followupSummary || '', generatedAt: null, savedBy: null, id: report.reportDate };
-                              app.methods.renderReportView();
-                              app.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT_CACHE, app.state.dailyReportData);
+                              const report = importedData[0];
+                              // Check for the essential reportDate field
+                              if (!report.reportDate) throw new Error("CSV missing required header 'reportDate'.");
+                              // Update local report state, treat dates as strings initially
+                              app.state.dailyReportData = {
+                                    reportDate: report.reportDate, // Keep as string from CSV
+                                    linkedinSummary: report.linkedinSummary || '',
+                                    callSummary: report.callSummary || '',
+                                    appointmentSummary: report.appointmentSummary || '',
+                                    followupSummary: report.followupSummary || '',
+                                    generatedAt: null, // Not applicable for imported local data
+                                    savedBy: null,     // Not applicable for imported local data
+                                    id: report.reportDate // Use date as ID for local cache key
+                              };
+                              app.methods.renderReportView(); // Update the form and output display
+                              app.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT_CACHE, app.state.dailyReportData); // Cache the locally loaded report
                               app.methods.showNotification('Report data loaded into local view. NOT saved to cloud.', 'success', 6000);
                           } catch(error) { console.error("Error importing report CSV:", error); app.methods.showNotification(`Report import failed: ${error.message}`, 'error', 6000);
                           } finally { event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); }
@@ -2705,63 +2899,157 @@
                 getFilteredData: (viewType) => {
                     let data = []; const searchTerm = (app.state.filterState[viewType] || '').toLowerCase();
                     const sortConfig = app.state.sortState[viewType] || {};
-                    switch (viewType) { case 'leads': data = [...(app.state.leads || [])]; break; case 'calls': data = [...(app.state.calls || [])]; break; case 'appointments': data = [...(app.state.appointments || [])]; break; default: return []; } // Add check for undefined state
-                    if (searchTerm) { data = data.filter(item => JSON.stringify(item).toLowerCase().includes(searchTerm)); } // Simple search all fields
+
+                    // Get a copy of the relevant data from state
+                    switch (viewType) { case 'leads': data = [...(app.state.leads || [])]; break; case 'calls': data = [...(app.state.calls || [])]; break; case 'appointments': data = [...(app.state.appointments || [])]; break; default: return []; }
+
+                    // Apply Filter
+                    if (searchTerm) {
+                        try {
+                            data = data.filter(item =>
+                                Object.values(item).some(value =>
+                                    String(value).toLowerCase().includes(searchTerm)
+                                )
+                            );
+                        } catch (e) { console.error("Error during filtering:", e); return data; /* Return unfiltered on error */ }
+                    }
+
+                    // Apply Sort
                     if (sortConfig.key) {
                         data.sort((a, b) => {
                             let valA = a[sortConfig.key]; let valB = b[sortConfig.key];
+                             // Handle date comparisons properly
                              const dateKeys = ['connectionDate', 'dueDate', 'callDate', 'nextStepDueDate', 'meetingDateTime', 'confirmationCallDate', 'textReminderDate', 'createdAt', 'lastUpdatedAt'];
-                             if (dateKeys.includes(sortConfig.key)) { valA = app.utils.createDateAdjusted(valA)?.getTime() || 0; valB = app.utils.createDateAdjusted(valB)?.getTime() || 0; }
-                             else { valA = String(valA || '').toLowerCase(); valB = String(valB || '').toLowerCase(); }
-                            let comparison = 0; if (valA > valB) comparison = 1; else if (valA < valB) comparison = -1;
+                             if (dateKeys.includes(sortConfig.key)) {
+                                 // Convert potentially null/undefined dates to 0 for comparison, valid dates to time
+                                 valA = app.utils.createDateAdjusted(valA)?.getTime() || 0;
+                                 valB = app.utils.createDateAdjusted(valB)?.getTime() || 0;
+                             } else {
+                                 // Treat other fields as strings for case-insensitive comparison
+                                 valA = String(valA || '').toLowerCase();
+                                 valB = String(valB || '').toLowerCase();
+                             }
+                            // Perform comparison
+                            let comparison = 0;
+                            if (valA > valB) comparison = 1;
+                            else if (valA < valB) comparison = -1;
+                            // Apply direction
                             return sortConfig.dir === 'desc' ? (comparison * -1) : comparison;
                         });
-                    } return data;
+                    }
+                    return data;
                 },
 
                 // --- Webhook Notification ---
                 sendWebhookNotification: async (eventType, data) => {
-                    if (!app.state.webhookUrl) return;
+                    if (!app.state.webhookUrl) return; // Only send if URL is configured
                     const webhookUrl = app.state.webhookUrl;
-                    const payload = { event: eventType, timestamp: new Date().toISOString(), user: app.state.user ? { email: app.state.user.email, uid: app.state.user.uid } : null, data: data };
-                    console.log(`Sending webhook: ${eventType}`);
+                    // Basic validation of the URL structure
+                    if (!webhookUrl.match(/^https?:\/\/.+/)) {
+                        console.warn("Invalid webhook URL configured. Skipping notification.");
+                        return;
+                    }
+                    const payload = {
+                        event: eventType,
+                        timestamp: new Date().toISOString(),
+                        user: app.state.user ? { email: app.state.user.email, uid: app.state.user.uid, name: app.state.user.displayName } : null,
+                        data: data // Pass the relevant data for the event
+                    };
+                    console.log(`Sending webhook notification: ${eventType}`);
                     try {
-                        const response = await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                        if (!response.ok) console.warn(`Webhook failed (${eventType}): ${response.status} ${response.statusText}`);
-                    } catch (error) { console.error(`Webhook error (${eventType}):`, error); }
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) {
+                             // Log more details on failure
+                             const responseBody = await response.text();
+                             console.warn(`Webhook failed (${eventType}): ${response.status} ${response.statusText}. Response: ${responseBody}`);
+                             // Optionally notify user of webhook failure (might be too noisy)
+                             // app.methods.showNotification(`Webhook notification failed (${response.status}).`, 'warning');
+                        } else {
+                            console.log(`Webhook notification successful (${eventType})`);
+                        }
+                    } catch (error) {
+                        console.error(`Webhook error (${eventType}):`, error);
+                         // Optionally notify user of webhook failure
+                         // app.methods.showNotification(`Webhook notification failed (Network Error).`, 'warning');
+                    }
                 },
 
                 // --- UI Helpers ---
                 createStatusSpan: (text) => {
-                    if (!text) return ''; const statusClass = `status-${String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`; return `<span class="status ${statusClass}">${app.utils.sanitize(text)}</span>`; },
+                    if (!text) return '';
+                    // Generate a CSS class friendly name from the status text
+                    const statusClass = `status-${String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+                    return `<span class="status ${statusClass}">${app.utils.sanitize(text)}</span>`;
+                },
                 createActionButton: (iconClass, title, dataId, action, dataType = '') => `<button class="icon-btn ${action}-btn" title="${title}" data-id="${dataId}" data-action="${action}" ${dataType ? `data-type="${dataType}"` : ''} aria-label="${title}"><i class="${iconClass}"></i></button>`,
                 updateSortIndicators: (viewId, sortConfig) => {
                     const tableHeaders = document.querySelectorAll(`#${viewId}-view thead th.sortable`);
                     tableHeaders.forEach(th => {
-                        const sortKey = th.dataset.sort; th.classList.remove('sorted', 'asc', 'desc');
-                        if (sortConfig && sortKey === sortConfig.key) th.classList.add('sorted', sortConfig.dir);
+                        const sortKey = th.dataset.sort;
+                        th.classList.remove('sorted', 'asc', 'desc'); // Clear existing sort classes
+                        if (sortConfig && sortKey === sortConfig.key) {
+                             th.classList.add('sorted', sortConfig.dir); // Add current sort classes
+                        }
                     });
                 },
                  applyInitialSort: (viewType) => {
-                     if (app.state.sortState[viewType]) {
-                        // Ensure data is sorted according to the saved state
-                        app.methods.getFilteredData(viewType); // This applies the sort internally
+                    // This ensures the current sort state is applied when data loads/reloads
+                    if (app.state.sortState[viewType]) {
+                        console.log(`Applying initial sort for ${viewType}:`, app.state.sortState[viewType]);
+                        // The getFilteredData method already applies the sort based on state
+                        // We just need to update the visual indicators
                         app.methods.updateSortIndicators(viewType, app.state.sortState[viewType]);
+                     } else {
+                        // Ensure indicators are cleared if no sort is set for this view
+                        app.methods.updateSortIndicators(viewType, null);
                      }
                  },
                 handleSortClick: (thElement, viewType) => {
-                    const sortKey = thElement.dataset.sort; let currentSort = app.state.sortState[viewType] || {}; let newDir = 'asc';
-                    if (currentSort.key === sortKey && currentSort.dir === 'asc') newDir = 'desc';
-                    app.state.sortState[viewType] = { key: sortKey, dir: newDir };
-                    app.methods.saveSortState();
+                    const sortKey = thElement.dataset.sort;
+                    if (!sortKey) return; // Should not happen with .sortable class
+
+                    let currentSort = app.state.sortState[viewType] || {};
+                    let newDir = 'asc';
+                    // Cycle through asc -> desc -> none (or back to asc if starting from none)
+                    if (currentSort.key === sortKey) {
+                         if (currentSort.dir === 'asc') newDir = 'desc';
+                         // Optional: uncomment below to cycle to 'none'
+                         // else if (currentSort.dir === 'desc') { app.state.sortState[viewType] = {}; newDir = null; }
+                         else newDir = 'asc'; // If it was desc, cycle back to asc
+                    }
+                    // else { newDir = 'asc'; } // Start with asc if sorting a new column
+
+                    if (newDir) { app.state.sortState[viewType] = { key: sortKey, dir: newDir }; }
+                    else { delete app.state.sortState[viewType]; } // Remove sort if cycled to none
+
+                    app.methods.saveSortState(); // Persist the new sort state
+
                     // Re-render the specific table, which will use the new sort state
-                    app.methods[`render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`]();
+                    const renderMethodName = `render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`;
+                    if (app.methods[renderMethodName]) {
+                        app.methods[renderMethodName]();
+                    } else {
+                        console.warn(`Render method not found for table view: ${viewType}`);
+                    }
                 },
                  handleSearchInput: (event, viewType) => {
-                    app.state.filterState[viewType] = event.target.value;
-                    // Add debounce here if performance becomes an issue with large datasets
-                    // Re-render the specific table, which will use the new filter state
-                    app.methods[`render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`]();
+                    // Basic debounce implementation
+                    clearTimeout(app.state[`${viewType}SearchTimeout`]); // Clear previous timeout
+                    app.state[`${viewType}SearchTimeout`] = setTimeout(() => {
+                        app.state.filterState[viewType] = event.target.value;
+                        console.log(`Filtering ${viewType} for: "${app.state.filterState[viewType]}"`);
+                        // Re-render the specific table, which will use the new filter state
+                        const renderMethodName = `render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`;
+                        if (app.methods[renderMethodName]) {
+                            app.methods[renderMethodName]();
+                        } else {
+                            console.warn(`Render method not found for table view: ${viewType}`);
+                        }
+                    }, 300); // Wait 300ms after last input before filtering
                  },
                  // --- User Guide Method ---
                 showUserGuide: () => {
@@ -2770,17 +3058,18 @@
                             <h4><i class="fas fa-tachometer-alt"></i> Dashboard</h4>
                             <p>Provides a quick overview of today's activity and upcoming/overdue tasks.</p>
                             <ul>
-                                <li><strong>Today's Summary:</strong> Shows counts of new connections, messages due, calls due, appointments to confirm, and overdue tasks based on current data.</li>
-                                <li><strong>Upcoming / Overdue:</strong> Lists specific tasks needing attention (e.g., lead follow-ups, appointment confirmations). Click <i class="fas fa-check"></i> to mark complete or <i class="fas fa-clock"></i> to snooze to the next business day.</li>
-                                <li>The <i class="fas fa-bell"></i> icon (bottom right) also indicates pending tasks and navigates here.</li>
+                                <li><strong>Today's Summary:</strong> Shows counts of new connections, messages due, calls due, appointments to confirm, and overdue tasks based on current data and statuses.</li>
+                                <li><strong>Upcoming / Overdue:</strong> Lists specific tasks needing attention (e.g., lead follow-ups, appointment confirmations/reminders based on their due/reminder dates and status). Click <i class="fas fa-check"></i> to mark complete or <i class="fas fa-clock"></i> to snooze to the next business day (10 AM).</li>
+                                <li>The <i class="fas fa-bell"></i> icon (bottom right) also indicates pending tasks and clicking it navigates to the Dashboard task list.</li>
                             </ul>
 
                             <h4><i class="fab fa-linkedin"></i> LinkedIn Leads</h4>
                             <p>Track your LinkedIn connections and messaging workflow.</p>
                             <ul>
-                                <li>Click <strong><i class="fas fa-plus"></i> Add Connection</strong> to add a new lead. Data is saved to the shared cloud database.</li>
-                                <li>Use the <i class="fas fa-search"></i> <strong>Search</strong> bar to filter leads by any field.</li>
-                                <li>Click column headers (<i class="fas fa-sort"></i>) to sort the table.</li>
+                                <li>Requires Sign-In to Add/Edit/Delete. Data is saved to the shared cloud database.</li>
+                                <li>Click <strong><i class="fas fa-plus"></i> Add Connection</strong> to add a new lead.</li>
+                                <li>Use the <i class="fas fa-search"></i> <strong>Search</strong> bar to filter leads by any field (live filtering).</li>
+                                <li>Click column headers (<i class="fas fa-sort"></i>) to sort the table. Your sort preference is saved locally.</li>
                                 <li>Click <i class="fas fa-edit"></i> to edit or <i class="fas fa-trash-alt"></i> to delete a lead.</li>
                                 <li><strong>Export:</strong> Exports the currently filtered view to a CSV file.</li>
                                 <li><strong>Import (Local):</strong> Loads data from a CSV file into the table view <strong>only in your browser</strong>. It does <strong>NOT</strong> save this imported data to the cloud. Useful for temporary viewing or checking formats.</li>
@@ -2789,6 +3078,7 @@
                             <h4><i class="fas fa-phone-alt"></i> Call Tracking</h4>
                             <p>Log calls made to leads or clients.</p>
                             <ul>
+                                <li>Requires Sign-In to Add/Edit/Delete. Data is saved to the shared cloud database.</li>
                                 <li>Similar functionality to Leads: Add, Edit (<i class="fas fa-edit"></i>), Delete (<i class="fas fa-trash-alt"></i>), Search (<i class="fas fa-search"></i>), Sort (<i class="fas fa-sort"></i>), Export, and Import (Local).</li>
                                 <li>Record call outcomes and any next steps.</li>
                             </ul>
@@ -2796,41 +3086,42 @@
                              <h4><i class="fas fa-calendar-check"></i> Appointments</h4>
                              <p>Manage scheduled appointments.</p>
                              <ul>
+                                 <li>Requires Sign-In to Add/Edit/Delete. Data is saved to the shared cloud database.</li>
                                  <li>Similar functionality to Leads/Calls: Add, Edit (<i class="fas fa-edit"></i>), Delete (<i class="fas fa-trash-alt"></i>), Search (<i class="fas fa-search"></i>), Sort (<i class="fas fa-sort"></i>), Export, and Import (Local).</li>
-                                 <li>Enter the <strong>Meeting Date & Time</strong>. The <strong>Confirmation Call Date</strong> (2 business days prior) and <strong>Text Reminder Date</strong> (1 business day prior) are calculated automatically. These dates trigger tasks on the Dashboard.</li>
-                                 <li>Set the appointment status (Pending, Confirmed, etc.).</li>
+                                 <li>Enter the <strong>Meeting Date & Time</strong>. The <strong>Confirmation Call Date</strong> (2 business days prior) and <strong>Text Reminder Date</strong> (1 business day prior) are calculated automatically (read-only). These dates trigger tasks on the Dashboard if the appointment status is appropriate (e.g., 'Pending', 'Confirmed').</li>
+                                 <li>Set the appointment status (e.g., Pending, Confirmed, Completed).</li>
                              </ul>
 
                              <h4><i class="fas fa-chart-bar"></i> Daily Report</h4>
                              <p>Summarize daily activities.</p>
                              <ul>
-                                <li>Select a <strong>Report Date</strong> to load or save a report for that day.</li>
-                                <li>Fill in the summary text areas for LinkedIn, Calls, Appointments, and Follow-ups/Blockers.</li>
-                                <li>Click <strong><i class="fas fa-save"></i> Save Report</strong> to save the content to the shared cloud database for the selected date.</li>
-                                <li><strong>Export View:</strong> Exports the currently displayed report data to CSV.</li>
-                                <li><strong>Import (Local):</strong> Loads a single report row from CSV into the form view <strong>only in your browser</strong>. Does <strong>NOT</strong> save to the cloud.</li>
+                                 <li>Requires Sign-In to Save reports. Reports are saved to the shared cloud database.</li>
+                                 <li>Select a <strong>Report Date</strong> to load a previously saved report or to set the date for a new report.</li>
+                                 <li>Fill in the summary text areas for LinkedIn, Calls, Appointments, and Follow-ups/Blockers.</li>
+                                 <li>Click <strong><i class="fas fa-save"></i> Save Report</strong> to save the content to the shared cloud database for the selected date. This will overwrite any existing report for that date.</li>
+                                 <li><strong>Export View:</strong> Exports the currently displayed report data to CSV.</li>
+                                 <li><strong>Import (Local):</strong> Loads a single report row from CSV into the form view <strong>only in your browser</strong>. Does <strong>NOT</strong> save to the cloud.</li>
                              </ul>
 
                              <h4><i class="fas fa-cog"></i> Settings</h4>
                              <p>Manage application settings.</p>
                              <ul>
-                                 <li><strong>Shared Webhook:</strong> (Optional) Enter a webhook URL (e.g., from n8n, Zapier) to receive notifications when data is added/updated/deleted. This setting is shared by all users. Requires sign-in to update.</li>
-                                 <li><strong>Local Browser Data:</strong> Manage data stored <i>only in your current browser</i>.
+                                 <li><strong>Shared Webhook:</strong> (Optional) Requires Sign-In to update. Enter a webhook URL (e.g., from n8n, Zapier) to receive notifications when data is added/updated/deleted in the shared database. This setting is shared by all users.</li>
+                                 <li><strong>Local Browser Data:</strong> Manage data stored <i>only in your current browser</i>. This does NOT affect the shared cloud data.
                                     <ul>
-                                        <li><strong>Backup Local:</strong> Saves a snapshot of your current local settings (sort preferences, cached report/webhook) to browser storage.</li>
+                                        <li><strong>Backup Local:</strong> Saves a snapshot of your current local settings (sort preferences, search filters, cached report/webhook) to browser storage.</li>
                                         <li><strong>Restore Local:</strong> Replaces your current local settings with the last backup. Does <strong>NOT</strong> affect cloud data.</li>
                                         <li><strong>Clear Local Data:</strong> <strong style="color:var(--danger)">DANGER!</strong> Deletes all application data stored locally in this browser (cache, backups, preferences). Does <strong>NOT</strong> affect cloud data.</li>
                                     </ul>
                                  </li>
-                                 <li><strong>Cloud Sync:</strong> (Optional/Future Feature) Intended for user-specific preferences if implemented later.</li>
                              </ul>
 
                              <h4><i class="fas fa-sign-in-alt"></i> Authentication</h4>
                              <p>Sign in with your Google account to access and save shared data (Leads, Calls, Appointments, Reports, Shared Settings). Most features require you to be signed in.</p>
                              <ul>
-                                 <li>Click the <i class="fab fa-google"></i> <strong>Sign In</strong> button.</li>
+                                 <li>Click the <i class="fab fa-google"></i> <strong>Sign In</strong> button. Use your authorized Google account.</li>
                                  <li>Once signed in, your profile picture and name appear. Click <strong>Sign Out</strong> to disconnect.</li>
-                                 <li>Data is saved automatically to the shared Firestore database when you Add/Edit/Delete items while signed in.</li>
+                                 <li>While signed in, data updates (adds, edits, deletes) are saved to the shared cloud database and listeners update the view in real-time for all connected users.</li>
                              </ul>
                          </div>
                      `;
@@ -2881,7 +3172,7 @@
                     app.elements.exportLeadsBtn?.addEventListener('click', (e) => app.methods.exportCSVData(app.methods.getFilteredData('leads'), 'nm_leads_export.csv', leadHeaders, e.currentTarget));
                     const callHeaders = ["id", "name", "callDate", "outcome", "nextStep", "nextStepDueDate", "notes", "createdBy", "createdAt", "lastUpdatedBy", "lastUpdatedAt"];
                     app.elements.exportCallsBtn?.addEventListener('click', (e) => app.methods.exportCSVData(app.methods.getFilteredData('calls'), 'nm_calls_export.csv', callHeaders, e.currentTarget));
-                    const apptHeaders = ["id", "clientName", "meetingDateTime", "confirmationCallDate", "textReminderDate", "status", "notes", "lastReminderSent", "createdBy", "createdAt", "lastUpdatedBy", "lastUpdatedAt"];
+                    const apptHeaders = ["id", "clientName", "meetingDateTime", "confirmationCallDate", "textReminderDate", "status", "notes", "textReminderSent", "createdBy", "createdAt", "lastUpdatedBy", "lastUpdatedAt"];
                     app.elements.exportAppointmentsBtn?.addEventListener('click', (e) => app.methods.exportCSVData(app.methods.getFilteredData('appointments'), 'nm_appointments_export.csv', apptHeaders, e.currentTarget));
                     const reportHeaders = ["reportDate", "linkedinSummary", "callSummary", "appointmentSummary", "followupSummary", "savedBy", "generatedAt"];
                     app.elements.exportReportBtn?.addEventListener('click', (e) => { const report = app.state.dailyReportData; if (report?.reportDate) { const exp = {...report}; if(exp.generatedAt) exp.generatedAt = app.utils.createDateAdjusted(exp.generatedAt)?.toISOString(); app.methods.exportCSVData([exp], `nm_report_${report.reportDate}.csv`, reportHeaders, e.currentTarget); } else { app.methods.showNotification("No report displayed.", "warning"); } });
@@ -2891,22 +3182,22 @@
                     app.elements.importAppointmentsBtn?.addEventListener('click', () => app.elements.importAppointmentsFile?.click());
                     app.elements.importReportBtn?.addEventListener('click', () => app.elements.importReportFile?.click());
                     // Import File Input Handlers (Load LOCAL VIEW ONLY)
-                    const leadImportHeaders = ["name", "connectionDate"]; // Example minimum
+                    const leadImportHeaders = ["name", "connectionDate"]; // Example minimum required
                     app.elements.importLeadsFile?.addEventListener('change', (e) => app.methods.handleImport(e, 'leads', app.methods.renderLeadsTable, leadImportHeaders, app.elements.importLeadsBtn));
-                    const callImportHeaders = ["name", "callDate"]; // Example minimum
+                    const callImportHeaders = ["name", "callDate"]; // Example minimum required
                     app.elements.importCallsFile?.addEventListener('change', (e) => app.methods.handleImport(e, 'calls', app.methods.renderCallsTable, callImportHeaders, app.elements.importCallsBtn));
-                    const apptImportHeaders = ["clientName", "meetingDateTime"]; // Example minimum
+                    const apptImportHeaders = ["clientName", "meetingDateTime"]; // Example minimum required
                     app.elements.importAppointmentsFile?.addEventListener('change', (e) => app.methods.handleImport(e, 'appointments', app.methods.renderAppointmentsTable, apptImportHeaders, app.elements.importAppointmentsBtn));
                     app.elements.importReportFile?.addEventListener('change', (e) => app.methods.handleReportImport(e, app.elements.importReportBtn));
-                    // Table Sorting (Delegation)
+                    // Table Sorting (Delegation on thead)
                     document.querySelector('#leads-view thead')?.addEventListener('click', (e) => { const th = e.target.closest('th.sortable'); if(th) app.methods.handleSortClick(th, 'leads') });
                     document.querySelector('#calls-view thead')?.addEventListener('click', (e) => { const th = e.target.closest('th.sortable'); if(th) app.methods.handleSortClick(th, 'calls') });
                     document.querySelector('#appointments-view thead')?.addEventListener('click', (e) => { const th = e.target.closest('th.sortable'); if(th) app.methods.handleSortClick(th, 'appointments') });
-                    // Table Search Input
+                    // Table Search Input (with Debounce)
                     app.elements.searchLeadsInput?.addEventListener('input', (e) => app.methods.handleSearchInput(e, 'leads'));
                     app.elements.searchCallsInput?.addEventListener('input', (e) => app.methods.handleSearchInput(e, 'calls'));
                     app.elements.searchAppointmentsInput?.addEventListener('input', (e) => app.methods.handleSearchInput(e, 'appointments'));
-                    // Table Action Buttons (Delegation) - Edit/Delete
+                    // Table Action Buttons (Delegation on tbody) - Edit/Delete
                     const setupTableActionListeners = (tableBodyId, editHandler, deleteHandler) => {
                         document.getElementById(tableBodyId)?.addEventListener('click', (e) => {
                              const button = e.target.closest('button[data-action]'); if (!button) return;
@@ -2931,7 +3222,7 @@
                     try {
                         if (typeof firebase === 'undefined' || !firebase.app) throw new Error("Firebase SDK not loaded.");
                          // 🔥 CRITICAL CONFIG CHECK 🔥
-                         if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes("YOUR_") || !firebaseConfig.projectId || firebaseConfig.projectId.includes("YOUR_")) { // More robust check
+                         if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("YOUR_") || !firebaseConfig.projectId || firebaseConfig.projectId.startsWith("YOUR_")) {
                               console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                               console.error("!!! Firebase config placeholders detected. App will not work !!!");
                               console.error("!!! Please replace placeholders in `firebaseConfig` object.   !!!");
@@ -2942,16 +3233,31 @@
                         firebase.initializeApp(firebaseConfig);
                         auth = firebase.auth(); db = firebase.firestore();
                         app.state.firestoreInitialized = true; console.log("Firebase Initialized.");
-                        db.enablePersistence({ synchronizeTabs: true }) .then(() => console.log("Firestore offline persistence enabled.")) .catch(err => console.warn("Firestore offline persistence failed:", err.code)); // More specific catch
+                        // Enable offline persistence with tab synchronization
+                        db.enablePersistence({ synchronizeTabs: true })
+                          .then(() => console.log("Firestore offline persistence enabled."))
+                          .catch(err => {
+                              if (err.code == 'failed-precondition') {
+                                  console.warn("Firestore persistence failed: Multiple tabs open?");
+                              } else if (err.code == 'unimplemented') {
+                                  console.warn("Firestore persistence failed: Browser does not support.");
+                              } else {
+                                  console.warn("Firestore persistence failed:", err.code);
+                              }
+                          });
                     } catch (error) {
                         console.error("Firebase initialization failed:", error);
                         app.state.firestoreInitialized = false;
+                        // Update Sign In button to show error state
                         if (app.elements.googleSigninBtn) {
                              app.elements.googleSigninBtn.disabled = true;
                              app.elements.googleSigninBtn.title = "Firebase Connection Failed!";
                              app.elements.googleSigninBtn.classList.add('error-state'); // Add error style
-                             app.elements.googleSigninBtn.querySelector('span').textContent = 'Error';
-                             app.elements.googleSigninBtn.querySelector('i.fab.fa-google').className = 'fas fa-exclamation-triangle';
+                             // Ensure elements exist before trying to modify them
+                             const span = app.elements.googleSigninBtn.querySelector('span');
+                             const icon = app.elements.googleSigninBtn.querySelector('i');
+                             if (span) span.textContent = 'Error';
+                             if (icon) icon.className = 'fas fa-exclamation-triangle'; // Change icon
                         }
                          app.methods.showNotification("Failed to connect to Firebase. Check config & console.", "error", 10000);
                     }
@@ -2961,12 +3267,17 @@
                     app.state.backupTimestamp = lastBackup?.lastBackupTime || null;
                     app.state.dailyReportData = app.methods.loadDataFromStorage(STORAGE_KEYS.DAILY_REPORT_CACHE) || { reportDate: app.utils.getTodayDateString(), id: app.utils.getTodayDateString() };
                     app.state.webhookUrl = app.methods.loadDataFromStorage(STORAGE_KEYS.WEBHOOK_URL_CACHE) || DEFAULT_WEBHOOK_URL;
+                    app.state.filterState = lastBackup?.filterState || {}; // Load filters from backup if available
+
                     // 3. Set Footer Year
                     app.methods.setFooterYear(); // <-- ADDED CALL HERE
                     // 4. Setup Event Listeners
                     app.methods.setupEventListeners();
                     // 5. Set initial UI states
                      app.elements.reportDateInput.value = app.state.dailyReportData.reportDate || app.utils.getTodayDateString(); // Ensure report date is set
+                     app.elements.searchLeadsInput.value = app.state.filterState.leads || ''; // Apply loaded filters
+                     app.elements.searchCallsInput.value = app.state.filterState.calls || '';
+                     app.elements.searchAppointmentsInput.value = app.state.filterState.appointments || '';
                      app.methods.setActiveView('dashboard'); // Set initial view but render happens after auth
                     app.methods.renderSettingsView(); // Set initial readonly states etc.
                     // 6. Setup Auth Listener (triggers UI, listeners, and initial render)
@@ -2978,11 +3289,15 @@
                              // Trigger first render *after* the first auth state check completes
                              if (!app.state.initialRenderComplete && app.state.authReady) {
                                  console.log("Auth ready, performing initial render triggered by auth state change...");
-                                 // If logged out, updateUI already cleared tables.
+                                 // If logged out, updateUI already cleared tables and detached listeners.
                                  // If logged in, listeners were set up by updateUI and will populate data.
-                                 // Still call renderAllViews to ensure static parts & cached views render correctly.
-                                 app.methods.renderAllViews(); // This should now render tables correctly after listeners populate state
+                                 // renderAllViews ensures static parts & cached views render correctly.
+                                 app.methods.renderAllViews(!user); // Pass forceEmptyState=true if user is null
                                  app.state.initialRenderComplete = true;
+                             } else if (app.state.initialRenderComplete && app.state.authReady) {
+                                // Subsequent auth changes (e.g., token refresh) - re-render active view? Usually not needed as listeners handle data.
+                                // Maybe just update dashboard?
+                                app.methods.renderDashboardView();
                              }
                         });
                     } else { // Firebase failed init
