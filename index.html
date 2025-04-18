@@ -485,6 +485,12 @@
         input[readonly]:focus, select[readonly]:focus, textarea[readonly]:focus {
             box-shadow: none; border-color: var(--medium-light);
         }
+        /* Added styles for modal form buttons */
+        .modal-form-actions {
+            margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;
+            padding-top: 15px; border-top: 1px solid var(--border-color);
+        }
+
 
         /* Buttons (General) */
         button {
@@ -1060,12 +1066,12 @@
         //    🚨 THE APP WILL NOT WORK WITHOUT YOUR ACTUAL CONFIG VALUES! 🚨
         //
         const firebaseConfig = {
-            apiKey: "AIzaSyC1ziad-WaFBeUP7gnKGu05QiQdE-d1dxk", // 🔥 REPLACE
-            authDomain: "kf-tracker.firebaseapp.com", // 🔥 REPLACE
-            projectId: "kf-tracker", // 🔥 REPLACE
-            storageBucket: "kf-tracker.firebasestorage.app", // 🔥 REPLACE
-            messagingSenderId: "442039973322", // 🔥 REPLACE
-            appId: "1:442039973322:web:6ee8e95332f34a647b4b33", // 🔥 REPLACE
+            apiKey: "AIzaSyC1ziad-WaFBeUP7gnKGu05QiQdE-d1dxk",
+            authDomain: "kf-tracker.firebaseapp.com",
+            projectId: "kf-tracker",
+            storageBucket: "kf-tracker.firebasestorage.app",
+            messagingSenderId: "442039973322",
+            appId: "1:442039973322:web:6ee8e95332f34a647b4b33",
             // Optional: measurementId: "G-NW26FEGLS8"
             // databaseURL: "https://kf-tracker-default-rtdb.firebaseio.com" // Only needed for Realtime Database (v8 SDK)
         };
@@ -1876,18 +1882,69 @@
                 // --- CRUD Methods (Add, Edit, Save, Delete for Leads, Calls, Appointments) ---
 
                  // -- Leads --
-                 addLead: () => { /* ... (no change needed in logic, ensure saveLead called) ... */ },
+                 addLead: () => { // MODIFIED: Added form generation and modal opening
+                    if (!app.state.user) { app.methods.showNotification("Please sign in to add data.", "warning"); return; }
+                    const todayDate = app.utils.getTodayDateString();
+                    const formHtml = `
+                        <form id="add-lead-form" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="add-lead-name">Name *</label>
+                                <input type="text" id="add-lead-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-lead-company">Company</label>
+                                <input type="text" id="add-lead-company">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-lead-date">Connection Date *</label>
+                                <input type="date" id="add-lead-date" value="${todayDate}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-lead-stage">Message Stage *</label>
+                                <select id="add-lead-stage" required>
+                                    ${app.methods.generateLeadStageOptions('new-connection')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-lead-next">Next Action</label>
+                                <input type="text" id="add-lead-next" placeholder="e.g., Send follow-up message 2">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-lead-due">Due Date</label>
+                                <input type="date" id="add-lead-due">
+                            </div>
+                             <div class="form-group">
+                                <label for="add-lead-status">Status *</label>
+                                <select id="add-lead-status" required>
+                                    ${app.methods.generateLeadStatusOptions('new-connection')}
+                                </select>
+                            </div>
+                            <div class="modal-form-actions">
+                                <button type="button" class="secondary-btn" onclick="app.methods.closeModal()"><span>Cancel</span></button>
+                                <button type="button" class="success-btn" onclick="app.methods.saveLead(null, this)">
+                                    <i class="fas fa-check"></i> <span>Add Connection</span> <i class="loading-spinner"></i>
+                                </button>
+                            </div>
+                        </form>`;
+                    app.methods.openModal('Add New LinkedIn Connection', formHtml);
+                 },
                  editLead: (id) => { /* ... (no change needed in logic, ensure saveLead called) ... */ },
                  generateLeadStageOptions: (selectedValue) => {
                      const stages = ['New Connection', 'Message 1 Sent', 'Message 2 Sent', 'Final Message Sent', 'Responded - Positive', 'Responded - Negative', 'Booked Call', 'Follow-up Later', 'Closed'];
-                     return stages.map(stage => `<option value="${stage.toLowerCase().replace(/ /g, '-')}" ${stage.toLowerCase().replace(/ /g, '-') === selectedValue ? 'selected' : ''}>${stage}</option>`).join('');
+                     return stages.map(stage => {
+                         const value = stage.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Generate consistent value
+                         return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${stage}</option>`;
+                     }).join('');
                  },
                  generateLeadStatusOptions: (selectedValue) => { // Consolidated/simplified example
                      const statuses = ['New Connection', 'Waiting for Response 1', 'Waiting for Response 2', 'Connected - Positive', 'Connected - Negative', 'Call Booked', 'Follow-up Later', 'Closed - No Response', 'Closed - Negative', 'Wrong Person/Number'];
-                     return statuses.map(status => `<option value="${status.toLowerCase().replace(/ /g, '-')}" ${status.toLowerCase().replace(/ /g, '-') === selectedValue ? 'selected' : ''}>${status}</option>`).join('');
+                      return statuses.map(status => {
+                         const value = status.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Generate consistent value
+                         return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${status}</option>`;
+                     }).join('');
                  },
                  saveLead: (leadId = null, saveBtnElement) => {
-                     const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : '';
+                     const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : 'add-'; // Adjusted prefix for IDs
                      const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                      if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
                      try {
@@ -1903,6 +1960,7 @@
                          if (!connectionDate || (dueDateStr && !dueDate)) { app.methods.showNotification('Invalid date format.', 'warning'); stopLoading(); return; }
                          const leadData = { name, company, connectionDate, messageStage, nextAction, dueDate, status, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                          let actionPromise;
+                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true); // Start loading indicator
                          if (isUpdate) {
                              actionPromise = db.collection(FIRESTORE_LEADS_COLLECTION).doc(leadId).update(leadData);
                          } else {
@@ -1960,11 +2018,97 @@
                  },
 
                 // -- Calls -- (Similar structure)
-                 addCall: () => { /* ... form display ... */ },
+                 addCall: () => { // MODIFIED: Added form generation and modal opening
+                    if (!app.state.user) { app.methods.showNotification("Please sign in to add data.", "warning"); return; }
+                    const todayDate = app.utils.getTodayDateString();
+                    const formHtml = `
+                        <form id="add-call-form" onsubmit="return false;">
+                             <div class="form-group">
+                                <label for="add-call-name">Name *</label>
+                                <input type="text" id="add-call-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-call-date">Call Date *</label>
+                                <input type="date" id="add-call-date" value="${todayDate}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-call-outcome">Outcome *</label>
+                                <select id="add-call-outcome" required>
+                                    ${app.methods.generateCallOutcomeOptions('')}
+                                </select>
+                            </div>
+                             <div class="form-group">
+                                <label for="add-call-next-step">Next Step</label>
+                                <input type="text" id="add-call-next-step" placeholder="e.g., Schedule meeting, Send info">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-call-next-due">Next Step Due Date</label>
+                                <input type="date" id="add-call-next-due">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-call-notes">Notes</label>
+                                <textarea id="add-call-notes" rows="3"></textarea>
+                            </div>
+                            <div class="modal-form-actions">
+                                <button type="button" class="secondary-btn" onclick="app.methods.closeModal()"><span>Cancel</span></button>
+                                <button type="button" class="success-btn" onclick="app.methods.saveCall(null, this)">
+                                    <i class="fas fa-check"></i> <span>Add Call</span> <i class="loading-spinner"></i>
+                                </button>
+                            </div>
+                        </form>`;
+                    app.methods.openModal('Add New Call Record', formHtml);
+                 },
                  editCall: (id) => { /* ... form display ... */ },
-                 generateCallOutcomeOptions: (selectedValue) => { /* ... options ... */ },
-                 saveCall: (callId = null, saveBtnElement) => { /* ... save logic + webhook ... */ },
-                 deleteCall: (id) => { /* ... delete logic + webhook ... */ },
+                 generateCallOutcomeOptions: (selectedValue) => { // Added outcome options
+                     const outcomes = ['Connected - Positive', 'Connected - Negative', 'Connected - Needs Follow-up', 'Left Voicemail', 'No Answer', 'Wrong Number', 'Call Back Requested', 'Appointment Booked'];
+                      return outcomes.map(outcome => {
+                         const value = outcome.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Generate consistent value
+                         return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${outcome}</option>`;
+                     }).join('');
+                 },
+                 saveCall: (callId = null, saveBtnElement) => { // MODIFIED: Implemented save logic
+                    const isUpdate = !!callId; const idPrefix = isUpdate ? 'edit-' : 'add-';
+                    const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
+                    if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
+                    try {
+                        const name = document.getElementById(`${idPrefix}call-name`)?.value.trim();
+                        const callDateStr = document.getElementById(`${idPrefix}call-date`)?.value;
+                        const outcome = document.getElementById(`${idPrefix}call-outcome`)?.value;
+                        const nextStep = document.getElementById(`${idPrefix}call-next-step`)?.value.trim();
+                        const nextStepDueDateStr = document.getElementById(`${idPrefix}call-next-due`)?.value;
+                        const notes = document.getElementById(`${idPrefix}call-notes`)?.value.trim();
+                        if (!name || !callDateStr || !outcome) { app.methods.showNotification('Please fill required fields (*).', 'warning'); stopLoading(); return; }
+                        const callDate = app.utils.createDateAdjusted(callDateStr);
+                        const nextStepDueDate = nextStepDueDateStr ? app.utils.createDateAdjusted(nextStepDueDateStr) : null;
+                        if (!callDate || (nextStepDueDateStr && !nextStepDueDate)) { app.methods.showNotification('Invalid date format.', 'warning'); stopLoading(); return; }
+                        const callData = { name, callDate, outcome, nextStep, nextStepDueDate, notes, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                        let actionPromise;
+                        if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
+                        if (isUpdate) {
+                            actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).doc(callId).update(callData);
+                        } else {
+                            callData.createdBy = app.state.user.email || app.state.user.uid; callData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                            actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).add(callData);
+                        }
+                        actionPromise.then((docRefOrVoid) => {
+                            const savedId = isUpdate ? callId : docRefOrVoid.id;
+                            app.methods.showNotification(`Call record for '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
+                            app.methods.closeModal();
+                            const webhookData = { ...callData, id: savedId, callDate: app.utils.formatDate(callDate), nextStepDueDate: app.utils.formatDate(nextStepDueDate) };
+                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
+                            app.methods.sendWebhookNotification(isUpdate ? 'call_updated' : 'call_added', webhookData);
+                        }).catch(error => { console.error("Error saving call:", error); app.methods.showNotification(`Error saving call: ${error.message}`, 'error'); stopLoading(); });
+                    } catch (error) { console.error("Error preparing call data:", error); app.methods.showNotification("Error preparing call data.", "error"); stopLoading(); }
+                },
+                 deleteCall: (id) => { // MODIFIED: Implemented delete logic
+                    if (!db || !app.state.user) { app.methods.showNotification("Cannot delete: Not signed in.", "warning"); return; }
+                    const callToDelete = app.state.calls.find(c => c.id === id); if (!callToDelete) return;
+                    if (!confirm(`Permanently delete call record for '${app.utils.sanitize(callToDelete.name)}'? This cannot be undone.`)) return;
+                    console.log(`Deleting call ${id}...`);
+                    db.collection(FIRESTORE_CALLS_COLLECTION).doc(id).delete()
+                        .then(() => { app.methods.showNotification(`Call record deleted.`, 'success'); app.methods.sendWebhookNotification('call_deleted', { id: id, name: callToDelete.name }); })
+                        .catch(error => { console.error("Error deleting call:", error); app.methods.showNotification(`Error deleting call: ${error.message}`, 'error'); });
+                 },
                  renderCallsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.callsTableBody; if (!tableBody) return;
                      const callsToRender = app.methods.getFilteredData('calls');
@@ -1979,11 +2123,127 @@
                  },
 
                 // -- Appointments -- (Similar structure)
-                 addAppointment: () => { /* ... form display + date recalculation listener ... */ },
+                 addAppointment: () => { // MODIFIED: Added form generation and modal opening
+                    if (!app.state.user) { app.methods.showNotification("Please sign in to add data.", "warning"); return; }
+                    const formHtml = `
+                        <form id="add-appointment-form" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="add-appointment-client">Client Name *</label>
+                                <input type="text" id="add-appointment-client" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-appointment-meeting-time">Meeting Date & Time *</label>
+                                <input type="datetime-local" id="add-appointment-meeting-time" required onchange="app.methods.handleMeetingTimeChange(this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-appointment-confirm-date">Confirmation Call Date</label>
+                                <input type="date" id="add-appointment-confirm-date" readonly title="Calculated automatically (2 business days before meeting)">
+                            </div>
+                             <div class="form-group">
+                                <label for="add-appointment-reminder-date">Text Reminder Date</label>
+                                <input type="date" id="add-appointment-reminder-date" readonly title="Calculated automatically (1 business day before meeting)">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-appointment-status">Status *</label>
+                                <select id="add-appointment-status" required>
+                                    ${app.methods.generateAppointmentStatusOptions('pending')}
+                                </select>
+                            </div>
+                             <div class="form-group">
+                                <label for="add-appointment-notes">Notes</label>
+                                <textarea id="add-appointment-notes" rows="3"></textarea>
+                            </div>
+                             <div class="modal-form-actions">
+                                <button type="button" class="secondary-btn" onclick="app.methods.closeModal()"><span>Cancel</span></button>
+                                <button type="button" class="success-btn" onclick="app.methods.saveAppointment(null, this)">
+                                    <i class="fas fa-check"></i> <span>Add Appointment</span> <i class="loading-spinner"></i>
+                                </button>
+                            </div>
+                        </form>`;
+                    app.methods.openModal('Add New Appointment', formHtml);
+                 },
                  editAppointment: (id) => { /* ... form display + date recalculation listener ... */ },
-                 generateAppointmentStatusOptions: (selectedValue) => { /* ... options ... */ },
-                 saveAppointment: (apptId = null, saveBtnElement) => { /* ... save logic + webhook ... */ },
-                 deleteAppointment: (id) => { /* ... delete logic + webhook ... */ },
+                 generateAppointmentStatusOptions: (selectedValue) => { // Added status options
+                    const statuses = ['Pending', 'Confirmed', 'Rescheduled', 'No Show', 'Completed', 'Cancelled', 'Booked Call']; // Added 'Booked Call'
+                     return statuses.map(status => {
+                         const value = status.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Generate consistent value
+                         return `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${status}</option>`;
+                     }).join('');
+                 },
+                  handleMeetingTimeChange: (dateTimeValue) => { // Helper to update reminder dates
+                     const reminderDates = app.utils.calculateReminderDates(dateTimeValue);
+                     const confirmInput = document.getElementById('add-appointment-confirm-date') || document.getElementById('edit-appointment-confirm-date');
+                     const reminderInput = document.getElementById('add-appointment-reminder-date') || document.getElementById('edit-appointment-reminder-date');
+                     if(confirmInput) confirmInput.value = reminderDates.confirmationCallDate;
+                     if(reminderInput) reminderInput.value = reminderDates.textReminderDate;
+                  },
+                 saveAppointment: (apptId = null, saveBtnElement) => { // MODIFIED: Implemented save logic
+                    const isUpdate = !!apptId; const idPrefix = isUpdate ? 'edit-' : 'add-';
+                    const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
+                    if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
+                    try {
+                        const clientName = document.getElementById(`${idPrefix}appointment-client`)?.value.trim();
+                        const meetingDateTimeStr = document.getElementById(`${idPrefix}appointment-meeting-time`)?.value;
+                        const confirmationCallDateStr = document.getElementById(`${idPrefix}appointment-confirm-date`)?.value; // Should be calculated
+                        const textReminderDateStr = document.getElementById(`${idPrefix}appointment-reminder-date`)?.value; // Should be calculated
+                        const status = document.getElementById(`${idPrefix}appointment-status`)?.value;
+                        const notes = document.getElementById(`${idPrefix}appointment-notes`)?.value.trim();
+
+                        if (!clientName || !meetingDateTimeStr || !status) { app.methods.showNotification('Please fill required fields (*).', 'warning'); stopLoading(); return; }
+
+                        const meetingDateTime = app.utils.createDateAdjusted(meetingDateTimeStr);
+                        // Re-calculate reminders based on final meeting time to ensure accuracy
+                        const reminderDates = app.utils.calculateReminderDates(meetingDateTime);
+                        const confirmationCallDate = reminderDates.confirmationCallDate ? app.utils.createDateAdjusted(reminderDates.confirmationCallDate) : null;
+                        const textReminderDate = reminderDates.textReminderDate ? app.utils.createDateAdjusted(reminderDates.textReminderDate) : null;
+
+                        if (!meetingDateTime) { app.methods.showNotification('Invalid meeting date/time format.', 'warning'); stopLoading(); return; }
+
+                        const appointmentData = {
+                            clientName, meetingDateTime, confirmationCallDate, textReminderDate, status, notes,
+                            textReminderSent: false, // Default to not sent on add/update unless handled elsewhere
+                            lastUpdatedBy: app.state.user.email || app.state.user.uid,
+                            lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        let actionPromise;
+                        if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
+
+                        if (isUpdate) {
+                            // Need to fetch existing doc first if we want to preserve fields like 'textReminderSent' if not editing them
+                            const docRef = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(apptId);
+                            actionPromise = docRef.get().then(doc => {
+                                const existingData = doc.data() || {};
+                                const finalData = { ...existingData, ...appointmentData }; // Merge updates
+                                return docRef.update(finalData);
+                            });
+                        } else {
+                            appointmentData.createdBy = app.state.user.email || app.state.user.uid;
+                            appointmentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                            actionPromise = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).add(appointmentData);
+                        }
+                        actionPromise.then((docRefOrVoid) => {
+                            const savedId = isUpdate ? apptId : docRefOrVoid.id;
+                            app.methods.showNotification(`Appointment for '${app.utils.sanitize(clientName)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
+                            app.methods.closeModal();
+                            const webhookData = { ...appointmentData, id: savedId,
+                                meetingDateTime: meetingDateTime ? meetingDateTime.toISOString() : null, // Send ISO
+                                confirmationCallDate: app.utils.formatDate(confirmationCallDate), // Send YYYY-MM-DD
+                                textReminderDate: app.utils.formatDate(textReminderDate) // Send YYYY-MM-DD
+                            };
+                            delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
+                            app.methods.sendWebhookNotification(isUpdate ? 'appointment_updated' : 'appointment_added', webhookData);
+                        }).catch(error => { console.error("Error saving appointment:", error); app.methods.showNotification(`Error saving appointment: ${error.message}`, 'error'); stopLoading(); });
+                    } catch (error) { console.error("Error preparing appointment data:", error); app.methods.showNotification("Error preparing appointment data.", "error"); stopLoading(); }
+                 },
+                 deleteAppointment: (id) => { // MODIFIED: Implemented delete logic
+                    if (!db || !app.state.user) { app.methods.showNotification("Cannot delete: Not signed in.", "warning"); return; }
+                    const apptToDelete = app.state.appointments.find(a => a.id === id); if (!apptToDelete) return;
+                    if (!confirm(`Permanently delete appointment for '${app.utils.sanitize(apptToDelete.clientName)}'? This cannot be undone.`)) return;
+                    console.log(`Deleting appointment ${id}...`);
+                    db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(id).delete()
+                        .then(() => { app.methods.showNotification(`Appointment deleted.`, 'success'); app.methods.sendWebhookNotification('appointment_deleted', { id: id, clientName: apptToDelete.clientName }); })
+                        .catch(error => { console.error("Error deleting appointment:", error); app.methods.showNotification(`Error deleting appointment: ${error.message}`, 'error'); });
+                 },
                  renderAppointmentsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.appointmentsTableBody; if (!tableBody) return;
                      const apptsToRender = app.methods.getFilteredData('appointments');
@@ -2217,10 +2477,10 @@
                     // Auth
                     app.elements.googleSigninBtn?.addEventListener('click', app.methods.signInWithGoogle);
                     app.elements.signOutBtn?.addEventListener('click', app.methods.signOut);
-                    // Add Buttons (Open Modals)
-                    app.elements.addLeadBtn?.addEventListener('click', () => { app.methods.addLead(); /* Form logic inside openModal */ });
-                    app.elements.addCallBtn?.addEventListener('click', () => { app.methods.addCall(); /* Form logic inside openModal */ });
-                    app.elements.addAppointmentBtn?.addEventListener('click', () => { app.methods.addAppointment(); /* Form logic inside openModal */ });
+                    // Add Buttons (Open Modals) - MODIFIED: These now correctly point to functions that open modals
+                    app.elements.addLeadBtn?.addEventListener('click', () => { app.methods.addLead(); });
+                    app.elements.addCallBtn?.addEventListener('click', () => { app.methods.addCall(); });
+                    app.elements.addAppointmentBtn?.addEventListener('click', () => { app.methods.addAppointment(); });
                     // Report
                     app.elements.generateReportBtn?.addEventListener('click', app.methods.generateAndSaveReport);
                     app.elements.reportDateInput?.addEventListener('change', (e) => app.methods.loadReportForDate(e.target.value));
