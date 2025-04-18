@@ -1491,7 +1491,8 @@
                                 app.methods.renderAllViews(); // Perform initial full render
                                 app.state.initialRenderComplete = true;
                             } else {
-                                // Subsequent updates only affect dashboard/tasks actively
+                                // Subsequent updates might have already triggered renders via the modified listener
+                                // Ensure dashboard is always up-to-date though
                                 app.methods.updateDashboardSummary();
                                 app.methods.renderDashboardTaskList();
                             }
@@ -1504,13 +1505,20 @@
                             console.log(`${collectionName} snapshot received (${snapshot.docChanges().length} changes)`);
                             let updatedData = [];
                             snapshot.forEach(doc => updatedData.push({ id: doc.id, ...doc.data() }));
-                            app.state[stateKey] = updatedData;
-                            app.methods.applyInitialSort(stateKey); // Apply stored sort
-                            if (app.state.activeView === stateKey || app.state.activeView === 'dashboard') {
-                                if(renderFunc) renderFunc(); // Render table if active
-                                app.methods.updateDashboardSummary();
-                                app.methods.renderDashboardTaskList();
+                            app.state[stateKey] = updatedData; // Update state
+                            app.methods.applyInitialSort(stateKey); // Apply sorting to the new state
+
+                            // --- MODIFICATION START ---
+                            // Always render the specific table view to keep it up-to-date in the background.
+                            // The active view check is removed here for table rendering.
+                            if (renderFunc) {
+                                renderFunc(); // Call the specific render function (e.g., renderLeadsTable)
                             }
+                            // Always update dashboard components as they might be visible.
+                            app.methods.updateDashboardSummary();
+                            app.methods.renderDashboardTaskList();
+                            // --- MODIFICATION END ---
+
                             if (!initialLoads[loadKey]) { initialLoads[loadKey] = true; checkAllLoaded(); }
                         }, error => {
                             console.error(`Error listening to ${collectionName}:`, error);
@@ -1520,7 +1528,7 @@
                         detachListeners.push(listener);
                     };
 
-                    // Create listeners
+                    // Create listeners (Functions remain the same, but the internal callback logic changed)
                     createListener(FIRESTORE_LEADS_COLLECTION, "createdAt", "desc", 'leads', app.methods.renderLeadsTable, 'leads');
                     createListener(FIRESTORE_CALLS_COLLECTION, "callDate", "desc", 'calls', app.methods.renderCallsTable, 'calls');
                     createListener(FIRESTORE_APPOINTMENTS_COLLECTION, "meetingDateTime", "asc", 'appointments', app.methods.renderAppointmentsTable, 'appointments');
@@ -1681,12 +1689,13 @@
                     app.state.activeView = viewId; console.log("Set active view:", viewId);
                     app.elements.sidebarLinks.forEach(link => link.classList.toggle('active', link.dataset.view === viewId));
                     app.elements.contentViews.forEach(view => view.classList.toggle('active', view.id === `${viewId}-view`));
-                    // Render specific view content
+                    // Re-render the newly activated view to ensure it displays the latest data
+                    // which should already be in the state thanks to the modified listener.
                     app.methods[`render${viewId.charAt(0).toUpperCase() + viewId.slice(1)}View`]();
                     if (app.elements.mainContentInner) app.elements.mainContentInner.scrollTop = 0; // Scroll to top
                 },
                 renderAllViews: (forceEmptyState = false) => { // Render all tables/static content areas
-                    console.log("Rendering all views content...");
+                    console.log("Rendering all views content (renderAllViews)...");
                     app.methods.renderLeadsTable(forceEmptyState);
                     app.methods.renderCallsTable(forceEmptyState);
                     app.methods.renderAppointmentsTable(forceEmptyState);
@@ -1695,14 +1704,17 @@
                     app.methods.renderSettingsView();
                 },
                  renderDashboardView: () => {
+                    // console.log("Rendering Dashboard View"); // Less noisy log
                     app.methods.updateDashboardSummary();
                     app.methods.renderDashboardTaskList();
                  },
                  renderReportView: () => {
+                    // console.log("Rendering Report View"); // Less noisy log
                     app.methods.updateReportForm();
                     app.methods.updateReportOutput();
                  },
                  renderSettingsView: () => {
+                    // console.log("Rendering Settings View"); // Less noisy log
                     const webhookInput = app.elements.webhookUrlInput;
                     const saveWebhookBtn = app.elements.saveWebhookBtn;
                     const canInteract = app.state.firestoreInitialized && app.state.user;
@@ -1744,7 +1756,7 @@
                      const todayStart = app.utils.createDateAdjusted(todayStr); // Use UTC start of day
                      if (!todayStart) return; // Safety check
 
-                     const getCount = (data, filterFn) => data.filter(filterFn).length;
+                     const getCount = (data, filterFn) => (data || []).filter(filterFn).length; // Add check for undefined data
 
                      const newConnectionsToday = getCount(app.state.leads, l => app.utils.formatDate(l.connectionDate) === todayStr);
                      // Messages Due: Due date is today or earlier, and status indicates waiting for response/follow-up
@@ -1769,7 +1781,7 @@
                 generatePendingTasks: (overdueOnly = false) => {
                     const tasks = []; const today = new Date(); today.setHours(0, 0, 0, 0);
                     // Leads: Check dueDate
-                    app.state.leads.forEach(lead => {
+                    (app.state.leads || []).forEach(lead => { // Add check for undefined state
                         const dueDate = app.utils.createDateAdjusted(lead.dueDate);
                         if (dueDate) {
                              const dueDateStart = new Date(dueDate); dueDateStart.setHours(0,0,0,0);
@@ -1782,7 +1794,7 @@
                         }
                     });
                     // Appointments: Check confirmationCallDate and textReminderDate
-                     app.state.appointments.forEach(appt => {
+                     (app.state.appointments || []).forEach(appt => { // Add check for undefined state
                         const checkDate = (dateField, dateValue, taskType, titlePrefix, description) => {
                             const checkDt = app.utils.createDateAdjusted(dateValue);
                             if (checkDt) {
@@ -1832,7 +1844,7 @@
                     if (docRef) {
                          docRef.update(updates).then(() => {
                                app.methods.showNotification(`${itemName} marked complete.`, 'success');
-                               // Listener updates UI
+                               // Listener updates UI automatically
                            }).catch(error => { console.error(`Error completing task ${taskId}:`, error); app.methods.showNotification(`Failed to complete task: ${error.message}`, 'error'); });
                     }
                  },
@@ -1856,7 +1868,7 @@
                     if (docRef) {
                         docRef.update(updates).then(() => {
                                app.methods.showNotification(`${itemName} snoozed to next business day.`, 'success');
-                               // Listener updates UI
+                               // Listener updates UI automatically
                            }).catch(error => { console.error(`Error snoozing task ${taskId}:`, error); app.methods.showNotification(`Failed to snooze task: ${error.message}`, 'error'); });
                     }
                  },
@@ -1990,7 +2002,7 @@
                      }).join('');
                  },
                  saveLead: (leadId = null, saveBtnElement) => {
-                     console.log(`Attempting to save lead. ID: ${leadId}`); // Debug log
+                     // console.log(`Attempting to save lead. ID: ${leadId}`); // Debug log
                      const isUpdate = !!leadId; const idPrefix = isUpdate ? 'edit-' : 'add-'; // Adjusted prefix for IDs
                      const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                      if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
@@ -2008,24 +2020,25 @@
                          const leadData = { name, company, connectionDate, messageStage, nextAction, dueDate, status, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                          let actionPromise;
                          if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true); // Start loading indicator
-                         console.log("Lead data prepared:", leadData); // Debug log
+                         // console.log("Lead data prepared:", leadData); // Debug log
                          if (isUpdate) {
-                             console.log(`Updating lead ${leadId} in Firestore...`); // Debug log
+                             // console.log(`Updating lead ${leadId} in Firestore...`); // Debug log
                              actionPromise = db.collection(FIRESTORE_LEADS_COLLECTION).doc(leadId).update(leadData);
                          } else {
                              leadData.createdBy = app.state.user.email || app.state.user.uid; leadData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                             console.log("Adding new lead to Firestore..."); // Debug log
+                             // console.log("Adding new lead to Firestore..."); // Debug log
                              actionPromise = db.collection(FIRESTORE_LEADS_COLLECTION).add(leadData);
                          }
                          actionPromise.then((docRefOrVoid) => {
                              const savedId = isUpdate ? leadId : docRefOrVoid.id;
-                             console.log(`Lead ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
+                             // console.log(`Lead ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                              app.methods.showNotification(`Lead '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                              app.methods.closeModal();
                              // Webhook data prep
                              const webhookData = { ...leadData, id: savedId, connectionDate: app.utils.formatDate(connectionDate), dueDate: app.utils.formatDate(dueDate) };
                              delete webhookData.lastUpdatedAt; delete webhookData.createdAt; // Remove server timestamps
                              app.methods.sendWebhookNotification(isUpdate ? 'lead_updated' : 'lead_added', webhookData);
+                             // No need to manually re-render; the listener will handle it.
                          }).catch(error => { console.error("Error saving lead:", error); app.methods.showNotification(`Error saving lead: ${error.message}`, 'error'); stopLoading(); });
                      } catch (error) { console.error("Error preparing lead data:", error); app.methods.showNotification("Error preparing lead data.", "error"); stopLoading(); }
                  },
@@ -2035,18 +2048,24 @@
                      if (!confirm(`Permanently delete lead '${app.utils.sanitize(leadToDelete.name)}'? This cannot be undone.`)) return;
                      console.log(`Deleting lead ${id}...`);
                      db.collection(FIRESTORE_LEADS_COLLECTION).doc(id).delete()
-                        .then(() => { app.methods.showNotification(`Lead deleted.`, 'success'); app.methods.sendWebhookNotification('lead_deleted', { id: id, name: leadToDelete.name }); })
+                        .then(() => {
+                            app.methods.showNotification(`Lead deleted.`, 'success');
+                            app.methods.sendWebhookNotification('lead_deleted', { id: id, name: leadToDelete.name });
+                            // No need to manually re-render; the listener will handle it.
+                         })
                         .catch(error => { console.error("Error deleting lead:", error); app.methods.showNotification(`Error deleting lead: ${error.message}`, 'error'); });
                  },
                  renderLeadsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.leadsTableBody; if (!tableBody) return;
+                     // console.log("Rendering leads table..."); // More detailed log if needed
                      const leadsToRender = app.methods.getFilteredData('leads');
                      const cols = 8; // Update if columns change
                      let emptyMsg = "Loading leads...";
                      if (app.state.authReady) { // Only show other messages once auth state is known
                          if (!app.state.user) emptyMsg = "Please sign in to view leads.";
                          else if (app.state.filterState.leads && leadsToRender.length === 0) emptyMsg = "No leads found matching your search.";
-                         else if (leadsToRender.length === 0) emptyMsg = "No leads recorded yet. Click 'Add Connection'.";
+                         else if (leadsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No leads recorded yet. Click 'Add Connection'."; // Check if initialized
+                         else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; // Or similar
                      }
                      if (forceEmptyState && !app.state.user) emptyMsg = "Please sign in to view leads."; // Explicit empty state for sign out
 
@@ -2158,7 +2177,7 @@
                      }).join('');
                  },
                  saveCall: (callId = null, saveBtnElement) => {
-                    console.log(`Attempting to save call. ID: ${callId}`); // Debug log
+                    // console.log(`Attempting to save call. ID: ${callId}`); // Debug log
                     const isUpdate = !!callId; const idPrefix = isUpdate ? 'edit-' : 'add-';
                     const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                     if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
@@ -2176,23 +2195,24 @@
                         const callData = { name, callDate, outcome, nextStep, nextStepDueDate, notes, lastUpdatedBy: app.state.user.email || app.state.user.uid, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                         let actionPromise;
                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
-                        console.log("Call data prepared:", callData); // Debug log
+                        // console.log("Call data prepared:", callData); // Debug log
                         if (isUpdate) {
-                             console.log(`Updating call ${callId} in Firestore...`); // Debug log
+                             // console.log(`Updating call ${callId} in Firestore...`); // Debug log
                             actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).doc(callId).update(callData);
                         } else {
                             callData.createdBy = app.state.user.email || app.state.user.uid; callData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                             console.log("Adding new call to Firestore..."); // Debug log
+                             // console.log("Adding new call to Firestore..."); // Debug log
                             actionPromise = db.collection(FIRESTORE_CALLS_COLLECTION).add(callData);
                         }
                         actionPromise.then((docRefOrVoid) => {
                             const savedId = isUpdate ? callId : docRefOrVoid.id;
-                             console.log(`Call ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
+                             // console.log(`Call ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                             app.methods.showNotification(`Call record for '${app.utils.sanitize(name)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
                             const webhookData = { ...callData, id: savedId, callDate: app.utils.formatDate(callDate), nextStepDueDate: app.utils.formatDate(nextStepDueDate) };
                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
                             app.methods.sendWebhookNotification(isUpdate ? 'call_updated' : 'call_added', webhookData);
+                            // No need to manually re-render; the listener will handle it.
                         }).catch(error => { console.error("Error saving call:", error); app.methods.showNotification(`Error saving call: ${error.message}`, 'error'); stopLoading(); });
                     } catch (error) { console.error("Error preparing call data:", error); app.methods.showNotification("Error preparing call data.", "error"); stopLoading(); }
                 },
@@ -2202,14 +2222,19 @@
                     if (!confirm(`Permanently delete call record for '${app.utils.sanitize(callToDelete.name)}'? This cannot be undone.`)) return;
                     console.log(`Deleting call ${id}...`);
                     db.collection(FIRESTORE_CALLS_COLLECTION).doc(id).delete()
-                        .then(() => { app.methods.showNotification(`Call record deleted.`, 'success'); app.methods.sendWebhookNotification('call_deleted', { id: id, name: callToDelete.name }); })
+                        .then(() => {
+                            app.methods.showNotification(`Call record deleted.`, 'success');
+                            app.methods.sendWebhookNotification('call_deleted', { id: id, name: callToDelete.name });
+                             // No need to manually re-render; the listener will handle it.
+                        })
                         .catch(error => { console.error("Error deleting call:", error); app.methods.showNotification(`Error deleting call: ${error.message}`, 'error'); });
                  },
                  renderCallsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.callsTableBody; if (!tableBody) return;
+                     // console.log("Rendering calls table..."); // More detailed log if needed
                      const callsToRender = app.methods.getFilteredData('calls');
                      const cols = 6; let emptyMsg = "Loading calls...";
-                     if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view calls."; else if (app.state.filterState.calls && callsToRender.length === 0) emptyMsg = "No calls found matching search."; else if (callsToRender.length === 0) emptyMsg = "No calls recorded yet. Click 'Add Call'."; }
+                     if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view calls."; else if (app.state.filterState.calls && callsToRender.length === 0) emptyMsg = "No calls found matching search."; else if (callsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No calls recorded yet. Click 'Add Call'."; else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; }
                      if (forceEmptyState && !app.state.user) emptyMsg = "Please sign in to view calls.";
 
                      if (callsToRender.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="${cols}">${emptyMsg}</td></tr>`; return; }
@@ -2321,7 +2346,7 @@
                      if(reminderInput) reminderInput.value = reminderDates.textReminderDate;
                   },
                  saveAppointment: (apptId = null, saveBtnElement) => {
-                    console.log(`Attempting to save appointment. ID: ${apptId}`); // Debug log
+                    // console.log(`Attempting to save appointment. ID: ${apptId}`); // Debug log
                     const isUpdate = !!apptId; const idPrefix = isUpdate ? 'edit-' : 'add-';
                     const saveBtn = saveBtnElement; const stopLoading = () => { if (saveBtn) app.utils.toggleButtonLoading(saveBtn, false); };
                     if (!db || !app.state.user) { app.methods.showNotification("Cannot save: Not signed in.", "warning"); stopLoading(); return; }
@@ -2352,10 +2377,10 @@
                         };
                         let actionPromise;
                         if (saveBtn) app.utils.toggleButtonLoading(saveBtn, true);
-                        console.log("Appointment data prepared:", appointmentData); // Debug log
+                        // console.log("Appointment data prepared:", appointmentData); // Debug log
 
                         if (isUpdate) {
-                            console.log(`Updating appointment ${apptId} in Firestore...`); // Debug log
+                            // console.log(`Updating appointment ${apptId} in Firestore...`); // Debug log
                             const docRef = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(apptId);
                             // Get existing data to preserve fields like 'textReminderSent' if not explicitly changed by logic
                             actionPromise = docRef.get().then(doc => {
@@ -2375,12 +2400,12 @@
                             appointmentData.createdBy = app.state.user.email || app.state.user.uid;
                             appointmentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                             appointmentData.textReminderSent = false; // Ensure default on creation
-                             console.log("Adding new appointment to Firestore..."); // Debug log
+                             // console.log("Adding new appointment to Firestore..."); // Debug log
                             actionPromise = db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).add(appointmentData);
                         }
                         actionPromise.then((docRefOrVoid) => {
                             const savedId = isUpdate ? apptId : docRefOrVoid.id;
-                            console.log(`Appointment ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
+                            // console.log(`Appointment ${savedId} successfully ${isUpdate ? 'updated' : 'added'}.`); // Debug log
                             app.methods.showNotification(`Appointment for '${app.utils.sanitize(clientName)}' ${isUpdate ? 'updated' : 'added'}.`, 'success');
                             app.methods.closeModal();
                             const webhookData = { ...appointmentData, id: savedId,
@@ -2390,6 +2415,7 @@
                             };
                             delete webhookData.lastUpdatedAt; delete webhookData.createdAt;
                             app.methods.sendWebhookNotification(isUpdate ? 'appointment_updated' : 'appointment_added', webhookData);
+                             // No need to manually re-render; the listener will handle it.
                         }).catch(error => { console.error("Error saving appointment:", error); app.methods.showNotification(`Error saving appointment: ${error.message}`, 'error'); stopLoading(); });
                     } catch (error) { console.error("Error preparing appointment data:", error); app.methods.showNotification("Error preparing appointment data.", "error"); stopLoading(); }
                  },
@@ -2399,14 +2425,19 @@
                     if (!confirm(`Permanently delete appointment for '${app.utils.sanitize(apptToDelete.clientName)}'? This cannot be undone.`)) return;
                     console.log(`Deleting appointment ${id}...`);
                     db.collection(FIRESTORE_APPOINTMENTS_COLLECTION).doc(id).delete()
-                        .then(() => { app.methods.showNotification(`Appointment deleted.`, 'success'); app.methods.sendWebhookNotification('appointment_deleted', { id: id, clientName: apptToDelete.clientName }); })
+                        .then(() => {
+                            app.methods.showNotification(`Appointment deleted.`, 'success');
+                            app.methods.sendWebhookNotification('appointment_deleted', { id: id, clientName: apptToDelete.clientName });
+                             // No need to manually re-render; the listener will handle it.
+                        })
                         .catch(error => { console.error("Error deleting appointment:", error); app.methods.showNotification(`Error deleting appointment: ${error.message}`, 'error'); });
                  },
                  renderAppointmentsTable: (forceEmptyState = false) => {
                      const tableBody = app.elements.appointmentsTableBody; if (!tableBody) return;
+                     // console.log("Rendering appointments table..."); // More detailed log if needed
                      const apptsToRender = app.methods.getFilteredData('appointments');
                      const cols = 7; let emptyMsg = "Loading appointments...";
-                     if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view appointments."; else if (app.state.filterState.appointments && apptsToRender.length === 0) emptyMsg = "No appointments found matching search."; else if (apptsToRender.length === 0) emptyMsg = "No appointments recorded yet. Click 'Add Appointment'."; }
+                     if(app.state.authReady){ if (!app.state.user) emptyMsg = "Please sign in to view appointments."; else if (app.state.filterState.appointments && apptsToRender.length === 0) emptyMsg = "No appointments found matching search."; else if (apptsToRender.length === 0 && app.state.firestoreInitialized) emptyMsg = "No appointments recorded yet. Click 'Add Appointment'."; else if (!app.state.firestoreInitialized) emptyMsg = "Connecting to database..."; }
                      if (forceEmptyState && !app.state.user) emptyMsg = "Please sign in to view appointments.";
 
                      if (apptsToRender.length === 0) { tableBody.innerHTML = `<tr class="empty-row"><td colspan="${cols}">${emptyMsg}</td></tr>`; return; }
@@ -2504,25 +2535,171 @@
                  },
 
                 // --- Import/Export Methods ---
-                convertToCSV: (data, headers) => { /* ... (no change) ... */ },
-                exportCSVData: (data, filename, headers = [], buttonElement) => { /* ... (no change) ... */ },
-                parseCSV: (text) => { /* ... (no change) ... */ },
-                handleImport: (event, stateKey, renderFunction, requiredHeaders = [], buttonElement) => { /* ... (no change) ... */ },
-                 handleReportImport: (event, buttonElement) => { /* ... (no change) ... */ },
+                convertToCSV: (data, headers) => {
+                     if (!data || data.length === 0) return '';
+                     const processedData = data.map(row => {
+                         let newRow = {};
+                         for (const key in row) {
+                             // Convert Firestore Timestamps or JS Dates to ISO strings for consistency
+                             if (row[key] instanceof Date) newRow[key] = row[key].toISOString();
+                             else if (row[key] && typeof row[key].toDate === 'function') newRow[key] = row[key].toDate().toISOString();
+                             else newRow[key] = row[key];
+                         } return newRow;
+                     });
+                    const actualHeaders = headers.length > 0 ? headers : Object.keys(processedData[0]);
+                    const csvRows = [actualHeaders.map(h => JSON.stringify(h)).join(',')]; // Header row
+                    processedData.forEach(row => {
+                        const values = actualHeaders.map(header => JSON.stringify(row[header] === undefined || row[header] === null ? '' : row[header]));
+                        csvRows.push(values.join(','));
+                    });
+                    return csvRows.join('\n');
+                 },
+                 exportCSVData: (data, filename, headers = [], buttonElement) => {
+                     if (!data || data.length === 0) { app.methods.showNotification('No data to export.', 'warning'); return; }
+                     const exportBtn = buttonElement;
+                     if (exportBtn) app.utils.toggleButtonLoading(exportBtn, true, 'Exporting...');
+                     try {
+                         const csvContent = app.methods.convertToCSV(data, headers);
+                         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                         const link = document.createElement("a");
+                         const url = URL.createObjectURL(blob);
+                         link.setAttribute("href", url);
+                         link.setAttribute("download", filename);
+                         link.style.visibility = 'hidden'; document.body.appendChild(link);
+                         link.click(); document.body.removeChild(link);
+                         app.methods.showNotification('Export complete.', 'success');
+                     } catch (error) { console.error("Error exporting CSV:", error); app.methods.showNotification('Export failed.', 'error');
+                     } finally { if (exportBtn) app.utils.toggleButtonLoading(exportBtn, false); }
+                 },
+                 parseCSV: (text) => {
+                     const lines = text.split(/\r?\n/); if (lines.length < 2) return [];
+                     const headers = lines[0].split(',').map(h => JSON.parse(h));
+                     const data = [];
+                     for (let i = 1; i < lines.length; i++) {
+                         if (!lines[i].trim()) continue; // Skip empty lines
+                         const values = lines[i].split(',').map(v => { try { return JSON.parse(v); } catch { return v; } }); // Basic CSV parsing (might need library for complex CSV)
+                         if (values.length !== headers.length) { console.warn(`Skipping row ${i+1}: Mismatched column count`); continue; }
+                         let row = {}; headers.forEach((header, index) => { row[header] = values[index]; }); data.push(row);
+                     } return data;
+                 },
+                 handleImport: (event, stateKey, renderFunction, requiredHeaders = [], buttonElement) => {
+                     const file = event.target.files[0]; const importBtn = buttonElement; if (!file) return;
+                     if (!confirm(`Importing loads data into the LOCAL table view ONLY.\n\n🚨 IT DOES NOT SAVE TO THE SHARED CLOUD DATABASE. 🚨\n\nExisting data in the table will be replaced locally.\n\nContinue loading '${file.name}' into the local view?`)) { event.target.value = ''; return; }
+                     if (importBtn) app.utils.toggleButtonLoading(importBtn, true, "Importing...");
+                     const reader = new FileReader();
+                     reader.onload = (e) => {
+                         try {
+                             const text = e.target.result; const importedData = app.methods.parseCSV(text);
+                             if (importedData.length === 0) throw new Error("CSV file is empty or invalid.");
+                             const firstRow = importedData[0]; const missingHeaders = requiredHeaders.filter(h => !(h in firstRow));
+                             if (missingHeaders.length > 0) throw new Error(`Missing headers: ${missingHeaders.join(', ')}`);
+                             app.state[stateKey] = importedData.map(item => ({
+                                 ...item,
+                                 connectionDate: item.connectionDate ? app.utils.createDateAdjusted(item.connectionDate) : null,
+                                 dueDate: item.dueDate ? app.utils.createDateAdjusted(item.dueDate) : null,
+                                 callDate: item.callDate ? app.utils.createDateAdjusted(item.callDate) : null,
+                                 nextStepDueDate: item.nextStepDueDate ? app.utils.createDateAdjusted(item.nextStepDueDate) : null,
+                                 meetingDateTime: item.meetingDateTime ? app.utils.createDateAdjusted(item.meetingDateTime) : null,
+                                 confirmationCallDate: item.confirmationCallDate ? app.utils.createDateAdjusted(item.confirmationCallDate) : null,
+                                 textReminderDate: item.textReminderDate ? app.utils.createDateAdjusted(item.textReminderDate) : null,
+                                 id: item.id || `imported-${app.utils.generateId()}`
+                             }));
+                             renderFunction();
+                             app.methods.showNotification(`${importedData.length} records loaded into local view. NOT saved to cloud.`, 'success', 6000);
+                         } catch (error) { console.error("Error importing CSV:", error); app.methods.showNotification(`Import failed: ${error.message}`, 'error', 6000);
+                         } finally { event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); }
+                     };
+                     reader.onerror = () => { app.methods.showNotification('Error reading file.', 'error'); event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); };
+                     reader.readAsText(file);
+                 },
+                  handleReportImport: (event, buttonElement) => {
+                      const file = event.target.files[0]; const importBtn = buttonElement; if (!file) return;
+                       if (!confirm("Importing overwrites the current report form view ONLY.\n\n🚨 IT DOES NOT SAVE TO THE CLOUD DATABASE. 🚨\n\nContinue loading report data locally?")) { event.target.value = ''; return; }
+                       if (importBtn) app.utils.toggleButtonLoading(importBtn, true, "Importing...");
+                       const reader = new FileReader();
+                       reader.onload = (e) => {
+                          try {
+                              const text = e.target.result; const importedData = app.methods.parseCSV(text);
+                              if (importedData.length !== 1) throw new Error("Report CSV must contain exactly one data row.");
+                              const report = importedData[0]; if (!report.reportDate) throw new Error("CSV missing 'reportDate'.");
+                              app.state.dailyReportData = { reportDate: report.reportDate, linkedinSummary: report.linkedinSummary || '', callSummary: report.callSummary || '', appointmentSummary: report.appointmentSummary || '', followupSummary: report.followupSummary || '', generatedAt: null, savedBy: null, id: report.reportDate };
+                              app.methods.renderReportView();
+                              app.methods.saveDataToStorage(STORAGE_KEYS.DAILY_REPORT_CACHE, app.state.dailyReportData);
+                              app.methods.showNotification('Report data loaded into local view. NOT saved to cloud.', 'success', 6000);
+                          } catch(error) { console.error("Error importing report CSV:", error); app.methods.showNotification(`Report import failed: ${error.message}`, 'error', 6000);
+                          } finally { event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); }
+                       };
+                       reader.onerror = () => { app.methods.showNotification('Error reading file.', 'error'); event.target.value = ''; if (importBtn) app.utils.toggleButtonLoading(importBtn, false); };
+                       reader.readAsText(file);
+                  },
 
                 // --- Filtering & Sorting ---
-                getFilteredData: (viewType) => { /* ... (no change) ... */ },
+                getFilteredData: (viewType) => {
+                    let data = []; const searchTerm = (app.state.filterState[viewType] || '').toLowerCase();
+                    const sortConfig = app.state.sortState[viewType] || {};
+                    switch (viewType) { case 'leads': data = [...(app.state.leads || [])]; break; case 'calls': data = [...(app.state.calls || [])]; break; case 'appointments': data = [...(app.state.appointments || [])]; break; default: return []; } // Add check for undefined state
+                    if (searchTerm) { data = data.filter(item => JSON.stringify(item).toLowerCase().includes(searchTerm)); } // Simple search all fields
+                    if (sortConfig.key) {
+                        data.sort((a, b) => {
+                            let valA = a[sortConfig.key]; let valB = b[sortConfig.key];
+                             const dateKeys = ['connectionDate', 'dueDate', 'callDate', 'nextStepDueDate', 'meetingDateTime', 'confirmationCallDate', 'textReminderDate', 'createdAt', 'lastUpdatedAt'];
+                             if (dateKeys.includes(sortConfig.key)) { valA = app.utils.createDateAdjusted(valA)?.getTime() || 0; valB = app.utils.createDateAdjusted(valB)?.getTime() || 0; }
+                             else { valA = String(valA || '').toLowerCase(); valB = String(valB || '').toLowerCase(); }
+                            let comparison = 0; if (valA > valB) comparison = 1; else if (valA < valB) comparison = -1;
+                            return sortConfig.dir === 'desc' ? (comparison * -1) : comparison;
+                        });
+                    } return data;
+                },
 
                 // --- Webhook Notification ---
-                sendWebhookNotification: async (eventType, data) => { /* ... (no change) ... */ },
+                sendWebhookNotification: async (eventType, data) => {
+                    if (!app.state.webhookUrl) return;
+                    const webhookUrl = app.state.webhookUrl;
+                    const payload = { event: eventType, timestamp: new Date().toISOString(), user: app.state.user ? { email: app.state.user.email, uid: app.state.user.uid } : null, data: data };
+                    console.log(`Sending webhook: ${eventType}`);
+                    try {
+                        const response = await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (!response.ok) console.warn(`Webhook failed (${eventType}): ${response.status} ${response.statusText}`);
+                    } catch (error) { console.error(`Webhook error (${eventType}):`, error); }
+                },
 
                 // --- UI Helpers ---
-                createStatusSpan: (text) => { /* ... (no change) ... */ },
+                createStatusSpan: (text) => {
+                    if (!text) return ''; const statusClass = `status-${String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`; return `<span class="status ${statusClass}">${app.utils.sanitize(text)}</span>`; },
                 createActionButton: (iconClass, title, dataId, action, dataType = '') => `<button class="icon-btn ${action}-btn" title="${title}" data-id="${dataId}" data-action="${action}" ${dataType ? `data-type="${dataType}"` : ''} aria-label="${title}"><i class="${iconClass}"></i></button>`,
-                updateSortIndicators: (viewId, sortConfig) => { /* ... (no change) ... */ },
-                 applyInitialSort: (viewType) => { /* ... (no change) ... */ },
-                handleSortClick: (thElement, viewType) => { /* ... (no change) ... */ },
-                 handleSearchInput: (event, viewType) => { /* ... (no change) ... */ },
+                updateSortIndicators: (viewId, sortConfig) => {
+                    const tableHeaders = document.querySelectorAll(`#${viewId}-view thead th.sortable`);
+                    tableHeaders.forEach(th => {
+                        const sortKey = th.dataset.sort; th.classList.remove('sorted', 'asc', 'desc');
+                        if (sortConfig && sortKey === sortConfig.key) th.classList.add('sorted', sortConfig.dir);
+                    });
+                },
+                 applyInitialSort: (viewType) => {
+                     if (app.state.sortState[viewType]) {
+                        // Ensure data is sorted according to the saved state
+                        app.methods.getFilteredData(viewType); // This applies the sort internally
+                        app.methods.updateSortIndicators(viewType, app.state.sortState[viewType]);
+                     }
+                     // Add default sorts here if desired, e.g.:
+                     // else if (viewType === 'leads' && !app.state.sortState.leads) {
+                     //    app.state.sortState.leads = { key: 'connectionDate', dir: 'desc'};
+                     //    app.methods.updateSortIndicators('leads', app.state.sortState.leads);
+                     // }
+                 },
+                handleSortClick: (thElement, viewType) => {
+                    const sortKey = thElement.dataset.sort; let currentSort = app.state.sortState[viewType] || {}; let newDir = 'asc';
+                    if (currentSort.key === sortKey && currentSort.dir === 'asc') newDir = 'desc';
+                    app.state.sortState[viewType] = { key: sortKey, dir: newDir };
+                    app.methods.saveSortState();
+                    // Re-render the specific table, which will use the new sort state
+                    app.methods[`render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`]();
+                },
+                 handleSearchInput: (event, viewType) => {
+                    app.state.filterState[viewType] = event.target.value;
+                    // Add debounce here if performance becomes an issue with large datasets
+                    // Re-render the specific table, which will use the new filter state
+                    app.methods[`render${viewType.charAt(0).toUpperCase() + viewType.slice(1)}Table`]();
+                 },
 
                 // --- Event Listener Setup ---
                 setupEventListeners: () => {
@@ -2654,11 +2831,11 @@
                              app.methods.updateUI(user); // Handles UI changes, listener setup/teardown
                              // Trigger first render *after* the first auth state check completes
                              if (!app.state.initialRenderComplete && app.state.authReady) {
-                                 console.log("Auth ready, performing initial render...");
+                                 console.log("Auth ready, performing initial render triggered by auth state change...");
                                  // If logged out, updateUI already cleared tables.
                                  // If logged in, listeners were set up by updateUI and will populate data.
                                  // Still call renderAllViews to ensure static parts & cached views render correctly.
-                                 app.methods.renderAllViews();
+                                 app.methods.renderAllViews(); // This should now render tables correctly after listeners populate state
                                  app.state.initialRenderComplete = true;
                              }
                         });
@@ -2670,7 +2847,7 @@
                              app.state.initialRenderComplete = true;
                          }
                     }
-                    // Make app object globally accessible for onclick handlers
+                    // Make app object globally accessible for onclick handlers in modal forms
                     window.app = app;
                     console.log("App Init sequence done.");
                 } // End init
