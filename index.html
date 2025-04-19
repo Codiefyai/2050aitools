@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VirtuCall PH - Daily Tracker</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png">
-
+    <link rel="icon" href="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png" type="image/png">
     <style>
         /* Basic Reset & Defaults */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,7 +13,7 @@
             line-height: 1.6;
             background-color: #f4f7f9;
             color: #333;
-            display: flex; /* Use flex for main layout */
+            display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
@@ -25,101 +24,6 @@
             width: 95%;
         }
 
-        /* === AUTHENTICATION STYLES === */
-        #login-container {
-            display: flex; /* Shown by default */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh; /* Take up most of the viewport */
-            text-align: center;
-            padding: 20px;
-        }
-        #login-container img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-        #login-container h2 {
-            color: #0056b3;
-            margin-bottom: 25px;
-        }
-        #google-signin-btn {
-            background-color: #4285F4; /* Google Blue */
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1em;
-            font-weight: 500;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: inline-flex; /* Align icon and text */
-            align-items: center;
-            gap: 10px;
-        }
-        #google-signin-btn:hover {
-            background-color: #357ae8;
-        }
-        #google-signin-btn svg { /* Simple G icon */
-            width: 18px;
-            height: 18px;
-            fill: white;
-            background-color: white; /* White background */
-            border-radius: 2px; /* Slightly rounded corners */
-            padding: 1px; /* Padding around the path */
-        }
-        #login-error {
-            color: #dc3545;
-            margin-top: 15px;
-            font-size: 0.9em;
-        }
-
-        /* Hide app container initially */
-        #app-container {
-            display: none; /* Initially hidden */
-            flex-direction: column;
-            min-height: 100vh; /* Ensure footer stays down */
-        }
-        #app-container.visible {
-            display: flex; /* Show the container */
-        }
-        #login-container.hidden {
-             display: none; /* Hide login */
-        }
-
-
-        /* === USER INFO & SIGN OUT === */
-        #user-info {
-            font-size: 0.85em;
-            color: #e9ecef; /* Light color on dark header */
-            margin-left: auto; /* Pushes it to the right */
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        #user-info.hidden {
-            display: none;
-        }
-        #sign-out-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 0.8em;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        #sign-out-btn:hover {
-            background-color: #c82333;
-        }
-        /* --- END AUTH STYLES --- */
-
-
-        /* --- ORIGINAL STYLES (No significant changes needed below) --- */
-
         /* Header */
         header {
             background-color: #0056b3; /* VirtuCall Blue */
@@ -128,19 +32,24 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
-        header .container { /* Adjust container within header */
+        header .container {
             display: flex;
             align-items: center;
-            width: 100%; /* Take full width */
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
         }
         header h1 {
-            font-size: 1.8em;
+            font-size: 1.6em;
             display: flex;
             align-items: center;
+            justify-content: flex-start;
             gap: 10px;
-            flex-wrap: wrap;
-            margin-right: auto; /* Pushes user info to the right */
+            margin: 5px 0;
+            flex-grow: 1;
         }
          header .logo {
              font-weight: bold;
@@ -151,11 +60,46 @@
              font-size: 0.8em;
              display: inline-block;
          }
-         header img.header-logo { /* Specific class for header logo */
+         header img {
              width: 40px;
              height: 40px;
              border-radius: 50%;
              margin-right: 10px;
+         }
+
+         /* Auth Section Styling */
+         #auth-section {
+             display: flex;
+             align-items: center;
+             gap: 15px;
+             margin: 5px 0;
+         }
+         #user-info {
+             font-size: 0.9em;
+             color: #e0e0e0;
+             display: flex;
+             align-items: center;
+             gap: 8px;
+         }
+         #user-info img { /* Style for user avatar */
+             width: 30px;
+             height: 30px;
+             border-radius: 50%;
+             margin: 0; /* Override header img margin */
+         }
+         #google-signin-btn, #google-signout-btn {
+             padding: 8px 15px;
+             background-color: #ffffff;
+             color: #0056b3;
+             border: none;
+             border-radius: 5px;
+             cursor: pointer;
+             font-size: 0.9em;
+             font-weight: 500;
+             transition: background-color 0.3s, color 0.3s;
+         }
+         #google-signin-btn:hover, #google-signout-btn:hover {
+             background-color: #e9ecef;
          }
 
         /* View Switcher */
@@ -246,6 +190,11 @@
             outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
+        input:disabled, select:disabled, textarea:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
 
         textarea {
             resize: vertical;
@@ -272,6 +221,11 @@
          form button[type="submit"]:active {
              transform: scale(0.98);
          }
+         form button[type="submit"]:disabled {
+             background-color: #6c757d;
+             cursor: not-allowed;
+         }
+
 
         /* Tables */
         .table-responsive {
@@ -300,7 +254,7 @@
             background-color: #f8f9fa;
         }
         tbody tr:hover {
-            background-color: #e9ecef;
+            background-color: #e2e6ea; /* Slightly darker hover */
         }
         td .actions button {
             padding: 6px 10px;
@@ -322,7 +276,7 @@
 
         /* Specific Sections */
         #manager-view, #va-view {
-            display: none; /* Hidden by default, shown by JS */
+            display: none; /* Hidden by default */
         }
         #manager-view.active, #va-view.active {
             display: block; /* Show active view */
@@ -352,6 +306,10 @@
              max-width: 180px;
              background-color: #fff;
          }
+         #copy-yesterday-btn {
+             padding: 8px 12px;
+             font-size: 0.9em;
+         }
 
         /* VA Log Stats Cards */
         .stats-container {
@@ -372,6 +330,7 @@
             color: #6c757d;
             font-size: 0.9em;
             margin-bottom: 10px;
+            font-weight: 500; /* Adjusted weight */
         }
         .stat-card .stat-value {
             font-size: 1.8em;
@@ -387,7 +346,7 @@
         /* Footer */
         footer {
             text-align: center;
-            margin-top: auto; /* Pushes footer to bottom */
+            margin-top: auto;
             padding: 25px 20px;
             background-color: #343a40;
             color: #adb5bd;
@@ -398,18 +357,34 @@
         footer p { margin-top: 10px; }
 
         /* Utility Classes */
-        .hidden { display: none !important; } /* Use important to override inline styles if needed */
-        .error-message { color: #dc3545; font-size: 0.9em; margin-top: 5px;}
-        .text-success { color: #28a745; }
-        .text-warning { color: #ffc107; }
-        .text-danger { color: #dc3545; }
+        .hidden { display: none !important; }
+        .loading-overlay { /* Simple loading indicator */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: #0056b3;
+            z-index: 1000;
+        }
+        .error-message { color: #dc3545; font-size: 0.9em; margin-top: 5px; display: block; /* Make it block */ }
+        .success-message { color: #28a745; font-size: 0.9em; margin-top: 5px; display: block; }
+        .text-success { color: #28a745 !important; } /* Use important for specificity */
+        .text-warning { color: #ffc107 !important; }
+        .text-danger { color: #dc3545 !important; }
+        .text-info { color: #17a2b8 !important; }
+        .text-muted { color: #6c757d !important; }
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-            header h1 { font-size: 1.5em; }
-            header .container { flex-wrap: wrap; }
-            #user-info { margin-left: 0; width: 100%; justify-content: center; margin-top: 10px; }
-
+            header .container { justify-content: center; gap: 10px; }
+            header h1 { font-size: 1.5em; justify-content: center; order: 1; width: 100%; text-align: center; }
+            #auth-section { order: 2; width: 100%; justify-content: center; }
             form { grid-template-columns: 1fr; gap: 15px; }
             form button[type="submit"] { width: 100%; max-width: none; justify-self: stretch; }
             th, td { padding: 10px 8px; font-size: 0.9em; }
@@ -417,156 +392,346 @@
             #va-date-selector { padding: 10px; gap: 8px; }
             #va-date-selector input[type="date"] { flex-grow: 1; }
             .stats-container { grid-template-columns: 1fr 1fr; }
-            #login-container { min-height: 70vh; }
         }
         @media (max-width: 480px) {
-             header h1 { font-size: 1.3em; justify-content: center; margin-right: 0;}
-             #user-info { font-size: 0.8em; gap: 10px;}
+             header h1 { font-size: 1.3em; }
              section { padding: 15px; }
              nav button { display: block; width: 90%; margin: 5px auto; }
-             .container { padding: 10px; }
+             .container { padding: 10px; width: 100%; }
              th, td { font-size: 0.85em; }
              footer { padding: 15px 10px; }
              .stats-container { grid-template-columns: 1fr; }
-             #google-signin-btn { padding: 10px 20px; font-size: 0.95em; }
-             #login-container { min-height: 60vh; }
         }
 
     </style>
 </head>
 <body>
 
-    <!-- === LOGIN VIEW === -->
-    <div id="login-container">
-        <img src="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png" alt="VirtuCall PH Logo">
-        <h2>VirtuCall PH Daily Tracker</h2>
-        <button id="google-signin-btn">
-            <!-- Simple SVG Google G Logo -->
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 48 48">
-                <g>
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                    <path fill="none" d="M0 0h48v48H0z"></path>
-                </g>
-            </svg>
-            Sign in with Google
-        </button>
-        <p id="login-error" class="hidden"></p> <!-- For displaying login errors -->
-    </div>
+    <header>
+        <div class="container">
+             <h1><img src="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png" alt="VirtuCall PH Logo"> VirtuCall PH <span class="logo">Daily Tracker</span></h1>
+             <!-- Auth Section -->
+             <div id="auth-section">
+                 <span id="user-info" class="hidden"></span>
+                 <button id="google-signin-btn">Sign in with Google</button>
+                 <button id="google-signout-btn" class="hidden">Sign Out</button>
+             </div>
+        </div>
+    </header>
 
-    <!-- === MAIN APPLICATION VIEW (Initially Hidden) === -->
-    <div id="app-container">
-        <header>
-            <div class="container">
-                 <h1><img src="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png" alt="VirtuCall PH Logo" class="header-logo"> VirtuCall PH <span class="logo">Daily Tracker</span></h1>
-                 <div id="user-info" class="hidden">
-                     <span id="user-display-name"></span>
-                     <button id="sign-out-btn">Sign Out</button>
-                 </div>
-            </div>
-        </header>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-overlay hidden">Loading...</div>
 
+    <!-- Main App Content - Hidden until signed in -->
+    <div id="app-content" class="hidden">
         <nav class="container">
-            <button id="show-manager-view" class="active">Manager View</button>
-            <button id="show-va-view">VA Daily Log</button>
+            <!-- ADDED: data-view attribute for easier handling -->
+            <button id="show-manager-view" data-view="manager-view" class="active">Manager View</button>
+            <button id="show-va-view" data-view="va-view">VA Daily Log</button>
         </nav>
 
         <main class="container">
-            <!-- Manager View Section -->
+
+            <!-- ======================================== -->
+            <!-- ==      Manager View Section          == -->
+            <!-- ======================================== -->
             <section id="manager-view" class="active">
                 <h2>Client Management</h2>
+                <span class="error-message" id="client-form-error"></span>
+                <span class="success-message" id="client-form-success"></span>
                 <form id="add-client-form">
-                     <div> <label for="client-name">Company Name:</label> <input id="client-name" required="" type="text"> </div>
-                     <div> <label for="client-contact-person">Contact Person:</label> <input id="client-contact-person" type="text"> </div>
-                     <div> <label for="client-contact-email">Contact Email:</label> <input id="client-contact-email" type="email"> </div>
-                     <div> <label for="client-contact-phone">Contact Phone:</label> <input id="client-contact-phone" type="tel"> </div>
-                     <div> <label for="client-services">Service(s):</label> <select id="client-services" required=""> <option value="">Select Service</option> <option value="B2B Lead Generation">B2B Lead Generation</option> <option value="Professional Telemarketing">Professional Telemarketing</option> <option value="Appointment Setting">Appointment Setting</option> <option value="Data Services">Data Services</option> <option value="Outbound Sales">Outbound Sales</option> <option value="Customer Support">Customer Support</option> <option value="Order Processing">Order Processing</option> <option value="Customer Retention">Customer Retention</option> <option value="Customer Onboarding">Customer Onboarding</option> <option value="Other">Other</option> </select> </div>
-                     <div> <label for="client-status">Status:</label> <select id="client-status" required=""> <option value="Prospect">Prospect</option> <option value="Active">Active</option> <option value="On Hold">On Hold</option> <option value="Completed">Completed</option> </select> </div>
-                      <div style="grid-column: 1 / -1;"> <label for="client-notes">Notes:</label> <textarea id="client-notes"></textarea> </div>
-                     <button type="submit">Add Client</button>
+                     <div>
+                         <label for="client-name">Company Name:</label>
+                         <input type="text" id="client-name" required>
+                     </div>
+                     <div>
+                         <label for="client-contact-person">Contact Person:</label>
+                         <input type="text" id="client-contact-person">
+                     </div>
+                     <div>
+                         <label for="client-contact-email">Contact Email:</label>
+                         <input type="email" id="client-contact-email">
+                     </div>
+                     <div>
+                         <label for="client-contact-phone">Contact Phone:</label>
+                         <input type="tel" id="client-contact-phone">
+                     </div>
+                     <div>
+                         <label for="client-services">Service(s):</label>
+                         <select id="client-services" required>
+                             <option value="">Select Service</option>
+                             <option value="B2B Lead Generation">B2B Lead Generation</option>
+                             <option value="Professional Telemarketing">Professional Telemarketing</option>
+                             <option value="Appointment Setting">Appointment Setting</option>
+                             <option value="Data Services">Data Services</option>
+                             <option value="Outbound Sales">Outbound Sales</option>
+                             <option value="Customer Support">Customer Support</option>
+                             <option value="Order Processing">Order Processing</option>
+                             <option value="Customer Retention">Customer Retention</option>
+                             <option value="Customer Onboarding">Customer Onboarding</option>
+                             <option value="Other">Other</option>
+                         </select>
+                     </div>
+                     <div>
+                         <label for="client-status">Status:</label>
+                         <select id="client-status" required>
+                             <option value="Prospect">Prospect</option>
+                             <option value="Active">Active</option>
+                             <option value="On Hold">On Hold</option>
+                             <option value="Completed">Completed</option>
+                         </select>
+                     </div>
+                      <div style="grid-column: 1 / -1;">
+                         <label for="client-notes">Notes:</label>
+                         <textarea id="client-notes"></textarea>
+                     </div>
+                     <button type="submit" id="add-client-submit-btn">Add Client</button>
                 </form>
+
                 <h3>Client List</h3>
                 <div class="table-responsive">
                     <table id="client-list-table">
-                        <thead> <tr> <th>Company Name</th> <th>Contact Person</th> <th>Contact Info</th> <th>Service(s)</th> <th>Status</th> <th>Notes</th> <th>Actions</th> </tr> </thead>
-                        <tbody id="client-list-body"> </tbody>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Contact Person</th>
+                                <th>Contact Info</th>
+                                <th>Service(s)</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-list-body">
+                            <!-- Client rows will be added here by JavaScript -->
+                             <tr><td colspan="7" style="text-align:center;">Loading clients...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </section>
-            <!-- VA Daily Log Section -->
+
+            <!-- ======================================== -->
+            <!-- ==      VA Daily Log Section          == -->
+            <!-- ======================================== -->
             <section id="va-view">
                 <h2>VA Daily Log</h2>
-                 <div id="va-date-selector"> <label for="log-date">Select Log Date:</label> <input id="log-date" value="" type="date"> <button id="copy-yesterday-btn" style="margin-left: auto; background-color: #6c757d;">Copy from Yesterday</button> </div>
-                 <div class="stats-container"> <div class="stat-card"> <h4>Total Calls</h4> <div class="stat-value" id="stat-total-calls">0</div> <div class="stat-subtext">Appointments & Calls</div> </div> <div class="stat-card"> <h4>Productive Time</h4> <div class="stat-value" id="stat-productive-time">0</div> <div class="stat-subtext">Minutes Logged</div> </div> <div class="stat-card"> <h4>Leads Generated</h4> <div class="stat-value" id="stat-leads">0</div> <div class="stat-subtext">Potential Opportunities</div> </div> <div class="stat-card"> <h4>Appointments Set</h4> <div class="stat-value" id="stat-appointments">0</div> <div class="stat-subtext">Confirmed Meetings</div> </div> </div>
+
+                 <!-- Date Selector -->
+                 <div id="va-date-selector">
+                     <label for="log-date">Select Log Date:</label>
+                     <input type="date" id="log-date" value=""> <!-- Will be set to today by JS -->
+                     <button id="copy-yesterday-btn" style="margin-left: auto; background-color: #6c757d;">Copy Tasks from Yesterday</button>
+                 </div>
+                 <span class="error-message" id="va-view-error"></span>
+                 <span class="success-message" id="va-view-success"></span>
+
+                 <!-- Daily Stats Summary Cards -->
+                 <div class="stats-container">
+                     <div class="stat-card">
+                         <h4>Total Calls Logged</h4>
+                         <div class="stat-value" id="stat-total-calls">0</div>
+                         <div class="stat-subtext">Appointments & Calls</div>
+                     </div>
+                     <div class="stat-card">
+                         <h4>Productive Time</h4>
+                         <div class="stat-value" id="stat-productive-time">0</div>
+                         <div class="stat-subtext">Minutes Logged (Tasks)</div>
+                     </div>
+                     <div class="stat-card">
+                         <h4>Leads Generated</h4>
+                         <div class="stat-value" id="stat-leads">0</div>
+                         <div class="stat-subtext">(From Calls & Summary)</div>
+                     </div>
+                     <div class="stat-card">
+                         <h4>Appointments Set</h4>
+                         <div class="stat-value" id="stat-appointments">0</div>
+                         <div class="stat-subtext">(From Calls & Summary)</div>
+                     </div>
+                 </div>
+
+                <!-- Appointment / Call Logging -->
                 <h3>Log Appointment / Call</h3>
                 <form id="log-appointment-form">
-                    <div> <label for="appt-client-name">Client Name:</label> <input id="appt-client-name" required="" list="client-suggestions" type="text"> <datalist id="client-suggestions"> </datalist> </div>
-                    <div> <label for="appt-time">Time:</label> <input id="appt-time" required="" type="time"> </div>
-                    <div> <label for="appt-purpose">Purpose:</label> <select id="appt-purpose" required=""> <option value="">Select Purpose</option> <option value="Lead Gen Call">Lead Gen Call</option> <option value="Follow-up Call">Follow-up Call</option> <option value="Appointment Setting Call">Appointment Setting Call</option> <option value="Scheduled Appointment">Scheduled Appointment</option> <option value="Support Call">Support Call</option> <option value="Onboarding Call">Onboarding Call</option> <option value="Other">Other</option> </select> </div>
-                     <div> <label for="appt-status">Status / Outcome:</label> <select id="appt-status" required=""> <option value="">Select Outcome</option> <option value="Scheduled">Scheduled</option> <option value="Completed - Successful" class="text-success">Completed - Successful</option> <option value="Completed - Unsuccessful" class="text-warning">Completed - Unsuccessful</option> <option value="Completed - Left Voicemail" class="text-warning">Completed - Left Voicemail</option> <option value="No Answer" class="text-danger">No Answer</option> <option value="Rescheduled">Rescheduled</option> <option value="Cancelled" class="text-danger">Cancelled</option> <option value="Appointment Set" class="text-success">Appointment Set</option> <option value="Lead Generated" class="text-success">Lead Generated</option> <option value="Issue Resolved" class="text-success">Issue Resolved</option> </select> </div>
-                     <div style="grid-column: 1 / -1;"> <label for="appt-notes">Notes / Details:</label> <textarea id="appt-notes" placeholder="Include key details, next steps, or important information from the call"></textarea> </div>
-                    <button type="submit">Log Appointment/Call</button>
+                    <div>
+                        <label for="appt-client-name">Client Name:</label>
+                        <input type="text" id="appt-client-name" required list="client-suggestions">
+                        <datalist id="client-suggestions">
+                            <!-- Will be populated from manager's client list -->
+                        </datalist>
+                    </div>
+                    <div>
+                        <label for="appt-time">Time:</label>
+                        <input type="time" id="appt-time" required>
+                    </div>
+                    <div>
+                        <label for="appt-purpose">Purpose:</label>
+                        <select id="appt-purpose" required>
+                            <option value="">Select Purpose</option>
+                            <option value="Lead Gen Call">Lead Gen Call</option>
+                            <option value="Follow-up Call">Follow-up Call</option>
+                            <option value="Appointment Setting Call">Appointment Setting Call</option>
+                            <option value="Scheduled Appointment">Scheduled Appointment</option>
+                            <option value="Support Call">Support Call</option>
+                            <option value="Onboarding Call">Onboarding Call</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="appt-status">Status / Outcome:</label>
+                        <select id="appt-status" required>
+                             <option value="">Select Outcome</option>
+                             <option value="Scheduled">Scheduled</option>
+                            <option value="Completed - Successful">Completed - Successful</option>
+                            <option value="Completed - Unsuccessful">Completed - Unsuccessful</option>
+                            <option value="Completed - Left Voicemail">Completed - Left Voicemail</option>
+                            <option value="No Answer">No Answer</option>
+                            <option value="Rescheduled">Rescheduled</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Appointment Set">Appointment Set</option>
+                            <option value="Lead Generated">Lead Generated</option>
+                            <option value="Issue Resolved">Issue Resolved</option>
+                        </select>
+                    </div>
+                     <div style="grid-column: 1 / -1;">
+                         <label for="appt-notes">Notes / Details:</label>
+                         <textarea id="appt-notes" placeholder="Include key details, next steps, or important information from the call"></textarea>
+                     </div>
+
+                    <button type="submit" id="log-appointment-submit-btn">Log Appointment/Call</button>
                 </form>
+
                 <h4>Appointments / Calls Logged (<span id="display-log-date-appt"></span>)</h4>
                 <div class="table-responsive">
                     <table id="appointment-log-table">
-                        <thead> <tr> <th>Time</th> <th>Client</th> <th>Purpose</th> <th>Status/Outcome</th> <th>Notes</th> <th>Actions</th> </tr> </thead>
-                        <tbody id="appointment-log-body"> </tbody>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Client</th>
+                                <th>Purpose</th>
+                                <th>Status/Outcome</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointment-log-body">
+                            <!-- Appointment log rows for the selected date -->
+                             <tr><td colspan="6" style="text-align:center;">No appointments logged for this date.</td></tr>
+                        </tbody>
                     </table>
                 </div>
+
                  <hr style="margin: 35px 0; border: 0; border-top: 1px solid #eee;">
+
+                 <!-- Task Logging -->
                  <h3>Log General Task / Productivity</h3>
                  <form id="log-task-form">
-                     <div> <label for="task-description">Task Description:</label> <input id="task-description" placeholder="e.g., Lead Research, Data Cleaning, Email Outreach" required="" type="text"> </div>
-                     <div> <label for="task-client-name">Associated Client (Optional):</label> <input id="task-client-name" list="client-suggestions" type="text"> </div>
-                     <div> <label for="task-time-spent">Time Spent (minutes):</label> <input id="task-time-spent" min="1" required="" type="number"> </div>
-                      <div style="grid-column: 1 / -1;"> <label for="task-notes">Task Notes (Optional):</label> <textarea id="task-notes" placeholder="Details about what was accomplished or any blockers encountered"></textarea> </div>
-                     <button type="submit">Log Task</button>
+                     <div>
+                         <label for="task-description">Task Description:</label>
+                         <input type="text" id="task-description" placeholder="e.g., Lead Research, Data Cleaning, Email Outreach" required>
+                     </div>
+                     <div>
+                        <label for="task-client-name">Associated Client (Optional):</label>
+                        <input type="text" id="task-client-name" list="client-suggestions">
+                    </div>
+                     <div>
+                         <label for="task-time-spent">Time Spent (minutes):</label>
+                         <input type="number" id="task-time-spent" min="1" required>
+                     </div>
+                      <div style="grid-column: 1 / -1;">
+                         <label for="task-notes">Task Notes (Optional):</label>
+                         <textarea id="task-notes" placeholder="Details about what was accomplished or any blockers encountered"></textarea>
+                     </div>
+                     <button type="submit" id="log-task-submit-btn">Log Task</button>
                  </form>
+
                 <h4>Tasks Logged (<span id="display-log-date-task"></span>)</h4>
                  <div class="table-responsive">
                     <table id="task-log-table">
-                         <thead> <tr> <th>Task</th> <th>Client</th> <th>Time Spent (min)</th> <th>Notes</th> <th>Actions</th> </tr> </thead>
-                         <tbody id="task-log-body"> </tbody>
+                         <thead>
+                             <tr>
+                                 <th>Task</th>
+                                 <th>Client</th>
+                                 <th>Time Spent (min)</th>
+                                 <th>Notes</th>
+                                 <th>Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody id="task-log-body">
+                             <!-- Task log rows for the selected date -->
+                              <tr><td colspan="5" style="text-align:center;">No tasks logged for this date.</td></tr>
+                         </tbody>
                      </table>
                  </div>
+
                  <hr style="margin: 35px 0; border: 0; border-top: 1px solid #eee;">
+
+                 <!-- Daily Productivity Summary -->
                  <h3>Daily Productivity Summary (<span id="display-log-date-summary"></span>)</h3>
                   <form id="log-productivity-form">
-                       <div> <label for="prod-calls">Calls Made:</label> <input id="prod-calls" min="0" value="0" required="" type="number"> </div>
-                       <div> <label for="prod-emails">Emails Sent:</label> <input id="prod-emails" min="0" value="0" required="" type="number"> </div>
-                       <div> <label for="prod-leads">Leads Generated:</label> <input id="prod-leads" min="0" value="0" required="" type="number"> </div>
-                       <div> <label for="prod-appts-set">Appointments Set:</label> <input id="prod-appts-set" min="0" value="0" required="" type="number"> </div>
-                        <div> <label for="prod-tickets">Issues Resolved:</label> <input id="prod-tickets" min="0" value="0" required="" type="number"> </div>
-                      <button type="submit" style="background-color: #007bff; max-width: 250px;">Save/Update Daily Summary</button>
+                       <div>
+                           <label for="prod-calls">Calls Made (Total):</label>
+                           <input type="number" id="prod-calls" min="0" value="0" required>
+                       </div>
+                       <div>
+                           <label for="prod-emails">Emails Sent:</label>
+                           <input type="number" id="prod-emails" min="0" value="0" required>
+                       </div>
+                       <div>
+                           <label for="prod-leads">Leads Generated (Total):</label>
+                           <input type="number" id="prod-leads" min="0" value="0" required>
+                       </div>
+                       <div>
+                           <label for="prod-appts-set">Appointments Set (Total):</label>
+                           <input type="number" id="prod-appts-set" min="0" value="0" required>
+                       </div>
+                        <div>
+                           <label for="prod-tickets">Issues Resolved (Total):</label>
+                           <input type="number" id="prod-tickets" min="0" value="0" required>
+                       </div>
+                      <button type="submit" id="log-productivity-submit-btn" style="background-color: #007bff; max-width: 250px;">Save/Update Daily Summary</button>
                   </form>
-                   <div id="va-daily-summary" style="margin-top: 20px; padding: 15px; background-color:#e9ecef; border-radius: 6px; border: 1px solid #dee2e6; font-size: 0.95em; line-height: 1.8;"> <strong>Saved Summary for <span id="display-log-date-summary-display"></span>:</strong><br> Calls Made: <span id="summary-calls">0</span> | Emails Sent: <span id="summary-emails">0</span> | Leads Generated: <span id="summary-leads">0</span> | Appointments Set: <span id="summary-appts-set">0</span> | Issues Resolved: <span id="summary-tickets">0</span> </div>
+
+                   <!-- Display area for saved summary -->
+                   <div id="va-daily-summary" style="margin-top: 20px; padding: 15px; background-color:#e9ecef; border-radius: 6px; border: 1px solid #dee2e6; font-size: 0.95em; line-height: 1.8;">
+                       <strong>Saved Summary for <span id="display-log-date-summary-display"></span>:</strong><br>
+                       Calls Made: <span id="summary-calls">0</span> |
+                       Emails Sent: <span id="summary-emails">0</span> |
+                       Leads Generated: <span id="summary-leads">0</span> |
+                       Appointments Set: <span id="summary-appts-set">0</span> |
+                       Issues Resolved: <span id="summary-tickets">0</span>
+                   </div>
+
+                   <!-- Daily Notes -->
                    <h3>Daily Notes & Reflections</h3>
                    <form id="daily-notes-form">
-                       <div style="grid-column: 1 / -1;"> <label for="daily-notes">Notes about the day, challenges, or achievements:</label> <textarea id="daily-notes" rows="4" placeholder="What went well? What could be improved? Any important notes for tomorrow?"></textarea> </div>
-                       <button type="submit" style="background-color: #17a2b8;">Save Notes</button>
+                       <div style="grid-column: 1 / -1;">
+                           <label for="daily-notes">Notes about the day, challenges, or achievements:</label>
+                           <textarea id="daily-notes" rows="4" placeholder="What went well? What could be improved? Any important notes for tomorrow?"></textarea>
+                       </div>
+                       <button type="submit" id="daily-notes-submit-btn" style="background-color: #17a2b8;">Save Notes</button>
                    </form>
+                    <div id="daily-notes-display" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; white-space: pre-wrap; font-size: 0.95em; color: #495057;">
+                        <strong>Saved Notes for <span id="display-log-date-notes-display"></span>:</strong>
+                        <p id="notes-content" style="margin-top: 5px;">No notes saved for this date.</p>
+                    </div>
+
             </section>
+
         </main>
+    </div> <!-- End of #app-content -->
 
-        <footer>
-            <div class="container">
-                © 2025 VirtuCall PH powered by Nitchiebot AI. All rights reserved. <br> <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-                <p style="font-size: 0.85em; margin-top: 15px; color: #6c757d;">
-                   Tracker data is currently stored locally. Use Firebase Firestore for cloud storage per user.
-                </p>
-            </div>
-        </footer>
-    </div> <!-- End #app-container -->
+    <footer>
+        <div class="container">
+            © 2024 VirtuCall PH powered by Nitchiebot AI. All rights reserved. <br> <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            <p style="font-size: 0.85em; margin-top: 15px; color: #6c757d;">Tracker data is stored centrally using Firebase Firestore. Sign-in uses Google Authentication.</p>
+        </div>
+    </footer>
 
-    <!-- === FIREBASE MODULE SCRIPT === -->
+    <!-- Firebase SDK -->
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-      // Import Auth functions
       import {
           getAuth,
           onAuthStateChanged,
@@ -574,274 +739,889 @@
           signInWithPopup,
           signOut
       } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      // ---> ADDED: Import Firestore functions <---
+      import {
+          getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc,
+          query, where, orderBy, serverTimestamp, Timestamp, arrayUnion, arrayRemove
+       } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-      // Your web app's Firebase configuration (FROM YOUR SNIPPET)
-      // !! SECURITY WARNING: Avoid committing real API keys to public repos !!
-      // Consider using environment variables or Firebase Hosting config
+      // Your web app's Firebase configuration
       const firebaseConfig = {
-          apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA", // <-- Potentially exposed key!
-          authDomain: "virtucall-ph-daily-tracker.firebaseapp.com",
-          databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "virtucall-ph-daily-tracker",
-          storageBucket: "virtucall-ph-daily-tracker.appspot.com", // Corrected domain
-          messagingSenderId: "482945061810",
-          appId: "1:482945061810:web:2d3512d0ee3fbafff6caab",
-          measurementId: "G-ZNBLK62LE2"
+        apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA", // USE YOUR ACTUAL API KEY
+        authDomain: "virtucall-ph-daily-tracker.firebaseapp.com",
+        databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "virtucall-ph-daily-tracker",
+        storageBucket: "virtucall-ph-daily-tracker.appspot.com",
+        messagingSenderId: "482945061810",
+        appId: "1:482945061810:web:2d3512d0ee3fbafff6caab",
+        measurementId: "G-ZNBLK62LE2"
       };
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app); // Optional: If you use Analytics
-      const auth = getAuth(app); // Get the Auth service instance
-      const googleProvider = new GoogleAuthProvider(); // Initialize Google Auth Provider
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const db = getFirestore(app); // Initialize Firestore
+      const provider = new GoogleAuthProvider();
 
-      // --- Auth Related DOM Elements ---
-      const loginContainer = document.getElementById('login-container');
-      const appContainer = document.getElementById('app-container');
-      const googleSignInBtn = document.getElementById('google-signin-btn');
-      const signOutBtn = document.getElementById('sign-out-btn');
-      const userInfoDiv = document.getElementById('user-info');
-      const userDisplayNameSpan = document.getElementById('user-display-name');
-      const loginErrorP = document.getElementById('login-error');
+      // --- Global Variables ---
+      let currentUser = null;
+      let currentView = 'manager-view'; // Default view
+      let selectedLogDate = ''; // YYYY-MM-DD format
+      let currentLogData = {}; // To hold the fetched log data for the selected date
+      let clientCache = []; // Simple cache for client names
 
-      // --- Original App DOM References ---
+      // --- DOM Elements ---
+      const signInButton = document.getElementById('google-signin-btn');
+      const signOutButton = document.getElementById('google-signout-btn');
+      const userInfoDisplay = document.getElementById('user-info');
+      const appContent = document.getElementById('app-content');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      const viewButtons = document.querySelectorAll('nav button[data-view]');
       const managerView = document.getElementById('manager-view');
       const vaView = document.getElementById('va-view');
-      const showManagerBtn = document.getElementById('show-manager-view');
-      const showVaBtn = document.getElementById('show-va-view');
+
+      // Manager View Elements
       const addClientForm = document.getElementById('add-client-form');
       const clientListBody = document.getElementById('client-list-body');
+      const clientFormError = document.getElementById('client-form-error');
+      const clientFormSuccess = document.getElementById('client-form-success');
+      const addClientSubmitBtn = document.getElementById('add-client-submit-btn');
+
+
+      // VA View Elements
       const logDateInput = document.getElementById('log-date');
       const copyYesterdayBtn = document.getElementById('copy-yesterday-btn');
+      const clientSuggestionsDatalist = document.getElementById('client-suggestions');
       const logAppointmentForm = document.getElementById('log-appointment-form');
       const appointmentLogBody = document.getElementById('appointment-log-body');
       const logTaskForm = document.getElementById('log-task-form');
       const taskLogBody = document.getElementById('task-log-body');
       const logProductivityForm = document.getElementById('log-productivity-form');
       const dailyNotesForm = document.getElementById('daily-notes-form');
-      const dailyNotesTextarea = document.getElementById('daily-notes');
-      const clientSuggestions = document.getElementById('client-suggestions');
-      const displayLogDateAppt = document.getElementById('display-log-date-appt');
-      const displayLogDateTask = document.getElementById('display-log-date-task');
-      const displayLogDateSummary = document.getElementById('display-log-date-summary');
-      const displayLogDateSummaryDisplay = document.getElementById('display-log-date-summary-display');
-      const summaryDisplaySpans = { calls: document.getElementById('summary-calls'), emails: document.getElementById('summary-emails'), leads: document.getElementById('summary-leads'), apptsSet: document.getElementById('summary-appts-set'), tickets: document.getElementById('summary-tickets'), };
-      const productivityInputs = { calls: document.getElementById('prod-calls'), emails: document.getElementById('prod-emails'), leads: document.getElementById('prod-leads'), apptsSet: document.getElementById('prod-appts-set'), tickets: document.getElementById('prod-tickets'), };
-      const statCards = { totalCalls: document.getElementById('stat-total-calls'), productiveTime: document.getElementById('stat-productive-time'), leads: document.getElementById('stat-leads'), appointments: document.getElementById('stat-appointments') };
+      const vaViewError = document.getElementById('va-view-error');
+      const vaViewSuccess = document.getElementById('va-view-success');
+      const dateDisplaySpans = {
+          appt: document.getElementById('display-log-date-appt'),
+          task: document.getElementById('display-log-date-task'),
+          summary: document.getElementById('display-log-date-summary'),
+          summaryDisplay: document.getElementById('display-log-date-summary-display'),
+          notesDisplay: document.getElementById('display-log-date-notes-display'),
+      };
+      const summaryDisplayElements = {
+            calls: document.getElementById('summary-calls'),
+            emails: document.getElementById('summary-emails'),
+            leads: document.getElementById('summary-leads'),
+            apptsSet: document.getElementById('summary-appts-set'),
+            tickets: document.getElementById('summary-tickets'),
+      };
+      const notesContentEl = document.getElementById('notes-content');
+      const statElements = {
+            totalCalls: document.getElementById('stat-total-calls'),
+            productiveTime: document.getElementById('stat-productive-time'),
+            leads: document.getElementById('stat-leads'),
+            appointments: document.getElementById('stat-appointments'),
+      };
+      const logAppointmentSubmitBtn = document.getElementById('log-appointment-submit-btn');
+      const logTaskSubmitBtn = document.getElementById('log-task-submit-btn');
+      const logProductivitySubmitBtn = document.getElementById('log-productivity-submit-btn');
+      const dailyNotesSubmitBtn = document.getElementById('daily-notes-submit-btn');
 
-      // --- State Variable ---
-      let isAppInitialized = false; // Flag to prevent multiple initializations of tracker logic
 
-      // --- Authentication Logic ---
+      // --- Helper Functions ---
+      const showLoading = (show = true) => {
+          loadingIndicator.classList.toggle('hidden', !show);
+      };
 
-      // Listen for auth state changes
-      onAuthStateChanged(auth, (user) => {
-          if (user) {
-              // User is signed in.
-              console.log("User signed in:", user.displayName, user.email);
-              showAppView(user);
-              if (!isAppInitialized) {
-                  initializeAppTrackerLogic(); // Initialize the tracker logic ONLY when logged in
-                  isAppInitialized = true;
-              }
-          } else {
-              // User is signed out.
-              console.log("User signed out.");
-              showLoginView();
-              isAppInitialized = false; // Reset flag if user logs out
+      const showMessage = (element, message, isError = true) => {
+          element.textContent = message;
+          element.className = isError ? 'error-message' : 'success-message'; // Keep block display
+          element.classList.remove('hidden');
+          // Clear message after some time
+          setTimeout(() => {
+              element.textContent = '';
+              element.classList.add('hidden');
+          }, 5000);
+      };
+
+      const clearForm = (formElement) => {
+          formElement.reset();
+          // Clear any specific fields like textareas if reset doesn't cover them
+          formElement.querySelectorAll('textarea').forEach(ta => ta.value = '');
+      };
+
+      // Format date as YYYY-MM-DD
+      const formatDate = (date) => {
+          return date.toISOString().split('T')[0];
+      };
+
+       // Get color class based on status
+       const getStatusClass = (status) => {
+          switch (status) {
+              case 'Completed - Successful':
+              case 'Appointment Set':
+              case 'Lead Generated':
+              case 'Issue Resolved':
+                  return 'text-success';
+              case 'Completed - Unsuccessful':
+              case 'Completed - Left Voicemail':
+                  return 'text-warning';
+              case 'No Answer':
+              case 'Cancelled':
+                  return 'text-danger';
+              case 'Scheduled':
+              case 'Rescheduled':
+                  return 'text-info';
+              default:
+                  return 'text-muted';
           }
-      });
+       };
 
-      // Show Login View
-      function showLoginView() {
-          loginContainer.classList.remove('hidden'); // Show login
-          appContainer.classList.remove('visible');  // Hide app
-          userInfoDiv.classList.add('hidden');
-          loginErrorP.classList.add('hidden'); // Hide any previous errors
-          loginErrorP.textContent = '';
-      }
 
-      // Show App View
-      function showAppView(user) {
-          loginContainer.classList.add('hidden');   // Hide login
-          appContainer.classList.add('visible');    // Show app
-          userDisplayNameSpan.textContent = `Welcome, ${user.displayName || user.email}`;
-          userInfoDiv.classList.remove('hidden');
-          loginErrorP.classList.add('hidden');
-          loginErrorP.textContent = '';
-      }
+      // --- Authentication Functions ---
+      const signInWithGoogle = () => {
+          signInWithPopup(auth, provider)
+              .then((result) => {
+                  console.log('User signed in:', result.user);
+                  // Handled by onAuthStateChanged
+              }).catch((error) => {
+                  console.error("Sign in error:", error.code, error.message);
+                  alert(`Sign in failed: ${error.message}`);
+              });
+      };
 
-      // Sign In with Google
-      googleSignInBtn.addEventListener('click', async () => {
-          loginErrorP.classList.add('hidden'); // Hide error before attempting
-          loginErrorP.textContent = '';
-          try {
-              const result = await signInWithPopup(auth, googleProvider);
-              // Successful sign-in is handled by onAuthStateChanged
-              console.log("Sign-in popup successful", result.user);
-          } catch (error) {
-              // Handle Errors here.
-              console.error("Google Sign-In Error:", error.code, error.message);
-              loginErrorP.textContent = `Login failed: ${error.message}`;
-              loginErrorP.classList.remove('hidden');
-          }
-      });
-
-      // Sign Out
-      signOutBtn.addEventListener('click', async () => {
-          try {
-              await signOut(auth);
-              // Successful sign-out handled by onAuthStateChanged
-              console.log("Sign-out successful.");
-              // Clear local storage on sign out? Optional.
-              // localStorage.clear();
-          } catch (error) {
-              console.error("Sign-Out Error:", error);
+      const signOutUser = () => {
+          signOut(auth).then(() => {
+              console.log('User signed out');
+              // Handled by onAuthStateChanged
+          }).catch((error) => {
+              console.error("Sign out error:", error);
               alert(`Sign out failed: ${error.message}`);
+          });
+      };
+
+      // --- View Switching ---
+      const switchView = (viewId) => {
+          currentView = viewId;
+          document.querySelectorAll('main section').forEach(section => {
+              section.classList.toggle('active', section.id === viewId);
+          });
+          viewButtons.forEach(button => {
+              button.classList.toggle('active', button.dataset.view === viewId);
+          });
+          // Automatically load data for the activated view if needed
+          if (viewId === 'va-view' && currentUser && selectedLogDate) {
+              loadVALogData(currentUser.uid, selectedLogDate);
+          } else if (viewId === 'manager-view' && currentUser) {
+              displayClients();
+          }
+      };
+
+      // --- Manager View Functions ---
+
+      // Add Client to Firestore
+      const addClient = async (event) => {
+          event.preventDefault();
+          if (!currentUser) return showMessage(clientFormError, 'You must be logged in.');
+
+          addClientSubmitBtn.disabled = true;
+          showLoading();
+          clientFormError.classList.add('hidden');
+          clientFormSuccess.classList.add('hidden');
+
+          const clientData = {
+              companyName: document.getElementById('client-name').value.trim(),
+              contactPerson: document.getElementById('client-contact-person').value.trim(),
+              contactEmail: document.getElementById('client-contact-email').value.trim(),
+              contactPhone: document.getElementById('client-contact-phone').value.trim(),
+              service: document.getElementById('client-services').value,
+              status: document.getElementById('client-status').value,
+              notes: document.getElementById('client-notes').value.trim(),
+              addedBy: currentUser.uid,
+              addedByName: currentUser.displayName,
+              createdAt: serverTimestamp()
+          };
+
+          try {
+              const docRef = await addDoc(collection(db, "clients"), clientData);
+              console.log("Client added with ID: ", docRef.id);
+              showMessage(clientFormSuccess, 'Client added successfully!', false);
+              clearForm(addClientForm);
+              await displayClients(); // Refresh list
+              await populateClientDatalist(); // Refresh datalist for VA view
+          } catch (e) {
+              console.error("Error adding client: ", e);
+              showMessage(clientFormError, `Error adding client: ${e.message}`);
+          } finally {
+              showLoading(false);
+              addClientSubmitBtn.disabled = false;
+          }
+      };
+
+       // Display Clients from Firestore
+       const displayClients = async () => {
+           if (!currentUser) return;
+           showLoading();
+           clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading clients...</td></tr>'; // Clear and show loading
+
+           try {
+               const q = query(collection(db, "clients"), orderBy("companyName")); // Order by name
+               const querySnapshot = await getDocs(q);
+               clientListBody.innerHTML = ''; // Clear previous entries
+               clientCache = []; // Reset cache
+
+               if (querySnapshot.empty) {
+                   clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No clients found. Add one using the form above.</td></tr>';
+               } else {
+                   querySnapshot.forEach((doc) => {
+                       const client = doc.data();
+                       client.id = doc.id; // Add Firestore ID to the object
+                       clientCache.push({ id: client.id, name: client.companyName }); // Populate cache
+
+                       const row = clientListBody.insertRow();
+                       row.innerHTML = `
+                           <td>${client.companyName || 'N/A'}</td>
+                           <td>${client.contactPerson || 'N/A'}</td>
+                           <td>${client.contactEmail ? `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a><br>` : ''} ${client.contactPhone || ''}</td>
+                           <td>${client.service || 'N/A'}</td>
+                           <td>${client.status || 'N/A'}</td>
+                           <td style="white-space: pre-wrap; max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${client.notes || ''}</td>
+                           <td class="actions">
+                               <button class="delete-btn" data-id="${client.id}" aria-label="Delete client ${client.companyName}">Delete</button>
+                               <!-- Add Edit button functionality later if needed -->
+                           </td>
+                       `;
+                       // Add event listener for the new delete button (delegated below)
+                   });
+               }
+               await populateClientDatalist(); // Populate datalist after loading clients
+           } catch (e) {
+               console.error("Error getting clients: ", e);
+               clientListBody.innerHTML = `<tr><td colspan="7" style="text-align:center;" class="text-danger">Error loading clients: ${e.message}</td></tr>`;
+               showMessage(clientFormError, `Error loading clients: ${e.message}`);
+           } finally {
+               showLoading(false);
+           }
+       };
+
+
+       // Delete Client from Firestore
+       const deleteClient = async (clientId) => {
+           if (!currentUser) return showMessage(clientFormError, 'You must be logged in.');
+           if (!clientId) return showMessage(clientFormError, 'Invalid client ID.');
+
+           const confirmDelete = confirm("Are you sure you want to delete this client? This action cannot be undone.");
+           if (!confirmDelete) return;
+
+           showLoading();
+           try {
+               await deleteDoc(doc(db, "clients", clientId));
+               console.log("Client deleted with ID: ", clientId);
+               showMessage(clientFormSuccess, 'Client deleted successfully!', false);
+               await displayClients(); // Refresh list
+               await populateClientDatalist(); // Refresh datalist
+           } catch (e) {
+               console.error("Error deleting client: ", e);
+               showMessage(clientFormError, `Error deleting client: ${e.message}`);
+           } finally {
+               showLoading(false);
+           }
+       };
+
+
+      // --- VA View Functions ---
+
+      // Populate Client Datalist for VA forms
+      const populateClientDatalist = async () => {
+          // Use the cache if available, otherwise fetch (could happen if VA view loads first)
+          if (clientCache.length === 0) {
+              try {
+                  const q = query(collection(db, "clients"), orderBy("companyName"));
+                  const querySnapshot = await getDocs(q);
+                  clientCache = querySnapshot.docs.map(doc => ({ id: doc.id, name: doc.data().companyName }));
+              } catch (e) {
+                  console.error("Error fetching clients for datalist:", e);
+                  showMessage(vaViewError, "Could not load client suggestions.");
+                  return; // Stop if error
+              }
+          }
+
+          clientSuggestionsDatalist.innerHTML = ''; // Clear existing options
+          clientCache.forEach(client => {
+              const option = document.createElement('option');
+              option.value = client.name;
+              clientSuggestionsDatalist.appendChild(option);
+          });
+      };
+
+      // Get or Create Log Document Reference
+      const getLogDocRef = (userId, date) => {
+          if (!userId || !date) {
+              console.error("User ID and Date are required for log reference.");
+              return null;
+          }
+          return doc(db, 'va_logs', userId, 'daily_logs', date);
+      };
+
+      // Load VA Log Data for a specific date
+      const loadVALogData = async (userId, date) => {
+          if (!userId || !date) return;
+          showLoading();
+          vaViewError.classList.add('hidden');
+          vaViewSuccess.classList.add('hidden'); // Clear messages on load
+
+          // Update date display spans
+          Object.values(dateDisplaySpans).forEach(span => span.textContent = date);
+
+          const logDocRef = getLogDocRef(userId, date);
+          try {
+              const docSnap = await getDoc(logDocRef);
+              if (docSnap.exists()) {
+                  currentLogData = docSnap.data();
+                  console.log("Log data loaded for", date, currentLogData);
+                  // Ensure arrays/objects exist if they were previously undefined
+                  currentLogData.appointments = currentLogData.appointments || [];
+                  currentLogData.tasks = currentLogData.tasks || [];
+                  currentLogData.summary = currentLogData.summary || {};
+                  currentLogData.dailyNotes = currentLogData.dailyNotes || '';
+
+              } else {
+                  console.log("No log document found for", date, "- resetting data.");
+                  // Reset data if no doc exists for the date
+                  currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
+              }
+
+              // Display data
+              displayAppointments(currentLogData.appointments);
+              displayTasks(currentLogData.tasks);
+              displaySummary(currentLogData.summary);
+              displayNotes(currentLogData.dailyNotes);
+              updateStatCards(); // Calculate stats based on loaded data
+
+          } catch (e) {
+              console.error("Error loading VA log data: ", e);
+              showMessage(vaViewError, `Error loading log data: ${e.message}`);
+              // Reset display if error occurs
+              currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
+              displayAppointments([]);
+              displayTasks([]);
+              displaySummary({});
+              displayNotes('');
+              updateStatCards();
+          } finally {
+              showLoading(false);
+          }
+      };
+
+      // Display Appointments in the table
+      const displayAppointments = (appointments = []) => {
+          appointmentLogBody.innerHTML = ''; // Clear table
+          if (!appointments || appointments.length === 0) {
+              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No appointments logged for this date.</td></tr>';
+              return;
+          }
+
+          // Sort by time before displaying
+          appointments.sort((a, b) => (a.time || "00:00").localeCompare(b.time || "00:00"));
+
+          appointments.forEach(appt => {
+              const row = appointmentLogBody.insertRow();
+              // Add unique id if it doesn't exist (for newly added items before refresh)
+              const itemId = appt.id || `temp_${Date.now()}_${Math.random()}`;
+              const statusClass = getStatusClass(appt.status);
+              row.innerHTML = `
+                  <td>${appt.time || 'N/A'}</td>
+                  <td>${appt.clientName || 'N/A'}</td>
+                  <td>${appt.purpose || 'N/A'}</td>
+                  <td class="${statusClass}">${appt.status || 'N/A'}</td>
+                  <td style="white-space: pre-wrap;">${appt.notes || ''}</td>
+                  <td class="actions">
+                       <button class="delete-btn" data-type="appointment" data-id="${itemId}" aria-label="Delete appointment for ${appt.clientName} at ${appt.time}">Delete</button>
+                  </td>
+              `;
+          });
+      };
+
+       // Display Tasks in the table
+       const displayTasks = (tasks = []) => {
+           taskLogBody.innerHTML = ''; // Clear table
+           if (!tasks || tasks.length === 0) {
+               taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No tasks logged for this date.</td></tr>';
+               return;
+           }
+
+           // Sort tasks maybe by description or time added if timestamp exists? For now, just display as is.
+           // tasks.sort((a, b) => a.description.localeCompare(b.description));
+
+           tasks.forEach(task => {
+               const row = taskLogBody.insertRow();
+               const itemId = task.id || `temp_${Date.now()}_${Math.random()}`;
+               row.innerHTML = `
+                   <td>${task.description || 'N/A'}</td>
+                   <td>${task.clientName || 'N/A'}</td>
+                   <td>${task.timeSpent || '0'}</td>
+                   <td style="white-space: pre-wrap;">${task.notes || ''}</td>
+                   <td class="actions">
+                       <button class="delete-btn" data-type="task" data-id="${itemId}" aria-label="Delete task ${task.description}">Delete</button>
+                   </td>
+               `;
+           });
+       };
+
+       // Display Summary Data in form and display area
+       const displaySummary = (summary = {}) => {
+           // Fill the form inputs
+           document.getElementById('prod-calls').value = summary.calls || 0;
+           document.getElementById('prod-emails').value = summary.emails || 0;
+           document.getElementById('prod-leads').value = summary.leads || 0;
+           document.getElementById('prod-appts-set').value = summary.apptsSet || 0;
+           document.getElementById('prod-tickets').value = summary.tickets || 0;
+
+           // Update the display area below the form
+           summaryDisplayElements.calls.textContent = summary.calls || 0;
+           summaryDisplayElements.emails.textContent = summary.emails || 0;
+           summaryDisplayElements.leads.textContent = summary.leads || 0;
+           summaryDisplayElements.apptsSet.textContent = summary.apptsSet || 0;
+           summaryDisplayElements.tickets.textContent = summary.tickets || 0;
+       };
+
+       // Display Daily Notes in textarea and display area
+       const displayNotes = (notes = '') => {
+           document.getElementById('daily-notes').value = notes || '';
+           if (notes) {
+               notesContentEl.textContent = notes;
+           } else {
+               notesContentEl.textContent = 'No notes saved for this date.';
+           }
+       };
+
+
+       // Add Appointment/Call Log Entry
+       const addAppointmentLog = async (event) => {
+           event.preventDefault();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logAppointmentSubmitBtn.disabled = true;
+           showLoading();
+
+           const newAppointment = {
+               id: `appt_${Date.now()}`, // Unique ID for easier deletion
+               time: document.getElementById('appt-time').value,
+               clientName: document.getElementById('appt-client-name').value.trim(),
+               purpose: document.getElementById('appt-purpose').value,
+               status: document.getElementById('appt-status').value,
+               notes: document.getElementById('appt-notes').value.trim(),
+           };
+
+           const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+                // Use setDoc with merge: true to create the doc if it doesn't exist
+                // and use arrayUnion to add the appointment safely.
+                await setDoc(logDocRef, {
+                    appointments: arrayUnion(newAppointment),
+                    lastUpdated: serverTimestamp() // Track updates
+                 }, { merge: true });
+
+                console.log("Appointment logged successfully");
+                showMessage(vaViewSuccess, 'Appointment/Call logged successfully!', false);
+                clearForm(logAppointmentForm);
+                // Refresh data immediately
+                await loadVALogData(currentUser.uid, selectedLogDate);
+           } catch (e) {
+               console.error("Error logging appointment: ", e);
+               showMessage(vaViewError, `Error logging appointment: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logAppointmentSubmitBtn.disabled = false;
+           }
+       };
+
+       // Add Task Log Entry
+       const addTaskLog = async (event) => {
+           event.preventDefault();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logTaskSubmitBtn.disabled = true;
+           showLoading();
+
+           const newTask = {
+               id: `task_${Date.now()}`, // Unique ID
+               description: document.getElementById('task-description').value.trim(),
+               clientName: document.getElementById('task-client-name').value.trim(), // Optional
+               timeSpent: parseInt(document.getElementById('task-time-spent').value) || 0,
+               notes: document.getElementById('task-notes').value.trim(), // Optional
+           };
+
+           if (newTask.timeSpent <= 0) {
+               showMessage(vaViewError, 'Time spent must be a positive number.');
+               showLoading(false);
+               logTaskSubmitBtn.disabled = false;
+               return;
+           }
+
+           const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+               await setDoc(logDocRef, {
+                   tasks: arrayUnion(newTask),
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Task logged successfully");
+               showMessage(vaViewSuccess, 'Task logged successfully!', false);
+               clearForm(logTaskForm);
+               await loadVALogData(currentUser.uid, selectedLogDate);
+           } catch (e) {
+               console.error("Error logging task: ", e);
+               showMessage(vaViewError, `Error logging task: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logTaskSubmitBtn.disabled = false;
+           }
+       };
+
+        // Delete Appointment or Task Log Entry
+       const deleteLogEntry = async (type, itemId) => {
+           if (!currentUser || !selectedLogDate || !type || !itemId) return showMessage(vaViewError, 'Missing information to delete item.');
+
+           const confirmDelete = confirm(`Are you sure you want to delete this ${type}?`);
+           if (!confirmDelete) return;
+
+           showLoading();
+           const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+                // Fetch the current document to find the exact object to remove
+                const docSnap = await getDoc(logDocRef);
+                if (!docSnap.exists()) {
+                    throw new Error("Log document not found.");
+                }
+
+                const logData = docSnap.data();
+                let itemToRemove = null;
+                let updatedArray = [];
+                const fieldName = type === 'appointment' ? 'appointments' : 'tasks';
+
+                if (logData[fieldName] && Array.isArray(logData[fieldName])) {
+                    // Find the item by its unique ID
+                    itemToRemove = logData[fieldName].find(item => item.id === itemId);
+                    if (itemToRemove) {
+                        // Use arrayRemove - requires the exact object reference
+                        await updateDoc(logDocRef, {
+                             [fieldName]: arrayRemove(itemToRemove),
+                              lastUpdated: serverTimestamp()
+                         });
+                         console.log(`${type} entry deleted successfully`);
+                         showMessage(vaViewSuccess, `${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully!`, false);
+                         // Reload data after deletion
+                         await loadVALogData(currentUser.uid, selectedLogDate);
+
+                    } else {
+                         // Fallback/Error handling if item not found (e.g., already deleted)
+                        console.warn(`Item with id ${itemId} not found in ${fieldName} array.`);
+                        showMessage(vaViewError, `${type.charAt(0).toUpperCase() + type.slice(1)} not found, perhaps it was already deleted.`);
+                        await loadVALogData(currentUser.uid, selectedLogDate); // Still reload to ensure UI consistency
+                    }
+                 } else {
+                    throw new Error(`Log data format issue: ${fieldName} array not found.`);
+                 }
+
+           } catch (e) {
+               console.error(`Error deleting ${type}: `, e);
+               showMessage(vaViewError, `Error deleting ${type}: ${e.message}`);
+               // Ensure UI consistency even on error
+                if(currentUser && selectedLogDate) await loadVALogData(currentUser.uid, selectedLogDate);
+           } finally {
+               showLoading(false);
+           }
+       };
+
+
+       // Save/Update Daily Productivity Summary
+       const saveProductivitySummary = async (event) => {
+           event.preventDefault();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logProductivitySubmitBtn.disabled = true;
+           showLoading();
+
+           const summaryData = {
+               calls: parseInt(document.getElementById('prod-calls').value) || 0,
+               emails: parseInt(document.getElementById('prod-emails').value) || 0,
+               leads: parseInt(document.getElementById('prod-leads').value) || 0,
+               apptsSet: parseInt(document.getElementById('prod-appts-set').value) || 0,
+               tickets: parseInt(document.getElementById('prod-tickets').value) || 0,
+           };
+
+           const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+               // Use setDoc with merge: true to update only the summary field
+               await setDoc(logDocRef, {
+                   summary: summaryData,
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Productivity summary saved successfully");
+               showMessage(vaViewSuccess, 'Daily summary saved successfully!', false);
+               displaySummary(summaryData); // Update display area
+               updateStatCards(); // Recalculate stats potentially impacted by summary
+           } catch (e) {
+               console.error("Error saving summary: ", e);
+               showMessage(vaViewError, `Error saving summary: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logProductivitySubmitBtn.disabled = false;
+           }
+       };
+
+       // Save Daily Notes
+       const saveDailyNotes = async (event) => {
+           event.preventDefault();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           dailyNotesSubmitBtn.disabled = true;
+           showLoading();
+
+           const notes = document.getElementById('daily-notes').value.trim();
+           const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+               await setDoc(logDocRef, {
+                   dailyNotes: notes,
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Daily notes saved successfully");
+               showMessage(vaViewSuccess, 'Daily notes saved successfully!', false);
+               displayNotes(notes); // Update display area
+           } catch (e) {
+               console.error("Error saving notes: ", e);
+               showMessage(vaViewError, `Error saving notes: ${e.message}`);
+           } finally {
+               showLoading(false);
+               dailyNotesSubmitBtn.disabled = false;
+           }
+       };
+
+       // Update Stat Cards based on currentLogData
+       const updateStatCards = () => {
+           let totalCalls = 0;
+           let productiveTime = 0;
+           let leadsFromCalls = 0;
+           let apptsFromCalls = 0;
+
+           if (currentLogData.appointments) {
+               totalCalls = currentLogData.appointments.length;
+               currentLogData.appointments.forEach(appt => {
+                   if (appt.status === 'Lead Generated') leadsFromCalls++;
+                   if (appt.status === 'Appointment Set') apptsFromCalls++;
+               });
+           }
+
+           if (currentLogData.tasks) {
+               productiveTime = currentLogData.tasks.reduce((sum, task) => sum + (task.timeSpent || 0), 0);
+           }
+
+           // Use summary values if they exist, otherwise use calculated values from calls
+           const totalLeads = currentLogData.summary?.leads ?? leadsFromCalls;
+           const totalAppts = currentLogData.summary?.apptsSet ?? apptsFromCalls;
+
+
+           statElements.totalCalls.textContent = totalCalls;
+           statElements.productiveTime.textContent = productiveTime;
+           statElements.leads.textContent = totalLeads;
+           statElements.appointments.textContent = totalAppts;
+       };
+
+       // Copy Tasks (and Appointments maybe?) from Yesterday
+       const copyFromYesterday = async () => {
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           const today = new Date(selectedLogDate + 'T00:00:00'); // Ensure correct date object
+           const yesterday = new Date(today);
+           yesterday.setDate(today.getDate() - 1);
+           const yesterdayDateStr = formatDate(yesterday);
+
+           const confirmCopy = confirm(`Copy tasks and appointments from ${yesterdayDateStr} to ${selectedLogDate}? This will add to any existing entries for today.`);
+           if (!confirmCopy) return;
+
+           showLoading();
+           const yesterdayLogDocRef = getLogDocRef(currentUser.uid, yesterdayDateStr);
+           const todayLogDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
+           try {
+               const yesterdayDocSnap = await getDoc(yesterdayLogDocRef);
+
+               if (!yesterdayDocSnap.exists()) {
+                   showMessage(vaViewError, `No log data found for yesterday (${yesterdayDateStr}).`);
+                   return;
+               }
+
+               const yesterdayData = yesterdayDocSnap.data();
+               const itemsToCopy = {};
+
+               // Prepare items with NEW unique IDs for today
+               if (yesterdayData.appointments && yesterdayData.appointments.length > 0) {
+                   itemsToCopy.appointments = yesterdayData.appointments.map(appt => ({
+                       ...appt,
+                       id: `appt_${Date.now()}_${Math.random().toString(16).slice(2)}`, // New ID
+                       // Optionally reset status/notes or keep them? Let's keep them for now.
+                   }));
+               }
+                if (yesterdayData.tasks && yesterdayData.tasks.length > 0) {
+                   itemsToCopy.tasks = yesterdayData.tasks.map(task => ({
+                       ...task,
+                       id: `task_${Date.now()}_${Math.random().toString(16).slice(2)}`, // New ID
+                   }));
+               }
+
+
+                if (!itemsToCopy.appointments && !itemsToCopy.tasks) {
+                    showMessage(vaViewSuccess, `No tasks or appointments found for yesterday (${yesterdayDateStr}) to copy.`, false);
+                    return;
+                }
+
+                // Use arrayUnion to add copied items without overwriting existing ones
+                const updatePayload = {};
+                if (itemsToCopy.appointments) {
+                    updatePayload.appointments = arrayUnion(...itemsToCopy.appointments);
+                }
+                 if (itemsToCopy.tasks) {
+                    updatePayload.tasks = arrayUnion(...itemsToCopy.tasks);
+                }
+                 updatePayload.lastUpdated = serverTimestamp();
+
+
+               await setDoc(todayLogDocRef, updatePayload , { merge: true });
+
+               console.log("Copied data from yesterday");
+               showMessage(vaViewSuccess, 'Successfully copied entries from yesterday!', false);
+               await loadVALogData(currentUser.uid, selectedLogDate); // Refresh today's view
+
+           } catch (e) {
+               console.error("Error copying from yesterday: ", e);
+               showMessage(vaViewError, `Error copying data: ${e.message}`);
+           } finally {
+               showLoading(false);
+           }
+       };
+
+
+      // --- Initialization and Event Listeners ---
+
+      // Set initial date for VA log to today
+      const initializeDate = () => {
+           const today = new Date();
+           selectedLogDate = formatDate(today);
+           logDateInput.value = selectedLogDate;
+           logDateInput.max = selectedLogDate; // Prevent selecting future dates
+       };
+
+
+      // Auth State Change Listener
+      onAuthStateChanged(auth, (user) => {
+          showLoading();
+          if (user) {
+              // User is signed in
+              currentUser = user;
+              userInfoDisplay.innerHTML = `
+                  <img src="${user.photoURL || 'placeholder.png'}" alt="User Avatar"> <!-- Add a placeholder image -->
+                  <span>${user.displayName || user.email}</span>
+              `;
+              userInfoDisplay.classList.remove('hidden');
+              signOutButton.classList.remove('hidden');
+              signInButton.classList.add('hidden');
+              appContent.classList.remove('hidden');
+
+              initializeDate(); // Set initial date for VA view
+               populateClientDatalist(); // Start loading client suggestions
+
+              // Load data for the default/current view
+              switchView(currentView); // This will trigger data loading based on the view
+
+          } else {
+              // User is signed out
+              currentUser = null;
+              userInfoDisplay.classList.add('hidden');
+              userInfoDisplay.innerHTML = '';
+              signOutButton.classList.add('hidden');
+              signInButton.classList.remove('hidden');
+              appContent.classList.add('hidden');
+              // Clear data displays
+              clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Please sign in to view clients.</td></tr>';
+              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in to view logs.</td></tr>';
+              taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view logs.</td></tr>';
+              clientCache = []; // Clear cache on logout
+              currentLogData = {};
+          }
+           showLoading(false);
+      });
+
+      // --- Event Listeners ---
+      signInButton.addEventListener('click', signInWithGoogle);
+      signOutButton.addEventListener('click', signOutUser);
+
+      // View Switcher Buttons
+      viewButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              switchView(button.dataset.view);
+          });
+      });
+
+      // Manager View: Add Client Form Submit
+      addClientForm.addEventListener('submit', addClient);
+
+      // Manager View: Delete Client Button (Event Delegation)
+      clientListBody.addEventListener('click', (event) => {
+          if (event.target.classList.contains('delete-btn')) {
+              const clientId = event.target.dataset.id;
+               if (clientId) {
+                   deleteClient(clientId);
+               } else {
+                   console.error("Delete button clicked but data-id not found.");
+                   showMessage(clientFormError,"Could not find client ID to delete.");
+               }
+
           }
       });
 
 
-      // --- ORIGINAL TRACKER APP LOGIC (Wrapped in a function) ---
-      function initializeAppTrackerLogic() {
-          console.log("Initializing Tracker Application Logic...");
+      // VA View: Date Change
+      logDateInput.addEventListener('change', (event) => {
+          selectedLogDate = event.target.value;
+          if (currentUser) {
+              loadVALogData(currentUser.uid, selectedLogDate);
+          }
+      });
 
-          // --- Local Storage Helpers ---
-          // NOTE: With auth, you'll likely want to switch to Firestore later
-          // to store data per user, identified by user.uid
-          function loadArrayData(key) { const data = localStorage.getItem(key); return data ? JSON.parse(data) : []; }
-          function saveArrayData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-          function loadDateKeyedData(key) { const data = localStorage.getItem(key); return data ? JSON.parse(data) : {}; }
-          function saveDateKeyedData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+       // VA View: Copy Yesterday Button
+       copyYesterdayBtn.addEventListener('click', copyFromYesterday);
 
-          // --- Utility Functions ---
-           function escapeHtml(unsafe) {
-               if (typeof unsafe !== 'string') { if (unsafe === null || unsafe === undefined) return ''; try { unsafe = String(unsafe); } catch (e) { return ''; } }
-               return unsafe.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, """).replace(/'/g, "'");
+      // VA View: Log Forms Submit
+      logAppointmentForm.addEventListener('submit', addAppointmentLog);
+      logTaskForm.addEventListener('submit', addTaskLog);
+      logProductivityForm.addEventListener('submit', saveProductivitySummary);
+      dailyNotesForm.addEventListener('submit', saveDailyNotes);
+
+       // VA View: Delete Log Entry Buttons (Event Delegation)
+       vaView.addEventListener('click', (event) => {
+           if (event.target.classList.contains('delete-btn')) {
+               const type = event.target.dataset.type; // 'appointment' or 'task'
+               const itemId = event.target.dataset.id;
+                if (type && itemId) {
+                    deleteLogEntry(type, itemId);
+                } else {
+                     console.error("Delete button clicked but data-type or data-id not found.");
+                     showMessage(vaViewError,"Could not identify item to delete.");
+                }
            }
-           function getCurrentDate() { const today = new Date(); const year = today.getFullYear(); const month = String(today.getMonth() + 1).padStart(2, '0'); const day = String(today.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`; }
-           function getYesterdayDate() { const today = new Date(); const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1); const year = yesterday.getFullYear(); const month = String(yesterday.getMonth() + 1).padStart(2, '0'); const day = String(yesterday.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`; }
-           function formatDisplayDate(dateString) { if (!dateString) return "Invalid Date"; const date = new Date(dateString + 'T00:00:00'); if (isNaN(date)) return "Invalid Date"; return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }); }
-           function calculateTotalTaskMinutes(tasks) { return tasks.reduce((total, task) => total + (parseInt(task.timeSpent) || 0), 0); }
-           function countSuccessfulCalls(appointments) { const successfulStatuses = ['Completed - Successful', 'Appointment Set', 'Lead Generated', 'Issue Resolved']; return appointments.filter(appt => successfulStatuses.includes(appt.status)).length; }
-           function countLeadsGenerated(appointments) { return appointments.filter(appt => appt.status === 'Lead Generated').length; }
-           function countAppointmentsSet(appointments) { return appointments.filter(appt => appt.status === 'Appointment Set').length; }
+       });
 
-          // --- View Switching Logic ---
-          function switchView(viewToShow) {
-              managerView.classList.remove('active');
-              vaView.classList.remove('active');
-              showManagerBtn.classList.remove('active');
-              showVaBtn.classList.remove('active');
-              if (viewToShow === 'manager') { managerView.classList.add('active'); showManagerBtn.classList.add('active'); renderClientList(); }
-              else { vaView.classList.add('active'); showVaBtn.classList.add('active'); if (!logDateInput.value) { setVaDate(getCurrentDate()); } else { renderVaLogs(); } }
-          }
-          showManagerBtn.addEventListener('click', () => switchView('manager'));
-          showVaBtn.addEventListener('click', () => switchView('va'));
 
-          // --- Manager View Logic ---
-          function renderClientList() {
-              clientListBody.innerHTML = ''; const clients = loadArrayData(STORAGE_KEYS.CLIENTS);
-              if (clients.length === 0) { clientListBody.innerHTML = '<tr><td colspan="7" style="text-align: center; font-style: italic;">No clients added yet.</td></tr>'; return; }
-              clients.sort((a, b) => a.name.localeCompare(b.name));
-              clients.forEach((client) => { const row = document.createElement('tr'); row.dataset.clientId = client.id; row.innerHTML = `<td>${escapeHtml(client.name)}</td><td>${escapeHtml(client.contactPerson)}</td><td>${escapeHtml(client.email) || ''}<br>${escapeHtml(client.phone) || ''}</td><td>${escapeHtml(client.services)}</td><td>${escapeHtml(client.status)}</td><td style="white-space: normal; min-width: 150px;">${escapeHtml(client.notes)}</td><td class="actions"><button class="delete-btn" data-client-id="${client.id}">Delete</button></td>`; clientListBody.appendChild(row); });
-              updateClientSuggestions();
-          }
-          function updateClientSuggestions() { const clients = loadArrayData(STORAGE_KEYS.CLIENTS); clientSuggestions.innerHTML = ''; clients.forEach(client => { const option = document.createElement('option'); option.value = client.name; clientSuggestions.appendChild(option); }); }
-          addClientForm.addEventListener('submit', (e) => {
-              e.preventDefault();
-              const newClient = { id: Date.now(), name: document.getElementById('client-name').value.trim(), contactPerson: document.getElementById('client-contact-person').value.trim(), email: document.getElementById('client-contact-email').value.trim(), phone: document.getElementById('client-contact-phone').value.trim(), services: document.getElementById('client-services').value, status: document.getElementById('client-status').value, notes: document.getElementById('client-notes').value.trim() };
-              if (!newClient.name || !newClient.services || !newClient.status) { alert('Please fill in Company Name, Service(s), and Status.'); return; }
-              const clients = loadArrayData(STORAGE_KEYS.CLIENTS); clients.push(newClient); saveArrayData(STORAGE_KEYS.CLIENTS, clients); renderClientList(); addClientForm.reset(); alert('Client added successfully!');
-          });
-          clientListBody.addEventListener('click', (e) => {
-              if (e.target.classList.contains('delete-btn')) {
-                  const clientId = parseInt(e.target.dataset.clientId); if (isNaN(clientId)) { console.error("Invalid client ID for deletion."); return; }
-                  if (confirm('Are you sure you want to delete this client? This action cannot be undone.')) { let clients = loadArrayData(STORAGE_KEYS.CLIENTS); clients = clients.filter(client => client.id !== clientId); saveArrayData(STORAGE_KEYS.CLIENTS, clients); renderClientList(); alert('Client deleted.'); }
-              }
-          });
-
-          // --- VA View Logic ---
-          const STORAGE_KEYS = { CLIENTS: 'virtuCallClients', APPOINTMENTS: 'virtuCallAppointmentsLog', TASKS: 'virtuCallTasksLog', PRODUCTIVITY: 'virtuCallProductivityLog', DAILY_NOTES: 'virtuCallDailyNotes' }; // Define within scope
-          function setVaDate(dateString) { logDateInput.value = dateString; logDateInput.dispatchEvent(new Event('change')); }
-          function renderVaLogs() {
-              const selectedDate = logDateInput.value; if (!selectedDate) { console.error("No date selected for rendering VA logs."); return; }
-              const formattedDisplayDate = formatDisplayDate(selectedDate); displayLogDateAppt.textContent = formattedDisplayDate; displayLogDateTask.textContent = formattedDisplayDate; displayLogDateSummary.textContent = formattedDisplayDate; displayLogDateSummaryDisplay.textContent = formattedDisplayDate;
-              renderAppointmentLog(selectedDate); renderTaskLog(selectedDate); renderProductivitySummary(selectedDate); renderDailyNotes(selectedDate); updateStatsCards(selectedDate); updateClientSuggestions();
-          }
-          logDateInput.addEventListener('change', renderVaLogs);
-          function renderAppointmentLog(dateString) {
-              appointmentLogBody.innerHTML = ''; const allAppointments = loadDateKeyedData(STORAGE_KEYS.APPOINTMENTS); const appointmentsForDate = allAppointments[dateString] || [];
-              if (appointmentsForDate.length === 0) { appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align: center; font-style: italic;">No appointments or calls logged for this date.</td></tr>'; return; }
-              appointmentsForDate.sort((a, b) => a.time.localeCompare(b.time));
-              appointmentsForDate.forEach((appt) => { const row = document.createElement('tr'); row.dataset.apptId = appt.id; row.innerHTML = `<td>${escapeHtml(appt.time)}</td><td>${escapeHtml(appt.clientName)}</td><td>${escapeHtml(appt.purpose)}</td><td>${escapeHtml(appt.status)}</td><td style="white-space: normal; min-width: 150px;">${escapeHtml(appt.notes)}</td><td class="actions"><button class="delete-btn" data-log-type="appointment" data-id="${appt.id}">Delete</button></td>`; appointmentLogBody.appendChild(row); });
-          }
-          logAppointmentForm.addEventListener('submit', (e) => {
-              e.preventDefault(); const selectedDate = logDateInput.value; if (!selectedDate) { alert('Please select a date before logging.'); return; }
-              const newAppointment = { id: Date.now(), date: selectedDate, clientName: document.getElementById('appt-client-name').value.trim(), time: document.getElementById('appt-time').value, purpose: document.getElementById('appt-purpose').value, status: document.getElementById('appt-status').value, notes: document.getElementById('appt-notes').value.trim(), };
-              if (!newAppointment.clientName || !newAppointment.time || !newAppointment.purpose || !newAppointment.status) { alert('Please fill in all required fields for the appointment/call log.'); return; }
-              const allAppointments = loadDateKeyedData(STORAGE_KEYS.APPOINTMENTS); if (!allAppointments[selectedDate]) { allAppointments[selectedDate] = []; } allAppointments[selectedDate].push(newAppointment); saveDateKeyedData(STORAGE_KEYS.APPOINTMENTS, allAppointments); renderAppointmentLog(selectedDate); updateStatsCards(selectedDate); logAppointmentForm.reset(); document.getElementById('appt-client-name').focus();
-          });
-          function renderTaskLog(dateString) {
-              taskLogBody.innerHTML = ''; const allTasks = loadDateKeyedData(STORAGE_KEYS.TASKS); const tasksForDate = allTasks[dateString] || [];
-              if (tasksForDate.length === 0) { taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align: center; font-style: italic;">No tasks logged for this date.</td></tr>'; return; }
-              tasksForDate.forEach((task) => { const row = document.createElement('tr'); row.dataset.taskId = task.id; row.innerHTML = `<td style="white-space: normal;">${escapeHtml(task.description)}</td><td>${escapeHtml(task.clientName)}</td><td>${escapeHtml(task.timeSpent)}</td><td style="white-space: normal; min-width: 150px;">${escapeHtml(task.notes)}</td><td class="actions"><button class="delete-btn" data-log-type="task" data-id="${task.id}">Delete</button></td>`; taskLogBody.appendChild(row); });
-          }
-          logTaskForm.addEventListener('submit', (e) => {
-              e.preventDefault(); const selectedDate = logDateInput.value; if (!selectedDate) { alert('Please select a date before logging.'); return; }
-              const newTask = { id: Date.now(), date: selectedDate, description: document.getElementById('task-description').value.trim(), clientName: document.getElementById('task-client-name').value.trim() || 'N/A', timeSpent: document.getElementById('task-time-spent').value, notes: document.getElementById('task-notes').value.trim() };
-              if (!newTask.description || !newTask.timeSpent || parseInt(newTask.timeSpent) <= 0) { alert('Please provide a task description and a valid time spent (greater than 0).'); return; }
-              const allTasks = loadDateKeyedData(STORAGE_KEYS.TASKS); if (!allTasks[selectedDate]) { allTasks[selectedDate] = []; } allTasks[selectedDate].push(newTask); saveDateKeyedData(STORAGE_KEYS.TASKS, allTasks); renderTaskLog(selectedDate); updateStatsCards(selectedDate); logTaskForm.reset(); document.getElementById('task-description').focus();
-          });
-          function renderProductivitySummary(dateString) {
-              const allSummaries = loadDateKeyedData(STORAGE_KEYS.PRODUCTIVITY); const summaryForDate = allSummaries[dateString] || { calls: 0, emails: 0, leads: 0, apptsSet: 0, tickets: 0 };
-              productivityInputs.calls.value = summaryForDate.calls; productivityInputs.emails.value = summaryForDate.emails; productivityInputs.leads.value = summaryForDate.leads; productivityInputs.apptsSet.value = summaryForDate.apptsSet; productivityInputs.tickets.value = summaryForDate.tickets;
-              summaryDisplaySpans.calls.textContent = summaryForDate.calls; summaryDisplaySpans.emails.textContent = summaryForDate.emails; summaryDisplaySpans.leads.textContent = summaryForDate.leads; summaryDisplaySpans.apptsSet.textContent = summaryForDate.apptsSet; summaryDisplaySpans.tickets.textContent = summaryForDate.tickets;
-          }
-          logProductivityForm.addEventListener('submit', (e) => {
-              e.preventDefault(); const selectedDate = logDateInput.value; if (!selectedDate) { alert('Please select a date before saving the summary.'); return; }
-              const currentSummary = { calls: parseInt(productivityInputs.calls.value) || 0, emails: parseInt(productivityInputs.emails.value) || 0, leads: parseInt(productivityInputs.leads.value) || 0, apptsSet: parseInt(productivityInputs.apptsSet.value) || 0, tickets: parseInt(productivityInputs.tickets.value) || 0, };
-              const allSummaries = loadDateKeyedData(STORAGE_KEYS.PRODUCTIVITY); allSummaries[selectedDate] = currentSummary; saveDateKeyedData(STORAGE_KEYS.PRODUCTIVITY, allSummaries); renderProductivitySummary(selectedDate); alert('Daily summary saved successfully!');
-          });
-          function renderDailyNotes(dateString) { const allNotes = loadDateKeyedData(STORAGE_KEYS.DAILY_NOTES); dailyNotesTextarea.value = allNotes[dateString] || ''; }
-          dailyNotesForm.addEventListener('submit', (e) => {
-              e.preventDefault(); const selectedDate = logDateInput.value; if (!selectedDate) { alert('Please select a date before saving notes.'); return; }
-              const notes = dailyNotesTextarea.value.trim(); const allNotes = loadDateKeyedData(STORAGE_KEYS.DAILY_NOTES); allNotes[selectedDate] = notes; saveDateKeyedData(STORAGE_KEYS.DAILY_NOTES, allNotes); alert('Daily notes saved successfully!');
-          });
-          function updateStatsCards(dateString) {
-              const allAppointments = loadDateKeyedData(STORAGE_KEYS.APPOINTMENTS); const appointmentsForDate = allAppointments[dateString] || []; const allTasks = loadDateKeyedData(STORAGE_KEYS.TASKS); const tasksForDate = allTasks[dateString] || [];
-              const totalCalls = appointmentsForDate.length; const productiveMinutes = calculateTotalTaskMinutes(tasksForDate); const leadsGenerated = countLeadsGenerated(appointmentsForDate); const appointmentsSet = countAppointmentsSet(appointmentsForDate);
-              statCards.totalCalls.textContent = totalCalls; statCards.productiveTime.textContent = productiveMinutes; statCards.leads.textContent = leadsGenerated; statCards.appointments.textContent = appointmentsSet;
-          }
-          vaView.addEventListener('click', (e) => {
-              if (e.target.classList.contains('delete-btn') && e.target.dataset.logType) {
-                   const logType = e.target.dataset.logType; const itemId = parseInt(e.target.dataset.id); const selectedDate = logDateInput.value; if (!selectedDate || isNaN(itemId)) { console.error("Missing data for deletion:", { logType, itemId, selectedDate }); return; }
-                   if (confirm(`Are you sure you want to delete this ${logType} log entry?`)) {
-                       let storageKey = ''; let renderFunction = null; if (logType === 'appointment') { storageKey = STORAGE_KEYS.APPOINTMENTS; renderFunction = renderAppointmentLog; } else if (logType === 'task') { storageKey = STORAGE_KEYS.TASKS; renderFunction = renderTaskLog; } else { console.error("Unknown log type for deletion:", logType); return; }
-                       const allLogs = loadDateKeyedData(storageKey); if (allLogs[selectedDate]) { allLogs[selectedDate] = allLogs[selectedDate].filter(item => item.id !== itemId); saveDateKeyedData(storageKey, allLogs); renderFunction(selectedDate); updateStatsCards(selectedDate); alert(`${logType.charAt(0).toUpperCase() + logType.slice(1)} log deleted.`); } else { console.warn(`No logs found for date ${selectedDate} to delete from.`); }
-                   }
-              }
-          });
-          copyYesterdayBtn.addEventListener('click', () => {
-              const todayDate = getCurrentDate(); const yesterdayDate = getYesterdayDate(); if(logDateInput.value !== todayDate) { setVaDate(todayDate); }
-              if (!confirm(`This will overwrite any logs already entered for ${formatDisplayDate(todayDate)} with the data from ${formatDisplayDate(yesterdayDate)}. Are you sure?`)) { return; }
-              const appointmentsYesterday = (loadDateKeyedData(STORAGE_KEYS.APPOINTMENTS)[yesterdayDate] || []).map(item => ({ ...item, id: Date.now() + Math.random(), date: todayDate }));
-              const tasksYesterday = (loadDateKeyedData(STORAGE_KEYS.TASKS)[yesterdayDate] || []).map(item => ({ ...item, id: Date.now() + Math.random(), date: todayDate }));
-              const productivityYesterday = loadDateKeyedData(STORAGE_KEYS.PRODUCTIVITY)[yesterdayDate] || null;
-              const notesYesterday = loadDateKeyedData(STORAGE_KEYS.DAILY_NOTES)[yesterdayDate] || null;
-              const allAppointments = loadDateKeyedData(STORAGE_KEYS.APPOINTMENTS); allAppointments[todayDate] = appointmentsYesterday; saveDateKeyedData(STORAGE_KEYS.APPOINTMENTS, allAppointments);
-              const allTasks = loadDateKeyedData(STORAGE_KEYS.TASKS); allTasks[todayDate] = tasksYesterday; saveDateKeyedData(STORAGE_KEYS.TASKS, allTasks);
-              if (productivityYesterday) { const allProductivity = loadDateKeyedData(STORAGE_KEYS.PRODUCTIVITY); allProductivity[todayDate] = { ...productivityYesterday }; saveDateKeyedData(STORAGE_KEYS.PRODUCTIVITY, allProductivity); }
-              if (notesYesterday !== null) { const allNotes = loadDateKeyedData(STORAGE_KEYS.DAILY_NOTES); allNotes[todayDate] = notesYesterday; saveDateKeyedData(STORAGE_KEYS.DAILY_NOTES, allNotes); }
-              renderVaLogs(); alert(`Data from ${formatDisplayDate(yesterdayDate)} copied to ${formatDisplayDate(todayDate)}.`);
-          });
-
-          // --- Initial Setup Calls (within initializeAppTrackerLogic) ---
-          renderClientList(); // Initial render of client list
-          setVaDate(getCurrentDate()); // Set VA date input to today and render initial VA logs
-          switchView('manager'); // Start with Manager View active
-
-      } // --- END initializeAppTrackerLogic ---
+      // --- Initial Load ---
+      // Auth state change handles the initial data load after login.
 
     </script>
 
