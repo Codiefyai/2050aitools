@@ -764,6 +764,45 @@
       const db = getFirestore(app); // Initialize Firestore
       const provider = new GoogleAuthProvider();
 
+      /*
+      =================================================
+      === Cloud Firestore Security Rules (Proposed) ===
+      =================================================
+
+      These rules should be deployed to your Firebase project's
+      Firestore rules editor (Firebase Console -> Firestore Database -> Rules).
+      Embedding them here is for reference or copy-pasting purposes as requested.
+      These rules WILL NOT be automatically applied just by being in this file.
+
+      rules_version = '2';
+
+      service cloud.firestore {
+        match /databases/{database}/documents {
+
+          // Clients: Allow authenticated users to read, create, update, delete.
+          // Read access is needed by both managers and VAs (for datalist).
+          // Create/Update/Delete are currently manager functions but not restricted by role here.
+          // Consider refining update/delete later if roles are implemented (e.g., check a user role claim).
+          match /clients/{clientId} {
+            allow read, create, update, delete: if request.auth != null;
+          }
+
+          // VA Logs: Allow users to read and write ONLY their own logs.
+          // The {userId} wildcard must match the authenticated user's ID.
+          // This prevents users from accessing or modifying other users' logs.
+          match /va_logs/{userId}/daily_logs/{date} {
+            allow read, write: if request.auth != null && userId == request.auth.uid;
+            // 'write' covers create, update, delete of the daily log document
+            // and operations like arrayUnion/arrayRemove used by the app to manage
+            // appointments and tasks within the document.
+          }
+
+        }
+      }
+
+      =================================================
+      */
+
       // --- Global Variables ---
       let currentUser = null;
       let currentView = 'manager-view'; // Default view
@@ -1060,6 +1099,7 @@
               console.error("User ID and Date are required for log reference.");
               return null;
           }
+          // Structure: /va_logs/{userId}/daily_logs/{YYYY-MM-DD}
           return doc(db, 'va_logs', userId, 'daily_logs', date);
       };
 
