@@ -35,11 +35,10 @@
 
         /* Header */
         header {
-            background-color: #0056b3;
-            /* VirtuCall Blue */
+            background-color: #0056b3; /* VirtuCall Blue */
             color: #fff;
             padding: 15px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -97,13 +96,11 @@
             gap: 8px;
         }
 
-        #user-info img {
-            /* Style for user avatar */
+        #user-info img { /* Style for user avatar */
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            margin: 0;
-            /* Override header img margin */
+            margin: 0; /* Override header img margin */
         }
 
         #google-signin-btn,
@@ -156,7 +153,7 @@
             padding: 25px;
             margin-bottom: 25px;
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         section h2 {
@@ -301,8 +298,7 @@
         }
 
         tbody tr:hover {
-            background-color: #e2e6ea;
-            /* Slightly darker hover */
+            background-color: #e2e6ea; /* Slightly darker hover */
         }
 
         td .actions button {
@@ -335,14 +331,12 @@
         /* Specific Sections */
         #manager-view,
         #va-view {
-            display: none;
-            /* Hidden by default */
+            display: none; /* Hidden by default */
         }
 
         #manager-view.active,
         #va-view.active {
-            display: block;
-            /* Show active view */
+            display: block; /* Show active view */
         }
 
         #va-daily-summary span {
@@ -391,7 +385,7 @@
             background: white;
             border-radius: 8px;
             padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
             border-top: 4px solid #0056b3;
         }
@@ -400,8 +394,7 @@
             color: #6c757d;
             font-size: 0.9em;
             margin-bottom: 10px;
-            font-weight: 500;
-            /* Adjusted weight */
+            font-weight: 500; /* Adjusted weight */
         }
 
         .stat-card .stat-value {
@@ -446,28 +439,32 @@
             display: none !important;
         }
 
-        .loading-overlay {
-            /* Simple loading indicator */
+        .loading-overlay { /* Simple loading indicator */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.8); /* Slightly more opaque */
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.5em;
             color: #0056b3;
             z-index: 1000;
+            transition: opacity 0.3s ease;
         }
+        .loading-overlay.hidden {
+             opacity: 0;
+             pointer-events: none; /* Allow clicks through when hidden */
+        }
+
 
         .error-message {
             color: #dc3545;
             font-size: 0.9em;
             margin-top: 5px;
-            display: block;
-            /* Make it block */
+            display: block; /* Make it block */
         }
 
         .success-message {
@@ -477,111 +474,34 @@
             display: block;
         }
 
-        .text-success {
-            color: #28a745 !important;
-        }
-
-        /* Use important for specificity */
-        .text-warning {
-            color: #ffc107 !important;
-        }
-
-        .text-danger {
-            color: #dc3545 !important;
-        }
-
-        .text-info {
-            color: #17a2b8 !important;
-        }
-
-        .text-muted {
-            color: #6c757d !important;
-        }
+        .text-success { color: #28a745 !important; } /* Use important for specificity */
+        .text-warning { color: #ffc107 !important; }
+        .text-danger { color: #dc3545 !important; }
+        .text-info { color: #17a2b8 !important; }
+        .text-muted { color: #6c757d !important; }
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-            header .container {
-                justify-content: center;
-                gap: 10px;
-            }
-
-            header h1 {
-                font-size: 1.5em;
-                justify-content: center;
-                order: 1;
-                width: 100%;
-                text-align: center;
-            }
-
-            #auth-section {
-                order: 2;
-                width: 100%;
-                justify-content: center;
-            }
-
-            form {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            form button[type="submit"] {
-                width: 100%;
-                max-width: none;
-                justify-self: stretch;
-            }
-
-            th,
-            td {
-                padding: 10px 8px;
-                font-size: 0.9em;
-            }
-
-            nav button {
-                padding: 8px 12px;
-                font-size: 0.9em;
-            }
-
-            #va-date-selector {
-                padding: 10px;
-                gap: 8px;
-            }
-
-            #va-date-selector input[type="date"] {
-                flex-grow: 1;
-                 /* Allow date input to take available space */
-            }
-            .stats-container {
-                grid-template-columns: 1fr 1fr;
-            }
-        } /* End of @media (max-width: 768px) */
-
-
+            header .container { justify-content: center; gap: 10px; }
+            header h1 { font-size: 1.5em; justify-content: center; order: 1; width: 100%; text-align: center; }
+            #auth-section { order: 2; width: 100%; justify-content: center; }
+            form { grid-template-columns: 1fr; gap: 15px; }
+            form button[type="submit"] { width: 100%; max-width: none; justify-self: stretch; }
+            th, td { padding: 10px 8px; font-size: 0.9em; }
+            nav button { padding: 8px 12px; font-size: 0.9em; }
+            #va-date-selector { padding: 10px; gap: 8px; }
+            #va-date-selector input[type="date"] { flex-grow: 1; }
+            .stats-container { grid-template-columns: 1fr 1fr; }
+        }
         @media (max-width: 480px) {
-             header h1 {
-                 font-size: 1.3em;
-             }
-             section {
-                 padding: 15px;
-             }
-             nav button {
-                 display: block;
-                 width: 90%;
-                 margin: 5px auto;
-             }
-             .container {
-                 padding: 10px;
-                 width: 100%;
-             }
-             th, td {
-                 font-size: 0.85em;
-             }
-             footer {
-                 padding: 15px 10px;
-             }
-             .stats-container {
-                 grid-template-columns: 1fr;
-             }
-        } /* End of @media (max-width: 480px) */
+             header h1 { font-size: 1.3em; }
+             section { padding: 15px; }
+             nav button { display: block; width: 90%; margin: 5px auto; }
+             .container { padding: 10px; width: 100%; }
+             th, td { font-size: 0.85em; }
+             footer { padding: 15px 10px; }
+             .stats-container { grid-template-columns: 1fr; }
+        }
 
     </style>
 </head>
@@ -593,9 +513,7 @@
              <h1><img src="https://i.ibb.co/67gPjyKt/Virtu-Call-favicon.png" alt="VirtuCall PH Logo"> VirtuCall PH <span class="logo">Daily Tracker</span></h1>
              <!-- Auth Section -->
              <div id="auth-section">
-                 <span id="user-info" class="hidden">
-                    <!-- User Info (Name/Avatar) will be loaded here -->
-                 </span>
+                 <span id="user-info" class="hidden"></span>
                  <button id="google-signin-btn">Sign in with Google</button>
                  <button id="google-signout-btn" class="hidden">Sign Out</button>
              </div>
@@ -687,7 +605,7 @@
                         </thead>
                         <tbody id="client-list-body">
                             <!-- Client rows will be added here by JavaScript -->
-                             <tr><td colspan="7" style="text-align:center;">Loading clients...</td></tr>
+                             <tr><td colspan="7" style="text-align:center;">Please sign in to view clients.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -739,7 +657,7 @@
                         <label for="appt-client-name">Client Name:</label>
                         <input type="text" id="appt-client-name" required list="client-suggestions">
                         <datalist id="client-suggestions">
-                            <!-- Will be populated from manager's client list -->
+                            <!-- Will be populated -->
                         </datalist>
                     </div>
                     <div>
@@ -783,7 +701,7 @@
                     <button type="submit" id="log-appointment-submit-btn">Log Appointment/Call</button>
                 </form>
 
-                <h4>Appointments / Calls Logged (<span id="display-log-date-appt">Today</span>)</h4>
+                <h4>Appointments / Calls Logged (<span id="display-log-date-appt"></span>)</h4>
                 <div class="table-responsive">
                     <table id="appointment-log-table">
                         <thead>
@@ -798,7 +716,7 @@
                         </thead>
                         <tbody id="appointment-log-body">
                             <!-- Appointment log rows for the selected date -->
-                             <tr><td colspan="6" style="text-align:center;">No appointments logged for this date.</td></tr>
+                             <tr><td colspan="6" style="text-align:center;">Please sign in to view logs.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -827,7 +745,7 @@
                      <button type="submit" id="log-task-submit-btn">Log Task</button>
                  </form>
 
-                <h4>Tasks Logged (<span id="display-log-date-task">Today</span>)</h4>
+                <h4>Tasks Logged (<span id="display-log-date-task"></span>)</h4>
                  <div class="table-responsive">
                     <table id="task-log-table">
                          <thead>
@@ -841,7 +759,7 @@
                          </thead>
                          <tbody id="task-log-body">
                              <!-- Task log rows for the selected date -->
-                              <tr><td colspan="5" style="text-align:center;">No tasks logged for this date.</td></tr>
+                              <tr><td colspan="5" style="text-align:center;">Please sign in to view logs.</td></tr>
                          </tbody>
                      </table>
                  </div>
@@ -849,7 +767,7 @@
                  <hr style="margin: 35px 0; border: 0; border-top: 1px solid #eee;">
 
                  <!-- Daily Productivity Summary -->
-                 <h3>Daily Productivity Summary (<span id="display-log-date-summary">Today</span>)</h3>
+                 <h3>Daily Productivity Summary (<span id="display-log-date-summary"></span>)</h3>
                   <form id="log-productivity-form">
                        <div>
                            <label for="prod-calls">Calls Made (Total):</label>
@@ -876,7 +794,7 @@
 
                    <!-- Display area for saved summary -->
                    <div id="va-daily-summary" style="margin-top: 20px; padding: 15px; background-color:#e9ecef; border-radius: 6px; border: 1px solid #dee2e6; font-size: 0.95em; line-height: 1.8;">
-                       <strong>Saved Summary for <span id="display-log-date-summary-display">Today</span>:</strong><br>
+                       <strong>Saved Summary for <span id="display-log-date-summary-display"></span>:</strong><br>
                        Calls Made: <span id="summary-calls">0</span> |
                        Emails Sent: <span id="summary-emails">0</span> |
                        Leads Generated: <span id="summary-leads">0</span> |
@@ -894,7 +812,7 @@
                        <button type="submit" id="daily-notes-submit-btn" style="background-color: #17a2b8;">Save Notes</button>
                    </form>
                     <div id="daily-notes-display" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; white-space: pre-wrap; font-size: 0.95em; color: #495057;">
-                        <strong>Saved Notes for <span id="display-log-date-notes-display">Today</span>:</strong>
+                        <strong>Saved Notes for <span id="display-log-date-notes-display"></span>:</strong>
                         <p id="notes-content" style="margin-top: 5px;">No notes saved for this date.</p>
                     </div>
 
@@ -913,11 +831,8 @@
     <!-- Firebase SDK -->
     <script type="module">
       // Import the functions you need from the SDKs you need
-      // Use the latest compatible version (e.g., 10.x or 11.x as needed)
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-      // Example: import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js"; // Optional: Only if using Analytics
       import {
           getAuth,
           onAuthStateChanged,
@@ -925,7 +840,7 @@
           signInWithPopup,
           signOut
       } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-      // Example: If using Firestore
+      // Import Firestore functions IF YOU ARE USING FIRESTORE
       import {
           getFirestore
           // collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc,
@@ -933,31 +848,64 @@
        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 
-      // Your web app's Firebase configuration
-      // IMPORTANT: Replace with your actual Firebase project configuration!
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA",
-  authDomain: "virtucall-ph-daily-tracker.firebaseapp.com",
-  databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "virtucall-ph-daily-tracker",
-  storageBucket: "virtucall-ph-daily-tracker.firebasestorage.app",
-  messagingSenderId: "482945061810",
-  appId: "1:482945061810:web:01c48c121b44bd7bf6caab",
-  measurementId: "G-T9X48X69JP"
-};
+      // *********************************************************************
+      // ** IMPORTANT: Using the Firebase Config from your first request.  **
+      // ** Verify this matches your Firebase Project Settings EXACTLY.    **
+      // *********************************************************************
+      const firebaseConfig = {
+        apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA", // Verify this API key
+        authDomain: "virtucall-ph-daily-tracker.firebaseapp.com",
+        databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app", // RTDB URL, ensure correct if using Firestore instead/also
+        projectId: "virtucall-ph-daily-tracker",
+        storageBucket: "virtucall-ph-daily-tracker.appspot.com", // Default convention, verify if changed
+        messagingSenderId: "482945061810",
+        appId: "1:482945061810:web:01c48c121b44bd7bf6caab", // Verify this App ID
+        measurementId: "G-T9X48X69JP" // Optional, for Analytics
+      };
+      // *********************************************************************
+      // *********************************************************************
 
       // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      // const analytics = getAnalytics(app); // Uncomment if using Analytics
-      const auth = getAuth(app);
-      // const db = getFirestore(app); // Uncomment if using Firestore
-      const provider = new GoogleAuthProvider();
+      let app;
+      let auth;
+      let db; // Firestore database instance
+      let analytics; // Analytics instance
+      let provider; // Google Auth Provider
+
+      try {
+          app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          // db = getFirestore(app); // Uncomment this if you are using Firestore
+          // analytics = getAnalytics(app); // Uncomment this if using Analytics
+          provider = new GoogleAuthProvider();
+          console.log("Firebase initialized successfully.");
+      } catch (error) {
+          console.error("Firebase initialization failed:", error);
+          // Display a prominent error message to the user
+          const body = document.querySelector('body');
+          const errorDiv = document.createElement('div');
+          errorDiv.style.backgroundColor = 'red';
+          errorDiv.style.color = 'white';
+          errorDiv.style.padding = '20px';
+          errorDiv.style.textAlign = 'center';
+          errorDiv.style.position = 'fixed';
+          errorDiv.style.top = '0';
+          errorDiv.style.left = '0';
+          errorDiv.style.width = '100%';
+          errorDiv.style.zIndex = '2000';
+          errorDiv.textContent = `CRITICAL ERROR: Firebase initialization failed. Check console and Firebase configuration. [${error.message}]`;
+          if (body) {
+            body.prepend(errorDiv);
+          }
+          // Prevent further execution if Firebase didn't initialize
+          throw new Error("Stopping script due to Firebase init failure.");
+      }
+
 
       // --- Global Variables ---
       let currentUser = null;
       let currentView = 'manager-view'; // Default view
-      // Add other global variables as needed (e.g., selectedLogDate, clientCache)
+      // Add other global variables (e.g., selectedLogDate, clientCache) here if needed
 
       // --- DOM Elements ---
       const signInButton = document.getElementById('google-signin-btn');
@@ -966,59 +914,87 @@ const firebaseConfig = {
       const appContent = document.getElementById('app-content');
       const loadingIndicator = document.getElementById('loading-indicator');
       const viewButtons = document.querySelectorAll('nav button[data-view]');
-      // Add references to other specific elements (forms, tables, buttons etc.) as needed
+      // Manager View Elements (Add references if needed for cleanup on sign-out)
+      const clientListBody = document.getElementById('client-list-body');
+      // VA View Elements (Add references if needed for cleanup on sign-out)
+      const appointmentLogBody = document.getElementById('appointment-log-body');
+      const taskLogBody = document.getElementById('task-log-body');
+
 
       // --- Helper Functions ---
       const showLoading = (show = true) => {
-          loadingIndicator.classList.toggle('hidden', !show);
-      };
-
-      const showMessage = (element, message, isError = true) => {
-          // Basic message display (replace with a more robust implementation if needed)
-          if (element) {
-              element.textContent = message;
-              element.className = isError ? 'error-message' : 'success-message';
-              element.classList.remove('hidden');
-              setTimeout(() => {
-                  element.textContent = '';
-                  element.classList.add('hidden');
-              }, 5000);
-          } else {
-              console.warn("Attempted to show message on null element:", message);
+          // Ensure loadingIndicator exists before manipulating it
+          if(loadingIndicator) {
+            loadingIndicator.classList.toggle('hidden', !show);
           }
       };
 
-      // Add other helper functions (e.g., formatDate, clearForm)
+      // Example showMessage (replace or enhance as needed)
+      const showMessage = (elementId, message, isError = true) => {
+          const element = document.getElementById(elementId);
+           if (element) {
+               element.textContent = message;
+               element.className = isError ? 'error-message' : 'success-message';
+               element.classList.remove('hidden');
+               setTimeout(() => {
+                   element.textContent = '';
+                   element.classList.add('hidden');
+               }, 5000);
+           } else {
+               console.warn("Attempted to show message on non-existent element:", elementId);
+           }
+      };
+
+      // Add other helper functions (formatDate, clearForm etc.) if needed
+
 
       // --- Authentication Functions ---
       const signInWithGoogle = () => {
-          showLoading();
+          if (!auth || !provider) {
+               console.error("Auth or Provider not initialized.");
+               alert("Authentication service is not ready. Please refresh.");
+               return;
+          }
+          showLoading(true); // Show loading indicator before starting sign-in
           signInWithPopup(auth, provider)
               .then((result) => {
-                  // Sign-in successful. Handled by onAuthStateChanged.
-                  console.log('User signed in:', result.user.displayName);
+                  // Sign-in successful. User info will be handled by onAuthStateChanged.
+                  console.log('signInWithPopup successful for:', result.user.displayName);
+                  // No need to hide loading here, onAuthStateChanged will handle it
               }).catch((error) => {
-                  // Handle Errors here.
-                  console.error("Sign in error:", error.code, error.message);
-                  alert(`Sign in failed: ${error.message}`);
-              }).finally(() => {
-                  // Hide loading indicator regardless of outcome,
-                  // as onAuthStateChanged will handle UI updates.
-                  // showLoading(false); // Let onAuthStateChanged handle loading state
+                  console.error("Google Sign-In Error:", error);
+                  console.error("Error Code:", error.code);
+                  console.error("Error Message:", error.message);
+                  // More specific error handling:
+                  if (error.code === 'auth/popup-closed-by-user') {
+                     alert('Sign-in cancelled. Please try again.');
+                  } else if (error.code === 'auth/popup-blocked') {
+                      alert('Popup blocked. Please allow popups for this site and try again.');
+                  } else if (error.code === 'auth/cancelled-popup-request') {
+                       console.warn('Cancelled multiple popup requests.'); // Less critical
+                  } else {
+                       alert(`Sign-in failed: ${error.message} (Code: ${error.code}). Please check console for details.`);
+                  }
+                  showLoading(false); // Hide loading on explicit error
               });
+              // Note: 'finally' block removed as onAuthStateChanged handles final UI state
       };
 
       const signOutUser = () => {
-          showLoading();
+          if (!auth) {
+               console.error("Auth not initialized.");
+               return;
+          }
+          showLoading(true);
           signOut(auth).then(() => {
-              // Sign-out successful. Handled by onAuthStateChanged.
-              console.log('User signed out');
+              // Sign-out successful. UI will be updated by onAuthStateChanged.
+              console.log('User signed out successfully.');
           }).catch((error) => {
-              console.error("Sign out error:", error);
+              console.error("Sign Out Error:", error);
               alert(`Sign out failed: ${error.message}`);
-          }).finally(() => {
-              // showLoading(false); // Let onAuthStateChanged handle loading state
+              showLoading(false); // Hide loading on explicit error
           });
+          // Note: 'finally' block removed as onAuthStateChanged handles final UI state
       };
 
       // --- View Switching ---
@@ -1031,83 +1007,112 @@ const firebaseConfig = {
               button.classList.toggle('active', button.dataset.view === viewId);
           });
           console.log("Switched to view:", viewId);
-          // TODO: Add logic to load data specific to the new view
-          // Example: if (viewId === 'manager-view' && currentUser) { loadManagerData(); }
-          // Example: if (viewId === 'va-view' && currentUser) { loadVALogDataForDate(selectedDate); }
+          // TODO: Add logic here to load data specific to the new view when switched
+          // e.g., if (viewId === 'va-view' && currentUser) loadVALogData(...)
+          // e.g., if (viewId === 'manager-view' && currentUser) loadClientList(...)
       };
 
-      // --- Application Logic Functions (Placeholders) ---
+      // --- Application Logic / Data Loading Placeholders ---
       const initializeAppForUser = () => {
-          console.log("Initializing app for user:", currentUser.displayName);
-          // Example: Load initial data needed for both views or the default view
-          // loadClientListForSuggestions();
-          // initializeDateSelector();
-          switchView(currentView); // Display the default or last selected view
+          console.log("Initializing app UI and loading data for user:", currentUser.displayName);
+          // This is where you would typically:
+          // 1. Set the initial date for the VA view
+          // 2. Load the client list (for manager view and VA suggestions)
+          // 3. Load the VA log data for the initial/default date
+          // 4. Make the UI interactive
+          // Example: initializeDateSelector(); loadClientList(); loadInitialVALog();
+          switchView(currentView); // Ensure the correct view is displayed
       };
 
       const cleanupAppOnSignOut = () => {
-           console.log("Cleaning up app state after sign out.");
-           // Example: Clear any sensitive data, reset forms, clear tables
-           // document.getElementById('client-list-body').innerHTML = '<tr><td colspan="7" style="text-align:center;">Please sign in to view clients.</td></tr>';
-           // document.getElementById('appointment-log-body').innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in to view logs.</td></tr>';
-           // Clear global cache variables etc.
-           // clientCache = [];
+           console.log("Cleaning up app state for sign-out.");
+           // Reset UI elements to their default non-logged-in state
+           if(clientListBody) clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Please sign in to view clients.</td></tr>';
+           if(appointmentLogBody) appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in to view logs.</td></tr>';
+           if(taskLogBody) taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view logs.</td></tr>';
+           // Reset forms, clear caches, etc. if needed
+           // Example: document.getElementById('add-client-form').reset(); clientCache = [];
       }
 
       // --- Initialization and Event Listeners ---
 
-      // Auth State Change Listener (Handles Seamless Sign-In)
+      // Auth State Change Listener (Core of seamless sign-in & routing)
       onAuthStateChanged(auth, (user) => {
-          showLoading(); // Show loading indicator during auth check
+          console.log("Auth state changed. Checking user...");
+          showLoading(true); // Show loading while processing state change
           if (user) {
-              // User is signed in.
+              // User is signed IN
               currentUser = user;
-              console.log("Auth state changed: User is signed IN", user.uid, user.displayName);
-              userInfoDisplay.innerHTML = `
-                  <img src="${user.photoURL || 'placeholder.png'}" alt="User Avatar" title="${user.displayName || user.email}">
-                  <span>${user.displayName || user.email}</span>
-              `;
-              userInfoDisplay.classList.remove('hidden');
-              signOutButton.classList.remove('hidden');
-              signInButton.classList.add('hidden');
-              appContent.classList.remove('hidden'); // Show the main application content
+              console.log("User is signed IN:", user.uid, user.displayName);
 
-              initializeAppForUser(); // Load user-specific data and set up the app
+              // Update Header UI
+              if(userInfoDisplay) {
+                  userInfoDisplay.innerHTML = `
+                      <img src="${user.photoURL || 'placeholder.png'}" alt="User Avatar" title="${user.displayName || user.email}">
+                      <span>${user.displayName || user.email}</span>
+                  `;
+                  userInfoDisplay.classList.remove('hidden');
+              }
+              if(signOutButton) signOutButton.classList.remove('hidden');
+              if(signInButton) signInButton.classList.add('hidden');
+
+              // Show the main application content (the "webapp page")
+              if(appContent) appContent.classList.remove('hidden');
+
+              // Initialize user-specific parts of the app
+              initializeAppForUser();
 
           } else {
-              // User is signed out.
+              // User is signed OUT
               currentUser = null;
-              console.log("Auth state changed: User is signed OUT");
-              userInfoDisplay.classList.add('hidden');
-              userInfoDisplay.innerHTML = '';
-              signOutButton.classList.add('hidden');
-              signInButton.classList.remove('hidden');
-              appContent.classList.add('hidden'); // Hide the main application content
+              console.log("User is signed OUT.");
 
-              cleanupAppOnSignOut(); // Clear sensitive data or UI elements
+              // Update Header UI
+              if(userInfoDisplay) {
+                  userInfoDisplay.classList.add('hidden');
+                  userInfoDisplay.innerHTML = '';
+              }
+               if(signOutButton) signOutButton.classList.add('hidden');
+               if(signInButton) signInButton.classList.remove('hidden');
+
+              // Hide the main application content
+              if(appContent) appContent.classList.add('hidden');
+
+              // Clean up any sensitive data displayed
+              cleanupAppOnSignOut();
           }
-           showLoading(false); // Hide loading indicator after processing auth state
+           showLoading(false); // Hide loading AFTER UI updates are done
+           console.log("Auth state processing complete.");
       });
 
       // --- Event Listeners ---
-      signInButton.addEventListener('click', signInWithGoogle);
-      signOutButton.addEventListener('click', signOutUser);
+      if (signInButton) {
+          signInButton.addEventListener('click', signInWithGoogle);
+      } else {
+          console.error("Sign-in button not found!");
+      }
 
-      // View Switcher Buttons
+      if (signOutButton) {
+          signOutButton.addEventListener('click', signOutUser);
+      } else {
+          console.error("Sign-out button not found!");
+      }
+
+
+      // View Switcher Buttons Listener
       viewButtons.forEach(button => {
           button.addEventListener('click', () => {
               switchView(button.dataset.view);
           });
       });
 
-      // TODO: Add other event listeners for forms, buttons, date changes etc.
-      // Example: document.getElementById('add-client-form').addEventListener('submit', handleAddClient);
-      // Example: document.getElementById('log-date').addEventListener('change', handleDateChange);
+      // TODO: Add event listeners for your forms (add client, log appointment, etc.)
+      // Example: document.getElementById('add-client-form').addEventListener('submit', handleAddClientSubmit);
 
 
       // --- Initial Load ---
-      // The onAuthStateChanged listener handles the initial setup after checking auth state.
-      console.log("Page script loaded. Waiting for Firebase Auth state...");
+      // The onAuthStateChanged listener above handles the initial check and setup.
+      console.log("VirtuCall Tracker script loaded. Firebase Auth state listener is active.");
 
     </script>
 
