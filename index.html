@@ -503,7 +503,7 @@
                             </tr>
                         </thead>
                         <tbody id="client-list-body">
-                            <!-- Client rows will be added here by JavaScript listener -->
+                            <!-- Client rows will be added here by JavaScript -->
                              <tr><td colspan="7" style="text-align:center;">Loading clients...</td></tr>
                         </tbody>
                     </table>
@@ -640,7 +640,7 @@
                       <div style="grid-column: 1 / -1;">
                          <label for="task-notes">Task Notes (Optional):</label>
                          <textarea id="task-notes" placeholder="Details about what was accomplished or any blockers encountered"></textarea>
-                     </div>
+                      </div>
                      <button type="submit" id="log-task-submit-btn">Log Task</button>
                  </form>
 
@@ -739,102 +739,45 @@
           signInWithPopup,
           signOut
       } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      // ---> ADDED: Import Firestore functions <---
       import {
           getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc,
-          query, where, orderBy, serverTimestamp, Timestamp, arrayUnion, arrayRemove,
-          onSnapshot // Real-time updates
+          query, where, orderBy, serverTimestamp, Timestamp, arrayUnion, arrayRemove
        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-      // =======================================================================
-      // ==           !!! IMPORTANT FIREBASE CONFIGURATION !!!                ==
-      // =======================================================================
-      // ==                                                                   ==
-      // ==  REPLACE the placeholder values below with your ACTUAL Firebase   ==
-      // ==  project's configuration details. You can find these in your      ==
-      // ==  Firebase project settings (Project Settings > General > Your apps ==
-      // ==  > Web app > Config).                                             ==
-      // ==                                                                   ==
-      // ==  Authentication WILL FAIL if these values are incorrect.          ==
-      // ==                                                                   ==
-      // =======================================================================
+      // ******************************************************
+      // ** UPDATED Firebase Configuration per Request **
+      // ******************************************************
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
-        apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA", // <--- REPLACE THIS
-        authDomain: "virtucall-ph-daily-tracker.firebaseapp.com", // <--- REPLACE THIS (e.g., your-project-id.firebaseapp.com)
-        databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app", // <--- REPLACE THIS (Optional, only if using Realtime Database)
-        projectId: "virtucall-ph-daily-tracker", // <--- REPLACE THIS
-        storageBucket: "virtucall-ph-daily-tracker.firebasestorage.app", // <--- REPLACE THIS (e.g., your-project-id.appspot.com)
-        messagingSenderId: "482945061810", // <--- REPLACE THIS
-        appId: "1:482945061810:web:2d3512d0ee3fbafff6caab", // <--- REPLACE THIS
-        measurementId: "G-ZNBLK62LE2" // <--- REPLACE THIS (Optional, only if using Analytics)
+        apiKey: "AIzaSyCdu4srPtFssKVBhQ1auoIeshikVZVZllA", // Use your actual API key
+        authDomain: "virtucall-ph-daily-tracker.firebaseapp.com",
+        databaseURL: "https://virtucall-ph-daily-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "virtucall-ph-daily-tracker",
+        storageBucket: "virtucall-ph-daily-tracker.appspot.com", // Updated storage bucket name convention
+        messagingSenderId: "482945061810",
+        appId: "1:482945061810:web:01c48c121b44bd7bf6caab", // Updated App ID
+        measurementId: "G-T9X48X69JP" // Updated Measurement ID
       };
-      // =======================================================================
-      // ==           END OF IMPORTANT FIREBASE CONFIGURATION                 ==
-      // =======================================================================
+      // ******************************************************
+      // ** END OF UPDATED Configuration             **
+      // ******************************************************
 
 
       // Initialize Firebase
-      let app;
-      let analytics;
-      let auth;
-      let db;
-      let provider;
-
-      try {
-          app = initializeApp(firebaseConfig);
-          // Conditionally initialize Analytics if measurementId is provided
-          if (firebaseConfig.measurementId) {
-            analytics = getAnalytics(app);
-          }
-          auth = getAuth(app);
-          db = getFirestore(app); // Initialize Firestore
-          provider = new GoogleAuthProvider();
-          console.log("Firebase initialized successfully.");
-      } catch (error) {
-          console.error("Firebase initialization failed:", error);
-          alert("Critical Error: Could not initialize Firebase. Check console and configuration. App functionality will be limited.");
-          // Prevent further execution if initialization fails critically
-          // Hide app content, show error message etc.
-          document.getElementById('app-content').classList.add('hidden');
-          document.getElementById('loading-indicator').textContent = 'Firebase Initialization Failed!';
-          document.getElementById('loading-indicator').classList.remove('hidden');
-
-          // Stop the script maybe? Or let parts that don't depend on Firebase run?
-          // For this app, most things depend on Firebase, so stopping makes sense.
-          throw new Error("Firebase init failed"); // Stop script execution
-      }
-
-
-      /*
-      =================================================
-      === Cloud Firestore Security Rules (Proposed) ===
-      =================================================
-      REMINDER: Deploy these rules via the Firebase Console.
-      (Firebase Console -> Firestore Database -> Rules)
-      rules_version = '2';
-      service cloud.firestore {
-        match /databases/{database}/documents {
-          match /clients/{clientId} {
-            allow read, create, update, delete: if request.auth != null;
-          }
-          match /va_logs/{userId}/daily_logs/{date} {
-            allow read, write: if request.auth != null && userId == request.auth.uid;
-          }
-        }
-      }
-      =================================================
-      */
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const db = getFirestore(app); // Initialize Firestore
+      const provider = new GoogleAuthProvider();
 
       // --- Global Variables ---
       let currentUser = null;
       let currentView = 'manager-view'; // Default view
       let selectedLogDate = ''; // YYYY-MM-DD format
-      let currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
-      let clientCache = [];
-
-      // Variables for listener unsubscribe functions
-      let clientListenerUnsubscribe = null;
-      let vaLogListenerUnsubscribe = null;
-
+      let currentLogData = {}; // To hold the fetched log data for the selected date
+      let clientCache = []; // Simple cache for client names
 
       // --- DOM Elements ---
       const signInButton = document.getElementById('google-signin-btn');
@@ -845,11 +788,16 @@
       const viewButtons = document.querySelectorAll('nav button[data-view]');
       const managerView = document.getElementById('manager-view');
       const vaView = document.getElementById('va-view');
+
+      // Manager View Elements
       const addClientForm = document.getElementById('add-client-form');
       const clientListBody = document.getElementById('client-list-body');
       const clientFormError = document.getElementById('client-form-error');
       const clientFormSuccess = document.getElementById('client-form-success');
       const addClientSubmitBtn = document.getElementById('add-client-submit-btn');
+
+
+      // VA View Elements
       const logDateInput = document.getElementById('log-date');
       const copyYesterdayBtn = document.getElementById('copy-yesterday-btn');
       const clientSuggestionsDatalist = document.getElementById('client-suggestions');
@@ -891,97 +839,77 @@
       // --- Helper Functions ---
       const showLoading = (show = true) => {
           loadingIndicator.classList.toggle('hidden', !show);
-          // Optional: Change text during loading
-          if(show) loadingIndicator.textContent = 'Loading...';
       };
 
       const showMessage = (element, message, isError = true) => {
-          if (!element) {
-              console.warn("Attempted to show message on a null element:", message);
-              return;
-          }
           element.textContent = message;
-          element.className = isError ? 'error-message' : 'success-message';
+          element.className = isError ? 'error-message' : 'success-message'; // Keep block display
           element.classList.remove('hidden');
+          // Clear message after some time
           setTimeout(() => {
-              if (element) {
-                 element.textContent = '';
-                 element.classList.add('hidden');
-              }
+              element.textContent = '';
+              element.classList.add('hidden');
           }, 5000);
       };
 
       const clearForm = (formElement) => {
-          if (formElement) {
-              formElement.reset();
-              formElement.querySelectorAll('textarea').forEach(ta => ta.value = '');
-          }
+          formElement.reset();
+          // Clear any specific fields like textareas if reset doesn't cover them
+          formElement.querySelectorAll('textarea').forEach(ta => ta.value = '');
       };
 
+      // Format date as YYYY-MM-DD
       const formatDate = (date) => {
           return date.toISOString().split('T')[0];
       };
 
+       // Get color class based on status
        const getStatusClass = (status) => {
           switch (status) {
-              case 'Completed - Successful': case 'Appointment Set': case 'Lead Generated': case 'Issue Resolved': return 'text-success';
-              case 'Completed - Unsuccessful': case 'Completed - Left Voicemail': return 'text-warning';
-              case 'No Answer': case 'Cancelled': return 'text-danger';
-              case 'Scheduled': case 'Rescheduled': return 'text-info';
-              default: return 'text-muted';
+              case 'Completed - Successful':
+              case 'Appointment Set':
+              case 'Lead Generated':
+              case 'Issue Resolved':
+                  return 'text-success';
+              case 'Completed - Unsuccessful':
+              case 'Completed - Left Voicemail':
+                  return 'text-warning';
+              case 'No Answer':
+              case 'Cancelled':
+                  return 'text-danger';
+              case 'Scheduled':
+              case 'Rescheduled':
+                  return 'text-info';
+              default:
+                  return 'text-muted';
           }
        };
 
 
       // --- Authentication Functions ---
       const signInWithGoogle = () => {
-          console.log("Attempting Google Sign-in...");
-          // Ensure provider is initialized
-          if (!provider) {
-              console.error("Google Auth Provider not initialized.");
-              alert("Error: Authentication provider not ready.");
-              return;
-          }
           signInWithPopup(auth, provider)
               .then((result) => {
-                   console.log('User signed in successfully:', result.user.displayName || result.user.email);
-                   // onAuthStateChanged will handle the rest
-              })
-              .catch((error) => {
-                    console.error("Google Sign-in Error:", error);
-                    // Provide more specific feedback if possible
-                    let message = `Sign in failed: ${error.message}`;
-                    if (error.code === 'auth/popup-closed-by-user') {
-                        message = "Sign in cancelled.";
-                    } else if (error.code === 'auth/cancelled-popup-request') {
-                        message = "Sign in cancelled (multiple popups open?).";
-                    } else if (error.code === 'auth/popup-blocked') {
-                        message = "Sign in failed: Pop-up blocked by browser. Please allow pop-ups for this site.";
-                    } else if (error.code === 'auth/unauthorized-domain') {
-                         message = "Sign in failed: Domain not authorized. Please contact administrator.";
-                    }
-                    // Check other common errors: auth/network-request-failed, auth/internal-error
-                    alert(message);
+                  console.log('User signed in:', result.user);
+                  // Handled by onAuthStateChanged
+              }).catch((error) => {
+                  console.error("Sign in error:", error.code, error.message);
+                  alert(`Sign in failed: ${error.message}`);
               });
       };
 
       const signOutUser = () => {
-          console.log("Attempting Sign-out...");
           signOut(auth).then(() => {
-              console.log('User signed out successfully.');
-              // onAuthStateChanged will handle the rest
+              console.log('User signed out');
+              // Handled by onAuthStateChanged
           }).catch((error) => {
-              console.error("Sign out Error:", error);
+              console.error("Sign out error:", error);
               alert(`Sign out failed: ${error.message}`);
           });
       };
 
       // --- View Switching ---
       const switchView = (viewId) => {
-          if (!document.getElementById(viewId)) {
-              console.warn(`Attempted to switch to non-existent view: ${viewId}`);
-              return;
-          }
           currentView = viewId;
           document.querySelectorAll('main section').forEach(section => {
               section.classList.toggle('active', section.id === viewId);
@@ -989,17 +917,25 @@
           viewButtons.forEach(button => {
               button.classList.toggle('active', button.dataset.view === viewId);
           });
-          console.log("Switched view to:", viewId);
+          // Automatically load data for the activated view if needed
+          if (viewId === 'va-view' && currentUser && selectedLogDate) {
+              loadVALogData(currentUser.uid, selectedLogDate);
+          } else if (viewId === 'manager-view' && currentUser) {
+              displayClients();
+          }
       };
 
       // --- Manager View Functions ---
+
+      // Add Client to Firestore
       const addClient = async (event) => {
           event.preventDefault();
           if (!currentUser) return showMessage(clientFormError, 'You must be logged in.');
 
           addClientSubmitBtn.disabled = true;
           showLoading();
-          clientFormError.classList.add('hidden'); clientFormSuccess.classList.add('hidden');
+          clientFormError.classList.add('hidden');
+          clientFormSuccess.classList.add('hidden');
 
           const clientData = {
               companyName: document.getElementById('client-name').value.trim(),
@@ -1010,21 +946,17 @@
               status: document.getElementById('client-status').value,
               notes: document.getElementById('client-notes').value.trim(),
               addedBy: currentUser.uid,
-              addedByName: currentUser.displayName || currentUser.email, // Fallback to email
+              addedByName: currentUser.displayName,
               createdAt: serverTimestamp()
           };
 
-          // Basic validation
-          if (!clientData.companyName || !clientData.service || !clientData.status) {
-               showMessage(clientFormError, 'Company Name, Service, and Status are required.');
-               showLoading(false); addClientSubmitBtn.disabled = false; return;
-          }
-
           try {
               const docRef = await addDoc(collection(db, "clients"), clientData);
-              console.log("Client add request sent, ID: ", docRef.id);
+              console.log("Client added with ID: ", docRef.id);
               showMessage(clientFormSuccess, 'Client added successfully!', false);
               clearForm(addClientForm);
+              await displayClients(); // Refresh list
+              await populateClientDatalist(); // Refresh datalist for VA view
           } catch (e) {
               console.error("Error adding client: ", e);
               showMessage(clientFormError, `Error adding client: ${e.message}`);
@@ -1034,60 +966,68 @@
           }
       };
 
-       // Sets up a real-time listener for the clients collection
-      const setupClientListener = () => {
-          if (!currentUser) { console.log("Cannot setup client listener: no user."); return; }
-          if (clientListenerUnsubscribe) { console.log("Client listener already active."); return; } // Avoid duplicate listeners
+       // Display Clients from Firestore
+       const displayClients = async () => {
+           if (!currentUser) return;
+           showLoading();
+           clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading clients...</td></tr>'; // Clear and show loading
 
-          const q = query(collection(db, "clients"), orderBy("companyName"));
-          console.log("Setting up real-time client listener...");
-          clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Connecting...</td></tr>';
+           try {
+               const q = query(collection(db, "clients"), orderBy("companyName")); // Order by name
+               const querySnapshot = await getDocs(q);
+               clientListBody.innerHTML = ''; // Clear previous entries
+               clientCache = []; // Reset cache
 
-          clientListenerUnsubscribe = onSnapshot(q, (querySnapshot) => {
-              console.log("Client data snapshot received.");
-              clientListBody.innerHTML = ''; clientCache = [];
+               if (querySnapshot.empty) {
+                   clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No clients found. Add one using the form above.</td></tr>';
+               } else {
+                   querySnapshot.forEach((doc) => {
+                       const client = doc.data();
+                       client.id = doc.id; // Add Firestore ID to the object
+                       clientCache.push({ id: client.id, name: client.companyName }); // Populate cache
 
-              if (querySnapshot.empty) {
-                  clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No clients found.</td></tr>';
-              } else {
-                  querySnapshot.forEach((doc) => {
-                      const client = doc.data();
-                      client.id = doc.id;
-                      clientCache.push({ id: client.id, name: client.companyName });
-                      const row = clientListBody.insertRow();
-                      row.innerHTML = `
-                          <td>${client.companyName || 'N/A'}</td>
-                          <td>${client.contactPerson || 'N/A'}</td>
-                          <td>${client.contactEmail ? `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a><br>` : ''} ${client.contactPhone || ''}</td>
-                          <td>${client.service || 'N/A'}</td>
-                          <td>${client.status || 'N/A'}</td>
-                          <td style="white-space: pre-wrap; max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${client.notes || ''}</td>
-                          <td class="actions">
-                              <button class="delete-btn" data-id="${client.id}" aria-label="Delete client ${client.companyName}">Delete</button>
-                          </td>
-                      `;
-                  });
-              }
-              populateClientDatalist();
-          }, (error) => {
-              console.error("Error in client listener: ", error);
-              clientListBody.innerHTML = `<tr><td colspan="7" style="text-align:center;" class="text-danger">Error loading clients: ${error.message}</td></tr>`;
-              showMessage(clientFormError, `Error loading clients: ${error.message}`);
-              populateClientDatalist(); // Update datalist from potentially stale cache
-              // Detach listener on error
-              if (clientListenerUnsubscribe) { clientListenerUnsubscribe(); clientListenerUnsubscribe = null; }
-          });
-      };
+                       const row = clientListBody.insertRow();
+                       row.innerHTML = `
+                           <td>${client.companyName || 'N/A'}</td>
+                           <td>${client.contactPerson || 'N/A'}</td>
+                           <td>${client.contactEmail ? `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a><br>` : ''} ${client.contactPhone || ''}</td>
+                           <td>${client.service || 'N/A'}</td>
+                           <td>${client.status || 'N/A'}</td>
+                           <td style="white-space: pre-wrap; max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${client.notes || ''}</td>
+                           <td class="actions">
+                               <button class="delete-btn" data-id="${client.id}" aria-label="Delete client ${client.companyName}">Delete</button>
+                               <!-- Add Edit button functionality later if needed -->
+                           </td>
+                       `;
+                       // Add event listener for the new delete button (delegated below)
+                   });
+               }
+               await populateClientDatalist(); // Populate datalist after loading clients
+           } catch (e) {
+               console.error("Error getting clients: ", e);
+               clientListBody.innerHTML = `<tr><td colspan="7" style="text-align:center;" class="text-danger">Error loading clients: ${e.message}</td></tr>`;
+               showMessage(clientFormError, `Error loading clients: ${e.message}`);
+           } finally {
+               showLoading(false);
+           }
+       };
 
+
+       // Delete Client from Firestore
        const deleteClient = async (clientId) => {
-           if (!currentUser || !clientId) return showMessage(clientFormError, 'Login required or Invalid client ID.');
-           if (!confirm("Are you sure you want to delete this client? This cannot be undone.")) return;
+           if (!currentUser) return showMessage(clientFormError, 'You must be logged in.');
+           if (!clientId) return showMessage(clientFormError, 'Invalid client ID.');
+
+           const confirmDelete = confirm("Are you sure you want to delete this client? This action cannot be undone.");
+           if (!confirmDelete) return;
 
            showLoading();
            try {
                await deleteDoc(doc(db, "clients", clientId));
-               console.log("Client delete request sent for ID: ", clientId);
+               console.log("Client deleted with ID: ", clientId);
                showMessage(clientFormSuccess, 'Client deleted successfully!', false);
+               await displayClients(); // Refresh list
+               await populateClientDatalist(); // Refresh datalist
            } catch (e) {
                console.error("Error deleting client: ", e);
                showMessage(clientFormError, `Error deleting client: ${e.message}`);
@@ -1098,107 +1038,154 @@
 
 
       // --- VA View Functions ---
-       const populateClientDatalist = () => {
-          clientSuggestionsDatalist.innerHTML = '';
-          if (clientCache.length > 0) {
-               clientCache.forEach(client => {
-                  const option = document.createElement('option');
-                  option.value = client.name;
-                  clientSuggestionsDatalist.appendChild(option);
-              });
+
+      // Populate Client Datalist for VA forms
+      const populateClientDatalist = async () => {
+          // Use the cache if available, otherwise fetch (could happen if VA view loads first)
+          if (clientCache.length === 0) {
+              try {
+                  const q = query(collection(db, "clients"), orderBy("companyName"));
+                  const querySnapshot = await getDocs(q);
+                  clientCache = querySnapshot.docs.map(doc => ({ id: doc.id, name: doc.data().companyName }));
+              } catch (e) {
+                  console.error("Error fetching clients for datalist:", e);
+                  showMessage(vaViewError, "Could not load client suggestions.");
+                  return; // Stop if error
+              }
           }
+
+          clientSuggestionsDatalist.innerHTML = ''; // Clear existing options
+          clientCache.forEach(client => {
+              const option = document.createElement('option');
+              option.value = client.name;
+              clientSuggestionsDatalist.appendChild(option);
+          });
       };
 
-       const getLogDocRef = (userId, date) => {
-          if (!userId || !date) { console.error("User ID and Date required."); return null; }
+      // Get or Create Log Document Reference
+      const getLogDocRef = (userId, date) => {
+          if (!userId || !date) {
+              console.error("User ID and Date are required for log reference.");
+              return null;
+          }
           return doc(db, 'va_logs', userId, 'daily_logs', date);
       };
 
-       const setupVaLogListener = (userId, date) => {
-          if (!userId || !date) { console.log("Cannot setup VA listener: invalid user/date."); return; }
+      // Load VA Log Data for a specific date
+      const loadVALogData = async (userId, date) => {
+          if (!userId || !date) return;
+          showLoading();
+          vaViewError.classList.add('hidden');
+          vaViewSuccess.classList.add('hidden'); // Clear messages on load
 
-          // Detach previous listener IF IT'S FOR A DIFFERENT DATE OR USER (should always be different date here)
-          if (vaLogListenerUnsubscribe) {
-              console.log("Unsubscribing previous VA log listener for date:", vaLogListenerUnsubscribe.lastDate);
-              vaLogListenerUnsubscribe();
-              vaLogListenerUnsubscribe = null;
-          }
-
-          vaViewError.classList.add('hidden'); vaViewSuccess.classList.add('hidden');
-          Object.values(dateDisplaySpans).forEach(span => span.textContent = date); // Update date display immediately
-
-          // Reset UI elements before new data comes in
-          currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
-          displayAppointments([]); displayTasks([]); displaySummary({}); displayNotes(''); updateStatCards();
+          // Update date display spans
+          Object.values(dateDisplaySpans).forEach(span => span.textContent = date);
 
           const logDocRef = getLogDocRef(userId, date);
-          if (!logDocRef) { console.error("Failed to get log doc reference."); return; }
-
-          console.log(`Setting up real-time VA log listener for User: ${userId}, Date: ${date}`);
-          vaLogListenerUnsubscribe = onSnapshot(logDocRef, (docSnap) => {
-              console.log(`VA log snapshot received for ${date}`);
+          try {
+              const docSnap = await getDoc(logDocRef);
               if (docSnap.exists()) {
                   currentLogData = docSnap.data();
+                  console.log("Log data loaded for", date, currentLogData);
+                  // Ensure arrays/objects exist if they were previously undefined
                   currentLogData.appointments = currentLogData.appointments || [];
                   currentLogData.tasks = currentLogData.tasks || [];
                   currentLogData.summary = currentLogData.summary || {};
                   currentLogData.dailyNotes = currentLogData.dailyNotes || '';
+
               } else {
-                  console.log("No log document found for", date);
+                  console.log("No log document found for", date, "- resetting data.");
+                  // Reset data if no doc exists for the date
                   currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
               }
-              // Update UI based on new data
+
+              // Display data
               displayAppointments(currentLogData.appointments);
               displayTasks(currentLogData.tasks);
               displaySummary(currentLogData.summary);
               displayNotes(currentLogData.dailyNotes);
-              updateStatCards();
-          }, (error) => {
-              console.error(`Error in VA log listener for ${date}: `, error);
-              showMessage(vaViewError, `Error loading log data: ${error.message}`);
-              currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
-              displayAppointments([]); displayTasks([]); displaySummary({}); displayNotes(''); updateStatCards();
-              if (vaLogListenerUnsubscribe) { vaLogListenerUnsubscribe(); vaLogListenerUnsubscribe = null; }
-          });
+              updateStatCards(); // Calculate stats based on loaded data
 
-          if (vaLogListenerUnsubscribe) vaLogListenerUnsubscribe.lastDate = date; // Track the date
+          } catch (e) {
+              console.error("Error loading VA log data: ", e);
+              showMessage(vaViewError, `Error loading log data: ${e.message}`);
+              // Reset display if error occurs
+              currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
+              displayAppointments([]);
+              displayTasks([]);
+              displaySummary({});
+              displayNotes('');
+              updateStatCards();
+          } finally {
+              showLoading(false);
+          }
       };
 
-
-      // Display Appointments/Tasks/Summary/Notes (These functions primarily render based on currentLogData)
+      // Display Appointments in the table
       const displayAppointments = (appointments = []) => {
-          appointmentLogBody.innerHTML = '';
+          appointmentLogBody.innerHTML = ''; // Clear table
           if (!appointments || appointments.length === 0) {
-              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No appointments logged.</td></tr>'; return;
+              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No appointments logged for this date.</td></tr>';
+              return;
           }
-          const sortedAppts = [...appointments].sort((a, b) => (a.time || "00:00").localeCompare(b.time || "00:00"));
-          sortedAppts.forEach(appt => {
+
+          // Sort by time before displaying
+          appointments.sort((a, b) => (a.time || "00:00").localeCompare(b.time || "00:00"));
+
+          appointments.forEach(appt => {
               const row = appointmentLogBody.insertRow();
+              // Add unique id if it doesn't exist (for newly added items before refresh)
               const itemId = appt.id || `temp_${Date.now()}_${Math.random()}`;
               const statusClass = getStatusClass(appt.status);
-              row.innerHTML = `<td>${appt.time||'N/A'}</td><td>${appt.clientName||'N/A'}</td><td>${appt.purpose||'N/A'}</td><td class="${statusClass}">${appt.status||'N/A'}</td><td style="white-space: pre-wrap;">${appt.notes||''}</td><td class="actions"><button class="delete-btn" data-type="appointment" data-id="${itemId}" aria-label="Delete appointment">Del</button></td>`;
+              row.innerHTML = `
+                  <td>${appt.time || 'N/A'}</td>
+                  <td>${appt.clientName || 'N/A'}</td>
+                  <td>${appt.purpose || 'N/A'}</td>
+                  <td class="${statusClass}">${appt.status || 'N/A'}</td>
+                  <td style="white-space: pre-wrap;">${appt.notes || ''}</td>
+                  <td class="actions">
+                       <button class="delete-btn" data-type="appointment" data-id="${itemId}" aria-label="Delete appointment for ${appt.clientName} at ${appt.time}">Delete</button>
+                  </td>
+              `;
           });
       };
 
+       // Display Tasks in the table
        const displayTasks = (tasks = []) => {
-           taskLogBody.innerHTML = '';
+           taskLogBody.innerHTML = ''; // Clear table
            if (!tasks || tasks.length === 0) {
-               taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No tasks logged.</td></tr>'; return;
+               taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No tasks logged for this date.</td></tr>';
+               return;
            }
-           const sortedTasks = [...tasks]; // Keep order for now
-           sortedTasks.forEach(task => {
+
+           // Sort tasks maybe by description or time added if timestamp exists? For now, just display as is.
+           // tasks.sort((a, b) => a.description.localeCompare(b.description));
+
+           tasks.forEach(task => {
                const row = taskLogBody.insertRow();
                const itemId = task.id || `temp_${Date.now()}_${Math.random()}`;
-               row.innerHTML = `<td>${task.description||'N/A'}</td><td>${task.clientName||'N/A'}</td><td>${task.timeSpent||'0'}</td><td style="white-space: pre-wrap;">${task.notes||''}</td><td class="actions"><button class="delete-btn" data-type="task" data-id="${itemId}" aria-label="Delete task">Del</button></td>`;
+               row.innerHTML = `
+                   <td>${task.description || 'N/A'}</td>
+                   <td>${task.clientName || 'N/A'}</td>
+                   <td>${task.timeSpent || '0'}</td>
+                   <td style="white-space: pre-wrap;">${task.notes || ''}</td>
+                   <td class="actions">
+                       <button class="delete-btn" data-type="task" data-id="${itemId}" aria-label="Delete task ${task.description}">Delete</button>
+                   </td>
+               `;
            });
        };
 
+       // Display Summary Data in form and display area
        const displaySummary = (summary = {}) => {
+           // Fill the form inputs
            document.getElementById('prod-calls').value = summary.calls || 0;
            document.getElementById('prod-emails').value = summary.emails || 0;
            document.getElementById('prod-leads').value = summary.leads || 0;
            document.getElementById('prod-appts-set').value = summary.apptsSet || 0;
            document.getElementById('prod-tickets').value = summary.tickets || 0;
+
+           // Update the display area below the form
            summaryDisplayElements.calls.textContent = summary.calls || 0;
            summaryDisplayElements.emails.textContent = summary.emails || 0;
            summaryDisplayElements.leads.textContent = summary.leads || 0;
@@ -1206,88 +1193,167 @@
            summaryDisplayElements.tickets.textContent = summary.tickets || 0;
        };
 
+       // Display Daily Notes in textarea and display area
        const displayNotes = (notes = '') => {
            document.getElementById('daily-notes').value = notes || '';
-           notesContentEl.textContent = notes || 'No notes saved for this date.';
+           if (notes) {
+               notesContentEl.textContent = notes;
+           } else {
+               notesContentEl.textContent = 'No notes saved for this date.';
+           }
        };
 
-       // --- VA View Data Modification Functions ---
+
+       // Add Appointment/Call Log Entry
        const addAppointmentLog = async (event) => {
            event.preventDefault();
-           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User/Date error.');
-           logAppointmentSubmitBtn.disabled = true; showLoading();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logAppointmentSubmitBtn.disabled = true;
+           showLoading();
 
            const newAppointment = {
-               id: `appt_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+               id: `appt_${Date.now()}`, // Unique ID for easier deletion
                time: document.getElementById('appt-time').value,
                clientName: document.getElementById('appt-client-name').value.trim(),
                purpose: document.getElementById('appt-purpose').value,
                status: document.getElementById('appt-status').value,
                notes: document.getElementById('appt-notes').value.trim(),
            };
-           if (!newAppointment.time || !newAppointment.clientName || !newAppointment.purpose || !newAppointment.status) {
-                showMessage(vaViewError, 'Time, Client, Purpose, and Status are required.');
-                showLoading(false); logAppointmentSubmitBtn.disabled = false; return;
-           }
+
            const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
            try {
-                await setDoc(logDocRef, { appointments: arrayUnion(newAppointment), lastUpdated: serverTimestamp() }, { merge: true });
-                showMessage(vaViewSuccess, 'Appointment logged!', false); clearForm(logAppointmentForm);
-           } catch (e) { console.error("Error logging appointment: ", e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); logAppointmentSubmitBtn.disabled = false; }
+                // Use setDoc with merge: true to create the doc if it doesn't exist
+                // and use arrayUnion to add the appointment safely.
+                await setDoc(logDocRef, {
+                    appointments: arrayUnion(newAppointment),
+                    lastUpdated: serverTimestamp() // Track updates
+                 }, { merge: true });
+
+                console.log("Appointment logged successfully");
+                showMessage(vaViewSuccess, 'Appointment/Call logged successfully!', false);
+                clearForm(logAppointmentForm);
+                // Refresh data immediately
+                await loadVALogData(currentUser.uid, selectedLogDate);
+           } catch (e) {
+               console.error("Error logging appointment: ", e);
+               showMessage(vaViewError, `Error logging appointment: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logAppointmentSubmitBtn.disabled = false;
+           }
        };
 
+       // Add Task Log Entry
        const addTaskLog = async (event) => {
            event.preventDefault();
-           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User/Date error.');
-           logTaskSubmitBtn.disabled = true; showLoading();
-           const timeSpent = parseInt(document.getElementById('task-time-spent').value) || 0;
-           const description = document.getElementById('task-description').value.trim();
-           if (!description || timeSpent <= 0) {
-               showMessage(vaViewError, 'Task Description and positive Time Spent are required.');
-               showLoading(false); logTaskSubmitBtn.disabled = false; return;
-           }
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logTaskSubmitBtn.disabled = true;
+           showLoading();
+
            const newTask = {
-               id: `task_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-               description: description,
-               clientName: document.getElementById('task-client-name').value.trim(),
-               timeSpent: timeSpent,
-               notes: document.getElementById('task-notes').value.trim(),
+               id: `task_${Date.now()}`, // Unique ID
+               description: document.getElementById('task-description').value.trim(),
+               clientName: document.getElementById('task-client-name').value.trim(), // Optional
+               timeSpent: parseInt(document.getElementById('task-time-spent').value) || 0,
+               notes: document.getElementById('task-notes').value.trim(), // Optional
            };
+
+           if (newTask.timeSpent <= 0) {
+               showMessage(vaViewError, 'Time spent must be a positive number.');
+               showLoading(false);
+               logTaskSubmitBtn.disabled = false;
+               return;
+           }
+
            const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
            try {
-               await setDoc(logDocRef, { tasks: arrayUnion(newTask), lastUpdated: serverTimestamp() }, { merge: true });
-               showMessage(vaViewSuccess, 'Task logged!', false); clearForm(logTaskForm);
-           } catch (e) { console.error("Error logging task: ", e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); logTaskSubmitBtn.disabled = false; }
+               await setDoc(logDocRef, {
+                   tasks: arrayUnion(newTask),
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Task logged successfully");
+               showMessage(vaViewSuccess, 'Task logged successfully!', false);
+               clearForm(logTaskForm);
+               await loadVALogData(currentUser.uid, selectedLogDate);
+           } catch (e) {
+               console.error("Error logging task: ", e);
+               showMessage(vaViewError, `Error logging task: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logTaskSubmitBtn.disabled = false;
+           }
        };
 
-        const deleteLogEntry = async (type, itemId) => {
-           if (!currentUser || !selectedLogDate || !type || !itemId) return showMessage(vaViewError, 'Missing info for delete.');
-           if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
+        // Delete Appointment or Task Log Entry
+       const deleteLogEntry = async (type, itemId) => {
+           if (!currentUser || !selectedLogDate || !type || !itemId) return showMessage(vaViewError, 'Missing information to delete item.');
+
+           const confirmDelete = confirm(`Are you sure you want to delete this ${type}?`);
+           if (!confirmDelete) return;
+
            showLoading();
            const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
-           try {
-                const docSnap = await getDoc(logDocRef); // Get current state ONCE
-                if (!docSnap.exists()) throw new Error("Log document not found.");
-                const logData = docSnap.data();
-                const fieldName = type === 'appointment' ? 'appointments' : 'tasks';
-                const itemToRemove = logData[fieldName]?.find(item => item.id === itemId);
 
-                if (itemToRemove) {
-                     await updateDoc(logDocRef, { [fieldName]: arrayRemove(itemToRemove), lastUpdated: serverTimestamp() });
-                     showMessage(vaViewSuccess, `${type.charAt(0).toUpperCase() + type.slice(1)} deleted!`, false);
+           try {
+                // Fetch the current document to find the exact object to remove
+                const docSnap = await getDoc(logDocRef);
+                if (!docSnap.exists()) {
+                    throw new Error("Log document not found.");
+                }
+
+                const logData = docSnap.data();
+                let itemToRemove = null;
+                let updatedArray = [];
+                const fieldName = type === 'appointment' ? 'appointments' : 'tasks';
+
+                if (logData[fieldName] && Array.isArray(logData[fieldName])) {
+                    // Find the item by its unique ID
+                    itemToRemove = logData[fieldName].find(item => item.id === itemId);
+                    if (itemToRemove) {
+                        // Use arrayRemove - requires the exact object reference
+                        await updateDoc(logDocRef, {
+                             [fieldName]: arrayRemove(itemToRemove),
+                              lastUpdated: serverTimestamp()
+                         });
+                         console.log(`${type} entry deleted successfully`);
+                         showMessage(vaViewSuccess, `${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully!`, false);
+                         // Reload data after deletion
+                         await loadVALogData(currentUser.uid, selectedLogDate);
+
+                    } else {
+                         // Fallback/Error handling if item not found (e.g., already deleted)
+                        console.warn(`Item with id ${itemId} not found in ${fieldName} array.`);
+                        showMessage(vaViewError, `${type.charAt(0).toUpperCase() + type.slice(1)} not found, perhaps it was already deleted.`);
+                        await loadVALogData(currentUser.uid, selectedLogDate); // Still reload to ensure UI consistency
+                    }
                  } else {
-                      console.warn(`Item ${itemId} not found for deletion.`); showMessage(vaViewError, `Item not found.`);
+                    throw new Error(`Log data format issue: ${fieldName} array not found.`);
                  }
-           } catch (e) { console.error(`Error deleting ${type}: `, e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); }
+
+           } catch (e) {
+               console.error(`Error deleting ${type}: `, e);
+               showMessage(vaViewError, `Error deleting ${type}: ${e.message}`);
+               // Ensure UI consistency even on error
+                if(currentUser && selectedLogDate) await loadVALogData(currentUser.uid, selectedLogDate);
+           } finally {
+               showLoading(false);
+           }
        };
 
+
+       // Save/Update Daily Productivity Summary
        const saveProductivitySummary = async (event) => {
            event.preventDefault();
-           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User/Date error.');
-           logProductivitySubmitBtn.disabled = true; showLoading();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           logProductivitySubmitBtn.disabled = true;
+           showLoading();
+
            const summaryData = {
                calls: parseInt(document.getElementById('prod-calls').value) || 0,
                emails: parseInt(document.getElementById('prod-emails').value) || 0,
@@ -1295,164 +1361,275 @@
                apptsSet: parseInt(document.getElementById('prod-appts-set').value) || 0,
                tickets: parseInt(document.getElementById('prod-tickets').value) || 0,
            };
+
            const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
            try {
-               await setDoc(logDocRef, { summary: summaryData, lastUpdated: serverTimestamp() }, { merge: true });
-               showMessage(vaViewSuccess, 'Daily summary saved!', false);
-           } catch (e) { console.error("Error saving summary: ", e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); logProductivitySubmitBtn.disabled = false; }
+               // Use setDoc with merge: true to update only the summary field
+               await setDoc(logDocRef, {
+                   summary: summaryData,
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Productivity summary saved successfully");
+               showMessage(vaViewSuccess, 'Daily summary saved successfully!', false);
+               displaySummary(summaryData); // Update display area
+               updateStatCards(); // Recalculate stats potentially impacted by summary
+           } catch (e) {
+               console.error("Error saving summary: ", e);
+               showMessage(vaViewError, `Error saving summary: ${e.message}`);
+           } finally {
+               showLoading(false);
+               logProductivitySubmitBtn.disabled = false;
+           }
        };
 
+       // Save Daily Notes
        const saveDailyNotes = async (event) => {
            event.preventDefault();
-           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User/Date error.');
-           dailyNotesSubmitBtn.disabled = true; showLoading();
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           dailyNotesSubmitBtn.disabled = true;
+           showLoading();
+
            const notes = document.getElementById('daily-notes').value.trim();
            const logDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
            try {
-               await setDoc(logDocRef, { dailyNotes: notes, lastUpdated: serverTimestamp() }, { merge: true });
-               showMessage(vaViewSuccess, 'Daily notes saved!', false);
-           } catch (e) { console.error("Error saving notes: ", e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); dailyNotesSubmitBtn.disabled = false; }
+               await setDoc(logDocRef, {
+                   dailyNotes: notes,
+                    lastUpdated: serverTimestamp()
+               }, { merge: true });
+
+               console.log("Daily notes saved successfully");
+               showMessage(vaViewSuccess, 'Daily notes saved successfully!', false);
+               displayNotes(notes); // Update display area
+           } catch (e) {
+               console.error("Error saving notes: ", e);
+               showMessage(vaViewError, `Error saving notes: ${e.message}`);
+           } finally {
+               showLoading(false);
+               dailyNotesSubmitBtn.disabled = false;
+           }
        };
 
+       // Update Stat Cards based on currentLogData
        const updateStatCards = () => {
-           let totalCalls = currentLogData.appointments?.length || 0;
-           let productiveTime = currentLogData.tasks?.reduce((sum, task) => sum + (task.timeSpent || 0), 0) || 0;
-           let leadsFromCalls = currentLogData.appointments?.filter(a => a.status === 'Lead Generated').length || 0;
-           let apptsFromCalls = currentLogData.appointments?.filter(a => a.status === 'Appointment Set').length || 0;
+           let totalCalls = 0;
+           let productiveTime = 0;
+           let leadsFromCalls = 0;
+           let apptsFromCalls = 0;
+
+           if (currentLogData.appointments) {
+               totalCalls = currentLogData.appointments.length;
+               currentLogData.appointments.forEach(appt => {
+                   if (appt.status === 'Lead Generated') leadsFromCalls++;
+                   if (appt.status === 'Appointment Set') apptsFromCalls++;
+               });
+           }
+
+           if (currentLogData.tasks) {
+               productiveTime = currentLogData.tasks.reduce((sum, task) => sum + (task.timeSpent || 0), 0);
+           }
+
+           // Use summary values if they exist, otherwise use calculated values from calls
            const totalLeads = currentLogData.summary?.leads ?? leadsFromCalls;
            const totalAppts = currentLogData.summary?.apptsSet ?? apptsFromCalls;
+
+
            statElements.totalCalls.textContent = totalCalls;
            statElements.productiveTime.textContent = productiveTime;
            statElements.leads.textContent = totalLeads;
            statElements.appointments.textContent = totalAppts;
        };
 
+       // Copy Tasks (and Appointments maybe?) from Yesterday
        const copyFromYesterday = async () => {
-           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User/Date error.');
-           const today = new Date(selectedLogDate + 'T00:00:00');
-           const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+           if (!currentUser || !selectedLogDate) return showMessage(vaViewError, 'User not logged in or date not selected.');
+
+           const today = new Date(selectedLogDate + 'T00:00:00'); // Ensure correct date object
+           const yesterday = new Date(today);
+           yesterday.setDate(today.getDate() - 1);
            const yesterdayDateStr = formatDate(yesterday);
-           if (!confirm(`Copy entries from ${yesterdayDateStr} to ${selectedLogDate}?`)) return;
+
+           const confirmCopy = confirm(`Copy tasks and appointments from ${yesterdayDateStr} to ${selectedLogDate}? This will add to any existing entries for today.`);
+           if (!confirmCopy) return;
+
            showLoading();
            const yesterdayLogDocRef = getLogDocRef(currentUser.uid, yesterdayDateStr);
            const todayLogDocRef = getLogDocRef(currentUser.uid, selectedLogDate);
+
            try {
                const yesterdayDocSnap = await getDoc(yesterdayLogDocRef);
-               if (!yesterdayDocSnap.exists()) { showMessage(vaViewError, `No data for ${yesterdayDateStr}.`); return; }
-               const yesterdayData = yesterdayDocSnap.data();
-               const updatePayload = { lastUpdated: serverTimestamp() };
-               let copiedCount = 0;
-               const createNewId = (prefix) => `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-               if (yesterdayData.appointments?.length > 0) {
-                   updatePayload.appointments = arrayUnion(...yesterdayData.appointments.map(a => ({ ...a, id: createNewId('appt') })));
-                   copiedCount += yesterdayData.appointments.length;
+               if (!yesterdayDocSnap.exists()) {
+                   showMessage(vaViewError, `No log data found for yesterday (${yesterdayDateStr}).`);
+                   return;
                }
-               if (yesterdayData.tasks?.length > 0) {
-                   updatePayload.tasks = arrayUnion(...yesterdayData.tasks.map(t => ({ ...t, id: createNewId('task') })));
-                   copiedCount += yesterdayData.tasks.length;
+
+               const yesterdayData = yesterdayDocSnap.data();
+               const itemsToCopy = {};
+
+               // Prepare items with NEW unique IDs for today
+               if (yesterdayData.appointments && yesterdayData.appointments.length > 0) {
+                   itemsToCopy.appointments = yesterdayData.appointments.map(appt => ({
+                       ...appt,
+                       id: `appt_${Date.now()}_${Math.random().toString(16).slice(2)}`, // New ID
+                       // Optionally reset status/notes or keep them? Let's keep them for now.
+                   }));
                }
-               if (copiedCount === 0) { showMessage(vaViewSuccess, `No entries found for ${yesterdayDateStr} to copy.`, false); return; }
+                if (yesterdayData.tasks && yesterdayData.tasks.length > 0) {
+                   itemsToCopy.tasks = yesterdayData.tasks.map(task => ({
+                       ...task,
+                       id: `task_${Date.now()}_${Math.random().toString(16).slice(2)}`, // New ID
+                   }));
+               }
+
+
+                if (!itemsToCopy.appointments && !itemsToCopy.tasks) {
+                    showMessage(vaViewSuccess, `No tasks or appointments found for yesterday (${yesterdayDateStr}) to copy.`, false);
+                    return;
+                }
+
+                // Use arrayUnion to add copied items without overwriting existing ones
+                const updatePayload = {};
+                if (itemsToCopy.appointments) {
+                    updatePayload.appointments = arrayUnion(...itemsToCopy.appointments);
+                }
+                 if (itemsToCopy.tasks) {
+                    updatePayload.tasks = arrayUnion(...itemsToCopy.tasks);
+                }
+                 updatePayload.lastUpdated = serverTimestamp();
+
 
                await setDoc(todayLogDocRef, updatePayload , { merge: true });
-               showMessage(vaViewSuccess, `Copied ${copiedCount} entries!`, false);
-           } catch (e) { console.error("Error copying: ", e); showMessage(vaViewError, `Error: ${e.message}`);
-           } finally { showLoading(false); }
+
+               console.log("Copied data from yesterday");
+               showMessage(vaViewSuccess, 'Successfully copied entries from yesterday!', false);
+               await loadVALogData(currentUser.uid, selectedLogDate); // Refresh today's view
+
+           } catch (e) {
+               console.error("Error copying from yesterday: ", e);
+               showMessage(vaViewError, `Error copying data: ${e.message}`);
+           } finally {
+               showLoading(false);
+           }
        };
 
 
       // --- Initialization and Event Listeners ---
-       const initializeDate = () => {
+
+      // Set initial date for VA log to today
+      const initializeDate = () => {
            const today = new Date();
            selectedLogDate = formatDate(today);
            logDateInput.value = selectedLogDate;
-           logDateInput.max = selectedLogDate;
+           logDateInput.max = selectedLogDate; // Prevent selecting future dates
        };
 
-       // Detach All Listeners Utility
-       const detachAllListeners = () => {
-           if (clientListenerUnsubscribe) { clientListenerUnsubscribe(); clientListenerUnsubscribe = null; console.log("Client listener detached."); }
-           if (vaLogListenerUnsubscribe) { vaLogListenerUnsubscribe(); vaLogListenerUnsubscribe = null; console.log("VA log listener detached."); }
-       };
 
-      // Auth State Change Listener - Central point for app state based on auth
+      // Auth State Change Listener
       onAuthStateChanged(auth, (user) => {
-          console.log("Auth state changed. User:", user ? user.uid : 'null');
           showLoading();
-          detachAllListeners(); // Ensure clean slate before setting up new state
-
           if (user) {
+              // User is signed in
               currentUser = user;
-              userInfoDisplay.innerHTML = `<img src="${user.photoURL || 'placeholder.png'}" alt="Avatar"> <span>${user.displayName || user.email}</span>`;
+              userInfoDisplay.innerHTML = `
+                  <img src="${user.photoURL || 'placeholder.png'}" alt="User Avatar"> <!-- Add a placeholder image -->
+                  <span>${user.displayName || user.email}</span>
+              `;
               userInfoDisplay.classList.remove('hidden');
               signOutButton.classList.remove('hidden');
               signInButton.classList.add('hidden');
               appContent.classList.remove('hidden');
 
-              initializeDate();
-              setupClientListener(); // Setup listener for clients
-              setupVaLogListener(currentUser.uid, selectedLogDate); // Setup listener for initial date
-              switchView(currentView); // Restore last view or default
-          } else {
-              currentUser = null;
-              userInfoDisplay.classList.add('hidden'); userInfoDisplay.innerHTML = '';
-              signOutButton.classList.add('hidden'); signInButton.classList.remove('hidden');
-              appContent.classList.add('hidden');
+              initializeDate(); // Set initial date for VA view
+               populateClientDatalist(); // Start loading client suggestions
 
-              // Clear UI state
-              clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Please sign in.</td></tr>';
-              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in.</td></tr>';
-              taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in.</td></tr>';
-              clientCache = [];
-              currentLogData = { appointments: [], tasks: [], summary: {}, dailyNotes: '' };
-              // Reset forms if needed
-              clearForm(addClientForm); clearForm(logAppointmentForm); clearForm(logTaskForm);
-              clearForm(logProductivityForm); clearForm(dailyNotesForm);
+              // Load data for the default/current view
+              switchView(currentView); // This will trigger data loading based on the view
+
+          } else {
+              // User is signed out
+              currentUser = null;
+              userInfoDisplay.classList.add('hidden');
+              userInfoDisplay.innerHTML = '';
+              signOutButton.classList.add('hidden');
+              signInButton.classList.remove('hidden');
+              appContent.classList.add('hidden');
+              // Clear data displays
+              clientListBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Please sign in to view clients.</td></tr>';
+              appointmentLogBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please sign in to view logs.</td></tr>';
+              taskLogBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Please sign in to view logs.</td></tr>';
+              clientCache = []; // Clear cache on logout
+              currentLogData = {};
           }
            showLoading(false);
       });
 
-      // --- Event Listeners Setup ---
+      // --- Event Listeners ---
       signInButton.addEventListener('click', signInWithGoogle);
       signOutButton.addEventListener('click', signOutUser);
 
+      // View Switcher Buttons
       viewButtons.forEach(button => {
-          button.addEventListener('click', () => switchView(button.dataset.view));
+          button.addEventListener('click', () => {
+              switchView(button.dataset.view);
+          });
       });
 
+      // Manager View: Add Client Form Submit
       addClientForm.addEventListener('submit', addClient);
+
+      // Manager View: Delete Client Button (Event Delegation)
       clientListBody.addEventListener('click', (event) => {
-          if (event.target.classList.contains('delete-btn') && event.target.dataset.id) {
-               deleteClient(event.target.dataset.id);
+          if (event.target.classList.contains('delete-btn')) {
+              const clientId = event.target.dataset.id;
+               if (clientId) {
+                   deleteClient(clientId);
+               } else {
+                   console.error("Delete button clicked but data-id not found.");
+                   showMessage(clientFormError,"Could not find client ID to delete.");
+               }
+
           }
       });
 
+
+      // VA View: Date Change
       logDateInput.addEventListener('change', (event) => {
-          const newDate = event.target.value;
-          if (newDate !== selectedLogDate && currentUser && newDate) { // Ensure date is valid
-                selectedLogDate = newDate;
-                setupVaLogListener(currentUser.uid, selectedLogDate); // Re-setup listener for new date
+          selectedLogDate = event.target.value;
+          if (currentUser) {
+              loadVALogData(currentUser.uid, selectedLogDate);
           }
       });
 
-      copyYesterdayBtn.addEventListener('click', copyFromYesterday);
+       // VA View: Copy Yesterday Button
+       copyYesterdayBtn.addEventListener('click', copyFromYesterday);
+
+      // VA View: Log Forms Submit
       logAppointmentForm.addEventListener('submit', addAppointmentLog);
       logTaskForm.addEventListener('submit', addTaskLog);
       logProductivityForm.addEventListener('submit', saveProductivitySummary);
       dailyNotesForm.addEventListener('submit', saveDailyNotes);
 
-      vaView.addEventListener('click', (event) => { // Delegate deletes within VA view
+       // VA View: Delete Log Entry Buttons (Event Delegation)
+       vaView.addEventListener('click', (event) => {
            if (event.target.classList.contains('delete-btn')) {
-               const type = event.target.dataset.type;
+               const type = event.target.dataset.type; // 'appointment' or 'task'
                const itemId = event.target.dataset.id;
-                if (type && itemId) deleteLogEntry(type, itemId);
+                if (type && itemId) {
+                    deleteLogEntry(type, itemId);
+                } else {
+                     console.error("Delete button clicked but data-type or data-id not found.");
+                     showMessage(vaViewError,"Could not identify item to delete.");
+                }
            }
        });
 
-      // --- Initial Check ---
-      // The onAuthStateChanged listener handles the initial setup based on whether a user is already logged in.
+
+      // --- Initial Load ---
+      // Auth state change handles the initial data load after login.
 
     </script>
 
