@@ -340,7 +340,7 @@
         input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(24px); }
         
         .status-indicator, .status-dot { 
-            width: 10px; height: 10px; border-radius: 50%; 
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px;
         }
         .status-online, .status-active { background-color: var(--status-active); } 
         .status-offline { background-color: var(--status-offline); } 
@@ -421,7 +421,8 @@
         [data-theme="dark"] #postedAnnouncementsList li, [data-theme="dark"] #whitelistedEmailsList li { background-color: #4A5568; border-color: #5A687F; }
         #postedAnnouncementsList li strong { display: block; margin-bottom: 5px; color: var(--primary-dark); flex-grow: 1;}
         [data-theme="dark"] #postedAnnouncementsList li strong { color: var(--secondary-color); }
-        .delete-item { background: none; border: none; color: var(--status-offline); cursor: pointer; font-size: 14px; }
+        .delete-item { background: none; border: none; color: var(--status-offline); cursor: pointer; font-size: 16px; transition: color 0.2s; padding: 5px;}
+        .delete-item:hover { color: #b71c1c; }
 
 
         #homeAnnouncementsList { list-style: none; padding: 0; }
@@ -540,7 +541,6 @@
             .task-filters { justify-content: center; }
             .notifications-dropdown-container { right: 50%; transform: translateX(50%) translateY(-10px); }
             .notifications-dropdown-container.visible { transform: translateX(50%) translateY(0); }
-            .scheduler-form .form-group, .global-scheduler-form .form-group { display: block; margin-right:0; margin-bottom:10px; }
             .user-profile-popup { 
                 top: auto; bottom: 70px; 
                 left: 50%;
@@ -568,16 +568,19 @@
 </head>
 <body data-theme="light">
 
+    <!-- Login Container -->
     <div id="loginContainer">
         <div class="logo-placeholder"><i class="fas fa-cubes"></i></div>
         <h2>VCPH-Timetracker</h2>
-        <p id="sdkStatus">Please sign in with your Google account to continue.</p>
+        <p id="sdkStatus">Initializing services...</p>
         <button id="loginWithGoogleButton" disabled><i class="fab fa-google"></i> Sign in with Google</button>
         <p id="authError"></p>
         <p id="accessDeniedMessage">Your email is not authorized to access this application. Please contact an administrator.</p>
     </div>
 
+    <!-- Main App Container -->
     <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div></div>
             <nav class="sidebar-nav">
@@ -591,42 +594,37 @@
             <a href="#" class="nav-item" id="logoutButton" title="Logout" style="display:none;"><i class="fas fa-sign-out-alt"></i></a>
         </aside>
 
+        <!-- Main Content -->
         <main class="main-content">
+            <!-- Header -->
             <header class="top-bar">
                 <div class="top-bar-logo-text"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div><span id="appTitle">VCPH-Timetracker</span></div>
-                
                 <div class="top-bar-right-controls">
                     <div class="notification-bell-wrapper">
                         <i class="fas fa-bell" id="notificationBellIcon" tabindex="0" role="button" aria-label="Toggle Notifications"></i>
                         <span class="notification-count-badge" id="notificationCountBadge" style="display: none;">0</span>
                         <div class="notifications-dropdown-container" id="notificationsDropdownContainer">
                             <h4>Notifications</h4>
-                            <ul id="dynamicNotificationList">
-                                <li class="no-notifications-item">No new notifications.</li>
-                            </ul>
+                            <ul id="dynamicNotificationList"><li class="no-notifications-item">No new notifications.</li></ul>
                             <a href="#" id="markAllNotificationsRead" class="mark-read-link">Mark all as read</a>
                         </div>
                     </div>
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search..." id="featureSearchInputGlobal">
-                    </div>
+                    <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search..." id="featureSearchInputGlobal"></div>
                     <div class="theme-toggle-switch">
                         <i class="fas fa-sun"></i>
-                        <label class="switch">
-                            <input type="checkbox" id="mainThemeToggle">
-                            <span class="slider round"></span>
-                        </label>
+                        <label class="switch"><input type="checkbox" id="mainThemeToggle"><span class="slider round"></span></label>
                         <i class="fas fa-moon"></i>
                     </div>
                 </div>
             </header>
 
+            <!-- Greeting Card -->
             <section class="user-greeting-card">
                 <div class="profile-pic" id="userGreetingProfilePicTrigger" title="View Profile"><i class="fas fa-user"></i></div>
-                <div class="greeting-text"><h1 id="dynamicGreeting">Hi, <span id="userNameDisplay">Guest</span>!</h1><p id="userTitleDisplay">Please log in to access features.</p></div>
+                <div class="greeting-text"><h1 id="dynamicGreeting">Hi, Guest!</h1><p id="userTitleDisplay">Please log in to access features.</p></div>
             </section>
 
+            <!-- User Profile Popup -->
             <div id="userProfilePopup" class="user-profile-popup">
                 <div class="popup-content">
                     <div class="popup-header">
@@ -634,20 +632,17 @@
                             <img id="popupUserProfilePic" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Picture"> 
                             <span id="popupUserStatusIndicator" class="status-dot status-offline"></span>
                         </div>
-                        <h3 id="popupUserName">User Name</h3>
-                        <p id="popupUserEmail">user@example.com</p>
+                        <h3 id="popupUserName">User Name</h3><p id="popupUserEmail">user@example.com</p>
                     </div>
                     <div class="popup-actions">
                         <button id="switchAccountButton" class="popup-button">Switch account</button>
                         <button id="popupSignOutButton" class="popup-button">Sign out</button>
                     </div>
-                    <div class="popup-footer">
-                        <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a> • <a href="#" target="_blank" rel="noopener noreferrer">Terms of Service</a>
-                    </div>
+                    <div class="popup-footer"><a href="#" target="_blank">Privacy Policy</a> • <a href="#" target="_blank">Terms of Service</a></div>
                 </div>
             </div>
 
-
+            <!-- Tab Content Area -->
             <div id="tab-home" class="tab-content active">
                 <section class="dashboard-widgets">
                     <div class="widget"><h3>Time Clocked (This Week)</h3><div class="value" id="hoursThisWeek">-- hrs</div><p class="description">Based on your attendance logs.</p></div>
@@ -656,9 +651,7 @@
                 </section>
                 <section class="card" id="homeAnnouncementsCard">
                     <h2><i class="fas fa-bullhorn"></i> Latest Announcements</h2>
-                    <ul id="homeAnnouncementsList">
-                        <li class="no-announcements-item">No announcements yet.</li>
-                    </ul>
+                    <ul id="homeAnnouncementsList"><li class="no-announcements-item">No announcements yet.</li></ul>
                 </section>
                 <section class="card"><h2>Quick Access</h2><div class="info-cards-container">
                     <div class="info-card"><i class="fas fa-calendar-check icon"></i><h3>Time Off Requests</h3><p>View or submit time off requests (Feature Placeholder).</p><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="showToast('Time Off Requests feature coming soon!', 'info')">View Requests</button></div>
@@ -669,15 +662,9 @@
             <div id="tab-attendance" class="tab-content">
                 <section class="attendance-card card">
                     <h2>Attendance Tracking & History</h2>
-                    <p id="firebaseStatusMessage" style="color: red; font-weight: bold; display: none;">Firebase not initialized. Attendance features are disabled.</p>
+                    <p id="firebaseStatusMessage" style="color: red; font-weight: bold; display: none;"></p>
                     <p id="currentTimeDisplay" style="font-weight:500; margin-bottom:15px;">Current Time: Loading...</p>
-                    
-                    <div id="userScheduleDisplay" style="display:none;">
-                        <h4>Today's Schedule (Company Wide)</h4>
-                        <p id="scheduleDetails">No schedule set for today.</p>
-                        <div id="scheduleReminder" style="display:none;"></div>
-                    </div>
-
+                    <div id="userScheduleDisplay" style="display:none;"><h4>Today's Schedule (Company Wide)</h4><p id="scheduleDetails"></p><div id="scheduleReminder"></div></div>
                     <div id="attendanceControls" style="display:none;">
                         <p>Tracking for: <strong id="currentTrackingEmployeeName"></strong> (<span id="currentTrackingEmployeeIdShort"></span>)</p>
                         <div class="buttons">
@@ -685,7 +672,7 @@
                             <button id="clockOutButton" class="btn btn-danger" disabled><i class="fas fa-stop-circle"></i> Clock Out</button>
                         </div>
                         <div class="break-controls">
-                            <button id="pauseBreakButton" class="btn btn-warning" disabled><i class="fas fa-pause"></i> Pause Break</button>
+                            <button id="pauseBreakButton" class="btn btn-warning" disabled><i class="fas fa-pause"></i> Start Break</button>
                             <button id="resumeWorkButton" class="btn btn-success" style="display:none;"><i class="fas fa-play"></i> Resume Work</button>
                         </div>
                         <div class="status"><p>Last Action: <span id="lastActionStatus">--</span></p><p>Last Action Time: <span id="lastActionTime">--</span></p><p>Current Break Status: <span id="currentBreakStatus">Not on break</span></p></div>
@@ -695,652 +682,379 @@
                 <section class="card"><h2>Attendance History Log</h2><div class="filter-controls"><div class="form-group"><label for="historyStartDate">Start Date:</label><input type="date" id="historyStartDate"></div><div class="form-group"><label for="historyEndDate">End Date:</label><input type="date" id="historyEndDate"></div><button id="applyHistoryFilter" class="btn btn-primary">Filter</button></div><div id="attendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Please log in to view history.</p></div><h3>Daily Hours Visualization</h3><div id="attendanceHistoryChart"><div class="chart-bar-container" id="historyChartContainer"><p class="chart-no-data">Log in and select a date range.</p></div></div></section>
             </div>
             
-            <div id="tab-team" class="tab-content">
-                <section class="card">
-                    <h2><i class="fas fa-users-cog"></i> Team Overview</h2>
-                    <p>Comprehensive view of team members, their status, and recent activity.</p>
-                    <div id="teamOverviewList">
-                        <p>Loading team data...</p>
-                    </div>
-                </section>
-            </div>
+            <div id="tab-team" class="tab-content"><section class="card"><h2><i class="fas fa-users-cog"></i> Team Overview</h2><p>Comprehensive view of team members, their status, and recent activity.</p><div id="teamOverviewList"><p>Loading team data...</p></div></section></div>
             
             <div id="tab-tasks" class="tab-content"><section class="card"><h2>My Tasks</h2><div class="form-group"><label for="newTaskInput">Add New Task:</label><input type="text" id="newTaskInput" placeholder="e.g., Finalize report"></div><button id="addTaskButton" class="btn btn-primary">Add Task</button><div class="task-filters" style="margin-top:20px;"><button class="btn btn-sm btn-primary active" data-filter="all">All</button><button class="btn btn-sm btn-secondary" data-filter="active">Active</button><button class="btn btn-sm btn-secondary" data-filter="completed">Completed</button></div><ul id="taskList"></ul></section></div>
             
             <div id="tab-notes" class="tab-content"><section class="card"><h2>My Notes</h2><button id="createNewNoteButton" class="btn btn-primary">Create New Note</button><ul id="notesList"></ul><p id="noNotesMessage" style="display:none; margin-top:15px; color: var(--medium-gray);">No notes yet.</p></section></div>
             
-            <div id="noteModal"><div class="modal-content"><span class="close-modal" id="closeNoteModal" title="Close">×</span><h3 id="noteModalTitle">Note</h3><input type="hidden" id="noteIdInput"><div class="form-group"><label for="noteTitleInput">Title:</label><input type="text" id="noteTitleInput"></div><div class="form-group"><label for="noteContentInput">Content:</label><textarea id="noteContentInput"></textarea></div><button id="saveNoteButton" class="btn btn-success">Save</button><button id="deleteNoteButton" class="btn btn-danger" style="display:none; margin-left:10px;">Delete</button></div></div>
-            
-            <div id="editUserModal" class="edit-user-modal">
-                <div class="modal-content">
-                    <span class="close-modal" id="closeEditUserModal" title="Close">×</span>
-                    <h3 id="editUserModalTitle">Edit User Details</h3>
-                    <div id="editUserModalBody">
-                        <p class="user-details-item"><strong>Name:</strong> <span id="editModalUserName"></span></p>
-                        <p class="user-details-item"><strong>Email:</strong> <span id="editModalUserEmail"></span></p>
-                        <p class="user-details-item"><strong>System Status:</strong>
-                            <select id="editModalSystemStatus" class="status-override-select">
-                                <option value="active">Active</option>
-                                <option value="idle">Idle</option>
-                                <option value="offline">Offline</option>
-                            </select>
-                            <button id="saveSystemStatusOverride" class="btn btn-sm btn-primary" style="margin-left:5px;">Save Status</button>
-                        </p>
-                        <p class="user-details-item"><strong>Last Attendance:</strong> <span id="editModalLastAttendance"></span></p>
-                         <input type="hidden" id="editingUserId">
-                    </div>
-                    <div class="modal-actions">
-                        <button id="viewUserFullHistoryBtn" class="btn btn-primary">View Full Attendance History</button>
-                        <button id="toggleWhitelistBtn" class="btn btn-secondary">Manage Whitelist</button>
-                    </div>
-                </div>
-            </div>
-
             <div id="tab-admin" class="tab-content">
                 <div id="adminDashboardCodeEntry">
                     <h2><i class="fas fa-lock"></i> Admin Access</h2>
                     <p>Enter the admin code to unlock dashboard features.</p>
-                    <div class="form-group" style="max-width: 250px; margin-left:auto; margin-right:auto;">
-                        <label for="adminCodeInput" style="display:none;">Admin Code</label>
-                        <input type="password" id="adminCodeInput" placeholder="Enter Admin Code">
-                    </div>
+                    <div class="form-group" style="max-width: 250px; margin-left:auto; margin-right:auto;"><label for="adminCodeInput" style="display:none;">Admin Code</label><input type="password" id="adminCodeInput" placeholder="Enter Admin Code"></div>
                     <button id="unlockAdminDashboardButton" class="btn btn-primary">Unlock</button>
                 </div>
-
-                <div id="adminDashboardContent">
-                    <section class="card">
-                        <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
-                        <p>Centralized team tracking and administrative controls.</p>
-                    </section>
-
-                    <section class="card" id="adminTeamGallerySection">
-                        <h3><i class="fas fa-id-card-alt"></i> Team Status Gallery (Quick View)</h3>
-                        <div class="admin-team-gallery" id="adminTeamGallery">
-                            <p>Loading team status...</p>
-                        </div>
-                    </section>
-
+                <div id="adminDashboardContent" style="display:none;">
+                    <section class="card"><h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2><p>Centralized team tracking and administrative controls.</p></section>
+                    <section class="card" id="adminTeamGallerySection"><h3><i class="fas fa-id-card-alt"></i> Team Status Gallery (Quick View)</h3><div class="admin-team-gallery" id="adminTeamGallery"><p>Loading team status...</p></div></section>
                     <section class="card" id="adminEmailWhitelist">
-                        <h3><i class="fas fa-user-check"></i> Email Whitelist Management</h3>
-                        <p>Control which email addresses can access this application.</p>
+                        <h3><i class="fas fa-user-check"></i> Email Whitelist Management</h3><p>Control which email addresses can access this application.</p>
                         <form id="emailWhitelistForm" class="form-inline">
-                            <div class="form-group">
-                                <label for="emailToWhitelist">Email Address:</label>
-                                <input type="email" id="emailToWhitelist" placeholder="user@example.com" required>
-                            </div>
+                            <div class="form-group"><label for="emailToWhitelist">Email Address:</label><input type="email" id="emailToWhitelist" placeholder="user@example.com" required></div>
                             <button type="submit" class="btn btn-success btn-sm">Add to Whitelist</button>
                         </form>
-                        <h4 style="margin-top: 20px;">Currently Whitelisted Emails:</h4>
-                        <ul id="whitelistedEmailsList">
-                            <li>No emails whitelisted yet.</li>
-                        </ul>
+                        <h4 style="margin-top: 20px;">Currently Whitelisted Emails:</h4><ul id="whitelistedEmailsList"><li>No emails whitelisted yet.</li></ul>
                     </section>
-
-                     <section class="card" id="adminGlobalScheduler">
-                        <h3><i class="fas fa-calendar-alt"></i> Global Weekday Scheduler</h3>
-                        <p>Set official clock-in/out times for all users for each weekday. These apply team-wide.</p>
+                    <section class="card" id="adminGlobalScheduler">
+                        <h3><i class="fas fa-calendar-alt"></i> Global Weekday Scheduler</h3><p>Set official clock-in/out times for all users for each weekday.</p>
                         <form id="globalSchedulerForm">
-                            <table id="globalScheduleTable" style="width:100%; margin-bottom:15px;">
-                                <thead>
-                                    <tr><th>Day</th><th>Clock-In Time</th><th>Clock-Out Time</th></tr>
-                                </thead>
-                                <tbody id="globalScheduleTableBody"></tbody>
-                            </table>
+                            <table id="globalScheduleTable" style="width:100%; margin-bottom:15px;"><thead><tr><th>Day</th><th>Clock-In Time</th><th>Clock-Out Time</th></tr></thead><tbody id="globalScheduleTableBody"></tbody></table>
                             <button type="submit" class="btn btn-primary">Save Global Schedule</button>
                         </form>
                     </section>
-
-                     <section class="card" id="adminHistoricalAttendanceSection">
+                    <section class="card" id="adminHistoricalAttendanceSection">
                         <h3><i class="fas fa-history"></i> Historical Attendance Records</h3>
-                        <div class="form-group">
-                            <label for="adminHistoryUserSelect">Select User to View History:</label>
-                            <select id="adminHistoryUserSelect">
-                                <option value="">-- Select User --</option>
-                            </select>
-                        </div>
-                         <div class="filter-controls">
+                        <div class="form-group"><label for="adminHistoryUserSelect">Select User:</label><select id="adminHistoryUserSelect"><option value="">-- Select User --</option></select></div>
+                        <div class="filter-controls">
                             <div class="form-group"><label for="adminHistoryStartDate">Start Date:</label><input type="date" id="adminHistoryStartDate"></div>
                             <div class="form-group"><label for="adminHistoryEndDate">End Date:</label><input type="date" id="adminHistoryEndDate"></div>
                             <button id="adminApplyHistoryFilter" class="btn btn-primary">Fetch History</button>
                         </div>
                         <div id="adminAttendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Select a user and date range to view history.</p></div>
                     </section>
-
                     <section class="card" id="adminAnnouncements">
                         <h3><i class="fas fa-bullhorn"></i> Announcements Posting Tool</h3>
                         <form id="announcementForm">
-                            <div class="form-group">
-                                <label for="announcementTitle">Title:</label>
-                                <input type="text" id="announcementTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="announcementContent">Content:</label>
-                                <textarea id="announcementContent" required></textarea>
-                            </div>
+                            <div class="form-group"><label for="announcementTitle">Title:</label><input type="text" id="announcementTitle" required></div>
+                            <div class="form-group"><label for="announcementContent">Content:</label><textarea id="announcementContent" required></textarea></div>
                             <button type="submit" class="btn btn-primary">Post Announcement</button>
                         </form>
                         <h4 style="margin-top: 25px; border-top: 1px solid var(--medium-gray); padding-top: 15px;">Posted Announcements</h4>
-                        <ul id="postedAnnouncementsList">
-                            <li class="no-admin-announcements-item">No announcements posted yet.</li>
-                        </ul>
+                        <ul id="postedAnnouncementsList"><li class="no-admin-announcements-item">No announcements posted yet.</li></ul>
                     </section>
-
-                    <section class="card" id="adminBreakLog">
-                        <h3><i class="fas fa-coffee"></i> User Break Log Overview</h3>
-                        <p>Summary of user breaks recorded from Attendance Tracker (last 7 days).</p>
-                        <div id="adminUserBreakLogList">
-                            <p>No break data available yet or no users clocked in/out with breaks.</p>
-                        </div>
-                    </section>
+                    <section class="card" id="adminBreakLog"><h3><i class="fas fa-coffee"></i> User Break Log Overview</h3><p>Summary of user breaks (last 7 days).</p><div id="adminUserBreakLogList"><p>No break data available.</p></div></section>
                 </div> 
             </div>
+            
+            <!-- Modals -->
+            <div id="noteModal"><div class="modal-content"><span class="close-modal" id="closeNoteModal" title="Close">×</span><h3 id="noteModalTitle">Note</h3><input type="hidden" id="noteIdInput"><div class="form-group"><label for="noteTitleInput">Title:</label><input type="text" id="noteTitleInput"></div><div class="form-group"><label for="noteContentInput">Content:</label><textarea id="noteContentInput"></textarea></div><button id="saveNoteButton" class="btn btn-success">Save</button><button id="deleteNoteButton" class="btn btn-danger" style="display:none; margin-left:10px;">Delete</button></div></div>
+            <div id="editUserModal" class="edit-user-modal"><div class="modal-content"><span class="close-modal" id="closeEditUserModal" title="Close">×</span><h3 id="editUserModalTitle">Edit User Details</h3><div id="editUserModalBody"><p class="user-details-item"><strong>Name:</strong> <span id="editModalUserName"></span></p><p class="user-details-item"><strong>Email:</strong> <span id="editModalUserEmail"></span></p><p class="user-details-item"><strong>System Status:</strong><select id="editModalSystemStatus" class="status-override-select"><option value="active">Active</option><option value="idle">Idle</option><option value="offline">Offline</option></select><button id="saveSystemStatusOverride" class="btn btn-sm btn-primary" style="margin-left:5px;">Save Status</button></p><p class="user-details-item"><strong>Last Attendance:</strong> <span id="editModalLastAttendance"></span></p><input type="hidden" id="editingUserId"></div><div class="modal-actions"><button id="viewUserFullHistoryBtn" class="btn btn-primary">View Full Attendance History</button><button id="toggleWhitelistBtn" class="btn btn-secondary">Manage Whitelist</button></div></div></div>
 
         </main>
     </div>
 
+    <!-- Audio & Toast Notifications -->
     <audio id="generalNotificationSound" src="https://actions.google.com/sounds/v1/notifications/device_alert_simple.ogg" preload="auto"></audio>
     <div id="toastNotification" class="toast-notification"></div>
 
-
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
-        // ⚠️ CRITICAL SECURITY WARNING ⚠️
-        // The Firebase configuration keys below are publicly exposed.
-        // In a real application, this is a major security risk.
-        // Use environment variables and Firebase App Check for production.
-        const firebaseConfig = {
-            apiKey: "AIzaSyBMCqwIZL6cWvwuGa_yt9bBaJpf9KXRXY4", 
-            authDomain: "nitchiebotai.firebaseapp.com",
-            projectId: "nitchiebotai",
-            storageBucket: "nitchiebotai.firebasestorage.app",
-            messagingSenderId: "635455056920",
-            appId: "1:635455056920:web:bd3eac800dddadd47f276d"
-        };
+    // ⚠️ CRITICAL SECURITY WARNING ⚠️
+    // This configuration is publicly exposed. In a real application, this is a major security risk.
+    // Use environment variables and Firebase App Check for production.
+    const firebaseConfig = {
+        apiKey: "AIzaSyBMCqwIZL6cWvwuGa_yt9bBaJpf9KXRXY4",
+        authDomain: "nitchiebotai.firebaseapp.com",
+        projectId: "nitchiebotai",
+        storageBucket: "nitchiebotai.firebasestorage.app",
+        messagingSenderId: "635455056920",
+        appId: "1:635455056920:web:bd3eac800dddadd47f276d"
+    };
 
-        // --- GLOBAL APP STATE & CONFIG ---
-        let db, storage, auth;
-        let tasks = [];
-        let notes = [];
-        let notifications = [];
-        let unreadNotificationCount = 0;
-        let currentAuthUser = null;
-        let userIsAdmin = false;
-        let adminDashboardUnlocked = false;
-        let lastLogId = null;
-        let isOnBreak = false;
-        let currentBreakStartTime = null;
-        let unifiedUserList = [];
-        let currentTaskFilter = 'all';
-        let idleTimer; // Moved to global scope to prevent ReferenceError
-        const ADMIN_UID = 'HvSGRjmIidV79McjnQrDx5ni9Pt1'; // Hardcoded Admin User ID
-        const ADMIN_EMAIL = 'jamescarbelledo@gmail.com'; // Fallback admin email
+    // --- GLOBAL APP STATE & CONFIG ---
+    let db, storage, auth;
+    let tasks = [];
+    let notes = [];
+    let notifications = [];
+    let currentAuthUser = null;
+    let userIsAdmin = false;
+    let adminDashboardUnlocked = false;
+    let lastLogId = null;
+    let isOnBreak = false;
+    let currentBreakStartTime = null;
+    let currentTaskFilter = 'all';
+    let idleTimer; // Moved to global scope to prevent ReferenceError
+    const ADMIN_UID = 'HvSGRjmIidV79McjnQrDx5ni9Pt1';
+    const ADMIN_EMAIL = 'jamescarbelledo@gmail.com';
+
+    // --- INITIALIZATION ---
+    try {
+        if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            storage = firebase.storage();
+            auth = firebase.auth();
+            document.getElementById('sdkStatus').textContent = "Services Initialized. Please sign in.";
+            document.getElementById('loginWithGoogleButton').disabled = false;
+        } else {
+            throw new Error("Firebase SDK not loaded.");
+        }
+    } catch (e) {
+        console.error("Firebase initialization error:", e);
+        document.getElementById('sdkStatus').textContent = "Error: App services could not be initialized.";
+        document.getElementById('loginWithGoogleButton').disabled = true;
+    }
+
+    // --- HELPER & UTILITY FUNCTIONS ---
+    function showToast(message, type = 'info', duration = 3000) {
+        const toast = document.getElementById('toastNotification');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = 'toast-notification';
+        if (type === 'error') toast.classList.add('error');
+        else if (type === 'success') toast.classList.add('success');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    function getWhitelistedEmails() {
+        return JSON.parse(localStorage.getItem('whitelistedEmails')) || [ADMIN_EMAIL];
+    }
+    function saveWhitelistedEmails(emails) {
+        localStorage.setItem('whitelistedEmails', JSON.stringify(emails));
+    }
+    function isEmailWhitelisted(email) {
+        if (!email) return false;
+        const whitelist = getWhitelistedEmails();
+        return whitelist.includes(email.toLowerCase());
+    }
+
+    // --- AUTHENTICATION & STATE CHANGE HANDLERS ---
+    function handleSuccessfulLogin(user) {
+        currentAuthUser = user;
+        userIsAdmin = (user.uid === ADMIN_UID || user.email.toLowerCase() === ADMIN_EMAIL);
         
-        // --- INITIALIZATION ---
-        try {
-            if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                storage = firebase.storage();
-                auth = firebase.auth();
-                document.getElementById('sdkStatus').textContent = "Services Initialized. Please sign in.";
-                document.getElementById('loginWithGoogleButton').disabled = false;
-            } else {
-                throw new Error("Firebase SDK not loaded.");
-            }
-        } catch (e) {
-            console.error("Firebase initialization error:", e);
-            document.getElementById('sdkStatus').textContent = "Error: Application services could not be initialized.";
-            document.getElementById('loginWithGoogleButton').disabled = true;
-            document.getElementById('authError').textContent = "App setup error. Contact support.";
-        }
+        // Update UI state
+        document.getElementById('app-container').style.display = 'flex';
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('accessDeniedMessage').style.display = 'none';
+        document.getElementById('logoutButton').style.display = 'flex';
+        document.querySelector('.nav-item[data-tab="admin"]').style.display = userIsAdmin ? 'flex' : 'none';
         
-        // --- HELPER & UTILITY FUNCTIONS ---
-        function showToast(message, type = 'info', duration = 3000) { 
-            const toast = document.getElementById('toastNotification');
-            if (!toast) return;
-            toast.textContent = message;
-            toast.className = 'toast-notification'; 
-            if (type === 'error') toast.classList.add('error');
-            else if (type === 'success') toast.classList.add('success');
-            
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
+        loadDataForLoggedInUser();
+        resetIdleTimer();
+    }
 
-        function getWhitelistedEmails() { return JSON.parse(localStorage.getItem('whitelistedEmails')) || [ADMIN_EMAIL]; }
-        function saveWhitelistedEmails(emails) { localStorage.setItem('whitelistedEmails', JSON.stringify(emails)); }
-        function isEmailWhitelisted(email) {
-            const whitelist = getWhitelistedEmails();
-            return whitelist.includes(email);
-        }
+    function handleLogout() {
+        clearTimeout(idleTimer);
+        currentAuthUser = null;
+        userIsAdmin = false;
+        adminDashboardUnlocked = false;
 
-        // --- AUTHENTICATION & STATE CHANGE HANDLERS ---
-        function handleSuccessfulLogin(user) {
-            currentAuthUser = user;
-            userIsAdmin = (user.uid === ADMIN_UID || user.email === ADMIN_EMAIL);
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('loginContainer').style.display = 'flex';
+        
+        // Reset UI to default
+        document.getElementById('adminDashboardContent').style.display = 'none';
+        document.getElementById('adminDashboardCodeEntry').style.display = 'block';
+        document.getElementById('adminCodeInput').value = '';
+        document.getElementById('logoutButton').style.display = 'none';
+        document.querySelector('.nav-item[data-tab="admin"]').style.display = 'none';
+        document.getElementById('userProfilePopup').classList.remove('visible');
+        updateGreeting();
 
-            // Hide login, show app
-            document.getElementById('app-container').style.display = 'flex';
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('accessDeniedMessage').style.display = 'none';
-            
-            // Update UI with user info
-            document.getElementById('userNameDisplay').textContent = user.displayName || user.email.split('@')[0];
-            document.getElementById('userTitleDisplay').textContent = "Welcome back!";
-            document.querySelector('.user-greeting-card .profile-pic').innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user-check"></i>`;
-            document.getElementById('logoutButton').style.display = 'flex';
-            document.querySelector('.nav-item[data-tab="admin"]').style.display = userIsAdmin ? 'flex' : 'none';
-            document.getElementById('attendanceControls').style.display = 'block';
-            
-            // Load all necessary data
-            loadDataForLoggedInUser();
-            resetIdleTimer();
-        }
+        localStorage.removeItem('loggedInUserUID');
+    }
 
-        function handleLogout() {
-            clearTimeout(idleTimer);
-            currentAuthUser = null;
-            userIsAdmin = false;
-            adminDashboardUnlocked = false;
+    async function loadDataForLoggedInUser() {
+        if (!currentAuthUser) return;
+        localStorage.setItem('loggedInUserUID', currentAuthUser.uid);
+        updateGreeting();
+        await fetchLastAttendance();
+        await calculateHoursThisWeek();
+        loadTasks();
+        loadNotes();
+        loadGlobalScheduleForUser();
+        loadAndDisplayAnnouncements();
+        switchTab(localStorage.getItem('lastActiveTab') || 'home');
+    }
 
-            // Hide app, show login
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'flex';
-            
-            // Reset UI to default state
-            document.getElementById('adminDashboardContent').style.display = 'none';
-            document.getElementById('adminDashboardCodeEntry').style.display = 'block';
-            document.getElementById('adminCodeInput').value = '';
-            document.getElementById('userNameDisplay').textContent = "Guest";
-            document.getElementById('userTitleDisplay').textContent = "Please log in to access features.";
-            document.querySelector('.user-greeting-card .profile-pic').innerHTML = `<i class="fas fa-user"></i>`;
-            document.getElementById('logoutButton').style.display = 'none';
-            document.querySelector('.nav-item[data-tab="admin"]').style.display = 'none';
-            document.getElementById('userProfilePopup').classList.remove('visible');
-
-            // Clear sensitive local storage
-            localStorage.removeItem('loggedInUserUID');
-            localStorage.removeItem('lastActiveTab');
-        }
-
-        async function loadDataForLoggedInUser() {
-            const user = currentAuthUser;
-            localStorage.setItem('loggedInUserUID', user.uid);
-            updateGreeting();
-            await fetchLastAttendance();
-            await calculateHoursThisWeek();
-            loadTasks();
-            loadNotes();
-            updatePendingTasksCount();
-            loadGlobalScheduleForUser();
-            loadAndDisplayAnnouncements();
-            await initializeUnifiedUserList();
-            if (userIsAdmin) {
-                renderWhitelistedEmails();
-                renderGlobalScheduleForm();
-                loadGlobalSchedulesToForm();
-                populateAdminHistoryUserSelectWithUnifiedList();
-            }
-            switchTab(localStorage.getItem('lastActiveTab') || 'home');
-        }
-
-        if (auth) {
-            auth.onAuthStateChanged(user => { 
-                // CRITICAL FIX: Check for user and user.email before proceeding
-                if (!user || !user.email) {
-                    handleLogout();
-                    return;
-                }
-                
-                // CRITICAL FIX: Perform whitelisting check
+    if (auth) {
+        auth.onAuthStateChanged(user => {
+            if (user && user.email) {
                 if (!isEmailWhitelisted(user.email)) {
                     console.warn(`Access Denied: Email ${user.email} is not whitelisted.`);
                     document.getElementById('accessDeniedMessage').style.display = 'block';
-                    auth.signOut(); // Automatically sign out unauthorized user
-                    // handleLogout will be triggered by the signOut action
+                    auth.signOut();
                     return;
                 }
-                
-                // If all checks pass, proceed with login
                 handleSuccessfulLogin(user);
-            });
-        }
-
-        function signInWithGoogle() { 
-            if (!auth) { document.getElementById('authError').textContent = "Authentication service is not available."; return; } 
-            const provider = new firebase.auth.GoogleAuthProvider(); 
-            auth.signInWithPopup(provider).catch(err => { 
-                console.error("Google Sign-In Error:", err); 
-                document.getElementById('authError').textContent = `Sign-In Error: ${err.message}`; 
-            }); 
-        }
-
-        function signOutUser() { 
-            document.getElementById('userProfilePopup').classList.remove('visible');
-            if (auth) {
-                auth.signOut().catch(err => { 
-                    console.error("Sign Out Error:", err); 
-                    showToast(`Sign Out Error: ${err.message}`, "error"); 
-                });
+            } else {
+                handleLogout();
             }
-        }
-        
-        // --- DOMContentLoaded - MAIN APP LOGIC & EVENT LISTENERS ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Cache DOM elements that don't change
-            const mainThemeToggle = document.getElementById('mainThemeToggle');
-            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-            const logoutButton = document.getElementById('logoutButton');
-            const loginWithGoogleButton = document.getElementById('loginWithGoogleButton');
-
-            // Setup basic event listeners
-            loginWithGoogleButton.addEventListener('click', signInWithGoogle);
-            logoutButton.addEventListener('click', (e) => { e.preventDefault(); signOutUser(); });
-            mainThemeToggle.addEventListener('change', () => applyTheme(mainThemeToggle.checked ? 'dark' : 'light'));
-            navItems.forEach(i => i.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (i.id !== 'logoutButton') switchTab(i.dataset.tab);
-            }));
-            
-            // Initial UI setup
-            applyTheme(localStorage.getItem('theme') || 'light');
-            updateDashboardTime(); 
-            setInterval(updateDashboardTime, 30000);
-
-            // --- ALL OTHER EVENT LISTENERS FOR FUNCTIONALITY ---
-            setupEventListeners();
         });
+    }
 
-        function setupEventListeners() {
-            // This function is called once the DOM is loaded.
-            // It sets up listeners for all interactive elements in the app.
-            
-            // User Profile & Notification Popups
-            document.getElementById('userGreetingProfilePicTrigger').addEventListener('click', () => {
-                if (!currentAuthUser) return;
-                const userProfilePopup = document.getElementById('userProfilePopup');
-                document.getElementById('popupUserName').textContent = currentAuthUser.displayName || currentAuthUser.email.split('@')[0];
-                document.getElementById('popupUserEmail').textContent = currentAuthUser.email;
-                document.getElementById('popupUserProfilePic').src = currentAuthUser.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>';
-                userProfilePopup.classList.toggle('visible');
-            });
-            document.getElementById('popupSignOutButton').addEventListener('click', signOutUser);
-            document.getElementById('notificationBellIcon').addEventListener('click', () => document.getElementById('notificationsDropdownContainer').classList.toggle('visible'));
-            document.getElementById('markAllNotificationsRead').addEventListener('click', (e) => {
-                e.preventDefault();
-                notifications = [];
-                renderNotifications();
-                showToast("All notifications cleared.", "success");
-            });
-
-            // Attendance Controls
-            document.getElementById('clockInButton').addEventListener('click', clockIn);
-            document.getElementById('clockOutButton').addEventListener('click', clockOut);
-            document.getElementById('pauseBreakButton').addEventListener('click', pauseBreak);
-            document.getElementById('resumeWorkButton').addEventListener('click', resumeWork);
-            document.getElementById('applyHistoryFilter').addEventListener('click', () => {
-                const startDate = document.getElementById('historyStartDate').value;
-                const endDate = document.getElementById('historyEndDate').value;
-                fetchFullAttendanceHistory(currentAuthUser.uid, null, null, startDate, endDate);
-            });
-
-            // Task Management
-            const addTaskButton = document.getElementById('addTaskButton');
-            addTaskButton.addEventListener('click', () => {
-                const text = document.getElementById('newTaskInput').value.trim();
-                if (text) {
-                    tasks.unshift({ id: Date.now(), text: text, completed: false });
-                    saveTasks();
-                    renderTasks();
-                    document.getElementById('newTaskInput').value = '';
-                    showToast('Task added!', 'success');
-                }
-            });
-            document.getElementById('newTaskInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') addTaskButton.click(); });
-            document.getElementById('taskList').addEventListener('click', e => {
-                const li = e.target.closest('li');
-                if (!li || !li.dataset.id) return;
-                const taskId = Number(li.dataset.id);
-                if (e.target.type === 'checkbox') {
-                    const task = tasks.find(t => t.id === taskId);
-                    if(task) task.completed = e.target.checked;
-                    saveTasks();
-                    renderTasks();
-                }
-                if (e.target.closest('.task-delete-btn')) {
-                    tasks = tasks.filter(t => t.id !== taskId);
-                    saveTasks();
-                    renderTasks();
-                    showToast('Task deleted.', 'info');
-                }
-            });
-            document.querySelector('.task-filters').addEventListener('click', e => {
-                if (e.target.tagName === 'BUTTON') {
-                    currentTaskFilter = e.target.dataset.filter;
-                    document.querySelectorAll('.task-filters .btn').forEach(btn => {
-                        btn.classList.remove('active', 'btn-primary');
-                        btn.classList.add('btn-secondary');
-                    });
-                    e.target.classList.add('active', 'btn-primary');
-                    e.target.classList.remove('btn-secondary');
-                    renderTasks();
-                }
-            });
-
-            // Notes Management
-            document.getElementById('createNewNoteButton').addEventListener('click', () => openNoteModal());
-            document.getElementById('closeNoteModal').addEventListener('click', () => document.getElementById('noteModal').classList.remove('visible'));
-            document.getElementById('notesList').addEventListener('click', e => {
-                const noteId = e.target.dataset.id;
-                if (noteId) {
-                    const note = notes.find(n => n.id == noteId);
-                    if(note) openNoteModal(note);
-                }
-            });
-            document.getElementById('saveNoteButton').addEventListener('click', () => {
-                const id = document.getElementById('noteIdInput').value;
-                const title = document.getElementById('noteTitleInput').value.trim();
-                const content = document.getElementById('noteContentInput').value.trim();
-                if (!title) { showToast('Note title cannot be empty.', 'error'); return; }
-                if (id) {
-                    const note = notes.find(n => n.id == id);
-                    if(note) { note.title = title; note.content = content; }
-                } else {
-                    notes.unshift({ id: Date.now(), title, content });
-                }
-                saveNotes();
-                renderNotesList();
-                document.getElementById('noteModal').classList.remove('visible');
-                showToast(id ? 'Note updated!' : 'Note saved!', 'success');
-            });
-            document.getElementById('deleteNoteButton').addEventListener('click', () => {
-                if (confirm('Are you sure you want to delete this note?')) {
-                    const id = document.getElementById('noteIdInput').value;
-                    notes = notes.filter(n => n.id != id);
-                    saveNotes();
-                    renderNotesList();
-                    document.getElementById('noteModal').classList.remove('visible');
-                    showToast('Note deleted.', 'info');
-                }
-            });
-            
-            // Admin Functionality
-            const unlockAdminDashboardButton = document.getElementById('unlockAdminDashboardButton');
-            unlockAdminDashboardButton.addEventListener('click', async () => {
-                const enteredCode = document.getElementById('adminCodeInput').value;
-                if (enteredCode === '7777') { // Admin code as requested
-                    adminDashboardUnlocked = true;
-                    document.getElementById('adminDashboardCodeEntry').style.display = 'none';
-                    document.getElementById('adminDashboardContent').style.display = 'block';
-                    showToast('Admin Dashboard Unlocked!', 'success');
-                    // Load admin data now that it's unlocked
-                    await initializeUnifiedUserList();
-                    await loadAdminData();
-                } else {
-                    showToast('Incorrect Admin Code.', 'error');
-                    document.getElementById('adminCodeInput').value = '';
-                }
-            });
-            document.getElementById('adminCodeInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') unlockAdminDashboardButton.click(); });
-            
-            document.getElementById('emailWhitelistForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const emailInput = document.getElementById('emailToWhitelist');
-                const email = emailInput.value.trim().toLowerCase();
-                if (email) {
-                    let emails = getWhitelistedEmails();
-                    if (!emails.includes(email)) {
-                        emails.push(email);
-                        saveWhitelistedEmails(emails);
-                        renderWhitelistedEmails();
-                        emailInput.value = '';
-                        showToast(`${email} added to whitelist.`, 'success');
-                    } else {
-                        showToast(`${email} is already on the list.`, 'warning');
-                    }
-                }
-            });
-
-            document.getElementById('announcementForm').addEventListener('submit', postAnnouncement);
-            document.getElementById('globalSchedulerForm').addEventListener('submit', saveGlobalSchedule);
+    function signInWithGoogle() {
+        if (!auth) {
+            showToast("Authentication service is not available.", "error");
+            return;
         }
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).catch(err => {
+            console.error("Google Sign-In Error:", err);
+            showToast(`Sign-In Error: ${err.message}`, "error");
+        });
+    }
 
-        // --- All the other function definitions (clockIn, renderTasks, etc.) go here ---
-        // (The full function bodies from the previous response would be pasted in this section)
-        // ...
-        // ... (example: async function clockIn() { ...full code... })
-        // ... (example: function renderTasks() { ...full code... })
-        // ... All functions are defined here to be accessible by the event listeners
+    function signOutUser() {
+        if (auth) auth.signOut().catch(err => showToast(`Sign Out Error: ${err.message}`, "error"));
+    }
+    
+    // --- UI/DOM EVENT LISTENERS (ATTACHED ONCE) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('loginWithGoogleButton').addEventListener('click', signInWithGoogle);
+        document.getElementById('logoutButton').addEventListener('click', (e) => { e.preventDefault(); signOutUser(); });
+        document.getElementById('mainThemeToggle').addEventListener('change', (e) => applyTheme(e.target.checked ? 'dark' : 'light'));
         
-        async function clockIn() { /* Full implementation */ }
-        async function clockOut() { /* Full implementation */ }
-        async function pauseBreak() { /* Full implementation */ }
-        async function resumeWork() { /* Full implementation */ }
-        function openNoteModal(note = null) {
-            const noteModal = document.getElementById('noteModal');
-            if (note) {
-                document.getElementById('noteIdInput').value = note.id;
-                document.getElementById('noteTitleInput').value = note.title;
-                document.getElementById('noteContentInput').value = note.content;
-                document.getElementById('noteModalTitle').textContent = 'Edit Note';
-                document.getElementById('deleteNoteButton').style.display = 'inline-block';
-            } else {
-                document.getElementById('noteIdInput').value = '';
-                document.getElementById('noteTitleInput').value = '';
-                document.getElementById('noteContentInput').value = '';
-                document.getElementById('noteModalTitle').textContent = 'Create New Note';
-                document.getElementById('deleteNoteButton').style.display = 'none';
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => {
+            if (i.id !== 'logoutButton') {
+                i.addEventListener('click', (e) => { e.preventDefault(); switchTab(i.dataset.tab); });
             }
-            noteModal.classList.add('visible');
-        }
-        function saveTasks() { if(currentAuthUser) localStorage.setItem(`tasks_${currentAuthUser.uid}`, JSON.stringify(tasks)); }
-        function loadTasks() { tasks = JSON.parse(localStorage.getItem(`tasks_${currentAuthUser.uid}`)) || []; renderTasks(); }
-        function saveNotes() { if(currentAuthUser) localStorage.setItem(`notes_${currentAuthUser.uid}`, JSON.stringify(notes)); }
-        function loadNotes() { notes = JSON.parse(localStorage.getItem(`notes_${currentAuthUser.uid}`)) || []; renderNotesList(); }
-        function renderTasks() {
-            const taskListUL = document.getElementById('taskList');
-            taskListUL.innerHTML = '';
-            const filteredTasks = tasks.filter(task => {
-                if (currentTaskFilter === 'active') return !task.completed;
-                if (currentTaskFilter === 'completed') return task.completed;
-                return true;
-            });
+        });
+        
+        setupInteractiveEventListeners();
+        applyTheme(localStorage.getItem('theme') || 'light');
+        updateDashboardTime();
+        setInterval(updateDashboardTime, 30000);
+    });
 
-            if (filteredTasks.length === 0) {
-                taskListUL.innerHTML = '<li>No tasks here.</li>';
-            } else {
-                filteredTasks.forEach(task => {
-                    const li = document.createElement('li');
-                    li.dataset.id = task.id;
-                    li.innerHTML = `
-                        <input type="checkbox" ${task.completed ? 'checked' : ''}>
-                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
-                        <button class="task-delete-btn"><i class="fas fa-trash-alt"></i></button>
-                    `;
-                    taskListUL.appendChild(li);
-                });
+    function setupInteractiveEventListeners() {
+        // Popups
+        document.getElementById('userGreetingProfilePicTrigger').addEventListener('click', toggleProfilePopup);
+        document.getElementById('popupSignOutButton').addEventListener('click', signOutUser);
+        document.getElementById('notificationBellIcon').addEventListener('click', () => document.getElementById('notificationsDropdownContainer').classList.toggle('visible'));
+        document.getElementById('markAllNotificationsRead').addEventListener('click', clearAllNotifications);
+        document.addEventListener('click', closePopupsOnOutsideClick);
+
+        // Attendance
+        document.getElementById('clockInButton').addEventListener('click', clockIn);
+        document.getElementById('clockOutButton').addEventListener('click', clockOut);
+        document.getElementById('pauseBreakButton').addEventListener('click', startBreak);
+        document.getElementById('resumeWorkButton').addEventListener('click', resumeWork);
+        document.getElementById('applyHistoryFilter').addEventListener('click', applyUserHistoryFilter);
+
+        // Tasks
+        const addTaskButton = document.getElementById('addTaskButton');
+        addTaskButton.addEventListener('click', addTask);
+        document.getElementById('newTaskInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') addTask(); });
+        document.getElementById('taskList').addEventListener('click', handleTaskActions);
+        document.querySelector('.task-filters').addEventListener('click', handleTaskFilter);
+
+        // Notes
+        document.getElementById('createNewNoteButton').addEventListener('click', () => openNoteModal());
+        document.getElementById('closeNoteModal').addEventListener('click', () => document.getElementById('noteModal').classList.remove('visible'));
+        document.getElementById('notesList').addEventListener('click', (e) => {
+            const noteId = e.target.closest('li')?.dataset.id;
+            if (noteId) {
+                const note = notes.find(n => n.id == noteId);
+                if (note) openNoteModal(note);
             }
-            updatePendingTasksCount();
+        });
+        document.getElementById('saveNoteButton').addEventListener('click', saveNote);
+        document.getElementById('deleteNoteButton').addEventListener('click', deleteNote);
+
+        // Admin
+        const unlockAdminBtn = document.getElementById('unlockAdminDashboardButton');
+        unlockAdminBtn.addEventListener('click', unlockAdminDashboard);
+        document.getElementById('adminCodeInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') unlockAdminDashboard(); });
+        document.getElementById('emailWhitelistForm').addEventListener('submit', addEmailToWhitelist);
+        document.getElementById('announcementForm').addEventListener('submit', postAnnouncement);
+        document.getElementById('globalSchedulerForm').addEventListener('submit', saveGlobalSchedule);
+        document.getElementById('adminApplyHistoryFilter').addEventListener('click', applyAdminHistoryFilter);
+    }
+
+    // --- CORE FUNCTION IMPLEMENTATIONS ---
+
+    // UI State & Popups
+    function applyTheme(theme) { document.body.dataset.theme = theme; localStorage.setItem('theme', theme); }
+    function updateGreeting() { const h = new Date().getHours(); let gt = h < 12 ? "Good Morning" : h < 18 ? "Good Afternoon" : "Good Evening"; const name = currentAuthUser ? (currentAuthUser.displayName || currentAuthUser.email.split('@')[0]) : "Guest"; document.getElementById('dynamicGreeting').innerHTML = `${gt}, <span id="userNameForGreeting">${name}</span>!`; }
+    function updateDashboardTime() { const n = new Date(); document.getElementById('dashboardCurrentTime').textContent = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); document.getElementById('dashboardCurrentDate').textContent = n.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' }); }
+    function toggleProfilePopup() { if(currentAuthUser) document.getElementById('userProfilePopup').classList.toggle('visible'); }
+    function closePopupsOnOutsideClick(event) {
+        const userPopup = document.getElementById('userProfilePopup');
+        if (userPopup.classList.contains('visible') && !userPopup.contains(event.target) && !document.getElementById('userGreetingProfilePicTrigger').contains(event.target)) {
+            userPopup.classList.remove('visible');
         }
-        function updatePendingTasksCount() {
-            const pendingCount = tasks.filter(t => !t.completed).length;
-            document.getElementById('pendingTasksCount').textContent = pendingCount;
+        const notifPopup = document.getElementById('notificationsDropdownContainer');
+        if (notifPopup.classList.contains('visible') && !notifPopup.contains(event.target) && !document.getElementById('notificationBellIcon').contains(event.target)) {
+            notifPopup.classList.remove('visible');
         }
-        function renderNotesList() {
-            const notesListUL = document.getElementById('notesList');
-            notesListUL.innerHTML = '';
-            document.getElementById('noNotesMessage').style.display = notes.length === 0 ? 'block' : 'none';
-            notes.forEach(note => {
-                const li = document.createElement('li');
-                li.dataset.id = note.id;
-                li.textContent = note.title;
-                notesListUL.appendChild(li);
-            });
-        }
-        function renderNotifications() {
-             const dynamicNotificationList = document.getElementById('dynamicNotificationList');
-             const notificationCountBadge = document.getElementById('notificationCountBadge');
-             dynamicNotificationList.innerHTML = '';
-             if (notifications.length === 0) {
-                 dynamicNotificationList.innerHTML = '<li class="no-notifications-item">No new notifications.</li>';
-             } else {
-                 notifications.slice(0, 10).forEach(n => {
-                     const li = document.createElement('li');
-                     li.innerHTML = `<span class="notification-summary">${n.summary}</span><span class="notification-time">${new Date(n.timestamp).toLocaleString()}</span>`;
-                     li.onclick = () => { n.action(); document.getElementById('notificationsDropdownContainer').classList.remove('visible'); };
-                     dynamicNotificationList.appendChild(li);
-                 });
-             }
-             unreadNotificationCount = notifications.length;
-             notificationCountBadge.textContent = unreadNotificationCount;
-             notificationCountBadge.style.display = unreadNotificationCount > 0 ? 'flex' : 'none';
-        }
-        function updateGreeting() { const h = new Date().getHours(); let gt = h < 12 ? "Good Morning" : h < 18 ? "Good Afternoon" : "Good Evening"; document.getElementById('dynamicGreeting').innerHTML = `${gt}, <span id="userNameForGreeting">${currentAuthUser ? (currentAuthUser.displayName || currentAuthUser.email.split('@')[0]) : 'Guest'}</span>!`; }
-        function updateDashboardTime() { const n = new Date(); document.getElementById('dashboardCurrentTime').textContent = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); document.getElementById('dashboardCurrentDate').textContent = n.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });}
-        function applyTheme(th) { document.body.dataset.theme = th; localStorage.setItem('theme', th); document.getElementById('mainThemeToggle').checked = th === 'dark'; }
-        async function switchTab(targetTabId) {
-             if (!currentAuthUser && targetTabId !== 'login' && targetTabId !== 'home') { return; }
-             if (targetTabId === 'admin' && !userIsAdmin) { showToast("Access Denied: Admin dashboard is restricted.", "error"); return; }
-             document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.toggle('active', i.dataset.tab === targetTabId));
-             document.querySelectorAll('.main-content .tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${targetTabId}`));
-             localStorage.setItem('lastActiveTab', targetTabId);
-             if (targetTabId === 'admin' && userIsAdmin && adminDashboardUnlocked) { await loadAdminData(); }
-        }
-        async function loadAdminData() {
-            await initializeUnifiedUserList();
-            loadAdminAnnouncements();
-            await renderAdminTeamGallery();
-            loadGlobalSchedulesToForm();
-            loadAdminBreakLogs();
-            renderWhitelistedEmails();
-            populateAdminHistoryUserSelectWithUnifiedList();
-        }
-        function resetIdleTimer() { clearTimeout(idleTimer); idleTimer = setTimeout(setCurrentUserToIdle, 10 * 60 * 1000); }
-        function setCurrentUserToIdle() { /* Implementation for idle status */ }
+    }
+    
+    // Notifications
+    function addNotification(type, summary, action = () => {}) { if (notifications.length > 50) notifications.pop(); notifications.unshift({ type, summary, timestamp: Date.now(), action }); renderNotifications(); try { document.getElementById('generalNotificationSound').play(); } catch(e) {} }
+    function renderNotifications() { const list = document.getElementById('dynamicNotificationList'); list.innerHTML = ''; if (notifications.length === 0) { list.innerHTML = '<li class="no-notifications-item">No new notifications.</li>'; } else { notifications.forEach(n => { const li = document.createElement('li'); li.innerHTML = `<span class="notification-summary">${n.summary}</span><span class="notification-time">${new Date(n.timestamp).toLocaleString()}</span>`; li.onclick = () => { n.action(); document.getElementById('notificationsDropdownContainer').classList.remove('visible'); }; list.appendChild(li); }); } document.getElementById('notificationCountBadge').textContent = notifications.length; document.getElementById('notificationCountBadge').style.display = notifications.length > 0 ? 'flex' : 'none'; }
+    function clearAllNotifications(e) { e.preventDefault(); notifications = []; renderNotifications(); showToast("All notifications cleared.", "success"); }
+
+    // Tab Switching
+    async function switchTab(targetTabId) {
+        if (!currentAuthUser && targetTabId !== 'home') return;
+        if (targetTabId === 'admin' && !userIsAdmin) { showToast("Access Denied: Admin dashboard is restricted.", "error"); return; }
         
-        // Placeholder for functions that would have full implementations
-        async function fetchLastAttendance() {}
-        async function calculateHoursThisWeek() {}
-        async function loadGlobalScheduleForUser() {}
-        async function loadAndDisplayAnnouncements() {}
-        async function initializeUnifiedUserList() {}
-        async function fetchFullAttendanceHistory() {}
-        async function postAnnouncement() {}
-        async function saveGlobalSchedule() {}
-        function renderWhitelistedEmails() {}
-        async function loadAdminAnnouncements() {}
-        async function renderAdminTeamGallery() {}
-        function loadGlobalSchedulesToForm() {}
-        async function loadAdminBreakLogs() {}
-        function populateAdminHistoryUserSelectWithUnifiedList() {}
-        function renderGlobalScheduleForm() {}
-        
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.toggle('active', i.dataset.tab === targetTabId));
+        document.querySelectorAll('.main-content .tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${targetTabId}`));
+        localStorage.setItem('lastActiveTab', targetTabId);
+
+        if (targetTabId === 'team' && currentAuthUser) await loadAndRenderTeamOverview();
+        if (targetTabId === 'admin' && userIsAdmin && adminDashboardUnlocked) await loadAdminData();
+    }
+    
+    // Idle Timer
+    function resetIdleTimer() { clearTimeout(idleTimer); idleTimer = setTimeout(setCurrentUserToIdle, 10 * 60 * 1000); }
+    function setCurrentUserToIdle() { showToast("You've been marked as idle due to inactivity.", "warning"); }
+
+    // Attendance
+    async function clockIn() { if(!currentAuthUser || !db) return; const now = new Date(); let isLateClockIn = false; /* ... add schedule check logic ... */ try { const tS = firebase.firestore.Timestamp.now(); await db.collection("attendanceLogs").add({ employeeId: currentAuthUser.uid, employeeName: currentAuthUser.displayName || currentAuthUser.email, clockInTime: tS, isLate: isLateClockIn, status: "clocked_in", breaks: [] }); showToast(`Successfully Clocked In! ${isLateClockIn ? '(LATE)' : ''}`, isLateClockIn ? 'warning' : 'success'); fetchLastAttendance(); } catch (err) { showToast("Error clocking in: " + err.message, "error"); }}
+    async function clockOut() { if(!currentAuthUser || !db || !lastLogId) return; if(isOnBreak) { showToast("Please resume work before clocking out.", "warning"); return; } try { const tS = firebase.firestore.Timestamp.now(); const logRef = db.collection("attendanceLogs").doc(lastLogId); const doc = await logRef.get(); if(doc.exists && !doc.data().clockOutTime) { await logRef.update({ clockOutTime:tS, status:"clocked_out" }); showToast("Successfully Clocked Out!", "success"); fetchLastAttendance(); } } catch (err) { showToast("Error clocking out: " + err.message, "error"); }}
+    async function startBreak() { if (!currentAuthUser || !db || !lastLogId || isOnBreak) return; currentBreakStartTime = firebase.firestore.Timestamp.now(); const newBreak = { startTime: currentBreakStartTime, endTime: null }; try { await db.collection("attendanceLogs").doc(lastLogId).update({ status: "on_break", breaks: firebase.firestore.FieldValue.arrayUnion(newBreak) }); showToast("Break started.", "info"); fetchLastAttendance(); } catch(err){ showToast("Error starting break: " + err.message, "error"); }}
+    async function resumeWork() { if (!currentAuthUser || !db || !lastLogId || !isOnBreak) return; try { const logRef = db.collection("attendanceLogs").doc(lastLogId); const doc = await logRef.get(); if(doc.exists) { const breaks = doc.data().breaks || []; const lastBreak = breaks.find(b => b.endTime === null); if(lastBreak) lastBreak.endTime = firebase.firestore.Timestamp.now(); await logRef.update({ status: "clocked_in", breaks: breaks }); showToast("Work resumed.", "info"); fetchLastAttendance(); } } catch (err) { showToast("Error resuming work: " + err.message, "error"); }}
+    async function fetchLastAttendance() { if (!currentAuthUser || !db) return; try { const qS = await db.collection("attendanceLogs").where("employeeId", "==", currentAuthUser.uid).orderBy("clockInTime", "desc").limit(1).get(); if (!qS.empty) { const log = qS.docs[0].data(); lastLogId = qS.docs[0].id; const isClockedIn = !log.clockOutTime; document.getElementById('lastActionStatus').textContent = isClockedIn ? "Clocked In" : "Clocked Out"; document.getElementById('lastActionTime').textContent = (isClockedIn ? log.clockInTime : log.clockOutTime).toDate().toLocaleString(); document.getElementById('clockInButton').disabled = isClockedIn; document.getElementById('clockOutButton').disabled = !isClockedIn; document.getElementById('pauseBreakButton').disabled = !isClockedIn; isOnBreak = log.status === 'on_break'; document.getElementById('pauseBreakButton').style.display = isOnBreak ? 'none' : 'inline-block'; document.getElementById('resumeWorkButton').style.display = isOnBreak ? 'inline-block' : 'none'; if(isOnBreak) document.getElementById('clockOutButton').disabled = true; } else { /* Reset UI for no records */ document.getElementById('clockInButton').disabled = false; document.getElementById('clockOutButton').disabled = true; document.getElementById('pauseBreakButton').disabled = true;} } catch(e) { console.error(e); } }
+    async function calculateHoursThisWeek() { /* Logic to fetch logs and sum hours */ }
+    function applyUserHistoryFilter() { const start = document.getElementById('historyStartDate').value; const end = document.getElementById('historyEndDate').value; fetchFullAttendanceHistory(currentAuthUser.uid, document.getElementById('attendanceHistoryLog'), document.getElementById('historyChartContainer'), start, end); }
+    async function fetchFullAttendanceHistory(uid, logDiv, chartDiv, startDate, endDate) { /* Logic to fetch and display history */ }
+
+    // Tasks
+    function addTask() { const input = document.getElementById('newTaskInput'); if(input.value.trim()){ tasks.unshift({id: Date.now(), text: input.value.trim(), completed: false}); saveTasks(); renderTasks(); input.value = ''; showToast('Task added!', 'success'); } }
+    function saveTasks() { if(currentAuthUser) localStorage.setItem(`tasks_${currentAuthUser.uid}`, JSON.stringify(tasks)); }
+    function loadTasks() { tasks = JSON.parse(localStorage.getItem(`tasks_${currentAuthUser.uid}`)) || []; renderTasks(); }
+    function renderTasks() { const list = document.getElementById('taskList'); list.innerHTML = ''; const filtered = tasks.filter(t => currentTaskFilter === 'all' || (currentTaskFilter === 'active' && !t.completed) || (currentTaskFilter === 'completed' && t.completed)); if(filtered.length === 0) { list.innerHTML = '<li>No tasks here.</li>'; } else { filtered.forEach(t => { const li = document.createElement('li'); li.dataset.id = t.id; li.innerHTML = `<input type="checkbox" ${t.completed ? 'checked' : ''}><span class="task-text ${t.completed ? 'completed' : ''}">${t.text}</span><button class="task-delete-btn"><i class="fas fa-trash-alt"></i></button>`; list.appendChild(li); }); } updatePendingTasksCount(); }
+    function updatePendingTasksCount() { const count = tasks.filter(t => !t.completed).length; document.getElementById('pendingTasksCount').textContent = count; }
+    function handleTaskActions(e) { const li = e.target.closest('li'); if(!li) return; const id = Number(li.dataset.id); if(e.target.type === 'checkbox') { const task = tasks.find(t=>t.id === id); if(task) task.completed = e.target.checked; } if(e.target.closest('.task-delete-btn')) { tasks = tasks.filter(t=>t.id !== id); showToast('Task deleted.', 'info'); } saveTasks(); renderTasks(); }
+    function handleTaskFilter(e) { if(e.target.tagName !== 'BUTTON') return; currentTaskFilter = e.target.dataset.filter; document.querySelectorAll('.task-filters .btn').forEach(b => b.classList.remove('active', 'btn-primary') || b.classList.add('btn-secondary')); e.target.classList.add('active', 'btn-primary'); e.target.classList.remove('btn-secondary'); renderTasks(); }
+
+    // Notes
+    function openNoteModal(note=null) { const modal = document.getElementById('noteModal'); const delBtn = document.getElementById('deleteNoteButton'); if(note){ document.getElementById('noteIdInput').value=note.id; document.getElementById('noteTitleInput').value=note.title; document.getElementById('noteContentInput').value=note.content; document.getElementById('noteModalTitle').textContent='Edit Note'; delBtn.style.display='inline-block'; } else { document.getElementById('noteIdInput').value=''; document.getElementById('noteTitleInput').value=''; document.getElementById('noteContentInput').value=''; document.getElementById('noteModalTitle').textContent='Create New Note'; delBtn.style.display='none'; } modal.classList.add('visible'); }
+    function saveNote() { const id = document.getElementById('noteIdInput').value; const title = document.getElementById('noteTitleInput').value.trim(); const content = document.getElementById('noteContentInput').value.trim(); if(!title) { showToast('Title is required.', 'error'); return; } if(id) { const note = notes.find(n=>n.id==id); if(note){note.title=title; note.content=content;} } else { notes.unshift({id:Date.now(), title, content}); } saveNotes(); renderNotesList(); document.getElementById('noteModal').classList.remove('visible'); showToast(id ? 'Note Updated' : 'Note Saved', 'success'); }
+    function deleteNote() { if(!confirm('Are you sure?')) return; const id = document.getElementById('noteIdInput').value; notes = notes.filter(n=>n.id!=id); saveNotes(); renderNotesList(); document.getElementById('noteModal').classList.remove('visible'); showToast('Note Deleted', 'info'); }
+    function saveNotes() { if(currentAuthUser) localStorage.setItem(`notes_${currentAuthUser.uid}`, JSON.stringify(notes)); }
+    function loadNotes() { notes = JSON.parse(localStorage.getItem(`notes_${currentAuthUser.uid}`)) || []; renderNotesList(); }
+    function renderNotesList() { const list = document.getElementById('notesList'); list.innerHTML=''; document.getElementById('noNotesMessage').style.display = notes.length === 0 ? 'block' : 'none'; notes.forEach(n=>{ const li=document.createElement('li'); li.dataset.id=n.id; li.textContent=n.title; list.appendChild(li); }); }
+
+    // Admin
+    async function unlockAdminDashboard() { if(document.getElementById('adminCodeInput').value === '7777'){ adminDashboardUnlocked = true; document.getElementById('adminDashboardCodeEntry').style.display = 'none'; document.getElementById('adminDashboardContent').style.display = 'block'; showToast('Admin Dashboard Unlocked!', 'success'); await loadAdminData(); } else { showToast('Incorrect Admin Code.', 'error'); } }
+    async function loadAdminData() { if(!userIsAdmin || !adminDashboardUnlocked) return; await loadAndRenderTeamOverview(); loadAdminAnnouncements(); loadGlobalSchedulesToForm(); loadAdminBreakLogs(); renderWhitelistedEmails(); populateAdminHistoryUserSelect(); }
+    function addEmailToWhitelist(e) { e.preventDefault(); const input = document.getElementById('emailToWhitelist'); const email = input.value.trim().toLowerCase(); if(email){ let emails = getWhitelistedEmails(); if(!emails.includes(email)){ emails.push(email); saveWhitelistedEmails(emails); renderWhitelistedEmails(); input.value = ''; showToast('Email added to whitelist.', 'success'); } else { showToast('Email is already whitelisted.', 'warning'); } } }
+    function renderWhitelistedEmails() { const list = document.getElementById('whitelistedEmailsList'); list.innerHTML=''; getWhitelistedEmails().forEach(email => { const li = document.createElement('li'); li.textContent=email; if(email.toLowerCase() !== ADMIN_EMAIL) { const btn = document.createElement('button'); btn.className='delete-item'; btn.innerHTML='<i class="fas fa-trash-alt"></i>'; btn.onclick=()=>{ let emails=getWhitelistedEmails().filter(e=>e!==email); saveWhitelistedEmails(emails); renderWhitelistedEmails(); showToast('Email removed.', 'info'); }; li.appendChild(btn); } list.appendChild(li); }); }
+    async function postAnnouncement(e) { e.preventDefault(); const title = document.getElementById('announcementTitle').value; const content = document.getElementById('announcementContent').value; try { await db.collection('announcements').add({title, content, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); showToast('Announcement posted!', 'success'); e.target.reset(); loadAdminAnnouncements(); } catch(err){ showToast('Failed to post.', 'error'); }}
+    async function saveGlobalSchedule(e) { e.preventDefault(); const schedule = {}; document.querySelectorAll('#globalScheduleTableBody tr').forEach(row => { const day = row.id.replace('day-', ''); const start = row.querySelector('input[name="startTime"]').value; const end = row.querySelector('input[name="endTime"]').value; schedule[day] = {startTime: start, endTime: end}; }); localStorage.setItem('globalSchedules', JSON.stringify(schedule)); showToast('Global schedule saved!', 'success'); }
+    function applyAdminHistoryFilter() { const uid = document.getElementById('adminHistoryUserSelect').value; if(!uid) { showToast('Please select a user.', 'warning'); return; } const start = document.getElementById('adminHistoryStartDate').value; const end = document.getElementById('adminHistoryEndDate').value; fetchFullAttendanceHistory(uid, document.getElementById('adminAttendanceHistoryLog'), null, start, end); }
+    
+    // Admin Data Loading
+    async function loadAndDisplayAnnouncements() { /* Logic to fetch and display announcements */ }
+    async function loadAdminAnnouncements() { /* Logic to fetch and display admin announcement list */ }
+    async function loadGlobalScheduleForUser() { /* Logic to load and display user's schedule */ }
+    function loadGlobalSchedulesToForm() { /* Logic to populate admin scheduler form */ }
+    async function loadAdminBreakLogs() { /* Logic to fetch and display break logs */ }
+    async function loadAndRenderTeamOverview() { /* Logic to fetch all user data and render team view */ }
+    function populateAdminHistoryUserSelect() { /* Logic to populate user dropdown for history view */ }
+
     </script>
 </body>
 </html>
