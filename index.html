@@ -340,7 +340,7 @@
         input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(24px); }
         
         .status-indicator, .status-dot { 
-            width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px;
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block;
         }
         .status-online, .status-active { background-color: var(--status-active); } 
         .status-offline { background-color: var(--status-offline); } 
@@ -369,16 +369,13 @@
         [data-theme="dark"] #notesList li:hover { background-color: #5a687f; }
         
         #noteModal, #editUserModal { 
-            position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; 
+            display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; 
             overflow: auto; background-color: rgba(0,0,0,0.5); 
-            display: none; /* Controlled by JS */
+            display: flex; /* Changed from none to flex for centering */
             align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
         }
-        #noteModal.visible, #editUserModal.visible { 
-            display: flex; /* Use flex to center */
-            opacity: 1; visibility: visible; 
-        }
+        #noteModal.visible, #editUserModal.visible { opacity: 1; visibility: visible; }
 
         .modal-content { 
             background-color: var(--card-bg); margin: auto; padding: 25px; border-radius: var(--border-radius); 
@@ -405,10 +402,7 @@
         #taskList li:last-child { border-bottom: none; }
         #taskList input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); flex-shrink: 0; cursor: pointer; }
         #taskList .task-text { flex-grow: 1; font-size: 15px; word-break: break-word; } #taskList .task-text.completed { text-decoration: line-through; color: var(--medium-gray); }
-        .task-delete-btn { background: none; border: none; color: var(--medium-gray); cursor: pointer; font-size: 16px; transition: color 0.2s; padding: 5px; }
-        .task-delete-btn:hover { color: var(--status-offline); }
         .task-filters { margin-bottom: 15px; display:flex; gap:5px; flex-wrap:wrap; }
-        .task-filters .btn.active { background-color: var(--primary-dark); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
 
         #adminDashboardCodeEntry { text-align: center; padding: 30px; border: 1px dashed var(--medium-gray); border-radius: var(--border-radius); margin-bottom: 20px;}
         #adminDashboardCodeEntry input { width: 200px; margin-bottom: 15px; text-align: center; font-size: 18px; }
@@ -421,8 +415,7 @@
         [data-theme="dark"] #postedAnnouncementsList li, [data-theme="dark"] #whitelistedEmailsList li { background-color: #4A5568; border-color: #5A687F; }
         #postedAnnouncementsList li strong { display: block; margin-bottom: 5px; color: var(--primary-dark); flex-grow: 1;}
         [data-theme="dark"] #postedAnnouncementsList li strong { color: var(--secondary-color); }
-        .delete-item { background: none; border: none; color: var(--status-offline); cursor: pointer; font-size: 16px; transition: color 0.2s; padding: 5px;}
-        .delete-item:hover { color: #b71c1c; }
+        .delete-item { background: none; border: none; color: var(--status-offline); cursor: pointer; font-size: 14px; }
 
 
         #homeAnnouncementsList { list-style: none; padding: 0; }
@@ -528,7 +521,7 @@
             .nav-item { font-size: 20px; padding: 8px; width: 40px; height: 40px; }
             #logoutButton { margin-top:0; margin-bottom:0; }
 
-            .main-content { margin-left: 0; padding: 15px; padding-bottom: 80px;  height: calc(100vh - 60px); overflow-y: auto; }
+            .main-content { margin-left: 0; padding: 15px; padding-bottom: 80px;  min-height: calc(100vh - 60px); overflow-y: auto; }
             .user-greeting-card { flex-direction: column; align-items: center; text-align: center; }
             .profile-pic { margin-right: 0; margin-bottom: 15px; }
             .top-bar { flex-direction: column; gap: 15px; height: auto; padding: 15px; }
@@ -541,6 +534,7 @@
             .task-filters { justify-content: center; }
             .notifications-dropdown-container { right: 50%; transform: translateX(50%) translateY(-10px); }
             .notifications-dropdown-container.visible { transform: translateX(50%) translateY(0); }
+            .scheduler-form .form-group, .global-scheduler-form .form-group { display: block; margin-right:0; margin-bottom:10px; }
             .user-profile-popup { 
                 top: auto; bottom: 70px; 
                 left: 50%;
@@ -568,19 +562,16 @@
 </head>
 <body data-theme="light">
 
-    <!-- Login Container -->
     <div id="loginContainer">
         <div class="logo-placeholder"><i class="fas fa-cubes"></i></div>
         <h2>VCPH-Timetracker</h2>
-        <p id="sdkStatus">Initializing services...</p>
+        <p id="sdkStatus">Please sign in with your Google account to continue.</p>
         <button id="loginWithGoogleButton" disabled><i class="fab fa-google"></i> Sign in with Google</button>
         <p id="authError"></p>
         <p id="accessDeniedMessage">Your email is not authorized to access this application. Please contact an administrator.</p>
     </div>
 
-    <!-- Main App Container -->
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div></div>
             <nav class="sidebar-nav">
@@ -594,37 +585,42 @@
             <a href="#" class="nav-item" id="logoutButton" title="Logout" style="display:none;"><i class="fas fa-sign-out-alt"></i></a>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
+        <div class="main-content">
             <header class="top-bar">
                 <div class="top-bar-logo-text"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div><span id="appTitle">VCPH-Timetracker</span></div>
+                
                 <div class="top-bar-right-controls">
                     <div class="notification-bell-wrapper">
                         <i class="fas fa-bell" id="notificationBellIcon" tabindex="0" role="button" aria-label="Toggle Notifications"></i>
                         <span class="notification-count-badge" id="notificationCountBadge" style="display: none;">0</span>
                         <div class="notifications-dropdown-container" id="notificationsDropdownContainer">
                             <h4>Notifications</h4>
-                            <ul id="dynamicNotificationList"><li class="no-notifications-item">No new notifications.</li></ul>
+                            <ul id="dynamicNotificationList">
+                                <li class="no-notifications-item">No new notifications.</li>
+                            </ul>
                             <a href="#" id="markAllNotificationsRead" class="mark-read-link">Mark all as read</a>
                         </div>
                     </div>
-                    <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search..." id="featureSearchInputGlobal"></div>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search..." id="featureSearchInputGlobal">
+                    </div>
                     <div class="theme-toggle-switch">
                         <i class="fas fa-sun"></i>
-                        <label class="switch"><input type="checkbox" id="mainThemeToggle"><span class="slider round"></span></label>
+                        <label class="switch">
+                            <input type="checkbox" id="mainThemeToggle">
+                            <span class="slider round"></span>
+                        </label>
                         <i class="fas fa-moon"></i>
                     </div>
                 </div>
             </header>
 
-            <!-- Greeting Card -->
             <section class="user-greeting-card">
                 <div class="profile-pic" id="userGreetingProfilePicTrigger" title="View Profile"><i class="fas fa-user"></i></div>
-                <div class="greeting-text"><h1 id="dynamicGreeting">Hi, Guest!</h1><p id="userTitleDisplay">Please log in to access features.</p></div>
+                <div class="greeting-text"><h1 id="dynamicGreeting">Hi, <span id="userNameDisplay">Guest</span>!</h1><p id="userTitleDisplay">Please log in to access features.</p></div>
             </section>
 
-            <!-- User Profile Popup -->
             <div id="userProfilePopup" class="user-profile-popup">
                 <div class="popup-content">
                     <div class="popup-header">
@@ -632,17 +628,20 @@
                             <img id="popupUserProfilePic" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Picture"> 
                             <span id="popupUserStatusIndicator" class="status-dot status-offline"></span>
                         </div>
-                        <h3 id="popupUserName">User Name</h3><p id="popupUserEmail">user@example.com</p>
+                        <h3 id="popupUserName">User Name</h3>
+                        <p id="popupUserEmail">user@example.com</p>
                     </div>
                     <div class="popup-actions">
                         <button id="switchAccountButton" class="popup-button">Switch account</button>
                         <button id="popupSignOutButton" class="popup-button">Sign out</button>
                     </div>
-                    <div class="popup-footer"><a href="#" target="_blank">Privacy Policy</a> • <a href="#" target="_blank">Terms of Service</a></div>
+                    <div class="popup-footer">
+                        <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a> &bull; <a href="#" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tab Content Area -->
+
             <div id="tab-home" class="tab-content active">
                 <section class="dashboard-widgets">
                     <div class="widget"><h3>Time Clocked (This Week)</h3><div class="value" id="hoursThisWeek">-- hrs</div><p class="description">Based on your attendance logs.</p></div>
@@ -651,7 +650,9 @@
                 </section>
                 <section class="card" id="homeAnnouncementsCard">
                     <h2><i class="fas fa-bullhorn"></i> Latest Announcements</h2>
-                    <ul id="homeAnnouncementsList"><li class="no-announcements-item">No announcements yet.</li></ul>
+                    <ul id="homeAnnouncementsList">
+                        <li class="no-announcements-item">No announcements yet.</li>
+                    </ul>
                 </section>
                 <section class="card"><h2>Quick Access</h2><div class="info-cards-container">
                     <div class="info-card"><i class="fas fa-calendar-check icon"></i><h3>Time Off Requests</h3><p>View or submit time off requests (Feature Placeholder).</p><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="showToast('Time Off Requests feature coming soon!', 'info')">View Requests</button></div>
@@ -662,9 +663,15 @@
             <div id="tab-attendance" class="tab-content">
                 <section class="attendance-card card">
                     <h2>Attendance Tracking & History</h2>
-                    <p id="firebaseStatusMessage" style="color: red; font-weight: bold; display: none;"></p>
+                    <p id="firebaseStatusMessage" style="color: red; font-weight: bold; display: none;">Firebase not initialized. Attendance features are disabled.</p>
                     <p id="currentTimeDisplay" style="font-weight:500; margin-bottom:15px;">Current Time: Loading...</p>
-                    <div id="userScheduleDisplay" style="display:none;"><h4>Today's Schedule (Company Wide)</h4><p id="scheduleDetails"></p><div id="scheduleReminder"></div></div>
+                    
+                    <div id="userScheduleDisplay" style="display:none;">
+                        <h4>Today's Schedule (Company Wide)</h4>
+                        <p id="scheduleDetails">No schedule set for today.</p>
+                        <div id="scheduleReminder" style="display:none;"></div>
+                    </div>
+
                     <div id="attendanceControls" style="display:none;">
                         <p>Tracking for: <strong id="currentTrackingEmployeeName"></strong> (<span id="currentTrackingEmployeeIdShort"></span>)</p>
                         <div class="buttons">
@@ -672,7 +679,7 @@
                             <button id="clockOutButton" class="btn btn-danger" disabled><i class="fas fa-stop-circle"></i> Clock Out</button>
                         </div>
                         <div class="break-controls">
-                            <button id="pauseBreakButton" class="btn btn-warning" disabled><i class="fas fa-pause"></i> Start Break</button>
+                            <button id="pauseBreakButton" class="btn btn-warning" disabled><i class="fas fa-pause"></i> Pause Break</button>
                             <button id="resumeWorkButton" class="btn btn-success" style="display:none;"><i class="fas fa-play"></i> Resume Work</button>
                         </div>
                         <div class="status"><p>Last Action: <span id="lastActionStatus">--</span></p><p>Last Action Time: <span id="lastActionTime">--</span></p><p>Current Break Status: <span id="currentBreakStatus">Not on break</span></p></div>
@@ -682,379 +689,1566 @@
                 <section class="card"><h2>Attendance History Log</h2><div class="filter-controls"><div class="form-group"><label for="historyStartDate">Start Date:</label><input type="date" id="historyStartDate"></div><div class="form-group"><label for="historyEndDate">End Date:</label><input type="date" id="historyEndDate"></div><button id="applyHistoryFilter" class="btn btn-primary">Filter</button></div><div id="attendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Please log in to view history.</p></div><h3>Daily Hours Visualization</h3><div id="attendanceHistoryChart"><div class="chart-bar-container" id="historyChartContainer"><p class="chart-no-data">Log in and select a date range.</p></div></div></section>
             </div>
             
-            <div id="tab-team" class="tab-content"><section class="card"><h2><i class="fas fa-users-cog"></i> Team Overview</h2><p>Comprehensive view of team members, their status, and recent activity.</p><div id="teamOverviewList"><p>Loading team data...</p></div></section></div>
+            <div id="tab-team" class="tab-content">
+                <section class="card">
+                    <h2><i class="fas fa-users-cog"></i> Team Overview</h2>
+                    <p>Comprehensive view of team members, their status, and recent activity.</p>
+                    <div id="teamOverviewList">
+                        <p>Loading team data...</p>
+                    </div>
+                </section>
+            </div>
             
-            <div id="tab-tasks" class="tab-content"><section class="card"><h2>My Tasks</h2><div class="form-group"><label for="newTaskInput">Add New Task:</label><input type="text" id="newTaskInput" placeholder="e.g., Finalize report"></div><button id="addTaskButton" class="btn btn-primary">Add Task</button><div class="task-filters" style="margin-top:20px;"><button class="btn btn-sm btn-primary active" data-filter="all">All</button><button class="btn btn-sm btn-secondary" data-filter="active">Active</button><button class="btn btn-sm btn-secondary" data-filter="completed">Completed</button></div><ul id="taskList"></ul></section></div>
+            <div id="tab-tasks" class="tab-content"><section class="card"><h2>My Tasks</h2><div class="form-group"><label for="newTaskInput">Add New Task:</label><input type="text" id="newTaskInput" placeholder="e.g., Finalize report"></div><button id="addTaskButton" class="btn btn-primary">Add Task</button><div class="task-filters" style="margin-top:20px;"><button class="btn btn-sm btn-primary" data-filter="all">All</button><button class="btn btn-sm btn-secondary" data-filter="active">Active</button><button class="btn btn-sm btn-secondary" data-filter="completed">Completed</button></div><ul id="taskList"></ul></section></div>
             
             <div id="tab-notes" class="tab-content"><section class="card"><h2>My Notes</h2><button id="createNewNoteButton" class="btn btn-primary">Create New Note</button><ul id="notesList"></ul><p id="noNotesMessage" style="display:none; margin-top:15px; color: var(--medium-gray);">No notes yet.</p></section></div>
             
+            <div id="noteModal"><div class="modal-content"><span class="close-modal" id="closeNoteModal" title="Close">×</span><h3 id="noteModalTitle">Note</h3><input type="hidden" id="noteIdInput"><div class="form-group"><label for="noteTitleInput">Title:</label><input type="text" id="noteTitleInput"></div><div class="form-group"><label for="noteContentInput">Content:</label><textarea id="noteContentInput"></textarea></div><button id="saveNoteButton" class="btn btn-success">Save</button><button id="deleteNoteButton" class="btn btn-danger" style="display:none; margin-left:10px;">Delete</button></div></div>
+            
+            <div id="editUserModal" class="edit-user-modal">
+                <div class="modal-content">
+                    <span class="close-modal" id="closeEditUserModal" title="Close">×</span>
+                    <h3 id="editUserModalTitle">Edit User Details</h3>
+                    <div id="editUserModalBody">
+                        <p class="user-details-item"><strong>Name:</strong> <span id="editModalUserName"></span></p>
+                        <p class="user-details-item"><strong>Email:</strong> <span id="editModalUserEmail"></span></p>
+                        <p class="user-details-item"><strong>System Status:</strong>
+                            <select id="editModalSystemStatus" class="status-override-select">
+                                <option value="active">Active</option>
+                                <option value="idle">Idle</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                            <button id="saveSystemStatusOverride" class="btn btn-sm btn-primary" style="margin-left:5px;">Save Status</button>
+                        </p>
+                        <p class="user-details-item"><strong>Last Attendance:</strong> <span id="editModalLastAttendance"></span></p>
+                         <input type="hidden" id="editingUserId">
+                    </div>
+                    <div class="modal-actions">
+                        <button id="viewUserFullHistoryBtn" class="btn btn-primary">View Full Attendance History</button>
+                        <button id="toggleWhitelistBtn" class="btn btn-secondary">Manage Whitelist</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="tab-admin" class="tab-content">
                 <div id="adminDashboardCodeEntry">
                     <h2><i class="fas fa-lock"></i> Admin Access</h2>
                     <p>Enter the admin code to unlock dashboard features.</p>
-                    <div class="form-group" style="max-width: 250px; margin-left:auto; margin-right:auto;"><label for="adminCodeInput" style="display:none;">Admin Code</label><input type="password" id="adminCodeInput" placeholder="Enter Admin Code"></div>
+                    <div class="form-group" style="max-width: 250px; margin-left:auto; margin-right:auto;">
+                        <label for="adminCodeInput" style="display:none;">Admin Code</label>
+                        <input type="password" id="adminCodeInput" placeholder="Enter Admin Code">
+                    </div>
                     <button id="unlockAdminDashboardButton" class="btn btn-primary">Unlock</button>
                 </div>
-                <div id="adminDashboardContent" style="display:none;">
-                    <section class="card"><h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2><p>Centralized team tracking and administrative controls.</p></section>
-                    <section class="card" id="adminTeamGallerySection"><h3><i class="fas fa-id-card-alt"></i> Team Status Gallery (Quick View)</h3><div class="admin-team-gallery" id="adminTeamGallery"><p>Loading team status...</p></div></section>
+
+                <div id="adminDashboardContent">
+                    <section class="card">
+                        <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                        <p>Centralized team tracking and administrative controls.</p>
+                    </section>
+
+                    <section class="card" id="adminTeamGallerySection">
+                        <h3><i class="fas fa-id-card-alt"></i> Team Status Gallery (Quick View)</h3>
+                        <div class="admin-team-gallery" id="adminTeamGallery">
+                            <p>Loading team status...</p>
+                        </div>
+                    </section>
+
                     <section class="card" id="adminEmailWhitelist">
-                        <h3><i class="fas fa-user-check"></i> Email Whitelist Management</h3><p>Control which email addresses can access this application.</p>
+                        <h3><i class="fas fa-user-check"></i> Email Whitelist Management</h3>
+                        <p>Control which email addresses can access this application.</p>
                         <form id="emailWhitelistForm" class="form-inline">
-                            <div class="form-group"><label for="emailToWhitelist">Email Address:</label><input type="email" id="emailToWhitelist" placeholder="user@example.com" required></div>
+                            <div class="form-group">
+                                <label for="emailToWhitelist">Email Address:</label>
+                                <input type="email" id="emailToWhitelist" placeholder="user@example.com" required>
+                            </div>
                             <button type="submit" class="btn btn-success btn-sm">Add to Whitelist</button>
                         </form>
-                        <h4 style="margin-top: 20px;">Currently Whitelisted Emails:</h4><ul id="whitelistedEmailsList"><li>No emails whitelisted yet.</li></ul>
+                        <h4 style="margin-top: 20px;">Currently Whitelisted Emails:</h4>
+                        <ul id="whitelistedEmailsList">
+                            <li>No emails whitelisted yet.</li>
+                        </ul>
                     </section>
-                    <section class="card" id="adminGlobalScheduler">
-                        <h3><i class="fas fa-calendar-alt"></i> Global Weekday Scheduler</h3><p>Set official clock-in/out times for all users for each weekday.</p>
+
+                     <section class="card" id="adminGlobalScheduler">
+                        <h3><i class="fas fa-calendar-alt"></i> Global Weekday Scheduler</h3>
+                        <p>Set official clock-in/out times for all users for each weekday. These apply team-wide.</p>
                         <form id="globalSchedulerForm">
-                            <table id="globalScheduleTable" style="width:100%; margin-bottom:15px;"><thead><tr><th>Day</th><th>Clock-In Time</th><th>Clock-Out Time</th></tr></thead><tbody id="globalScheduleTableBody"></tbody></table>
+                            <table id="globalScheduleTable" style="width:100%; margin-bottom:15px;">
+                                <thead>
+                                    <tr><th>Day</th><th>Clock-In Time</th><th>Clock-Out Time</th></tr>
+                                </thead>
+                                <tbody id="globalScheduleTableBody"></tbody>
+                            </table>
                             <button type="submit" class="btn btn-primary">Save Global Schedule</button>
                         </form>
                     </section>
-                    <section class="card" id="adminHistoricalAttendanceSection">
+
+                     <section class="card" id="adminHistoricalAttendanceSection">
                         <h3><i class="fas fa-history"></i> Historical Attendance Records</h3>
-                        <div class="form-group"><label for="adminHistoryUserSelect">Select User:</label><select id="adminHistoryUserSelect"><option value="">-- Select User --</option></select></div>
-                        <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="adminHistoryUserSelect">Select User to View History:</label>
+                            <select id="adminHistoryUserSelect">
+                                <option value="">-- Select User --</option>
+                            </select>
+                        </div>
+                         <div class="filter-controls">
                             <div class="form-group"><label for="adminHistoryStartDate">Start Date:</label><input type="date" id="adminHistoryStartDate"></div>
                             <div class="form-group"><label for="adminHistoryEndDate">End Date:</label><input type="date" id="adminHistoryEndDate"></div>
                             <button id="adminApplyHistoryFilter" class="btn btn-primary">Fetch History</button>
                         </div>
                         <div id="adminAttendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Select a user and date range to view history.</p></div>
                     </section>
+
                     <section class="card" id="adminAnnouncements">
                         <h3><i class="fas fa-bullhorn"></i> Announcements Posting Tool</h3>
                         <form id="announcementForm">
-                            <div class="form-group"><label for="announcementTitle">Title:</label><input type="text" id="announcementTitle" required></div>
-                            <div class="form-group"><label for="announcementContent">Content:</label><textarea id="announcementContent" required></textarea></div>
+                            <div class="form-group">
+                                <label for="announcementTitle">Title:</label>
+                                <input type="text" id="announcementTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="announcementContent">Content:</label>
+                                <textarea id="announcementContent" required></textarea>
+                            </div>
                             <button type="submit" class="btn btn-primary">Post Announcement</button>
                         </form>
                         <h4 style="margin-top: 25px; border-top: 1px solid var(--medium-gray); padding-top: 15px;">Posted Announcements</h4>
-                        <ul id="postedAnnouncementsList"><li class="no-admin-announcements-item">No announcements posted yet.</li></ul>
+                        <ul id="postedAnnouncementsList">
+                            <li class="no-admin-announcements-item">No announcements posted yet.</li>
+                        </ul>
                     </section>
-                    <section class="card" id="adminBreakLog"><h3><i class="fas fa-coffee"></i> User Break Log Overview</h3><p>Summary of user breaks (last 7 days).</p><div id="adminUserBreakLogList"><p>No break data available.</p></div></section>
+
+                    <section class="card" id="adminBreakLog">
+                        <h3><i class="fas fa-coffee"></i> User Break Log Overview</h3>
+                        <p>Summary of user breaks recorded from Attendance Tracker (last 7 days).</p>
+                        <div id="adminUserBreakLogList">
+                            <p>No break data available yet or no users clocked in/out with breaks.</p>
+                        </div>
+                    </section>
                 </div> 
             </div>
-            
-            <!-- Modals -->
-            <div id="noteModal"><div class="modal-content"><span class="close-modal" id="closeNoteModal" title="Close">×</span><h3 id="noteModalTitle">Note</h3><input type="hidden" id="noteIdInput"><div class="form-group"><label for="noteTitleInput">Title:</label><input type="text" id="noteTitleInput"></div><div class="form-group"><label for="noteContentInput">Content:</label><textarea id="noteContentInput"></textarea></div><button id="saveNoteButton" class="btn btn-success">Save</button><button id="deleteNoteButton" class="btn btn-danger" style="display:none; margin-left:10px;">Delete</button></div></div>
-            <div id="editUserModal" class="edit-user-modal"><div class="modal-content"><span class="close-modal" id="closeEditUserModal" title="Close">×</span><h3 id="editUserModalTitle">Edit User Details</h3><div id="editUserModalBody"><p class="user-details-item"><strong>Name:</strong> <span id="editModalUserName"></span></p><p class="user-details-item"><strong>Email:</strong> <span id="editModalUserEmail"></span></p><p class="user-details-item"><strong>System Status:</strong><select id="editModalSystemStatus" class="status-override-select"><option value="active">Active</option><option value="idle">Idle</option><option value="offline">Offline</option></select><button id="saveSystemStatusOverride" class="btn btn-sm btn-primary" style="margin-left:5px;">Save Status</button></p><p class="user-details-item"><strong>Last Attendance:</strong> <span id="editModalLastAttendance"></span></p><input type="hidden" id="editingUserId"></div><div class="modal-actions"><button id="viewUserFullHistoryBtn" class="btn btn-primary">View Full Attendance History</button><button id="toggleWhitelistBtn" class="btn btn-secondary">Manage Whitelist</button></div></div></div>
 
-        </main>
+        </div>
     </div>
 
-    <!-- Audio & Toast Notifications -->
     <audio id="generalNotificationSound" src="https://actions.google.com/sounds/v1/notifications/device_alert_simple.ogg" preload="auto"></audio>
     <div id="toastNotification" class="toast-notification"></div>
 
-    <!-- Firebase SDKs -->
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
-    // ⚠️ CRITICAL SECURITY WARNING ⚠️
-    // This configuration is publicly exposed. In a real application, this is a major security risk.
-    // Use environment variables and Firebase App Check for production.
-    const firebaseConfig = {
-        apiKey: "AIzaSyBMCqwIZL6cWvwuGa_yt9bBaJpf9KXRXY4",
-        authDomain: "nitchiebotai.firebaseapp.com",
-        projectId: "nitchiebotai",
-        storageBucket: "nitchiebotai.firebasestorage.app",
-        messagingSenderId: "635455056920",
-        appId: "1:635455056920:web:bd3eac800dddadd47f276d"
-    };
+        // IMPORTANT: Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMCqwIZL6cWvwuGa_yt9bBaJpf9KXRXY4",
+            authDomain: "nitchiebotai.firebaseapp.com",
+            projectId: "nitchiebotai",
+            storageBucket: "nitchiebotai.appspot.com",
+            messagingSenderId: "635455056920",
+            appId: "1:635455056920:web:bd3eac800dddadd47f276d"
+        };
 
-    // --- GLOBAL APP STATE & CONFIG ---
-    let db, storage, auth;
-    let tasks = [];
-    let notes = [];
-    let notifications = [];
-    let currentAuthUser = null;
-    let userIsAdmin = false;
-    let adminDashboardUnlocked = false;
-    let lastLogId = null;
-    let isOnBreak = false;
-    let currentBreakStartTime = null;
-    let currentTaskFilter = 'all';
-    let idleTimer; // Moved to global scope to prevent ReferenceError
-    const ADMIN_UID = 'HvSGRjmIidV79McjnQrDx5ni9Pt1';
-    const ADMIN_EMAIL = 'jamescarbelledo@gmail.com';
+        let db, storage, auth;
+        const sdkStatusDisplay = document.getElementById('sdkStatus');
+        const loginWithGoogleButton = document.getElementById('loginWithGoogleButton');
+        const globalAuthErrorDisplay = document.getElementById('authError');
+        const accessDeniedMessageDiv = document.getElementById('accessDeniedMessage');
 
-    // --- INITIALIZATION ---
-    try {
+
         if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            storage = firebase.storage();
-            auth = firebase.auth();
-            document.getElementById('sdkStatus').textContent = "Services Initialized. Please sign in.";
-            document.getElementById('loginWithGoogleButton').disabled = false;
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                storage = firebase.storage();
+                auth = firebase.auth();
+                if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Services Initialized. Please sign in.";
+                if(loginWithGoogleButton) loginWithGoogleButton.disabled = false;
+            } catch (e) {
+                console.error("Firebase initialization error:", e);
+                if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Error: Application services could not be initialized.";
+                if(loginWithGoogleButton) loginWithGoogleButton.disabled = true;
+                if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "App setup error. Contact support.";
+            }
         } else {
-            throw new Error("Firebase SDK not loaded.");
+            console.error("Firebase SDK not loaded. Critical features will be affected.");
+            if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Error: Required libraries not loaded.";
+            if(loginWithGoogleButton) loginWithGoogleButton.disabled = true;
+            if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "App components missing. Check connection or contact support.";
+            const firebaseStatusMsg = document.getElementById('firebaseStatusMessage');
+            if (firebaseStatusMsg) {
+                firebaseStatusMsg.textContent = "Firebase SDK not loaded. Attendance features are disabled.";
+                firebaseStatusMsg.style.display = 'block';
+            }
         }
-    } catch (e) {
-        console.error("Firebase initialization error:", e);
-        document.getElementById('sdkStatus').textContent = "Error: App services could not be initialized.";
-        document.getElementById('loginWithGoogleButton').disabled = true;
-    }
 
-    // --- HELPER & UTILITY FUNCTIONS ---
-    function showToast(message, type = 'info', duration = 3000) {
-        const toast = document.getElementById('toastNotification');
-        if (!toast) return;
-        toast.textContent = message;
-        toast.className = 'toast-notification';
-        if (type === 'error') toast.classList.add('error');
-        else if (type === 'success') toast.classList.add('success');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), duration);
-    }
+        function showToast(message, type = 'info', duration = 3000) { 
+            const toast = document.getElementById('toastNotification');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.className = 'toast-notification'; 
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'success') toast.classList.add('success');
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
 
-    function getWhitelistedEmails() {
-        return JSON.parse(localStorage.getItem('whitelistedEmails')) || [ADMIN_EMAIL];
-    }
-    function saveWhitelistedEmails(emails) {
-        localStorage.setItem('whitelistedEmails', JSON.stringify(emails));
-    }
-    function isEmailWhitelisted(email) {
-        if (!email) return false;
-        const whitelist = getWhitelistedEmails();
-        return whitelist.includes(email.toLowerCase());
-    }
+        // --- Start of Stub Functions for Standalone Functionality ---
+        // These functions provide placeholder logic to prevent "not defined" errors.
 
-    // --- AUTHENTICATION & STATE CHANGE HANDLERS ---
-    function handleSuccessfulLogin(user) {
-        currentAuthUser = user;
-        userIsAdmin = (user.uid === ADMIN_UID || user.email.toLowerCase() === ADMIN_EMAIL);
-        
-        // Update UI state
-        document.getElementById('app-container').style.display = 'flex';
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('accessDeniedMessage').style.display = 'none';
-        document.getElementById('logoutButton').style.display = 'flex';
-        document.querySelector('.nav-item[data-tab="admin"]').style.display = userIsAdmin ? 'flex' : 'none';
-        
-        loadDataForLoggedInUser();
-        resetIdleTimer();
-    }
+        // Task Management Stubs
+        function getTasks() { return JSON.parse(localStorage.getItem('tasks_demo')) || []; }
+        function saveTasks(tasks) { localStorage.setItem('tasks_demo', JSON.stringify(tasks)); }
+        function updatePendingTasksCount() {
+            const pendingTasksCountDisplay = document.getElementById('pendingTasksCount');
+            if (pendingTasksCountDisplay) {
+                const pendingCount = getTasks().filter(t => !t.completed).length;
+                pendingTasksCountDisplay.textContent = pendingCount;
+            }
+        }
+        function renderTasks(filter = 'all') {
+            const taskList = document.getElementById('taskList');
+            if (!taskList) return;
+            const tasks = getTasks();
+            let filteredTasks = tasks;
+            if (filter === 'active') filteredTasks = tasks.filter(t => !t.completed);
+            if (filter === 'completed') filteredTasks = tasks.filter(t => t.completed);
+            
+            taskList.innerHTML = '';
+            if (filteredTasks.length === 0) {
+                taskList.innerHTML = '<li>No tasks found for this filter.</li>';
+                return;
+            }
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <input type="checkbox" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
+                    <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                `;
+                taskList.appendChild(li);
+            });
+        }
 
-    function handleLogout() {
-        clearTimeout(idleTimer);
-        currentAuthUser = null;
-        userIsAdmin = false;
-        adminDashboardUnlocked = false;
+        // Note Management Stubs
+        function getNotes() { return JSON.parse(localStorage.getItem('notes_demo')) || []; }
+        function saveNotes(notes) { localStorage.setItem('notes_demo', JSON.stringify(notes)); }
+        function renderNotesList() {
+             const notesList = document.getElementById('notesList');
+             const noNotesMessage = document.getElementById('noNotesMessage');
+             if (!notesList || !noNotesMessage) return;
+             const notes = getNotes();
+             notesList.innerHTML = '';
+             if (notes.length === 0) {
+                noNotesMessage.style.display = 'block';
+             } else {
+                noNotesMessage.style.display = 'none';
+                notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.textContent = note.title;
+                    li.dataset.noteId = note.id;
+                    notesList.appendChild(li);
+                });
+             }
+        }
 
-        document.getElementById('app-container').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'flex';
-        
-        // Reset UI to default
-        document.getElementById('adminDashboardContent').style.display = 'none';
-        document.getElementById('adminDashboardCodeEntry').style.display = 'block';
-        document.getElementById('adminCodeInput').value = '';
-        document.getElementById('logoutButton').style.display = 'none';
-        document.querySelector('.nav-item[data-tab="admin"]').style.display = 'none';
-        document.getElementById('userProfilePopup').classList.remove('visible');
-        updateGreeting();
+        // Announcement Stubs
+        function getAnnouncements() { return JSON.parse(localStorage.getItem('announcements_demo')) || []; }
+        function saveAnnouncements(announcements) { localStorage.setItem('announcements_demo', JSON.stringify(announcements)); }
+        function loadAndDisplayAnnouncements() {
+            const list = document.getElementById('homeAnnouncementsList');
+            if(!list) return;
+            const announcements = getAnnouncements().slice(0, 3); // Show latest 3
+            list.innerHTML = '';
+            if (announcements.length > 0) {
+                announcements.forEach(ann => {
+                    list.innerHTML += `<li><strong>${ann.title}</strong><p>${ann.content}</p></li>`;
+                });
+            } else {
+                 list.innerHTML = '<li class="no-announcements-item">No announcements yet.</li>';
+            }
+        }
+        function loadAdminAnnouncements() {
+            const list = document.getElementById('postedAnnouncementsList');
+            if(!list) return;
+            const announcements = getAnnouncements();
+            list.innerHTML = '';
+            if (announcements.length > 0) {
+                announcements.forEach(ann => {
+                    list.innerHTML += `<li><div><strong>${ann.title}</strong><p>${ann.content}</p></div><button class="delete-item" data-id="${ann.id}">&times;</button></li>`;
+                });
+            } else {
+                 list.innerHTML = '<li class="no-admin-announcements-item">No announcements posted yet.</li>';
+            }
+        }
 
-        localStorage.removeItem('loggedInUserUID');
-    }
+        // Notification Stub
+        function addNotification(type, summary, onClickAction) {
+            // This is a placeholder to simulate notification logic.
+            console.log(`Notification Added: [${type}] ${summary}`);
+            const notificationCountBadge = document.getElementById('notificationCountBadge');
+            const dynamicNotificationList = document.getElementById('dynamicNotificationList');
+            if(notificationCountBadge && dynamicNotificationList) {
+                let count = parseInt(notificationCountBadge.textContent || '0', 10);
+                count++;
+                notificationCountBadge.textContent = count;
+                notificationCountBadge.style.display = 'flex';
 
-    async function loadDataForLoggedInUser() {
-        if (!currentAuthUser) return;
-        localStorage.setItem('loggedInUserUID', currentAuthUser.uid);
-        updateGreeting();
-        await fetchLastAttendance();
-        await calculateHoursThisWeek();
-        loadTasks();
-        loadNotes();
-        loadGlobalScheduleForUser();
-        loadAndDisplayAnnouncements();
-        switchTab(localStorage.getItem('lastActiveTab') || 'home');
-    }
+                const noNotifItem = dynamicNotificationList.querySelector('.no-notifications-item');
+                if(noNotifItem) noNotifItem.remove();
 
-    if (auth) {
-        auth.onAuthStateChanged(user => {
-            if (user && user.email) {
-                if (!isEmailWhitelisted(user.email)) {
-                    console.warn(`Access Denied: Email ${user.email} is not whitelisted.`);
-                    document.getElementById('accessDeniedMessage').style.display = 'block';
-                    auth.signOut();
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="notification-summary">${summary}</span><span class="notification-time">Just now</span>`;
+                li.onclick = onClickAction;
+                dynamicNotificationList.prepend(li);
+            }
+        }
+
+        // --- End of Stub Functions ---
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const appContainer = document.querySelector('.app-container');
+            const loginContainer = document.getElementById('loginContainer');
+            const logoutButton = document.getElementById('logoutButton');
+
+            const body = document.body;
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const userGreetingProfilePicDiv = document.querySelector('.user-greeting-card .profile-pic');
+            const userGreetingProfilePicTrigger = document.getElementById('userGreetingProfilePicTrigger');
+            const userTitleDisplay = document.getElementById('userTitleDisplay');
+            const dynamicGreeting = document.getElementById('dynamicGreeting');
+            
+            const mainThemeToggle = document.getElementById('mainThemeToggle');
+
+            const hoursThisWeekDisplay = document.getElementById('hoursThisWeek');
+            const pendingTasksCountDisplay = document.getElementById('pendingTasksCount');
+            const dashboardCurrentTime = document.getElementById('dashboardCurrentTime');
+            const dashboardCurrentDate = document.getElementById('dashboardCurrentDate');
+
+            const notificationBellIcon = document.getElementById('notificationBellIcon');
+            const notificationCountBadge = document.getElementById('notificationCountBadge');
+            const notificationsDropdownContainer = document.getElementById('notificationsDropdownContainer');
+            
+            const userProfilePopup = document.getElementById('userProfilePopup');
+            const popupUserProfilePic = document.getElementById('popupUserProfilePic');
+            const popupUserStatusIndicator = document.getElementById('popupUserStatusIndicator');
+            const popupUserName = document.getElementById('popupUserName');
+            const popupUserEmail = document.getElementById('popupUserEmail');
+            const switchAccountButton = document.getElementById('switchAccountButton');
+            const popupSignOutButton = document.getElementById('popupSignOutButton');
+
+            const adminDashboardCodeEntryDiv = document.getElementById('adminDashboardCodeEntry');
+            const adminCodeInput = document.getElementById('adminCodeInput');
+            const unlockAdminDashboardButton = document.getElementById('unlockAdminDashboardButton');
+            const adminDashboardContentDiv = document.getElementById('adminDashboardContent');
+            const adminNavTab = document.querySelector('.nav-item[data-tab="admin"]');
+            let adminDashboardUnlocked = false;
+
+            const emailWhitelistForm = document.getElementById('emailWhitelistForm');
+            const whitelistedEmailsListUL = document.getElementById('whitelistedEmailsList');
+
+            const globalSchedulerForm = document.getElementById('globalSchedulerForm');
+            const globalScheduleTableBody = document.getElementById('globalScheduleTableBody');
+            const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+            const adminHistoryUserSelect = document.getElementById('adminHistoryUserSelect');
+            const adminApplyHistoryFilterButton = document.getElementById('adminApplyHistoryFilter');
+            const adminAttendanceHistoryLogDiv = document.getElementById('adminAttendanceHistoryLog');
+            const adminTeamGalleryDiv = document.getElementById('adminTeamGallery');
+            const teamOverviewListDiv = document.getElementById('teamOverviewList');
+
+            const editUserModal = document.getElementById('editUserModal');
+            const closeEditUserModalBtn = document.getElementById('closeEditUserModal');
+            const editModalUserName = document.getElementById('editModalUserName');
+            const editModalUserEmail = document.getElementById('editModalUserEmail');
+            const editModalSystemStatusSelect = document.getElementById('editModalSystemStatus');
+            const saveSystemStatusOverrideBtn = document.getElementById('saveSystemStatusOverride');
+            const editModalLastAttendance = document.getElementById('editModalLastAttendance');
+            const viewUserFullHistoryBtn = document.getElementById('viewUserFullHistoryBtn');
+            const toggleWhitelistBtn = document.getElementById('toggleWhitelistBtn');
+            const editingUserIdInput = document.getElementById('editingUserId');
+
+
+            let currentAuthUser = null;
+            let currentEmployeeId = null;
+            let currentEmployeeName = "Guest";
+            let userIsAdmin = false; 
+            const ADMIN_UID = 'HvSGRjmIidV79McjnQrDx5ni9Pt1'; 
+            const ADMIN_EMAIL = 'jamescarbelledo@gmail.com'; 
+
+            function getWhitelistedEmails() {
+                return JSON.parse(localStorage.getItem('whitelistedEmails')) || [ADMIN_EMAIL]; // Admin email is always whitelisted
+            }
+            function saveWhitelistedEmails(emails) {
+                if (!emails.includes(ADMIN_EMAIL)) {
+                    emails.push(ADMIN_EMAIL);
+                }
+                localStorage.setItem('whitelistedEmails', JSON.stringify(Array.from(new Set(emails))));
+            }
+             function isEmailWhitelisted(email) {
+                const whitelist = getWhitelistedEmails();
+                return whitelist.includes(email);
+            }
+            
+            // ===================================================================
+            // ===                ADMIN DASHBOARD UNLOCK LOGIC                 ===
+            // ===================================================================
+            unlockAdminDashboardButton?.addEventListener('click', () => {
+                if (adminCodeInput.value === '7777') {
+                    adminDashboardUnlocked = true;
+                    adminDashboardCodeEntryDiv.style.display = 'none';
+                    adminDashboardContentDiv.style.display = 'block';
+                    showToast('Admin Dashboard Unlocked!', 'success');
+                    
+                    if (userIsAdmin) {
+                        // Load all admin data now that the panel is visible
+                        loadAdminAnnouncements(); 
+                        renderAdminTeamGallery(); 
+                        loadGlobalSchedulesToForm();
+                        loadAdminBreakLogs();
+                        renderWhitelistedEmails();
+                        populateAdminHistoryUserSelectWithUnifiedList();
+                    }
+                } else {
+                    showToast('Incorrect Admin Code.', 'error');
+                    adminCodeInput.value = '';
+                }
+            });
+
+
+            if (auth) {
+                auth.onAuthStateChanged(async user => { 
+                    if (user) {
+                        currentAuthUser = user;
+                        currentEmployeeId = user.uid;
+                        currentEmployeeName = user.displayName || user.email?.split('@')[0] || "User";
+                        userIsAdmin = (user.uid === ADMIN_UID || user.email === ADMIN_EMAIL);
+
+                        if (!isEmailWhitelisted(user.email)) {
+                             console.warn(`Access Denied: Email ${user.email} is not whitelisted.`);
+                             accessDeniedMessageDiv.style.display = 'block';
+                             loginContainer.style.display = 'flex';
+                             appContainer.style.display = 'none';
+                             if (auth) auth.signOut(); 
+                             currentAuthUser = null;
+                             return;
+                        }
+                        accessDeniedMessageDiv.style.display = 'none';
+
+                        localStorage.setItem('loggedInUserUID', user.uid);
+                        if(appContainer) appContainer.style.display = 'flex';
+                        if(loginContainer) loginContainer.style.display = 'none';
+                        if(logoutButton) logoutButton.style.display = 'flex';
+                        if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = '';
+
+                        if(userNameDisplay) userNameDisplay.textContent = currentEmployeeName;
+                        if(userTitleDisplay) userTitleDisplay.textContent = "Welcome back!";
+                        if(userGreetingProfilePicDiv) { 
+                            if (user.photoURL) {
+                                userGreetingProfilePicDiv.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+                            } else {
+                                userGreetingProfilePicDiv.innerHTML = `<i class="fas fa-user-check"></i>`;
+                            }
+                        }
+                        
+                        if (adminNavTab) adminNavTab.style.display = userIsAdmin ? 'flex' : 'none';
+
+                        const cteni = document.getElementById('currentTrackingEmployeeName');
+                        const cteids = document.getElementById('currentTrackingEmployeeIdShort');
+                        if(cteni) cteni.textContent = currentEmployeeName;
+                        if(cteids) cteids.textContent = currentEmployeeId ? currentEmployeeId.substring(0,8) + "..." : 'N/A';
+                        if(document.getElementById('attendanceControls')) document.getElementById('attendanceControls').style.display = 'block';
+                        const selfieBtn = document.getElementById('captureSelfieButton'); if(selfieBtn) selfieBtn.style.display = 'inline-block';
+
+                        updateGreeting(); await fetchLastAttendance(); await calculateHoursThisWeek(); updatePendingTasksCount();
+                        loadGlobalScheduleForUser(); 
+                        loadAndDisplayAnnouncements(); 
+                        await initializeUnifiedUserList(); 
+                        if(userIsAdmin) {
+                            renderWhitelistedEmails();
+                            renderGlobalScheduleForm();
+                            loadGlobalSchedulesToForm();
+                            populateAdminHistoryUserSelectWithUnifiedList();
+                        }
+                        resetIdleTimer(); 
+                        switchTab(localStorage.getItem('lastActiveTab') || 'home');
+                    } else {
+                        currentAuthUser = null; currentEmployeeId = null; currentEmployeeName = "Guest"; userIsAdmin = false;
+                        adminDashboardUnlocked = false; 
+                        if(adminDashboardContentDiv) adminDashboardContentDiv.style.display = 'none';
+                        if(adminDashboardCodeEntryDiv) adminDashboardCodeEntryDiv.style.display = 'block';
+                        if(adminCodeInput) adminCodeInput.value = '';
+
+                        localStorage.removeItem('loggedInUserUID');
+                        localStorage.removeItem('lastActiveTab');
+                        if(appContainer) appContainer.style.display = 'none'; if(loginContainer) loginContainer.style.display = 'flex'; if(logoutButton) logoutButton.style.display = 'none';
+                        if(userNameDisplay) userNameDisplay.textContent = currentEmployeeName; if(userTitleDisplay) userTitleDisplay.textContent = "Please log in to access features."; if(userGreetingProfilePicDiv) userGreetingProfilePicDiv.innerHTML = `<i class="fas fa-user"></i>`;
+                        if(document.getElementById('attendanceControls')) document.getElementById('attendanceControls').style.display = 'none';
+                        if(document.getElementById('lastActionStatus')) document.getElementById('lastActionStatus').textContent = "--"; if(document.getElementById('lastActionTime')) document.getElementById('lastActionTime').textContent = "--";
+                        updateGreeting();
+                        if(hoursThisWeekDisplay) hoursThisWeekDisplay.textContent = "-- hrs"; if(pendingTasksCountDisplay) pendingTasksCountDisplay.textContent = "--";
+                        const attHistLog = document.getElementById('attendanceHistoryLog'); const attHistChart = document.getElementById('historyChartContainer');
+                        if(attHistLog) attHistLog.innerHTML = "<p>Please log in to view history.</p>"; if(attHistChart) attHistChart.innerHTML = '<p class="chart-no-data">Log in to see chart data.</p>';
+                         if(loginContainer && body.style.display !== 'flex'){
+                            body.style.display = 'flex';
+                            body.style.justifyContent = 'center';
+                            body.style.alignItems = 'center';
+                        }
+                        clearTimeout(idleTimer); 
+                        if (adminNavTab) adminNavTab.style.display = 'none';
+                        if (userProfilePopup) userProfilePopup.classList.remove('visible'); 
+                    }
+                });
+            } else {
+                if(loginContainer) loginContainer.style.display = 'flex';
+                if(appContainer) appContainer.style.display = 'none';
+                if(loginContainer && body.style.display !== 'flex'){
+                    body.style.display = 'flex';
+                    body.style.justifyContent = 'center';
+                    body.style.alignItems = 'center';
+                }
+            }
+
+            function signInWithGoogle() { 
+                if (!auth) { if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "Authentication service is not available."; return; } 
+                const provider = new firebase.auth.GoogleAuthProvider(); 
+                auth.signInWithPopup(provider).catch(err => { 
+                    console.error("Google Sign-In Error:", err); 
+                    if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = `Sign-In Error: ${err.message} (Code: ${err.code})`; 
+                }); 
+            }
+            function signOutUser() { 
+                if (userProfilePopup) userProfilePopup.classList.remove('visible');
+                if (!auth) { alert("Authentication service is not available."); return; } 
+                auth.signOut().catch(err => { console.error("Sign Out Error:", err); alert(`Sign Out Error: ${err.message}`); });
+            }
+            if(loginWithGoogleButton) loginWithGoogleButton.addEventListener('click', signInWithGoogle);
+            if(logoutButton) logoutButton.addEventListener('click', (e) => { e.preventDefault(); signOutUser(); });
+
+
+            function updateGreeting() { const h = new Date().getHours(); let gt = "Hi"; if (h<12) gt="Good Morning"; else if(h<18) gt="Good Afternoon"; else gt="Good Evening"; if (dynamicGreeting) dynamicGreeting.innerHTML = `${gt}, <span id="userNameForGreeting">${currentEmployeeName}</span>!`; }
+            function updateDashboardTime() { const n=new Date(); if(dashboardCurrentTime) dashboardCurrentTime.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); if(dashboardCurrentDate) dashboardCurrentDate.textContent=n.toLocaleDateString([],{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+            
+            function applyTheme(th) { 
+                body.dataset.theme = th; 
+                localStorage.setItem('theme', th); 
+                if(mainThemeToggle) mainThemeToggle.checked = th === 'dark';
+            }
+            mainThemeToggle?.addEventListener('change', () => applyTheme(mainThemeToggle.checked ? 'dark' : 'light'));
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            const tabContents = document.querySelectorAll('.main-content .tab-content');
+
+            async function switchTab(targetTabId) { 
+                if (!currentAuthUser && targetTabId !=='login' && targetTabId !== 'home') {
+                    if(loginContainer && loginContainer.style.display === 'none') { if(auth) auth.signOut(); }
                     return;
                 }
-                handleSuccessfulLogin(user);
-            } else {
-                handleLogout();
+                if (targetTabId === 'admin' && !userIsAdmin) {
+                    showToast("Access Denied: Admin dashboard is restricted.", "error");
+                    return; 
+                }
+
+                navItems.forEach(i=>i.classList.toggle('active',i.dataset.tab===targetTabId));
+                tabContents.forEach(c=>c.classList.toggle('active',c.id===`tab-${targetTabId}`));
+                localStorage.setItem('lastActiveTab', targetTabId);
+
+                if(targetTabId==='home'){updateGreeting();updateDashboardTime();if(currentAuthUser&&db)calculateHoursThisWeek();updatePendingTasksCount();loadAndDisplayAnnouncements();}
+                if(targetTabId==='attendance' && currentAuthUser && db){ 
+                    const sd=document.getElementById('historyStartDate');
+                    const ed=document.getElementById('historyEndDate');
+                    if(sd)sd.valueAsDate=null;if(ed)ed.valueAsDate=null;
+                    fetchFullAttendanceHistory(); 
+                    loadGlobalScheduleForUser();
+                }
+                if(targetTabId==='team' && currentAuthUser) { 
+                    await loadAndRenderTeamOverview();
+                }
+                if(targetTabId==='tasks')renderTasks();
+                if(targetTabId==='notes')renderNotesList();
+                if(targetTabId==='admin' && userIsAdmin) {
+                    if (adminDashboardUnlocked) {
+                        loadAdminAnnouncements();
+                        await renderAdminTeamGallery(); 
+                        loadGlobalSchedulesToForm();
+                        loadAdminBreakLogs();
+                        renderWhitelistedEmails();
+                        populateAdminHistoryUserSelectWithUnifiedList();
+                    }
+                }
             }
-        });
-    }
+            navItems.forEach(i => i.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(i.id !== 'logoutButton') switchTab(i.dataset.tab);
+            }));
 
-    function signInWithGoogle() {
-        if (!auth) {
-            showToast("Authentication service is not available.", "error");
-            return;
-        }
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).catch(err => {
-            console.error("Google Sign-In Error:", err);
-            showToast(`Sign-In Error: ${err.message}`, "error");
-        });
-    }
+            userGreetingProfilePicTrigger?.addEventListener('click', () => {
+                if (!currentAuthUser) return;
+                if (userProfilePopup.classList.contains('visible')) {
+                    userProfilePopup.classList.remove('visible');
+                } else {
+                    popupUserName.textContent = currentEmployeeName;
+                    popupUserEmail.textContent = currentAuthUser.email;
+                    if (currentAuthUser.photoURL) {
+                        popupUserProfilePic.src = currentAuthUser.photoURL;
+                    } else {
+                        popupUserProfilePic.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>';
+                    }
 
-    function signOutUser() {
-        if (auth) auth.signOut().catch(err => showToast(`Sign Out Error: ${err.message}`, "error"));
-    }
-    
-    // --- UI/DOM EVENT LISTENERS (ATTACHED ONCE) ---
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('loginWithGoogleButton').addEventListener('click', signInWithGoogle);
-        document.getElementById('logoutButton').addEventListener('click', (e) => { e.preventDefault(); signOutUser(); });
-        document.getElementById('mainThemeToggle').addEventListener('change', (e) => applyTheme(e.target.checked ? 'dark' : 'light'));
-        
-        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => {
-            if (i.id !== 'logoutButton') {
-                i.addEventListener('click', (e) => { e.preventDefault(); switchTab(i.dataset.tab); });
+                    const currentUserData = unifiedUserList.find(u => u.id === currentAuthUser.uid); 
+                    const status = currentUserData ? currentUserData.systemStatus : 'active'; 
+                    
+                    popupUserStatusIndicator.className = 'status-dot'; 
+                    popupUserStatusIndicator.classList.add(`status-${status}`);
+
+                    userProfilePopup.classList.add('visible');
+                }
+            });
+
+            popupSignOutButton?.addEventListener('click', signOutUser);
+            switchAccountButton?.addEventListener('click', () => {
+                showToast("Switch account feature is a placeholder.", "info");
+            });
+
+            document.addEventListener('click', (event) => {
+                if (userProfilePopup?.classList.contains('visible')) {
+                    if (!userProfilePopup.contains(event.target) && !userGreetingProfilePicTrigger.contains(event.target)) {
+                        userProfilePopup.classList.remove('visible');
+                    }
+                }
+                 if (editUserModal?.classList.contains('visible')) {
+                    if (!editUserModal.querySelector('.modal-content').contains(event.target)) {
+                       closeEditUserModal();
+                    }
+                }
+                if (notificationsDropdownContainer?.classList.contains('visible')) {
+                    if (!notificationsDropdownContainer.contains(event.target) && !notificationBellIcon.contains(event.target)) {
+                       notificationsDropdownContainer.classList.remove('visible');
+                    }
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && userProfilePopup?.classList.contains('visible')) {
+                    userProfilePopup.classList.remove('visible');
+                }
+                if (event.key === 'Escape' && editUserModal?.classList.contains('visible')) {
+                    closeEditUserModal();
+                }
+            });
+
+
+            const clockInButton = document.getElementById('clockInButton'); 
+            const clockOutButton = document.getElementById('clockOutButton');
+            const pauseBreakButton = document.getElementById('pauseBreakButton');
+            const resumeWorkButton = document.getElementById('resumeWorkButton');
+            const lastActionStatusDisplay = document.getElementById('lastActionStatus'); 
+            const lastActionTimeDisplay = document.getElementById('lastActionTime');
+            const currentBreakStatusDisplay = document.getElementById('currentBreakStatus');
+            const currentTimeDisplay = document.getElementById('currentTimeDisplay'); 
+            const geolocationStatusDisplay = document.getElementById('geolocationStatus'); 
+            const captureSelfieButton = document.getElementById('captureSelfieButton'); 
+            const selfieVideo = document.getElementById('selfieVideo'); 
+            const selfieCanvas = document.getElementById('selfieCanvas'); 
+            const selfiePreview = document.getElementById('selfiePreview'); 
+            let currentGeolocation=null; let selfieStream=null; let capturedSelfieBlob=null; let lastLogId=null;
+            let isOnBreak = false; let currentBreakStartTime = null;
+
+            function updateLiveTime() { if(currentTimeDisplay) currentTimeDisplay.textContent = `Current Time: ${new Date().toLocaleTimeString()}`; } setInterval(updateLiveTime, 1000); if(currentTimeDisplay) updateLiveTime();
+
+            function getGeolocation() { return new Promise((resolve) => { if (!geolocationStatusDisplay) { console.warn("Geolocation display element missing."); resolve(null); return; } if (navigator.geolocation) { navigator.geolocation.getCurrentPosition( p => { currentGeolocation={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy}; geolocationStatusDisplay.textContent=`Geolocation: Acquired (Accuracy: ${p.coords.accuracy.toFixed(0)}m)`; resolve(currentGeolocation); }, e => { let msg="Geolocation: Error"; switch(e.code){case e.PERMISSION_DENIED:msg+=" (Permission Denied by User/System)";break;case e.POSITION_UNAVAILABLE:msg+=" (Location information is unavailable)";break;case e.TIMEOUT:msg+=" (Location request timed out)";break;default:msg+=` (${e.message||'Unknown GPS error'})`;} geolocationStatusDisplay.textContent=msg;console.warn("Geolocation Error Object:",e);resolve(null);}, {enableHighAccuracy:true,timeout:15000,maximumAge:0}); } else { geolocationStatusDisplay.textContent="Geolocation: Not supported by this browser"; resolve(null); } }); }
+            captureSelfieButton?.addEventListener('click', async () => { if(selfieStream){selfieStream.getTracks().forEach(t=>t.stop());if(selfieVideo)selfieVideo.style.display='none';if(selfiePreview)selfiePreview.style.display='none';captureSelfieButton.innerHTML='<i class="fas fa-camera"></i> Capture Selfie';selfieStream=null;capturedSelfieBlob=null;return;} try{selfieStream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode: "user"}});if(selfieVideo){selfieVideo.srcObject=selfieStream;selfieVideo.style.display='block';}if(selfiePreview)selfiePreview.style.display='none';captureSelfieButton.innerHTML='<i class="fas fa-check-circle"></i> Take Photo / <i class="fas fa-times-circle"></i> Cancel';}catch(err){console.error("Camera access error:",err);alert("Could not access camera. Please ensure permissions are granted and no other app is using it.");}});
+            selfieVideo?.addEventListener('click', () => { if(selfieStream&&selfieCanvas&&selfieVideo.videoWidth>0){const ctx=selfieCanvas.getContext('2d');selfieCanvas.width=selfieVideo.videoWidth;selfieCanvas.height=selfieVideo.videoHeight;ctx.drawImage(selfieVideo,0,0,selfieCanvas.width,selfieVideo.videoHeight);selfieCanvas.toBlob(b=>{capturedSelfieBlob=b;if(selfiePreview){selfiePreview.src=URL.createObjectURL(b);selfiePreview.style.display='block';}selfieStream.getTracks().forEach(t=>t.stop());if(selfieVideo)selfieVideo.style.display='none';selfieStream=null;if(captureSelfieButton)captureSelfieButton.innerHTML='<i class="fas fa-redo"></i> Retake Selfie';},'image/jpeg',0.9);}});
+            async function uploadSelfie(uid, logType) { if(!capturedSelfieBlob||!storage)return null;const ref=storage.ref(`selfies/${uid}/${logType}_${Date.now()}.jpg`);try{const snap=await ref.put(capturedSelfieBlob);const url=await snap.ref.getDownloadURL();capturedSelfieBlob=null;if(selfiePreview)selfiePreview.style.display='none';if(captureSelfieButton)captureSelfieButton.innerHTML='<i class="fas fa-camera"></i> Capture Selfie';return url;}catch(err){console.error("Selfie Upload Error:",err);alert(`Failed to upload selfie. Error: ${err.message}. Check CORS settings on Firebase Storage and network connection.`);return null;}}
+
+            async function fetchLastAttendance() {
+                if(!currentAuthUser||!db) return;
+                try{
+                    const qS=await db.collection("attendanceLogs")
+                        .where("employeeId", "==", currentAuthUser.uid)
+                        .orderBy("clockInTime","desc")
+                        .limit(1).get();
+                    if(!qS.empty){
+                        const logData=qS.docs[0].data();lastLogId=qS.docs[0].id;
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent=logData.clockOutTime?"Clocked Out":"Clocked In";
+                        const t=logData.clockOutTime?logData.clockOutTime.toDate():logData.clockInTime.toDate();
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=t.toLocaleString();
+                        
+                        clockInButton.disabled = !logData.clockOutTime;
+                        clockOutButton.disabled = !!logData.clockOutTime;
+                        pauseBreakButton.disabled = !!logData.clockOutTime; 
+                        
+                        isOnBreak = logData.status === "on_break";
+                        if (isOnBreak) {
+                            currentBreakStatusDisplay.textContent = `On Break (Started: ${new Date(logData.breaks[logData.breaks.length-1].startTime.seconds*1000).toLocaleTimeString()})`;
+                            pauseBreakButton.style.display = 'none';
+                            resumeWorkButton.style.display = 'inline-block';
+                            clockOutButton.disabled = true; 
+                        } else {
+                            currentBreakStatusDisplay.textContent = "Not on break";
+                            pauseBreakButton.style.display = 'inline-block';
+                            resumeWorkButton.style.display = 'none';
+                            pauseBreakButton.disabled = !!logData.clockOutTime; 
+                        }
+
+                    }else{
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="No records found";
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent="--";
+                        if(clockInButton)clockInButton.disabled=false;
+                        if(clockOutButton)clockOutButton.disabled=true;
+                        if(pauseBreakButton)pauseBreakButton.disabled=true;
+                        if(resumeWorkButton)resumeWorkButton.style.display='none';
+                        currentBreakStatusDisplay.textContent = "Not on break";
+                    }
+                }catch(err){
+                    console.error("Fetch last attendance log error:",err);
+                    if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Error loading status";
+                    if (err.code === 'failed-precondition') { showToast("Firestore query failed: Missing index for fetching last attendance. Admin: please create Firestore indexes.", "error", 5000); } 
+                    else if (err.message && err.message.includes("Invalid property path")) { showToast("Firestore query error (last attendance): Invalid field name. " + err.message, "error", 5000); }
+                }
             }
-        });
-        
-        setupInteractiveEventListeners();
-        applyTheme(localStorage.getItem('theme') || 'light');
-        updateDashboardTime();
-        setInterval(updateDashboardTime, 30000);
-    });
 
-    function setupInteractiveEventListeners() {
-        // Popups
-        document.getElementById('userGreetingProfilePicTrigger').addEventListener('click', toggleProfilePopup);
-        document.getElementById('popupSignOutButton').addEventListener('click', signOutUser);
-        document.getElementById('notificationBellIcon').addEventListener('click', () => document.getElementById('notificationsDropdownContainer').classList.toggle('visible'));
-        document.getElementById('markAllNotificationsRead').addEventListener('click', clearAllNotifications);
-        document.addEventListener('click', closePopupsOnOutsideClick);
+            async function fetchFullAttendanceHistory(userId = null, logDiv = null, chartContainer = null) {
+                const targetUserId = userId || currentAuthUser?.uid;
+                if (!targetUserId || !db) {
+                    if(logDiv) logDiv.innerHTML = "<p>Cannot fetch history. User not specified.</p>";
+                    return;
+                }
+                const logDisplay = logDiv || document.getElementById('attendanceHistoryLog');
+                const chartDisplay = chartContainer || document.getElementById('historyChartContainer');
+                if(!logDisplay || !chartDisplay) return;
 
-        // Attendance
-        document.getElementById('clockInButton').addEventListener('click', clockIn);
-        document.getElementById('clockOutButton').addEventListener('click', clockOut);
-        document.getElementById('pauseBreakButton').addEventListener('click', startBreak);
-        document.getElementById('resumeWorkButton').addEventListener('click', resumeWork);
-        document.getElementById('applyHistoryFilter').addEventListener('click', applyUserHistoryFilter);
+                logDisplay.innerHTML = "<p>Loading history...</p>";
+                chartDisplay.innerHTML = "";
 
-        // Tasks
-        const addTaskButton = document.getElementById('addTaskButton');
-        addTaskButton.addEventListener('click', addTask);
-        document.getElementById('newTaskInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') addTask(); });
-        document.getElementById('taskList').addEventListener('click', handleTaskActions);
-        document.querySelector('.task-filters').addEventListener('click', handleTaskFilter);
+                try {
+                    let query = db.collection("attendanceLogs")
+                                .where("employeeId", "==", targetUserId)
+                                .orderBy("clockInTime", "desc");
+                    
+                    const startDateInput = userId ? document.getElementById('adminHistoryStartDate') : document.getElementById('historyStartDate');
+                    const endDateInput = userId ? document.getElementById('adminHistoryEndDate') : document.getElementById('historyEndDate');
 
-        // Notes
-        document.getElementById('createNewNoteButton').addEventListener('click', () => openNoteModal());
-        document.getElementById('closeNoteModal').addEventListener('click', () => document.getElementById('noteModal').classList.remove('visible'));
-        document.getElementById('notesList').addEventListener('click', (e) => {
-            const noteId = e.target.closest('li')?.dataset.id;
-            if (noteId) {
-                const note = notes.find(n => n.id == noteId);
-                if (note) openNoteModal(note);
+                    if (startDateInput && startDateInput.value) {
+                        query = query.where("clockInTime", ">=", new Date(startDateInput.value));
+                    }
+                    if (endDateInput && endDateInput.value) {
+                        // Add 1 day to end date to include the whole day
+                        const endOfDay = new Date(endDateInput.value);
+                        endOfDay.setHours(23, 59, 59, 999);
+                        query = query.where("clockInTime", "<=", endOfDay);
+                    }
+
+
+                    const snapshot = await query.get();
+                    if (snapshot.empty) {
+                        logDisplay.innerHTML = "<p>No attendance records found for the selected criteria.</p>";
+                        chartDisplay.innerHTML = `<p class="chart-no-data">No data available.</p>`;
+                        return;
+                    }
+
+                    let logHTML = '';
+                    const dailyHours = {};
+
+                    snapshot.docs.forEach(doc => {
+                        const log = doc.data();
+                        const clockInDate = log.clockInTime.toDate();
+                        const clockInString = clockInDate.toLocaleString();
+                        const clockOutString = log.clockOutTime ? log.clockOutTime.toDate().toLocaleString() : 'N/A';
+                        const duration = log.workDurationMinutes ? `${log.workDurationMinutes} min` : 'N/A';
+                        const isLateClass = log.isLate ? 'late-entry' : '';
+
+                        logHTML += `<div class="history-log-item ${isLateClass}"><strong>In:</strong> ${clockInString} | <strong>Out:</strong> ${clockOutString} | <strong>Work Duration:</strong> ${duration}</div>`;
+                        
+                        if(log.workDurationMinutes) {
+                            const dateKey = clockInDate.toLocaleDateString();
+                            dailyHours[dateKey] = (dailyHours[dateKey] || 0) + log.workDurationMinutes;
+                        }
+                    });
+                    logDisplay.innerHTML = logHTML;
+
+                    // Render Chart
+                    const chartData = Object.entries(dailyHours).map(([date, minutes]) => ({ date, hours: minutes / 60 })).reverse();
+                    if (chartData.length > 0) {
+                        const maxHours = Math.max(...chartData.map(d => d.hours));
+                        chartData.forEach(day => {
+                            const bar = document.createElement('div');
+                            bar.className = 'chart-bar';
+                            bar.style.height = `${(day.hours / maxHours) * 100}%`;
+                            bar.title = `${day.hours.toFixed(2)} hours on ${day.date}`;
+                            bar.innerHTML = `<span>${new Date(day.date).toLocaleDateString([], {month: 'short', day: 'numeric'})}</span>`;
+                            chartDisplay.appendChild(bar);
+                        });
+                    } else {
+                         chartDisplay.innerHTML = `<p class="chart-no-data">No data with duration to visualize.</p>`;
+                    }
+
+                } catch (err) {
+                    console.error("Error fetching attendance history:", err);
+                    logDisplay.innerHTML = `<p style="color:red;">Error fetching history: ${err.message}. Check console for details.</p>`;
+                     if (err.code === 'failed-precondition') showToast("Firestore query failed: Missing index for history.", "error", 5000);
+                }
             }
+
+            document.getElementById('applyHistoryFilter')?.addEventListener('click', () => fetchFullAttendanceHistory());
+
+            async function calculateHoursThisWeek() {
+                if(!currentAuthUser||!db||!hoursThisWeekDisplay) return;
+                const today = new Date();
+                const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+                firstDayOfWeek.setHours(0,0,0,0);
+                
+                try {
+                     const snapshot = await db.collection("attendanceLogs")
+                        .where("employeeId", "==", currentAuthUser.uid)
+                        .where("clockInTime", ">=", firebase.firestore.Timestamp.fromDate(firstDayOfWeek))
+                        .get();
+                     let totalMinutes = 0;
+                     snapshot.forEach(doc => {
+                         totalMinutes += doc.data().workDurationMinutes || 0;
+                     });
+                     hoursThisWeekDisplay.textContent = `${(totalMinutes/60).toFixed(2)} hrs`;
+                } catch(err) {
+                    console.error("Error calculating weekly hours:", err);
+                    hoursThisWeekDisplay.textContent = "Error";
+                    if (err.code === 'failed-precondition') showToast("Firestore query failed: Missing index for weekly hours.", "error", 5000);
+                }
+            }
+
+            clockInButton?.addEventListener('click', async () => {
+                if(!currentAuthUser||!db){showToast("Please sign in to clock in.", "error");return;}
+
+                const now = new Date();
+                const todayDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+                const globalSchedules = JSON.parse(localStorage.getItem('globalSchedules')) || {};
+                const todaySchedule = globalSchedules[todayDayName];
+                let isLateClockIn = false;
+
+                if (todaySchedule && todaySchedule.startTime) {
+                    const [startHour, startMinute] = todaySchedule.startTime.split(':').map(Number);
+                    const officialStartTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+                    const gracePeriodStartTime = new Date(officialStartTime.getTime() - 10 * 60000); 
+
+                    if (now < gracePeriodStartTime) {
+                        showToast(`Cannot clock in yet. Scheduled start time is ${todaySchedule.startTime}. You can clock in from ${gracePeriodStartTime.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}.`, "warning", 5000);
+                        return;
+                    }
+                    if (now > officialStartTime) {
+                        isLateClockIn = true;
+                    }
+                }
+
+
+                clockInButton.disabled=true;
+                await getGeolocation();
+                const tS=firebase.firestore.Timestamp.now();
+                let pUrl=null;
+                if(capturedSelfieBlob) pUrl = await uploadSelfie(currentAuthUser.uid,`in_${tS.toMillis()}`);
+
+                const entry={
+                    employeeId:currentAuthUser.uid,
+                    employeeName:currentAuthUser.displayName||currentAuthUser.email,
+                    clockInTime:tS,
+                    isLate: isLateClockIn,
+                    geolocationIn:currentGeolocation ? new firebase.firestore.GeoPoint(currentGeolocation.lat,currentGeolocation.lon) : null,
+                    geolocationInAccuracy: currentGeolocation && typeof currentGeolocation.acc === 'number' ? currentGeolocation.acc : null,
+                    photoInUrl:pUrl,
+                    status:"clocked_in",
+                    breaks: [] 
+                };
+                try{
+                    const dRef=await db.collection("attendanceLogs").add(entry);
+                    lastLogId=dRef.id;
+                    if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Clocked In";
+                    if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=tS.toDate().toLocaleString();
+                    if(clockOutButton)clockOutButton.disabled=false;
+                    if(pauseBreakButton)pauseBreakButton.disabled=false;
+                    calculateHoursThisWeek();
+                    if(document.getElementById('tab-attendance')?.classList.contains('active'))fetchFullAttendanceHistory();
+                    showToast(`Successfully Clocked In! ${isLateClockIn ? '(Marked as LATE)' : ''}`, isLateClockIn ? "warning" : "success");
+                    addNotification("attendance", `You clocked in at ${tS.toDate().toLocaleTimeString()} ${isLateClockIn ? '(LATE)' : ''}`, () => switchTab('attendance'));
+                    const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                    if (currentUserInList) {
+                        currentUserInList.attendanceStatus = 'Clocked In' + (isLateClockIn ? ' (Late)' : '');
+                        currentUserInList.lastAttendanceLog = entry; 
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                        if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    }
+                }catch(err){
+                    console.error("Clock-in error:",err);
+                    showToast("Error clocking in: " + err.message, "error");
+                    clockInButton.disabled=false;
+                }
+            });
+
+            clockOutButton?.addEventListener('click', async () => {
+                if(!currentAuthUser||!lastLogId||!db){showToast("Cannot clock out. No active session or not signed in.", "error");return;}
+                if(isOnBreak) { showToast("Please resume work before clocking out.", "warning"); return; }
+
+                clockOutButton.disabled=true;
+                await getGeolocation();
+                const tS=firebase.firestore.Timestamp.now();
+                let pUrl=null;
+                if(capturedSelfieBlob) pUrl = await uploadSelfie(currentAuthUser.uid,`out_${tS.toMillis()}`);
+                try{
+                    const logRef=db.collection("attendanceLogs").doc(lastLogId);
+                    const doc=await logRef.get();
+                    if(doc.exists&&!doc.data().clockOutTime){
+                        const inT=doc.data().clockInTime.toDate();
+                        const dur=Math.round((tS.toDate()-inT)/60000); 
+                        
+                        let totalBreakMinutes = 0;
+                        const breaksArray = doc.data().breaks || [];
+                        breaksArray.forEach(brk => {
+                            if (brk.startTime && brk.endTime) {
+                                totalBreakMinutes += Math.round((brk.endTime.toDate() - brk.startTime.toDate()) / 60000);
+                            }
+                        });
+                        const workDurationMinutes = dur - totalBreakMinutes;
+                        const updatedLogEntry = {
+                            clockOutTime:tS,
+                            durationMinutes:dur, 
+                            workDurationMinutes: workDurationMinutes, 
+                            totalBreakMinutes: totalBreakMinutes,
+                            status:"clocked_out",
+                            geolocationOut:currentGeolocation ? new firebase.firestore.GeoPoint(currentGeolocation.lat,currentGeolocation.lon) : null,
+                            geolocationOutAccuracy: currentGeolocation && typeof currentGeolocation.acc === 'number' ? currentGeolocation.acc : null,
+                            photoOutUrl:pUrl
+                        };
+
+                        await logRef.update(updatedLogEntry);
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Clocked Out";
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=tS.toDate().toLocaleString();
+                        if(clockInButton)clockInButton.disabled=false;
+                        if(pauseBreakButton)pauseBreakButton.disabled=true;
+                        lastLogId=null; isOnBreak = false;
+                        calculateHoursThisWeek();
+                        if(document.getElementById('tab-attendance')?.classList.contains('active'))fetchFullAttendanceHistory();
+                        showToast("Successfully Clocked Out!", "success");
+                        addNotification("attendance", `You clocked out at ${tS.toDate().toLocaleTimeString()}. Work duration: ${workDurationMinutes} mins.`, () => switchTab('attendance'));
+                        const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                        if (currentUserInList) {
+                            currentUserInList.attendanceStatus = 'Clocked Out';
+                            currentUserInList.breakStatus = 'N/A';
+                            currentUserInList.lastAttendanceLog = {...doc.data(), ...updatedLogEntry};
+                            if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                            if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                        }
+                    }else{
+                        showToast("Could not find active clock-in record or already clocked out.", "error");
+                        fetchLastAttendance(); 
+                    }
+                }catch(err){
+                    console.error("Clock-out error:",err);
+                    showToast("Error clocking out: " + err.message, "error");
+                    clockOutButton.disabled=false;
+                }
+            });
+
+            pauseBreakButton?.addEventListener('click', async () => {
+                if (!currentAuthUser || !lastLogId || !db || isOnBreak) {
+                    showToast("Cannot pause break. Not clocked in or already on break.", "warning");
+                    return;
+                }
+                pauseBreakButton.disabled = true;
+                currentBreakStartTime = firebase.firestore.Timestamp.now();
+                const newBreakEntry = { startTime: currentBreakStartTime, endTime: null, durationMinutes: null };
+                try {
+                    const logRef = db.collection("attendanceLogs").doc(lastLogId);
+                    await logRef.update({
+                        status: "on_break",
+                        breaks: firebase.firestore.FieldValue.arrayUnion(newBreakEntry)
+                    });
+                    isOnBreak = true;
+                    currentBreakStatusDisplay.textContent = `On Break (Started: ${currentBreakStartTime.toDate().toLocaleTimeString()})`;
+                    pauseBreakButton.style.display = 'none';
+                    resumeWorkButton.style.display = 'inline-block';
+                    resumeWorkButton.disabled = false;
+                    clockOutButton.disabled = true; 
+                    showToast("Break started.", "info");
+                    addNotification("break", `Break started at ${currentBreakStartTime.toDate().toLocaleTimeString()}`, () => switchTab('attendance'));
+                     const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                    if (currentUserInList) {
+                        currentUserInList.breakStatus = 'On Break';
+                        if (currentUserInList.lastAttendanceLog) {
+                            currentUserInList.lastAttendanceLog.status = "on_break";
+                            if (!currentUserInList.lastAttendanceLog.breaks) currentUserInList.lastAttendanceLog.breaks = [];
+                            currentUserInList.lastAttendanceLog.breaks.push(newBreakEntry);
+                        }
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                         if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    }
+                } catch (err) {
+                    console.error("Pause break error:", err);
+                    showToast("Error starting break: " + err.message, "error");
+                    pauseBreakButton.disabled = false;
+                }
+            });
+
+            resumeWorkButton?.addEventListener('click', async () => {
+                if (!currentAuthUser || !lastLogId || !db || !isOnBreak || !currentBreakStartTime) {
+                     showToast("Cannot resume work. Not on break or error in break state.", "warning");
+                    return;
+                }
+                resumeWorkButton.disabled = true;
+                const breakEndTime = firebase.firestore.Timestamp.now();
+                const breakDuration = Math.round((breakEndTime.toDate() - currentBreakStartTime.toDate()) / 60000);
+
+                try {
+                    const logRef = db.collection("attendanceLogs").doc(lastLogId);
+                    const doc = await logRef.get();
+                    if (doc.exists) {
+                        const breaksArray = doc.data().breaks || [];
+                        if (breaksArray.length > 0) {
+                            const lastBreakIndex = breaksArray.findIndex(b => b.startTime.isEqual(currentBreakStartTime) && b.endTime === null);
+                            if (lastBreakIndex !== -1) { 
+                                breaksArray[lastBreakIndex].endTime = breakEndTime;
+                                breaksArray[lastBreakIndex].durationMinutes = breakDuration;
+                            }
+                        }
+                        await logRef.update({
+                            status: "clocked_in", 
+                            breaks: breaksArray
+                        });
+                        isOnBreak = false;
+                        currentBreakStartTime = null;
+                        currentBreakStatusDisplay.textContent = "Not on break";
+                        pauseBreakButton.style.display = 'inline-block';
+                        pauseBreakButton.disabled = false;
+                        resumeWorkButton.style.display = 'none';
+                        clockOutButton.disabled = false; 
+                        showToast(`Work resumed. Break duration: ${breakDuration} min.`, "info");
+                        addNotification("break", `Work resumed. Break was ${breakDuration} min.`, () => switchTab('attendance'));
+                        const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                        if (currentUserInList) {
+                            currentUserInList.breakStatus = 'N/A';
+                             if (currentUserInList.lastAttendanceLog) {
+                                currentUserInList.lastAttendanceLog.status = "clocked_in";
+                                const lbi = currentUserInList.lastAttendanceLog.breaks.findIndex(b => b.endTime === null);
+                                if (lbi !== -1) {
+                                    currentUserInList.lastAttendanceLog.breaks[lbi].endTime = breakEndTime;
+                                    currentUserInList.lastAttendanceLog.breaks[lbi].durationMinutes = breakDuration;
+                                }
+                            }
+                            if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                            if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                        }
+                    }
+                } catch (err) {
+                    console.error("Resume work error:", err);
+                    showToast("Error resuming work: " + err.message, "error");
+                    resumeWorkButton.disabled = false;
+                }
+            });
+
+            let unifiedUserList = []; 
+
+            async function initializeUnifiedUserList() {
+                unifiedUserList = []; 
+                const tempUserMap = new Map(); 
+
+                const baseMockUsers = [
+                    { id: 'mockuser1', name: 'Alice Wonder', email: 'alice@example.com', role: 'Developer', systemStatus: 'active', lastActivity: Date.now(), photoURL: 'https://randomuser.me/api/portraits/women/1.jpg', attendanceStatus: 'Clocked Out', breakStatus: 'N/A', isWhitelisted: false, lastAttendanceLog: null },
+                    { id: 'mockuser2', name: 'Bob Builder', email: 'bob@example.com', role: 'Designer', systemStatus: 'offline', lastActivity: Date.now() - (20 * 60 * 1000), photoURL: 'https://randomuser.me/api/portraits/men/1.jpg', attendanceStatus: 'Clocked Out', breakStatus: 'N/A', isWhitelisted: false, lastAttendanceLog: null },
+                ];
+                baseMockUsers.forEach(user => tempUserMap.set(user.id, { ...user }));
+
+                if (currentAuthUser) {
+                    tempUserMap.set(currentAuthUser.uid, {
+                        id: currentAuthUser.uid,
+                        name: currentEmployeeName,
+                        email: currentAuthUser.email,
+                        photoURL: currentAuthUser.photoURL,
+                        role: userIsAdmin ? 'Admin' : 'User',
+                        systemStatus: 'active', 
+                        lastActivity: Date.now(),
+                        isWhitelisted: isEmailWhitelisted(currentAuthUser.email),
+                        attendanceStatus: lastActionStatusDisplay?.textContent || 'Unknown',
+                        breakStatus: currentBreakStatusDisplay?.textContent || 'N/A',
+                        lastAttendanceLog: null 
+                    });
+                }
+
+                const whitelisted = getWhitelistedEmails();
+                whitelisted.forEach(email => {
+                    let existingUser = null;
+                    for (let user of tempUserMap.values()) {
+                        if (user.email === email) {
+                            existingUser = user;
+                            break;
+                        }
+                    }
+                    if (existingUser) {
+                        existingUser.isWhitelisted = true;
+                    } else {
+                        tempUserMap.set(email, { 
+                            id: email, 
+                            name: email.split('@')[0], 
+                            email: email, 
+                            role: 'Whitelisted', 
+                            systemStatus: 'offline', 
+                            lastActivity: 0, 
+                            isWhitelisted: true,
+                            photoURL: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>',
+                            attendanceStatus: 'Unknown',
+                            breakStatus: 'N/A',
+                            lastAttendanceLog: null
+                        });
+                    }
+                });
+
+                if (db) {
+                    try {
+                        const attendanceSnapshot = await db.collection("attendanceLogs").orderBy("clockInTime", "desc").get();
+                        const userLastLogMap = new Map();
+
+                        attendanceSnapshot.docs.forEach(doc => {
+                            const log = doc.data();
+                            if (!userLastLogMap.has(log.employeeId)) { 
+                                userLastLogMap.set(log.employeeId, log);
+                            }
+                        });
+                        
+                        userLastLogMap.forEach((log, employeeId) => {
+                            const attendanceStatus = log.clockOutTime ? 'Clocked Out' : 'Clocked In' + (log.isLate ? ' (Late)' : '');
+                            const breakS = (log.status === 'on_break') ? 'On Break' : (log.clockOutTime ? 'N/A' : 'Not on Break');
+                            
+                            if (tempUserMap.has(employeeId)) {
+                                const existingUser = tempUserMap.get(employeeId);
+                                existingUser.name = log.employeeName || existingUser.name; 
+                                if(log.photoInUrl || log.photoOutUrl) existingUser.photoURL = log.photoInUrl || log.photoOutUrl || existingUser.photoURL;
+                                existingUser.attendanceStatus = attendanceStatus;
+                                existingUser.breakStatus = breakS;
+                                existingUser.lastAttendanceLog = log;
+                                if (!existingUser.email && log.employeeName && log.employeeName.includes('@')) { 
+                                    existingUser.email = log.employeeName;
+                                }
+                            } else {
+                                tempUserMap.set(employeeId, {
+                                    id: employeeId,
+                                    name: log.employeeName || 'Unknown User',
+                                    email: (log.employeeName && log.employeeName.includes('@')) ? log.employeeName : `${employeeId.substring(0,5)}@unknown.com`,
+                                    photoURL: log.photoInUrl || log.photoOutUrl || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>',
+                                    role: 'Logged User',
+                                    systemStatus: 'offline', 
+                                    lastActivity: log.clockInTime.toDate().getTime(),
+                                    isWhitelisted: isEmailWhitelisted((log.employeeName && log.employeeName.includes('@')) ? log.employeeName : ''),
+                                    attendanceStatus: attendanceStatus,
+                                    breakStatus: breakS,
+                                    lastAttendanceLog: log
+                                });
+                            }
+                        });
+                    } catch (err) {
+                        console.error("Error fetching user data from attendance logs:", err);
+                         if (err.code === 'failed-precondition') { showToast("Firestore query failed (user list): Missing index. Admin: create Firestore indexes.", "error", 5000); }
+                    }
+                }
+                unifiedUserList = Array.from(tempUserMap.values());
+            }
+
+            async function loadAndRenderTeamOverview() {
+                if (!teamOverviewListDiv || !currentAuthUser) {
+                    if (teamOverviewListDiv) teamOverviewListDiv.innerHTML = '<p>Please log in to view team overview.</p>';
+                    return;
+                }
+                teamOverviewListDiv.innerHTML = '<p>Loading team members...</p>';
+                await initializeUnifiedUserList(); 
+                renderTeamOverview();
+            }
+            
+            function renderTeamOverview() {
+                if (!teamOverviewListDiv) return;
+                teamOverviewListDiv.innerHTML = '';
+
+                if (unifiedUserList.length === 0) {
+                    teamOverviewListDiv.innerHTML = '<p>No team members to display. Admins can whitelist emails in the Admin Dashboard.</p>';
+                    return;
+                }
+
+                unifiedUserList.forEach(user => {
+                    const item = document.createElement('div');
+                    item.classList.add('team-overview-user-item');
+                    item.dataset.userId = user.id;
+
+                    let displayName = user.name || user.email.split('@')[0];
+                    if (user.id === currentAuthUser?.uid) displayName += " (You)";
+
+                    item.innerHTML = `
+                        <img src="${user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>'}" alt="${displayName}" class="team-overview-avatar">
+                        <div class="team-overview-info">
+                            <h4>${displayName}</h4>
+                            <p class="email">${user.email || 'No email available'}</p>
+                            <p>System: <span class="status-dot status-${user.systemStatus || 'offline'}"></span> <span class="status-text">${user.systemStatus || 'offline'}</span></p>
+                            <p class="attendance-status ${user.attendanceStatus && user.attendanceStatus.includes('(Late)') ? 'late-entry' : ''}">Attendance: ${user.attendanceStatus || 'N/A'}</p>
+                            <p>Whitelisted: ${user.isWhitelisted ? 'Yes' : 'No'}</p>
+                        </div>
+                        <div class="team-overview-actions">
+                            ${userIsAdmin && adminDashboardUnlocked ? `<button class="btn btn-sm btn-secondary edit-user-overview-btn" data-user-id="${user.id}">Edit</button>` : ''}
+                        </div>
+                    `;
+                    teamOverviewListDiv.appendChild(item);
+                });
+
+                document.querySelectorAll('.edit-user-overview-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        openEditUserModal(this.dataset.userId);
+                    });
+                });
+            }
+            
+            function openEditUserModal(userId) {
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (!user) {
+                    showToast("User not found.", "error");
+                    return;
+                }
+                editingUserIdInput.value = userId;
+                editModalUserName.textContent = user.name || 'N/A';
+                editModalUserEmail.textContent = user.email || 'N/A';
+                editModalSystemStatusSelect.value = user.systemStatus || 'offline';
+                editModalLastAttendance.textContent = user.attendanceStatus || 'N/A';
+                
+                toggleWhitelistBtn.textContent = user.isWhitelisted ? "Remove from Whitelist" : "Add to Whitelist";
+                toggleWhitelistBtn.dataset.currentWhitelistStatus = user.isWhitelisted;
+
+                editUserModal.classList.add('visible');
+            }
+
+            function closeEditUserModal() {
+                editUserModal.classList.remove('visible');
+            }
+            closeEditUserModalBtn?.addEventListener('click', closeEditUserModal);
+
+            saveSystemStatusOverrideBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                const newStatus = editModalSystemStatusSelect.value;
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (user) {
+                    user.systemStatus = newStatus;
+                    if (userId === currentAuthUser?.uid) user.lastActivity = Date.now(); 
+                    renderTeamOverview(); 
+                    if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    showToast(`Display status for ${user.name} updated to ${newStatus}.`, "success");
+                }
+                closeEditUserModal();
+            });
+
+            viewUserFullHistoryBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                if(adminHistoryUserSelect) adminHistoryUserSelect.value = userId; 
+                switchTab('admin'); 
+                if(!adminDashboardUnlocked) {
+                     showToast("Please unlock Admin Dashboard to view historical data.", "warning");
+                } else {
+                    adminApplyHistoryFilterButton.click(); 
+                    document.getElementById('adminHistoricalAttendanceSection').scrollIntoView({ behavior: 'smooth' });
+                }
+                closeEditUserModal();
+            });
+            
+            toggleWhitelistBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (!user || !user.email) {
+                     showToast("User email not available for whitelist action.", "error");
+                     return;
+                }
+                
+                let currentWhitelist = getWhitelistedEmails();
+                if (user.isWhitelisted) { 
+                    if (user.email === ADMIN_EMAIL) {
+                        showToast("The primary admin email cannot be removed from the whitelist.", "error");
+                        return;
+                    }
+                    currentWhitelist = currentWhitelist.filter(email => email !== user.email);
+                    user.isWhitelisted = false;
+                    showToast(`${user.email} removed from whitelist.`, "success");
+                } else { 
+                    if (!currentWhitelist.includes(user.email)) {
+                        currentWhitelist.push(user.email);
+                    }
+                    user.isWhitelisted = true;
+                    showToast(`${user.email} added to whitelist.`, "success");
+                }
+                saveWhitelistedEmails(currentWhitelist);
+                renderWhitelistedEmails(); 
+                renderTeamOverview(); 
+                toggleWhitelistBtn.textContent = user.isWhitelisted ? "Remove from Whitelist" : "Add to Whitelist";
+            });
+
+
+            async function renderAdminTeamGallery() { 
+                if (!adminTeamGalleryDiv || !userIsAdmin || !adminDashboardUnlocked) return;
+                adminTeamGalleryDiv.innerHTML = ''; 
+
+                if (unifiedUserList.length === 0) {
+                     await initializeUnifiedUserList(); 
+                }
+
+                if (unifiedUserList.length === 0) {
+                     adminTeamGalleryDiv.innerHTML = '<p>No users to display in gallery. Whitelist users or wait for attendance data.</p>';
+                     return;
+                }
+
+                unifiedUserList.forEach(user => {
+                    const card = document.createElement('div');
+                    card.classList.add('admin-team-user-card');
+                    card.innerHTML = `
+                        <div class="gallery-avatar-container">
+                            <img src="${user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>'}" alt="${user.name}" class="gallery-avatar">
+                            <span class="gallery-status-dot status-${user.systemStatus || 'offline'}"></span>
+                        </div>
+                        <h4 class="gallery-user-name">${user.name || user.email.split('@')[0]} ${user.id === currentAuthUser?.uid ? '(You)' : ''}</h4>
+                        <p class="gallery-user-email">${user.email || 'N/A'}</p>
+                        <p class="gallery-attendance-status ${user.attendanceStatus && user.attendanceStatus.includes('(Late)') ? 'late-entry' : ''}">Attendance: ${user.attendanceStatus || 'N/A'}</p>
+                        <p class="gallery-break-status">Break: ${user.breakStatus || 'N/A'}</p>
+                    `;
+                    adminTeamGalleryDiv.appendChild(card);
+                });
+            }
+
+
+            let idleTimeout = 10 * 60 * 1000; 
+            let idleTimer;
+
+            function resetIdleTimer() { 
+                clearTimeout(idleTimer);
+                const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser?.uid);
+                if (currentUserInList) {
+                    currentUserInList.lastActivity = Date.now();
+                    if (currentUserInList.systemStatus === 'idle') {
+                        currentUserInList.systemStatus = 'active';
+                        if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                        if (userProfilePopup.classList.contains('visible')) { 
+                           popupUserStatusIndicator.className = 'status-dot status-active';
+                        }
+                    }
+                }
+                idleTimer = setTimeout(setCurrentUserToIdle, idleTimeout);
+            }
+
+            function setCurrentUserToIdle() {
+                const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser?.uid);
+                if (currentUserInList && currentUserInList.systemStatus === 'active') { 
+                    currentUserInList.systemStatus = 'idle';
+                    if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                     if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                    if (userProfilePopup.classList.contains('visible')) { 
+                        popupUserStatusIndicator.className = 'status-dot status-idle';
+                    }
+                    addNotification("status_admin", `${currentUserInList.name} is now idle.`, () => switchTab('admin'));
+                }
+            }
+            window.addEventListener('mousemove', resetIdleTimer);
+            window.addEventListener('keydown', resetIdleTimer);
+            window.addEventListener('mousedown', resetIdleTimer);
+            window.addEventListener('scroll', resetIdleTimer);
+            window.addEventListener('touchstart', resetIdleTimer);
+            
+            function populateAdminHistoryUserSelectWithUnifiedList() {
+                if (!adminHistoryUserSelect) return;
+                const currentVal = adminHistoryUserSelect.value;
+                adminHistoryUserSelect.innerHTML = '<option value="">-- Select User --</option>';
+                unifiedUserList.forEach(user => { 
+                    const option = document.createElement('option');
+                    option.value = user.id; 
+                    option.textContent = user.name + (user.email ? ` (${user.email})` : '');
+                    adminHistoryUserSelect.appendChild(option);
+                });
+                adminHistoryUserSelect.value = currentVal;
+            }
+            adminApplyHistoryFilterButton?.addEventListener('click', () => {
+                const selectedUserId = adminHistoryUserSelect.value;
+                if (!selectedUserId) {
+                    showToast("Please select a user to view their history.", "warning");
+                    return;
+                }
+                fetchFullAttendanceHistory(selectedUserId, adminAttendanceHistoryLogDiv, null); 
+            });
+            
+
+            const adminBreakLogListDiv = document.getElementById('adminUserBreakLogList');
+            async function loadAdminBreakLogs() {
+                if (!adminBreakLogListDiv || !userIsAdmin || !db || !adminDashboardUnlocked) return;
+                adminBreakLogListDiv.innerHTML = '<p>Loading break logs...</p>';
+                
+                try {
+                    const sevenDaysAgo = new Date();
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                    const attendanceSnapshot = await db.collection("attendanceLogs")
+                                                .where("clockInTime", ">=", firebase.firestore.Timestamp.fromDate(sevenDaysAgo))
+                                                .orderBy("clockInTime", "desc")
+                                                .get();
+                    
+                    let html = '';
+                    const userBreaks = {};
+
+                    attendanceSnapshot.docs.forEach(doc => {
+                        const log = doc.data();
+                        if (log.breaks && log.breaks.length > 0) {
+                            if (!userBreaks[log.employeeId]) {
+                                userBreaks[log.employeeId] = { name: log.employeeName || log.employeeId, totalBreakTime: 0, entries: [] };
+                            }
+                            log.breaks.forEach(brk => {
+                                if (brk.durationMinutes) {
+                                    userBreaks[log.employeeId].totalBreakTime += brk.durationMinutes;
+                                }
+                                userBreaks[log.employeeId].entries.push({
+                                    date: log.clockInTime.toDate().toLocaleDateString(),
+                                    start: brk.startTime.toDate().toLocaleTimeString(),
+                                    end: brk.endTime ? brk.endTime.toDate().toLocaleTimeString() : 'N/A',
+                                    duration: brk.durationMinutes ? `${brk.durationMinutes} min` : 'Ongoing'
+                                });
+                            });
+                        }
+                    });
+
+                    if (Object.keys(userBreaks).length === 0) {
+                        html = '<p>No break data found in the last 7 days.</p>';
+                    } else {
+                        Object.values(userBreaks).forEach(userData => {
+                            html += `<div class="card" style="margin-bottom:15px;"><h4>${userData.name} (Total Break: ${userData.totalBreakTime} min)</h4><ul>`;
+                            userData.entries.slice(0, 5).forEach(entry => { 
+                                html += `<li>${entry.date}: ${entry.start} - ${entry.end} (${entry.duration})</li>`;
+                            });
+                            html += `</ul></div>`;
+                        });
+                    }
+                    adminBreakLogListDiv.innerHTML = html;
+
+                } catch (err) {
+                    console.error("Error loading admin break logs:", err);
+                    adminBreakLogListDiv.innerHTML = '<p>Error loading break logs. Check console.</p>';
+                    if (err.code === 'failed-precondition') showToast("Firestore query failed: Missing index for admin break logs.", "error", 5000);
+                }
+            }
+            function renderWhitelistedEmails() {
+                if (!whitelistedEmailsListUL) return;
+                const emails = getWhitelistedEmails();
+                whitelistedEmailsListUL.innerHTML = '';
+                if (emails.length > 0) {
+                    emails.forEach(email => {
+                        const li = document.createElement('li');
+                        li.textContent = email;
+                        if (email !== ADMIN_EMAIL) {
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.className = 'delete-item';
+                            deleteBtn.innerHTML = '&times;';
+                            deleteBtn.title = `Remove ${email}`;
+                            deleteBtn.onclick = () => {
+                                saveWhitelistedEmails(getWhitelistedEmails().filter(e => e !== email));
+                                renderWhitelistedEmails();
+                                showToast(`${email} removed from whitelist.`, 'success');
+                            };
+                            li.appendChild(deleteBtn);
+                        }
+                        whitelistedEmailsListUL.appendChild(li);
+                    });
+                } else {
+                    whitelistedEmailsListUL.innerHTML = '<li>No emails whitelisted yet.</li>';
+                }
+            }
+
+            emailWhitelistForm?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('emailToWhitelist');
+                const email = emailInput.value.trim().toLowerCase();
+                if (email) {
+                    const currentList = getWhitelistedEmails();
+                    if (!currentList.includes(email)) {
+                        currentList.push(email);
+                        saveWhitelistedEmails(currentList);
+                        renderWhitelistedEmails();
+                        showToast(`${email} added to whitelist.`, 'success');
+                        emailInput.value = '';
+                    } else {
+                        showToast(`${email} is already on the whitelist.`, 'info');
+                    }
+                }
+            });
+
+            function renderGlobalScheduleForm() {
+                if (!globalScheduleTableBody) return;
+                globalScheduleTableBody.innerHTML = '';
+                weekdays.forEach(day => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${day}</td>
+                        <td><input type="time" id="start-${day.toLowerCase()}"></td>
+                        <td><input type="time" id="end-${day.toLowerCase()}"></td>
+                    `;
+                    globalScheduleTableBody.appendChild(row);
+                });
+            }
+
+            function loadGlobalSchedulesToForm() {
+                const schedules = JSON.parse(localStorage.getItem('globalSchedules')) || {};
+                weekdays.forEach(day => {
+                    const dayKey = day;
+                    if(schedules[dayKey]) {
+                        document.getElementById(`start-${day.toLowerCase()}`).value = schedules[dayKey].startTime || '';
+                        document.getElementById(`end-${day.toLowerCase()}`).value = schedules[dayKey].endTime || '';
+                    }
+                });
+            }
+
+            globalSchedulerForm?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const schedules = {};
+                weekdays.forEach(day => {
+                    const startTime = document.getElementById(`start-${day.toLowerCase()}`).value;
+                    const endTime = document.getElementById(`end-${day.toLowerCase()}`).value;
+                    if (startTime && endTime) {
+                        schedules[day] = { startTime, endTime };
+                    }
+                });
+                localStorage.setItem('globalSchedules', JSON.stringify(schedules));
+                showToast('Global schedule saved successfully!', 'success');
+            });
+            function loadGlobalScheduleForUser() {
+                const scheduleDisplay = document.getElementById('userScheduleDisplay');
+                const scheduleDetails = document.getElementById('scheduleDetails');
+                const scheduleReminder = document.getElementById('scheduleReminder');
+                if(!scheduleDisplay || !scheduleDetails) return;
+
+                const now = new Date();
+                const todayDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+                const globalSchedules = JSON.parse(localStorage.getItem('globalSchedules')) || {};
+                const todaySchedule = globalSchedules[todayDayName];
+
+                if(todaySchedule && todaySchedule.startTime && todaySchedule.endTime) {
+                    scheduleDetails.innerHTML = `Today's official hours are <strong>${todaySchedule.startTime}</strong> to <strong>${todaySchedule.endTime}</strong>.`;
+                    scheduleDisplay.style.display = 'block';
+
+                    // Reminder Logic
+                    const [startHour, startMinute] = todaySchedule.startTime.split(':').map(Number);
+                    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+                    const fifteenMinsBefore = new Date(startTime.getTime() - 15 * 60000);
+                    if (now >= fifteenMinsBefore && now <= startTime && !clockInButton.disabled) {
+                        scheduleReminder.textContent = `Reminder: Clock-in time is at ${todaySchedule.startTime}!`;
+                        scheduleReminder.style.display = 'block';
+                    } else {
+                        scheduleReminder.style.display = 'none';
+                    }
+                } else {
+                    scheduleDisplay.style.display = 'none';
+                }
+            }
+
+
+            updateDashboardTime(); setInterval(updateDashboardTime, 30000);
+            renderTasks();
+            renderNotesList();
+            loadAndDisplayAnnouncements(); 
         });
-        document.getElementById('saveNoteButton').addEventListener('click', saveNote);
-        document.getElementById('deleteNoteButton').addEventListener('click', deleteNote);
-
-        // Admin
-        const unlockAdminBtn = document.getElementById('unlockAdminDashboardButton');
-        unlockAdminBtn.addEventListener('click', unlockAdminDashboard);
-        document.getElementById('adminCodeInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') unlockAdminDashboard(); });
-        document.getElementById('emailWhitelistForm').addEventListener('submit', addEmailToWhitelist);
-        document.getElementById('announcementForm').addEventListener('submit', postAnnouncement);
-        document.getElementById('globalSchedulerForm').addEventListener('submit', saveGlobalSchedule);
-        document.getElementById('adminApplyHistoryFilter').addEventListener('click', applyAdminHistoryFilter);
-    }
-
-    // --- CORE FUNCTION IMPLEMENTATIONS ---
-
-    // UI State & Popups
-    function applyTheme(theme) { document.body.dataset.theme = theme; localStorage.setItem('theme', theme); }
-    function updateGreeting() { const h = new Date().getHours(); let gt = h < 12 ? "Good Morning" : h < 18 ? "Good Afternoon" : "Good Evening"; const name = currentAuthUser ? (currentAuthUser.displayName || currentAuthUser.email.split('@')[0]) : "Guest"; document.getElementById('dynamicGreeting').innerHTML = `${gt}, <span id="userNameForGreeting">${name}</span>!`; }
-    function updateDashboardTime() { const n = new Date(); document.getElementById('dashboardCurrentTime').textContent = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); document.getElementById('dashboardCurrentDate').textContent = n.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' }); }
-    function toggleProfilePopup() { if(currentAuthUser) document.getElementById('userProfilePopup').classList.toggle('visible'); }
-    function closePopupsOnOutsideClick(event) {
-        const userPopup = document.getElementById('userProfilePopup');
-        if (userPopup.classList.contains('visible') && !userPopup.contains(event.target) && !document.getElementById('userGreetingProfilePicTrigger').contains(event.target)) {
-            userPopup.classList.remove('visible');
-        }
-        const notifPopup = document.getElementById('notificationsDropdownContainer');
-        if (notifPopup.classList.contains('visible') && !notifPopup.contains(event.target) && !document.getElementById('notificationBellIcon').contains(event.target)) {
-            notifPopup.classList.remove('visible');
-        }
-    }
-    
-    // Notifications
-    function addNotification(type, summary, action = () => {}) { if (notifications.length > 50) notifications.pop(); notifications.unshift({ type, summary, timestamp: Date.now(), action }); renderNotifications(); try { document.getElementById('generalNotificationSound').play(); } catch(e) {} }
-    function renderNotifications() { const list = document.getElementById('dynamicNotificationList'); list.innerHTML = ''; if (notifications.length === 0) { list.innerHTML = '<li class="no-notifications-item">No new notifications.</li>'; } else { notifications.forEach(n => { const li = document.createElement('li'); li.innerHTML = `<span class="notification-summary">${n.summary}</span><span class="notification-time">${new Date(n.timestamp).toLocaleString()}</span>`; li.onclick = () => { n.action(); document.getElementById('notificationsDropdownContainer').classList.remove('visible'); }; list.appendChild(li); }); } document.getElementById('notificationCountBadge').textContent = notifications.length; document.getElementById('notificationCountBadge').style.display = notifications.length > 0 ? 'flex' : 'none'; }
-    function clearAllNotifications(e) { e.preventDefault(); notifications = []; renderNotifications(); showToast("All notifications cleared.", "success"); }
-
-    // Tab Switching
-    async function switchTab(targetTabId) {
-        if (!currentAuthUser && targetTabId !== 'home') return;
-        if (targetTabId === 'admin' && !userIsAdmin) { showToast("Access Denied: Admin dashboard is restricted.", "error"); return; }
-        
-        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.toggle('active', i.dataset.tab === targetTabId));
-        document.querySelectorAll('.main-content .tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${targetTabId}`));
-        localStorage.setItem('lastActiveTab', targetTabId);
-
-        if (targetTabId === 'team' && currentAuthUser) await loadAndRenderTeamOverview();
-        if (targetTabId === 'admin' && userIsAdmin && adminDashboardUnlocked) await loadAdminData();
-    }
-    
-    // Idle Timer
-    function resetIdleTimer() { clearTimeout(idleTimer); idleTimer = setTimeout(setCurrentUserToIdle, 10 * 60 * 1000); }
-    function setCurrentUserToIdle() { showToast("You've been marked as idle due to inactivity.", "warning"); }
-
-    // Attendance
-    async function clockIn() { if(!currentAuthUser || !db) return; const now = new Date(); let isLateClockIn = false; /* ... add schedule check logic ... */ try { const tS = firebase.firestore.Timestamp.now(); await db.collection("attendanceLogs").add({ employeeId: currentAuthUser.uid, employeeName: currentAuthUser.displayName || currentAuthUser.email, clockInTime: tS, isLate: isLateClockIn, status: "clocked_in", breaks: [] }); showToast(`Successfully Clocked In! ${isLateClockIn ? '(LATE)' : ''}`, isLateClockIn ? 'warning' : 'success'); fetchLastAttendance(); } catch (err) { showToast("Error clocking in: " + err.message, "error"); }}
-    async function clockOut() { if(!currentAuthUser || !db || !lastLogId) return; if(isOnBreak) { showToast("Please resume work before clocking out.", "warning"); return; } try { const tS = firebase.firestore.Timestamp.now(); const logRef = db.collection("attendanceLogs").doc(lastLogId); const doc = await logRef.get(); if(doc.exists && !doc.data().clockOutTime) { await logRef.update({ clockOutTime:tS, status:"clocked_out" }); showToast("Successfully Clocked Out!", "success"); fetchLastAttendance(); } } catch (err) { showToast("Error clocking out: " + err.message, "error"); }}
-    async function startBreak() { if (!currentAuthUser || !db || !lastLogId || isOnBreak) return; currentBreakStartTime = firebase.firestore.Timestamp.now(); const newBreak = { startTime: currentBreakStartTime, endTime: null }; try { await db.collection("attendanceLogs").doc(lastLogId).update({ status: "on_break", breaks: firebase.firestore.FieldValue.arrayUnion(newBreak) }); showToast("Break started.", "info"); fetchLastAttendance(); } catch(err){ showToast("Error starting break: " + err.message, "error"); }}
-    async function resumeWork() { if (!currentAuthUser || !db || !lastLogId || !isOnBreak) return; try { const logRef = db.collection("attendanceLogs").doc(lastLogId); const doc = await logRef.get(); if(doc.exists) { const breaks = doc.data().breaks || []; const lastBreak = breaks.find(b => b.endTime === null); if(lastBreak) lastBreak.endTime = firebase.firestore.Timestamp.now(); await logRef.update({ status: "clocked_in", breaks: breaks }); showToast("Work resumed.", "info"); fetchLastAttendance(); } } catch (err) { showToast("Error resuming work: " + err.message, "error"); }}
-    async function fetchLastAttendance() { if (!currentAuthUser || !db) return; try { const qS = await db.collection("attendanceLogs").where("employeeId", "==", currentAuthUser.uid).orderBy("clockInTime", "desc").limit(1).get(); if (!qS.empty) { const log = qS.docs[0].data(); lastLogId = qS.docs[0].id; const isClockedIn = !log.clockOutTime; document.getElementById('lastActionStatus').textContent = isClockedIn ? "Clocked In" : "Clocked Out"; document.getElementById('lastActionTime').textContent = (isClockedIn ? log.clockInTime : log.clockOutTime).toDate().toLocaleString(); document.getElementById('clockInButton').disabled = isClockedIn; document.getElementById('clockOutButton').disabled = !isClockedIn; document.getElementById('pauseBreakButton').disabled = !isClockedIn; isOnBreak = log.status === 'on_break'; document.getElementById('pauseBreakButton').style.display = isOnBreak ? 'none' : 'inline-block'; document.getElementById('resumeWorkButton').style.display = isOnBreak ? 'inline-block' : 'none'; if(isOnBreak) document.getElementById('clockOutButton').disabled = true; } else { /* Reset UI for no records */ document.getElementById('clockInButton').disabled = false; document.getElementById('clockOutButton').disabled = true; document.getElementById('pauseBreakButton').disabled = true;} } catch(e) { console.error(e); } }
-    async function calculateHoursThisWeek() { /* Logic to fetch logs and sum hours */ }
-    function applyUserHistoryFilter() { const start = document.getElementById('historyStartDate').value; const end = document.getElementById('historyEndDate').value; fetchFullAttendanceHistory(currentAuthUser.uid, document.getElementById('attendanceHistoryLog'), document.getElementById('historyChartContainer'), start, end); }
-    async function fetchFullAttendanceHistory(uid, logDiv, chartDiv, startDate, endDate) { /* Logic to fetch and display history */ }
-
-    // Tasks
-    function addTask() { const input = document.getElementById('newTaskInput'); if(input.value.trim()){ tasks.unshift({id: Date.now(), text: input.value.trim(), completed: false}); saveTasks(); renderTasks(); input.value = ''; showToast('Task added!', 'success'); } }
-    function saveTasks() { if(currentAuthUser) localStorage.setItem(`tasks_${currentAuthUser.uid}`, JSON.stringify(tasks)); }
-    function loadTasks() { tasks = JSON.parse(localStorage.getItem(`tasks_${currentAuthUser.uid}`)) || []; renderTasks(); }
-    function renderTasks() { const list = document.getElementById('taskList'); list.innerHTML = ''; const filtered = tasks.filter(t => currentTaskFilter === 'all' || (currentTaskFilter === 'active' && !t.completed) || (currentTaskFilter === 'completed' && t.completed)); if(filtered.length === 0) { list.innerHTML = '<li>No tasks here.</li>'; } else { filtered.forEach(t => { const li = document.createElement('li'); li.dataset.id = t.id; li.innerHTML = `<input type="checkbox" ${t.completed ? 'checked' : ''}><span class="task-text ${t.completed ? 'completed' : ''}">${t.text}</span><button class="task-delete-btn"><i class="fas fa-trash-alt"></i></button>`; list.appendChild(li); }); } updatePendingTasksCount(); }
-    function updatePendingTasksCount() { const count = tasks.filter(t => !t.completed).length; document.getElementById('pendingTasksCount').textContent = count; }
-    function handleTaskActions(e) { const li = e.target.closest('li'); if(!li) return; const id = Number(li.dataset.id); if(e.target.type === 'checkbox') { const task = tasks.find(t=>t.id === id); if(task) task.completed = e.target.checked; } if(e.target.closest('.task-delete-btn')) { tasks = tasks.filter(t=>t.id !== id); showToast('Task deleted.', 'info'); } saveTasks(); renderTasks(); }
-    function handleTaskFilter(e) { if(e.target.tagName !== 'BUTTON') return; currentTaskFilter = e.target.dataset.filter; document.querySelectorAll('.task-filters .btn').forEach(b => b.classList.remove('active', 'btn-primary') || b.classList.add('btn-secondary')); e.target.classList.add('active', 'btn-primary'); e.target.classList.remove('btn-secondary'); renderTasks(); }
-
-    // Notes
-    function openNoteModal(note=null) { const modal = document.getElementById('noteModal'); const delBtn = document.getElementById('deleteNoteButton'); if(note){ document.getElementById('noteIdInput').value=note.id; document.getElementById('noteTitleInput').value=note.title; document.getElementById('noteContentInput').value=note.content; document.getElementById('noteModalTitle').textContent='Edit Note'; delBtn.style.display='inline-block'; } else { document.getElementById('noteIdInput').value=''; document.getElementById('noteTitleInput').value=''; document.getElementById('noteContentInput').value=''; document.getElementById('noteModalTitle').textContent='Create New Note'; delBtn.style.display='none'; } modal.classList.add('visible'); }
-    function saveNote() { const id = document.getElementById('noteIdInput').value; const title = document.getElementById('noteTitleInput').value.trim(); const content = document.getElementById('noteContentInput').value.trim(); if(!title) { showToast('Title is required.', 'error'); return; } if(id) { const note = notes.find(n=>n.id==id); if(note){note.title=title; note.content=content;} } else { notes.unshift({id:Date.now(), title, content}); } saveNotes(); renderNotesList(); document.getElementById('noteModal').classList.remove('visible'); showToast(id ? 'Note Updated' : 'Note Saved', 'success'); }
-    function deleteNote() { if(!confirm('Are you sure?')) return; const id = document.getElementById('noteIdInput').value; notes = notes.filter(n=>n.id!=id); saveNotes(); renderNotesList(); document.getElementById('noteModal').classList.remove('visible'); showToast('Note Deleted', 'info'); }
-    function saveNotes() { if(currentAuthUser) localStorage.setItem(`notes_${currentAuthUser.uid}`, JSON.stringify(notes)); }
-    function loadNotes() { notes = JSON.parse(localStorage.getItem(`notes_${currentAuthUser.uid}`)) || []; renderNotesList(); }
-    function renderNotesList() { const list = document.getElementById('notesList'); list.innerHTML=''; document.getElementById('noNotesMessage').style.display = notes.length === 0 ? 'block' : 'none'; notes.forEach(n=>{ const li=document.createElement('li'); li.dataset.id=n.id; li.textContent=n.title; list.appendChild(li); }); }
-
-    // Admin
-    async function unlockAdminDashboard() { if(document.getElementById('adminCodeInput').value === '7777'){ adminDashboardUnlocked = true; document.getElementById('adminDashboardCodeEntry').style.display = 'none'; document.getElementById('adminDashboardContent').style.display = 'block'; showToast('Admin Dashboard Unlocked!', 'success'); await loadAdminData(); } else { showToast('Incorrect Admin Code.', 'error'); } }
-    async function loadAdminData() { if(!userIsAdmin || !adminDashboardUnlocked) return; await loadAndRenderTeamOverview(); loadAdminAnnouncements(); loadGlobalSchedulesToForm(); loadAdminBreakLogs(); renderWhitelistedEmails(); populateAdminHistoryUserSelect(); }
-    function addEmailToWhitelist(e) { e.preventDefault(); const input = document.getElementById('emailToWhitelist'); const email = input.value.trim().toLowerCase(); if(email){ let emails = getWhitelistedEmails(); if(!emails.includes(email)){ emails.push(email); saveWhitelistedEmails(emails); renderWhitelistedEmails(); input.value = ''; showToast('Email added to whitelist.', 'success'); } else { showToast('Email is already whitelisted.', 'warning'); } } }
-    function renderWhitelistedEmails() { const list = document.getElementById('whitelistedEmailsList'); list.innerHTML=''; getWhitelistedEmails().forEach(email => { const li = document.createElement('li'); li.textContent=email; if(email.toLowerCase() !== ADMIN_EMAIL) { const btn = document.createElement('button'); btn.className='delete-item'; btn.innerHTML='<i class="fas fa-trash-alt"></i>'; btn.onclick=()=>{ let emails=getWhitelistedEmails().filter(e=>e!==email); saveWhitelistedEmails(emails); renderWhitelistedEmails(); showToast('Email removed.', 'info'); }; li.appendChild(btn); } list.appendChild(li); }); }
-    async function postAnnouncement(e) { e.preventDefault(); const title = document.getElementById('announcementTitle').value; const content = document.getElementById('announcementContent').value; try { await db.collection('announcements').add({title, content, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); showToast('Announcement posted!', 'success'); e.target.reset(); loadAdminAnnouncements(); } catch(err){ showToast('Failed to post.', 'error'); }}
-    async function saveGlobalSchedule(e) { e.preventDefault(); const schedule = {}; document.querySelectorAll('#globalScheduleTableBody tr').forEach(row => { const day = row.id.replace('day-', ''); const start = row.querySelector('input[name="startTime"]').value; const end = row.querySelector('input[name="endTime"]').value; schedule[day] = {startTime: start, endTime: end}; }); localStorage.setItem('globalSchedules', JSON.stringify(schedule)); showToast('Global schedule saved!', 'success'); }
-    function applyAdminHistoryFilter() { const uid = document.getElementById('adminHistoryUserSelect').value; if(!uid) { showToast('Please select a user.', 'warning'); return; } const start = document.getElementById('adminHistoryStartDate').value; const end = document.getElementById('adminHistoryEndDate').value; fetchFullAttendanceHistory(uid, document.getElementById('adminAttendanceHistoryLog'), null, start, end); }
-    
-    // Admin Data Loading
-    async function loadAndDisplayAnnouncements() { /* Logic to fetch and display announcements */ }
-    async function loadAdminAnnouncements() { /* Logic to fetch and display admin announcement list */ }
-    async function loadGlobalScheduleForUser() { /* Logic to load and display user's schedule */ }
-    function loadGlobalSchedulesToForm() { /* Logic to populate admin scheduler form */ }
-    async function loadAdminBreakLogs() { /* Logic to fetch and display break logs */ }
-    async function loadAndRenderTeamOverview() { /* Logic to fetch all user data and render team view */ }
-    function populateAdminHistoryUserSelect() { /* Logic to populate user dropdown for history view */ }
-
     </script>
 </body>
 </html>
