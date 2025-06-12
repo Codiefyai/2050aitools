@@ -1,645 +1,1929 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>2025ai</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/css/2025ai.webflow.2fd3081fb.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc7b4257e870934ed4c4d_2050_AI-removebg%2032x32.ICO" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.prod.website-files.com/67ac9fc4120a318b9a03c6f4/67acc8207477dad16a96e035_2050_AI-removebg-256x256.png" rel="apple-touch-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCPH-Timetracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* General Styles (same as before) */
+        :root {
+            --primary-color: #4A90E2;
+            --primary-dark: #357ABD;
+            --secondary-color: #50E3C2;
+            --light-gray-bg: #F4F7F6;
+            --medium-gray: #D1D5DB;
+            --dark-gray-text: #374151;
+            --card-bg: #FFFFFF;
+            --card-bg-dark: #2D3748;
+            --text-color-dark: #E2E8F0;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --sidebar-width: 75px;
+            --header-height: 60px;
+            --font-family: 'Inter', sans-serif;
+
+            --status-active: #10B981; /* Green */
+            --status-offline: #EF4444; /* Red */
+            --status-idle: #F59E0B; /* Orange */
+            --status-late: #EF4444; /* Red for late entries */
+        }
+
+        [data-theme="dark"] {
+            --light-gray-bg: #1A202C;
+            --card-bg: #2D3748;
+            --dark-gray-text: #E2E8F0;
+            --medium-gray: #4A5568;
+            --status-active: #2ECC71;
+            --status-offline: #E74C3C;
+            --status-idle: #F39C12;
+            --status-late: #E74C3C;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #707AFF;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer; /* Add cursor pointer for buttons */
-        }
-
-        /* Top Bar Styles (same as before) */
-        .top-bar {
-            background-color: #f8f8f8;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-
-        .top-bar.menu-open {
-            background-color: #333;
-        }
-
-        .top-bar .container {
+            font-family: var(--font-family);
+            background-color: var(--light-gray-bg);
+            color: var(--dark-gray-text);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-bar-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        /* Navigation Menu Styles (same as before) */
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details {
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu summary {
-            cursor: pointer;
-            display: block;
-            padding: 0.75rem 0;
-            transition: color 0.3s ease;
-            color: #333;
-        }
-
-        .nav-menu summary:hover {
-            color: #707AFF;
-        }
-
-        .nav-menu details>ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
-
-        .nav-menu details[open]>ul {
-            display: block;
-        }
-
-        .nav-menu ul ul li {
-            margin: 0;
-            padding: 0.25rem 0;
-        }
-
-        .nav-menu ul ul a {
-            display: block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-        }
-
-        /* Theme Toggle Styles (same as before) */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            margin-left: 2rem;
-        }
-
-        .theme-toggle label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-toggle .toggleThemeIcon {
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            height: 1.6rem;
-            background-color: #E8E8E8;
-            transition: .4s;
-            border-radius: 8rem;
-            width: 3rem;
-            padding: .2rem;
-        }
-
-        .theme-toggle .toggleThemeIcon:before {
-            position: absolute;
-            content: '';
-            height: 1.2rem;
-            width: 1.2rem;
-            background-color: #FFFFFF;
-            text-align: center;
-            transition: .4s;
-            border-radius: 4rem;
-            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M16 4a1.714 1.714 0 110 3.429A1.714 1.714 0 0116 4zM24.485 7.515a1.714 1.714 0 11-2.424 2.424 1.714 1.714 0 012.424-2.424zM7.429 16A1.714 1.714 0 104 16a1.714 1.714 0 003.429 0zM26.286 14.286a1.714 1.714 0 110 3.428 1.714 1.714 0 010-3.428zM9.94 24.485a1.714 1.714 0 10-2.425-2.424 1.714 1.714 0 002.424 2.424zM24.485 22.06a1.714 1.714 0 11-2.424 2.425 1.714 1.714 0 012.424-2.424zM16 24.571A1.714 1.714 0 1116 28a1.714 1.714 0 010-3.429zM9.94 7.515a1.714 1.714 0 4 1.714 0 10-2.425 2.424 1.714 1.714 0 002.424-2.424zM22 16a6 6 0 11-12 0 6 6 0 0112 0z'/%3E%3C/svg%3E%0A");
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon {
-            background-color: #4ab8ff;
-        }
-
-        input:checked + .theme-toggle .toggleThemeIcon:before {
-            content: '';
-            transform: translateX(calc(2.8rem - 1.2rem - 0.2rem));
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' viewBox='0 0 32 32'%3E%3Cpath fill='%23707AFF' d='M25.955 16.163a8 8 0 01-10.91-10.91C9.97 5.732 6 10.005 6 15.206c0 5.523 4.477 10 10 10 5.2 0 9.474-3.97 9.955-9.044z'/%3E%3C/svg%3E%0A");
-        }
-
-        #toggleTheme {
-            display: none;
-        }
-
-        /* Hero Section Styles (same as before) */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Featured Tools Styles (same as before) */
-        .featured-tools {
-            padding: 2rem 0;
-        }
-
-        .featured-tools h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Call to Action Styles (same as before) */
-        .call-to-action {
-            background-color: #f0f0f0;
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        /* Footer Styles (same as before) */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        /* Dark Mode Styles (same as before) */
-        body.dark-mode {
-            background-color: #171717;
-            color: #ffffff;
-        }
-
-        body.dark-mode a {
-            color: #ffffff;
-        }
-
-        body.dark-mode a.w--current {
-            color: #707AFF;
-        }
-
-        body.dark-mode path {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .submit-main .div-block-11 .rich-text-block-10 {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode .footer-subscribe {
-            fill: #ffffff;
-        }
-
-        body.dark-mode .tool-item-columns-new {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .dropdown-toggle-2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .footer-copyright {
-            color: #ffffff;
-        }
-
-        body.dark-mode .columns-6 {
-            background-color: #999999;
-        }
-
-        body.dark-mode .text-block-55 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .thank-you-link {
-            color: #a0a0a0;
-        }
-
-        body.dark-mode .collection-item-6 {
-            background-color: #2b2b2b;
-        }
-
-        body.dark-mode .white-cover {
-            color: #ffffff;
-        }
-
-        body.dark-mode .white-text-dm {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .white-text-db-gc {
-            color: #ffffff;
-            opacity: 0.8;
-        }
-
-        body.dark-mode .black-text-db-gc {
-            color: #000000;
-        }
-
-        body.dark-mode .footer-social-link-three-path {
-            color: #ffffff;
-        }
-
-        body.dark-mode .blue-text-dm {
-            color: #0f89f3;
-        }
-
-        /* Mobile Menu Styles (same as before) */
-        .menu-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: none;
-        }
-
-        .menu-button:focus {
-            outline: none;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
-
-        /* Media Queries (same as before) */
-        @media (max-width: 768px) {
-            .top-bar .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-menu {
-                position: static;
-                display: none;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                text-align: left;
-            }
-
-            .nav-menu ul {
-                flex-direction: column;
-            }
-
-            .nav-menu li {
-                margin: 0.5rem 0;
-            }
-
-            .menu-button {
-                display: block;
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-        }
-
-        /* ---------------------------------- */
-        /* --- New Loading Screen Styles --- */
-        /* ---------------------------------- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8f8f8; /* Match top-bar background */
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        #loading-bar-container {
-            width: 200px; /* Adjust as needed */
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
+        #loginContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInModal 0.5s ease-out;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        #loginContainer .logo-placeholder { font-size: 40px; color: var(--primary-color); margin-bottom: 20px; }
+        #loginWithGoogleButton {
+            background-color: #DB4437;
+            color: white; padding: 12px 24px; font-size: 16px;
+            border-radius: 8px; border: none; cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s; display: flex; align-items: center; gap: 10px;
+        }
+        #loginWithGoogleButton i { font-size: 20px; }
+        #loginWithGoogleButton:hover { background-color: #C33D2E; }
+        #loginWithGoogleButton:active { transform: scale(0.98); }
+        #loginContainer p#sdkStatus { margin-top: 15px; font-size: 13px; color: var(--medium-gray); }
+        #authError, #accessDeniedMessage { color:red; margin-top:15px; font-weight: 500; }
+        #accessDeniedMessage { display: none; padding: 20px; background-color: #ffebee; border: 1px solid #e57373; border-radius: 8px; }
+
+
+        .app-container {
+            display: none; 
+            flex-direction: row; width: 100%; height: 100vh; max-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 25px; height: 100%; z-index: 1000;
+            transition: width 0.3s ease; flex-shrink: 0;
+        }
+        [data-theme="dark"] .sidebar { background-color: rgba(45, 55, 72, 0.8); border-right: 1px solid rgba(255,255,255,0.08); }
+        .sidebar-logo .logo-placeholder { width: 45px; height: 45px; margin-bottom: 35px; color:var(--primary-color); display:flex; align-items:center; justify-content:center; }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 25px; width: 100%; align-items: center; flex-grow: 1;}
+        .nav-item { color: var(--medium-gray); font-size: 22px; padding: 12px; border-radius: var(--border-radius); transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s ease-out; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; text-decoration: none; }
+        .nav-item:hover { background-color: var(--primary-color); color: white; box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4); transform: translateY(-2px); }
+        .nav-item.active { background-color: var(--primary-color); color: white; box-shadow: 0 4px 12px rgba(74, 144, 226, 0.5); transform: scale(1.05); }
+        [data-theme="dark"] .nav-item { color: #A0AEC0; }
+        [data-theme="dark"] .nav-item:hover, [data-theme="dark"] .nav-item.active { background-color: var(--primary-color); color: #1A202C; }
+        #logoutButton { margin-top: auto; margin-bottom: 20px; }
+
+        .main-content { flex-grow: 1; padding: 25px; overflow-y: auto; transition: margin-left 0.3s ease; height: 100%; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background-color: var(--card-bg); padding: 10px 25px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); height: var(--header-height); }
+        .top-bar-logo-text { display: flex; align-items: center; color: var(--primary-color); font-weight: 600; font-size: 20px; }
+        .top-bar-logo-text .logo-placeholder { font-size:24px; margin-right: 12px; }
+        
+        .top-bar-right-controls { display: flex; align-items: center; gap: 20px; }
+        .notification-bell-wrapper { position: relative; cursor: pointer; }
+        #notificationBellIcon { font-size: 20px; color: var(--dark-gray-text); transition: color 0.3s, transform 0.2s; }
+        #notificationBellIcon:hover { color: var(--primary-color); transform: scale(1.1); }
+        #notificationBellIcon:active { transform: scale(0.95); }
+        [data-theme="dark"] #notificationBellIcon { color: var(--text-color-dark); }
+        [data-theme="dark"] #notificationBellIcon:hover { color: var(--secondary-color); }
+        .notification-count-badge {
+            position: absolute; top: -5px; right: -8px; background-color: var(--status-offline); color: white;
+            border-radius: 50%; padding: 1px 5px; font-size: 10px; font-weight: bold; line-height: 1;
+            display: flex; align-items: center; justify-content: center; min-width: 16px; min-height: 16px;
+            border: 1px solid var(--card-bg); animation: pulseBadge 1.5s infinite;
+        }
+        @keyframes pulseBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        .notifications-dropdown-container {
+            display: none; position: absolute; top: calc(100% + 10px); right: -10px; width: 320px;
+            background-color: var(--card-bg); border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            z-index: 1010; padding: 15px; border: 1px solid var(--medium-gray);
+            opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .notifications-dropdown-container.visible { display: block; opacity: 1; transform: translateY(0); }
+        .notifications-dropdown-container h4 { margin-top: 0; margin-bottom: 10px; font-size: 16px; border-bottom: 1px solid var(--medium-gray); padding-bottom: 8px; }
+        #dynamicNotificationList { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+        #dynamicNotificationList li { padding: 10px; border-bottom: 1px solid var(--light-gray-bg); font-size: 13px; cursor: pointer; transition: background-color 0.2s, padding-left 0.2s; }
+        #dynamicNotificationList li:last-child { border-bottom: none; }
+        #dynamicNotificationList li:hover { background-color: var(--light-gray-bg); padding-left: 15px; }
+        [data-theme="dark"] #dynamicNotificationList li { border-bottom-color: var(--medium-gray); }
+        [data-theme="dark"] #dynamicNotificationList li:hover { background-color: #384252; }
+        .no-notifications-item { color: var(--medium-gray); font-style: italic; cursor: default !important; }
+        .notification-summary { display: block; font-weight: 500; margin-bottom: 3px; }
+        .notification-time { font-size: 11px; color: var(--medium-gray); }
+        .mark-read-link { display: block; text-align: center; font-size: 12px; margin-top: 10px; color: var(--primary-color); text-decoration: none; }
+        .mark-read-link:hover { text-decoration: underline; }
+
+        .search-bar { display: flex; align-items: center; background-color: var(--light-gray-bg); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--medium-gray); min-width: 200px; transition: border-color 0.3s, box-shadow 0.3s; }
+        .search-bar:focus-within { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); }
+        .search-bar i { color: var(--medium-gray); margin-right: 10px; }
+        .search-bar input { border: none; outline: none; background-color: transparent; font-size: 14px; width: 100%; color: var(--dark-gray-text); }
+        [data-theme="dark"] .search-bar { background-color: #2D3748; border-color: #4A5568; }
+        [data-theme="dark"] .search-bar input { color: var(--text-color-dark); }
+
+        .theme-toggle-switch { display: flex; align-items: center; gap: 8px; }
+        .theme-toggle-switch .fas { font-size: 18px; color: var(--dark-gray-text); transition: color 0.3s, transform 0.3s; }
+        .theme-toggle-switch .fas:hover { transform: scale(1.2); }
+        [data-theme="dark"] .theme-toggle-switch .fas { color: var(--text-color-dark); }
+        .theme-toggle-switch .fa-sun { color: #f39c12; }
+        .theme-toggle-switch .fa-moon { color: #6c5ce7; } 
+
+        .user-greeting-card { display: flex; align-items: center; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; padding: 25px 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; animation: slideInUp 0.6s ease-out; }
+        @keyframes slideInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+        .profile-pic { width: 70px; height: 70px; background-color: rgba(255,255,255,0.2); border-radius: 50%; margin-right: 20px; display: flex; justify-content: center; align-items: center; border: 2px solid white; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .profile-pic:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .profile-pic i { font-size: 36px; } .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .greeting-text h1 { margin: 0 0 5px 0; font-size: 26px; font-weight: 700; }
+        .greeting-text p { margin: 0; font-size: 15px; opacity: 0.9; }
+
+        .user-profile-popup {
+            display: none;
+            position: fixed;
+            top: 70px; 
+            right: 25px; 
+            width: 320px;
+            background-color: #363636; 
+            color: #E0E0E0; 
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1050;
+            padding: 0;
             overflow: hidden;
-            position: relative; /* For robot positioning */
+            opacity: 0; transform: translateY(-10px) scale(0.95); 
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
         }
-
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #707AFF;
-            border-radius: 10px;
-            transition: width 0.1s ease; /* Smooth loading bar animation */
-        }
-
-        #robot-container {
-            position: absolute;
-            left: 0; /* Start at the beginning */
-            top: -35px; /* Position above the loading bar */
-            width: 40px; /* Adjust robot container width */
-            height: 40px; /* Adjust robot container height */
-            overflow: hidden; /* Clip robot if needed */
-        }
-
-        #robot-image {
-            width: 40px; /* Robot image width */
-            height: auto; /* Keep aspect ratio */
+        .user-profile-popup.visible {
             display: block;
-            animation: march 1s steps(2) infinite; /* Robot marching animation (adjust steps based on your robot sprite) */
-            transform: translateX(0%); /* Initial robot position */
-            transition: transform 0.1s linear; /* Sync robot movement with loading bar */
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .user-profile-popup .popup-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-profile-popup .popup-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #4F4F4F; 
+        }
+        .user-profile-popup .popup-profile-pic-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px auto;
+        }
+        .user-profile-popup #popupUserProfilePic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #5F5F5F;
+        }
+        .user-profile-popup #popupUserStatusIndicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid #363636; 
+        }
+        .user-profile-popup #popupUserName {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: #FFFFFF;
+        }
+        .user-profile-popup #popupUserEmail {
+            font-size: 13px;
+            color: #B0B0B0; 
+            margin: 0;
+            word-break: break-all;
+        }
+        .user-profile-popup .popup-actions {
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .user-profile-popup .popup-button {
+            background-color: #4A4A4A;
+            color: #D0D0D0;
+            border: 1px solid #5F5F5F;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .user-profile-popup .popup-button:hover {
+            background-color: #5A5A5A;
+            color: #FFFFFF;
+        }
+        .user-profile-popup .popup-footer {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #4F4F4F;
+        }
+        .user-profile-popup .popup-footer a {
+            color: #A0A0A0;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .user-profile-popup .popup-footer a:hover {
+            text-decoration: underline;
+            color: #C0C0C0;
         }
 
-        @keyframes march {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); } /* Adjust if your sprite sheet is different */
+
+        .card { background-color: var(--card-bg); padding: 25px 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; }
+        .card h2 { color: var(--primary-dark); margin-top: 0; margin-bottom: 20px; font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--medium-gray); padding-bottom: 10px; }
+        [data-theme="dark"] .card h2 { color: var(--secondary-color); border-bottom: 1px solid var(--medium-gray); }
+        .tab-content { display: none; } .tab-content.active { display: block; animation: fadeInContent 0.5s ease-in-out; }
+        @keyframes fadeInContent { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s, opacity 0.2s; text-transform: capitalize; }
+        .btn:active { transform: translateY(1px) scale(0.98); box-shadow: 0 1px 4px rgba(0,0,0,0.1);}
+        .btn-primary { background-color: var(--primary-color); color: white; } .btn-primary:hover { background-color: var(--primary-dark); box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3); }
+        .btn-secondary { background-color: var(--dark-gray-text); color: var(--card-bg); } .btn-secondary:hover { background-color: #525f73; } 
+        .btn-danger { background-color: var(--status-offline); color: white; } .btn-danger:hover { background-color: #DC2626; }
+        .btn-success { background-color: var(--status-active); color: white; } .btn-success:hover { background-color: #059669; }
+        .btn-warning { background-color: var(--status-idle); color: white; } .btn-warning:hover { background-color: #D97706; }
+        .btn-sm { padding: 8px 12px; font-size: 13px; } .btn-icon { padding: 8px; line-height: 1; }
+        .btn-group { display: flex; gap: 10px; } .btn:disabled { background-color: var(--medium-gray); cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
+        [data-theme="dark"] .btn-secondary { background-color: #718096; color: var(--card-bg); } [data-theme="dark"] .btn-secondary:hover { background-color: #A0AEC0; }
+
+        label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="time"], textarea, select { width: 100%; padding: 10px 12px; border: 1px solid var(--medium-gray); border-radius: 8px; font-size: 14px; background-color: var(--card-bg); color: var(--dark-gray-text); transition: border-color 0.2s, box-shadow 0.2s; }
+        input[type="text"]:focus, textarea:focus, select:focus, input[type="date"]:focus, input[type="time"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); }
+        textarea { min-height: 100px; resize: vertical; }
+        [data-theme="dark"] input, [data-theme="dark"] textarea, [data-theme="dark"] select { background-color: #4A5568; color: var(--text-color-dark); border-color: #718096; }
+        [data-theme="dark"] input:focus, [data-theme="dark"] textarea:focus, [data-theme="dark"] select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3); }
+        .form-group { margin-bottom: 20px; }
+        .form-inline .form-group { display: inline-block; margin-right: 10px; vertical-align: bottom;}
+
+
+        .attendance-card .buttons { margin: 20px 0; display: flex; gap: 15px; flex-wrap: wrap; }
+        .attendance-card .status p { margin: 8px 0; font-size: 15px; }
+        .attendance-card .status span { font-weight: 600; color: var(--primary-color); }
+        [data-theme="dark"] .attendance-card .status span { color: var(--secondary-color); }
+        #selfieVideo, #selfiePreview { border: 1px solid var(--medium-gray); border-radius: var(--border-radius); margin-top: 10px; }
+        .break-controls { margin-top: 15px; padding-top:15px; border-top: 1px dashed var(--medium-gray); }
+        #userScheduleDisplay { margin-top: 20px; padding: 15px; background-color: var(--light-gray-bg); border-radius: 8px; border: 1px solid var(--medium-gray); font-size:14px; }
+        [data-theme="dark"] #userScheduleDisplay { background-color: #384252; border-color: #4A5568;}
+        #userScheduleDisplay h4 { margin-top:0; margin-bottom:10px; font-size: 16px; color: var(--primary-dark); }
+        [data-theme="dark"] #userScheduleDisplay h4 { color: var(--secondary-color); }
+        #scheduleReminder { margin-top: 10px; padding: 10px; background-color: var(--secondary-color); color: var(--card-bg); border-radius: 8px; display: none; animation: pulseReminder 2s infinite; }
+        [data-theme="dark"] #scheduleReminder { background-color: var(--primary-color); }
+        @keyframes pulseReminder { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+
+        .dashboard-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .widget { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .widget h3 { font-size: 18px; margin-bottom: 10px; color: var(--primary-dark); } .widget .value { font-size: 28px; font-weight: 600; color: var(--primary-color); }
+        .widget .description { font-size: 13px; color: var(--medium-gray); margin-top:5px;}
+        [data-theme="dark"] .widget h3 { color: var(--secondary-color); } [data-theme="dark"] .widget .value { color: var(--secondary-color); } [data-theme="dark"] .widget .description { color: #A0AEC0; }
+
+        .info-cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .info-cards-container .info-card { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .info-cards-container .info-card .icon { font-size: 28px; color: var(--primary-color); margin-bottom: 15px; }
+        .info-cards-container .info-card h3 { color: var(--primary-dark); font-size: 18px; margin-bottom: 8px; }
+        [data-theme="dark"] .info-cards-container .info-card .icon { color: var(--secondary-color); } [data-theme="dark"] .info-cards-container .info-card h3 { color: var(--secondary-color); }
+        .info-cards-container .info-card p { font-size: 14px; line-height: 1.5; }
+
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; vertical-align: middle;} 
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 26px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(24px); }
+        
+        .status-indicator, .status-dot { 
+            width: 10px; height: 10px; border-radius: 50%; 
         }
+        .status-online, .status-active { background-color: var(--status-active); } 
+        .status-offline { background-color: var(--status-offline); } 
+        .status-idle { background-color: var(--status-idle); } 
 
 
-        /* ---------------------------------- */
-        /* ----- New About Section Styles ----- */
-        /* ---------------------------------- */
-        #about-section {
-            display: none; /* Hidden initially */
-            padding: 4rem 0;
+        .filter-controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end; }
+        .history-log-item { padding: 10px; border-bottom: 1px solid var(--medium-gray); font-size: 13px; } .history-log-item:last-child { border-bottom: none; }
+        .history-log-item strong { color: var(--primary-dark); } [data-theme="dark"] .history-log-item strong { color: var(--secondary-color); }
+        .history-log-item.late-entry { color: var(--status-late) !important; font-weight: bold; }
+        .history-log-item.late-entry strong { color: var(--status-late) !important; }
+        [data-theme="dark"] .history-log-item.late-entry { color: var(--status-late) !important; }
+        [data-theme="dark"] .history-log-item.late-entry strong { color: var(--status-late) !important; }
+
+
+        #attendanceHistoryChart { margin-top: 20px; padding: 15px; border: 1px solid var(--medium-gray); border-radius: var(--border-radius); }
+        .chart-bar-container { display: flex; align-items: flex-end; height: 150px; gap: 5px; overflow-x: auto; padding-bottom: 25px; }
+        .chart-bar { background-color: var(--primary-color); min-width: 20px; flex-shrink: 0; transition: height 0.3s ease-out; text-align: center; color: white; font-size: 10px; padding-top: 2px; border-radius: 4px 4px 0 0; position: relative; }
+        .chart-bar span { display: block; white-space: nowrap; font-size:9px; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%) rotate(-65deg); transform-origin: center top; }
+        .chart-no-data { text-align:center; padding: 20px; color: var(--medium-gray); }
+
+        #notesList { list-style: none; padding: 0; margin-top: 20px; }
+        #notesList li { padding: 12px; margin-bottom: 10px; border-radius: 8px; background-color: var(--light-gray-bg); border: 1px solid var(--medium-gray); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.2s, transform 0.2s; word-break: break-word; }
+        #notesList li:hover { background-color: #e9ecef; transform: translateX(5px); } 
+        [data-theme="dark"] #notesList li { background-color: #4A5568; border-color: #718096; } 
+        [data-theme="dark"] #notesList li:hover { background-color: #5a687f; }
+        
+        #noteModal, #editUserModal { 
+            display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; 
+            overflow: auto; background-color: rgba(0,0,0,0.5); 
+            align-items: center; justify-content: center; 
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
+        }
+        #noteModal.visible, #editUserModal.visible { opacity: 1; visibility: visible; }
+
+        .modal-content { 
+            background-color: var(--card-bg); margin: auto; padding: 25px; border-radius: var(--border-radius); 
+            width: 90%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+            transform: scale(0.95); transition: transform 0.3s ease-out .1s, opacity 0.3s ease-out .1s; opacity: 0; 
+        }
+        #noteModal.visible .modal-content, #editUserModal.visible .modal-content { transform: scale(1); opacity: 1; }
+        .modal-content h3 { margin-top: 0; } 
+        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+        .close-modal:hover { color: var(--status-offline); transform: rotate(90deg); }
+        
+        #editUserModal .modal-content { max-width: 450px; }
+        #editUserModal h3 { margin-bottom: 15px; }
+        #editUserModal .user-details-item { margin-bottom: 10px; font-size: 14px; }
+        #editUserModal .user-details-item strong { min-width: 120px; display: inline-block; }
+        #editUserModal .status-override-select { margin-left: 10px; padding: 5px 8px; border-radius: 6px; }
+        #editUserModal .modal-actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+
+        #taskList { list-style: none; padding: 0; margin-top: 15px; }
+        #taskList li { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid var(--medium-gray); transition: background-color 0.2s; } 
+        #taskList li:hover { background-color: var(--light-gray-bg); }
+        [data-theme="dark"] #taskList li:hover { background-color: #384252; }
+        #taskList li:last-child { border-bottom: none; }
+        #taskList input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); flex-shrink: 0; cursor: pointer; }
+        #taskList .task-text { flex-grow: 1; font-size: 15px; word-break: break-word; } #taskList .task-text.completed { text-decoration: line-through; color: var(--medium-gray); }
+        .task-filters { margin-bottom: 15px; display:flex; gap:5px; flex-wrap:wrap; }
+
+        #adminDashboardCodeEntry { text-align: center; padding: 30px; border: 1px dashed var(--medium-gray); border-radius: var(--border-radius); margin-bottom: 20px;}
+        #adminDashboardCodeEntry input { width: 200px; margin-bottom: 15px; text-align: center; font-size: 18px; }
+        #adminDashboardContent { display: none; }
+
+        #tab-admin .card { margin-bottom: 25px; }
+        #announcementForm textarea { min-height: 80px; }
+        #postedAnnouncementsList, #whitelistedEmailsList { list-style: none; padding: 0; margin-top: 15px; }
+        #postedAnnouncementsList li, #whitelistedEmailsList li { padding: 10px 12px; border: 1px solid var(--medium-gray); border-radius: 8px; margin-bottom: 8px; background-color: var(--light-gray-bg); position: relative; display: flex; justify-content: space-between; align-items: center; }
+        [data-theme="dark"] #postedAnnouncementsList li, [data-theme="dark"] #whitelistedEmailsList li { background-color: #4A5568; border-color: #5A687F; }
+        #postedAnnouncementsList li strong { display: block; margin-bottom: 5px; color: var(--primary-dark); flex-grow: 1;}
+        [data-theme="dark"] #postedAnnouncementsList li strong { color: var(--secondary-color); }
+        .delete-item { background: none; border: none; color: var(--status-offline); cursor: pointer; font-size: 14px; }
+
+
+        #homeAnnouncementsList { list-style: none; padding: 0; }
+        #homeAnnouncementsList li { padding: 10px; border-bottom: 1px solid var(--medium-gray); }
+        #homeAnnouncementsList li:last-child { border-bottom: none; }
+        #homeAnnouncementsList li strong { color: var(--primary-dark); }
+        [data-theme="dark"] #homeAnnouncementsList li strong { color: var(--secondary-color); }
+
+        .admin-team-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .admin-team-user-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
         }
-
-        #about-section .container {
-            max-width: 800px; /* Narrower container for text */
+        .admin-team-user-card .gallery-avatar-container { position: relative; margin-bottom: 10px; }
+        .admin-team-user-card .gallery-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--medium-gray); }
+        .admin-team-user-card .gallery-status-dot {
+            position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px;
+            border-radius: 50%; border: 2px solid var(--card-bg);
         }
+        .admin-team-user-card .gallery-user-name { font-weight: 600; font-size: 16px; margin-bottom: 3px; }
+        .admin-team-user-card .gallery-user-email { font-size: 0.8em; color: var(--medium-gray); margin-bottom: 8px; word-break: break-all; }
+        .admin-team-user-card .gallery-attendance-status { font-size: 0.9em; font-weight: 500; }
+        .admin-team-user-card .gallery-attendance-status.late-entry { color: var(--status-late); }
+        .admin-team-user-card .gallery-break-status { font-size: 0.8em; color: var(--medium-gray); }
 
-        #about-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        #teamOverviewList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .team-overview-user-item {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
+        .team-overview-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--medium-gray); }
+        .team-overview-info { flex-grow: 1; }
+        .team-overview-info h4 { margin: 0 0 5px; font-size: 16px; }
+        .team-overview-info p { margin: 3px 0; font-size: 13px; color: var(--dark-gray-text); }
+        [data-theme="dark"] .team-overview-info p { color: var(--text-color-dark); }
+        .team-overview-info .email { color: var(--medium-gray); word-break: break-all; }
+        [data-theme="dark"] .team-overview-info .email { color: #A0AEC0; }
+        .team-overview-info .status-text { text-transform: capitalize; font-weight: 500;}
+        .team-overview-actions .btn-sm { margin-top: 10px; }
 
-        #about-section p {
-            margin-bottom: 1.5rem;
-            color: #555;
+
+        #adminSchedulerTable, #globalScheduleTable { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        #adminSchedulerTable th, #adminSchedulerTable td, #globalScheduleTable th, #globalScheduleTable td { border: 1px solid var(--medium-gray); padding: 8px; text-align: left; font-size: 13px; }
+        #adminSchedulerTable th, #globalScheduleTable th { background-color: var(--light-gray-bg); }
+        [data-theme="dark"] #adminSchedulerTable th, [data-theme="dark"] #globalScheduleTable th { background-color: #384252; }
+        [data-theme="dark"] #adminSchedulerTable td, [data-theme="dark"] #adminSchedulerTable th, [data-theme="dark"] #globalScheduleTable td, [data-theme="dark"] #globalScheduleTable th { border-color: #4A5568; }
+        #adminSchedulerTable input[type="time"], #globalScheduleTable input[type="time"] { padding: 5px; font-size: 13px; }
+        #adminSchedulerTable .btn-sm, #globalScheduleTable .btn-sm { padding: 4px 8px; font-size: 12px; }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            font-size: 15px;
         }
-
-        /* ---------------------------------- */
-        /* ----- Main Content Section Styles ----- */
-        /* ---------------------------------- */
-        #main-content {
-            display: none; /* Hidden initially, shown after "Get Started" */
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
         }
+        .toast-notification.error { background-color: var(--status-offline); }
+        .toast-notification.success { background-color: var(--status-active); }
 
 
+        @media (max-width: 992px) {
+            .dashboard-widgets, .info-cards-container, .admin-team-gallery, #teamOverviewList { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+            .top-bar-right-controls { gap: 10px; }
+            .search-bar { min-width: 150px; }
+        }
+        @media (max-width: 768px) {
+            body { display: block; }
+            .app-container { flex-direction: column-reverse; max-height: none; height: auto; }
+            .sidebar {
+                width: 100%; height: 60px; flex-direction: row; justify-content: space-around;
+                padding: 0 10px; position: fixed; bottom: 0; left: 0; right: 0; top:auto;
+                border-top: 1px solid rgba(0,0,0,0.1); border-right: none;
+                background-color: var(--card-bg); 
+                backdrop-filter: none; -webkit-backdrop-filter: none;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1); align-items: center;
+            }
+            [data-theme="dark"] .sidebar { background-color: var(--card-bg-dark); border-top: 1px solid rgba(255,255,255,0.1); }
+            .sidebar-logo { display: none; }
+            .sidebar-nav { flex-direction: row; width: 100%; justify-content: space-around; gap: 5px; align-items: center; height:100%; flex-grow: 0;}
+            .nav-item { font-size: 20px; padding: 8px; width: 40px; height: 40px; }
+            #logoutButton { margin-top:0; margin-bottom:0; }
+
+            .main-content { margin-left: 0; padding: 15px; padding-bottom: 80px;  height: calc(100vh - 60px); overflow-y: auto; }
+            .user-greeting-card { flex-direction: column; align-items: center; text-align: center; }
+            .profile-pic { margin-right: 0; margin-bottom: 15px; }
+            .top-bar { flex-direction: column; gap: 15px; height: auto; padding: 15px; }
+            .top-bar-right-controls { width: 100%; justify-content: space-around; }
+            .search-bar { width: 100%; min-width: auto; }
+            .filter-controls { flex-direction: column; gap:10px; }
+            .filter-controls .form-group { width: 100%; margin-bottom:0; }
+            .filter-controls input[type="date"], .filter-controls button { width: 100%; }
+            .filter-controls button { height: auto; padding: 10px; }
+            .task-filters { justify-content: center; }
+            .notifications-dropdown-container { right: 50%; transform: translateX(50%) translateY(-10px); }
+            .notifications-dropdown-container.visible { transform: translateX(50%) translateY(0); }
+            .scheduler-form .form-group, .global-scheduler-form .form-group { display: block; margin-right:0; margin-bottom:10px; }
+            .user-profile-popup { 
+                top: auto; bottom: 70px; 
+                left: 50%;
+                transform: translateX(-50%) translateY(10px) scale(0.95);
+            }
+            .user-profile-popup.visible {
+                 transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+         @media (max-width: 480px) { 
+            .greeting-text h1 { font-size: 22px; }
+            .greeting-text p { font-size: 14px; }
+            .widget .value { font-size: 24px; }
+            .nav-item { font-size: 18px; width: 35px; height: 35px; padding: 6px; }
+            .top-bar-logo-text span { display:none; } 
+            .top-bar-right-controls { gap: 5px; }
+            .search-bar input::placeholder { font-size: 13px; }
+            .notifications-dropdown-container { width: calc(100vw - 30px); }
+            .user-profile-popup { width: calc(100vw - 30px); }
+            #teamOverviewList { grid-template-columns: 1fr; }
+            .team-overview-user-item { flex-direction: column; text-align: center; }
+            .team-overview-user-item .team-overview-actions { margin-top: 10px; }
+        }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <h1>Loading AI Tools...</h1>
-        <div id="loading-bar-container">
-            <div id="loading-bar"></div>
-            <div id="robot-container">
-                <img id="robot-image" src="https://i.imgur.com/7pvpcpV.png" alt="Marching Robot">
-                <!-- Replace with your robot image -->
-            </div>
-        </div>
+    <div id="loginContainer">
+        <div class="logo-placeholder"><i class="fas fa-cubes"></i></div>
+        <h2>VCPH-Timetracker</h2>
+        <p id="sdkStatus">Please sign in with your Google account to continue.</p>
+        <button id="loginWithGoogleButton" disabled><i class="fab fa-google"></i> Sign in with Google</button>
+        <p id="authError"></p>
+        <p id="accessDeniedMessage">Your email is not authorized to access this application. Please contact an administrator.</p>
     </div>
 
-    <!-- About Section -->
-    <section id="about-section">
-        <div class="container">
-            <h2>Welcome to 2025AI</h2>
-            <p>Discover and explore the best AI tools available to enhance your productivity and creativity. Our curated list helps you navigate the world of artificial intelligence and find the perfect tools for your needs.</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div></div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-tab="home" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+                <a href="#" class="nav-item" data-tab="attendance" title="Attendance & History"><i class="fas fa-user-clock"></i></a>
+                <a href="#" class="nav-item" data-tab="team" title="Team Overview"><i class="fas fa-users-cog"></i></a>
+                <a href="#" class="nav-item" data-tab="tasks" title="Tasks"><i class="fas fa-tasks"></i></a>
+                <a href="#" class="nav-item" data-tab="notes" title="Notes"><i class="fas fa-sticky-note"></i></a>
+                <a href="#" class="nav-item" data-tab="admin" title="Admin Dashboard"><i class="fas fa-cogs"></i></a>
+            </nav>
+            <a href="#" class="nav-item" id="logoutButton" title="Logout" style="display:none;"><i class="fas fa-sign-out-alt"></i></a>
+        </aside>
 
-            <h3>User Guide</h3>
-            <p><strong>How to use 2025AI:</strong></p>
-            <ol style="list-style-type: decimal; text-align: left; margin: 0 auto; max-width: 600px;">
-                <li><strong>Explore Tools:</strong> Browse our categories or use the search function to find AI tools.</li>
-                <li><strong>Read Descriptions:</strong> Each tool comes with a brief description to help you understand its purpose.</li>
-                <li><strong>Visit Website:</strong> Click on a tool to visit its official website and learn more or start using it.</li>
-                <li><strong>Stay Updated:</strong> Check the "Added Today" section for the latest AI tools.</li>
-            </ol>
-
-            <button id="get-started-button" class="button">Get Started</button>
-        </div>
-    </section>
-
-    <!-- Main Content (Initially Hidden) -->
-    <div id="main-content">
-        <header id="top-bar" class="top-bar">
-            <div class="container">
-                <div id="logo" class="top-bar-logo">
-                    <a href="/">
-                        <img src="https://i.ibb.co/2195hnn4/2050-AI-removebg-preview.png" alt="2050 AI" title="2050 AI">
-                    </a>
+        <div class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-logo-text"><div class="logo-placeholder"><i class="fas fa-cubes"></i></div><span id="appTitle">VCPH-Timetracker</span></div>
+                
+                <div class="top-bar-right-controls">
+                    <div class="notification-bell-wrapper">
+                        <i class="fas fa-bell" id="notificationBellIcon" tabindex="0" role="button" aria-label="Toggle Notifications"></i>
+                        <span class="notification-count-badge" id="notificationCountBadge" style="display: none;">0</span>
+                        <div class="notifications-dropdown-container" id="notificationsDropdownContainer">
+                            <h4>Notifications</h4>
+                            <ul id="dynamicNotificationList">
+                                <li class="no-notifications-item">No new notifications.</li>
+                            </ul>
+                            <a href="#" id="markAllNotificationsRead" class="mark-read-link">Mark all as read</a>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search..." id="featureSearchInputGlobal">
+                    </div>
+                    <div class="theme-toggle-switch">
+                        <i class="fas fa-sun"></i>
+                        <label class="switch">
+                            <input type="checkbox" id="mainThemeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <i class="fas fa-moon"></i>
+                    </div>
                 </div>
-                <button aria-label="Toggle Menu" class="menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/newly-added">Added Today</a></li>
-                        <li><a href="/news">AI News</a></li>
-                        <li><a href="/learn">Videos</a></li>
-                        <li>
-                            <details>
-                                <summary>Help</summary>
-                                <ul>
-                                    <li><a href="/glossary">Glossary</a></li>
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/submit-a-tool">Submit a Tool</a></li>
-                                </ul>
-                            </details>
-                        </li>
+            </header>
+
+            <section class="user-greeting-card">
+                <div class="profile-pic" id="userGreetingProfilePicTrigger" title="View Profile"><i class="fas fa-user"></i></div>
+                <div class="greeting-text"><h1 id="dynamicGreeting">Hi, <span id="userNameDisplay">Guest</span>!</h1><p id="userTitleDisplay">Please log in to access features.</p></div>
+            </section>
+
+            <div id="userProfilePopup" class="user-profile-popup">
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <div class="popup-profile-pic-container">
+                            <img id="popupUserProfilePic" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Profile Picture"> 
+                            <span id="popupUserStatusIndicator" class="status-dot status-offline"></span>
+                        </div>
+                        <h3 id="popupUserName">User Name</h3>
+                        <p id="popupUserEmail">user@example.com</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button id="switchAccountButton" class="popup-button">Switch account</button>
+                        <button id="popupSignOutButton" class="popup-button">Sign out</button>
+                    </div>
+                    <div class="popup-footer">
+                        <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a> &bull; <a href="#" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="tab-home" class="tab-content active">
+                <section class="dashboard-widgets">
+                    <div class="widget"><h3>Time Clocked (This Week)</h3><div class="value" id="hoursThisWeek">-- hrs</div><p class="description">Based on your attendance logs.</p></div>
+                    <div class="widget"><h3>Pending Tasks</h3><div class="value" id="pendingTasksCount">--</div><p class="description">From your To-Do list.</p></div>
+                    <div class="widget"><h3>Current Time</h3><div class="value" id="dashboardCurrentTime">Loading...</div><p class="description" id="dashboardCurrentDate">Loading...</p></div>
+                </section>
+                <section class="card" id="homeAnnouncementsCard">
+                    <h2><i class="fas fa-bullhorn"></i> Latest Announcements</h2>
+                    <ul id="homeAnnouncementsList">
+                        <li class="no-announcements-item">No announcements yet.</li>
                     </ul>
-                </nav>
-                <div class="theme-toggle">
-                    <label for="toggleTheme">
-                        <input type="checkbox" id="toggleTheme">
-                        <span class="togglethemeicon"></span>
-                    </label>
+                </section>
+                <section class="card"><h2>Quick Access</h2><div class="info-cards-container">
+                    <div class="info-card"><i class="fas fa-calendar-check icon"></i><h3>Time Off Requests</h3><p>View or submit time off requests (Feature Placeholder).</p><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="showToast('Time Off Requests feature coming soon!', 'info')">View Requests</button></div>
+                    <div class="info-card"><i class="fas fa-question-circle icon"></i><h3>Help & Support</h3><p>Access documentation and support channels (Placeholder).</p><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="showToast('Help & Support feature coming soon!', 'info')">Get Help</button></div>
+                </div></section>
+            </div>
+
+            <div id="tab-attendance" class="tab-content">
+                <section class="attendance-card card">
+                    <h2>Attendance Tracking & History</h2>
+                    <p id="firebaseStatusMessage" style="color: red; font-weight: bold; display: none;">Firebase not initialized. Attendance features are disabled.</p>
+                    <p id="currentTimeDisplay" style="font-weight:500; margin-bottom:15px;">Current Time: Loading...</p>
+                    
+                    <div id="userScheduleDisplay" style="display:none;">
+                        <h4>Today's Schedule (Company Wide)</h4>
+                        <p id="scheduleDetails">No schedule set for today.</p>
+                        <div id="scheduleReminder" style="display:none;"></div>
+                    </div>
+
+                    <div id="attendanceControls" style="display:none;">
+                        <p>Tracking for: <strong id="currentTrackingEmployeeName"></strong> (<span id="currentTrackingEmployeeIdShort"></span>)</p>
+                        <div class="buttons">
+                            <button id="clockInButton" class="btn btn-success"><i class="fas fa-play-circle"></i> Clock In</button>
+                            <button id="clockOutButton" class="btn btn-danger" disabled><i class="fas fa-stop-circle"></i> Clock Out</button>
+                        </div>
+                        <div class="break-controls">
+                            <button id="pauseBreakButton" class="btn btn-warning" disabled><i class="fas fa-pause"></i> Pause Break</button>
+                            <button id="resumeWorkButton" class="btn btn-success" style="display:none;"><i class="fas fa-play"></i> Resume Work</button>
+                        </div>
+                        <div class="status"><p>Last Action: <span id="lastActionStatus">--</span></p><p>Last Action Time: <span id="lastActionTime">--</span></p><p>Current Break Status: <span id="currentBreakStatus">Not on break</span></p></div>
+                        <div id="optionalFeatures" style="margin-top:20px; padding-top:15px; border-top: 1px solid var(--medium-gray);"><h4>Optional Features:</h4><div id="geolocationStatus" style="margin-bottom:10px; font-weight:500;">Geolocation: N/A</div><button id="captureSelfieButton" class="btn btn-secondary btn-sm" style="display:none;"><i class="fas fa-camera"></i> Capture Selfie</button><div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"><video id="selfieVideo" width="160" height="120" autoplay muted playsinline style="display:none;"></video><canvas id="selfieCanvas" width="160" height="120" style="display:none;"></canvas><img id="selfiePreview" src="#" alt="Selfie Preview" style="display:none; max-width:160px; height:120px; object-fit:cover;"></div></div>
+                    </div>
+                </section>
+                <section class="card"><h2>Attendance History Log</h2><div class="filter-controls"><div class="form-group"><label for="historyStartDate">Start Date:</label><input type="date" id="historyStartDate"></div><div class="form-group"><label for="historyEndDate">End Date:</label><input type="date" id="historyEndDate"></div><button id="applyHistoryFilter" class="btn btn-primary">Filter</button></div><div id="attendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Please log in to view history.</p></div><h3>Daily Hours Visualization</h3><div id="attendanceHistoryChart"><div class="chart-bar-container" id="historyChartContainer"><p class="chart-no-data">Log in and select a date range.</p></div></div></section>
+            </div>
+            
+            <div id="tab-team" class="tab-content">
+                <section class="card">
+                    <h2><i class="fas fa-users-cog"></i> Team Overview</h2>
+                    <p>Comprehensive view of team members, their status, and recent activity.</p>
+                    <div id="teamOverviewList">
+                        <p>Loading team data...</p>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="tab-tasks" class="tab-content"><section class="card"><h2>My Tasks</h2><div class="form-group"><label for="newTaskInput">Add New Task:</label><input type="text" id="newTaskInput" placeholder="e.g., Finalize report"></div><button id="addTaskButton" class="btn btn-primary">Add Task</button><div class="task-filters" style="margin-top:20px;"><button class="btn btn-sm btn-primary" data-filter="all">All</button><button class="btn btn-sm btn-secondary" data-filter="active">Active</button><button class="btn btn-sm btn-secondary" data-filter="completed">Completed</button></div><ul id="taskList"></ul></section></div>
+            
+            <div id="tab-notes" class="tab-content"><section class="card"><h2>My Notes</h2><button id="createNewNoteButton" class="btn btn-primary">Create New Note</button><ul id="notesList"></ul><p id="noNotesMessage" style="display:none; margin-top:15px; color: var(--medium-gray);">No notes yet.</p></section></div>
+            
+            <div id="noteModal"><div class="modal-content"><span class="close-modal" id="closeNoteModal" title="Close">×</span><h3 id="noteModalTitle">Note</h3><input type="hidden" id="noteIdInput"><div class="form-group"><label for="noteTitleInput">Title:</label><input type="text" id="noteTitleInput"></div><div class="form-group"><label for="noteContentInput">Content:</label><textarea id="noteContentInput"></textarea></div><button id="saveNoteButton" class="btn btn-success">Save</button><button id="deleteNoteButton" class="btn btn-danger" style="display:none; margin-left:10px;">Delete</button></div></div>
+            
+            <div id="editUserModal" class="edit-user-modal">
+                <div class="modal-content">
+                    <span class="close-modal" id="closeEditUserModal" title="Close">×</span>
+                    <h3 id="editUserModalTitle">Edit User Details</h3>
+                    <div id="editUserModalBody">
+                        <p class="user-details-item"><strong>Name:</strong> <span id="editModalUserName"></span></p>
+                        <p class="user-details-item"><strong>Email:</strong> <span id="editModalUserEmail"></span></p>
+                        <p class="user-details-item"><strong>System Status:</strong>
+                            <select id="editModalSystemStatus" class="status-override-select">
+                                <option value="active">Active</option>
+                                <option value="idle">Idle</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                            <button id="saveSystemStatusOverride" class="btn btn-sm btn-primary" style="margin-left:5px;">Save Status</button>
+                        </p>
+                        <p class="user-details-item"><strong>Last Attendance:</strong> <span id="editModalLastAttendance"></span></p>
+                         <input type="hidden" id="editingUserId">
+                    </div>
+                    <div class="modal-actions">
+                        <button id="viewUserFullHistoryBtn" class="btn btn-primary">View Full Attendance History</button>
+                        <button id="toggleWhitelistBtn" class="btn btn-secondary">Manage Whitelist</button>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <h1>Explore the Future with AI Tools</h1>
-                    <p>Discover the best AI tools to boost your productivity and unlock new possibilities.</p>
+            <div id="tab-admin" class="tab-content">
+                <div id="adminDashboardCodeEntry">
+                    <h2><i class="fas fa-lock"></i> Admin Access</h2>
+                    <p>Enter the admin code to unlock dashboard features.</p>
+                    <div class="form-group" style="max-width: 250px; margin-left:auto; margin-right:auto;">
+                        <label for="adminCodeInput" style="display:none;">Admin Code</label>
+                        <input type="password" id="adminCodeInput" placeholder="Enter Admin Code">
+                    </div>
+                    <button id="unlockAdminDashboardButton" class="btn btn-primary">Unlock</button>
                 </div>
-            </section>
 
-            <section class="featured-tools">
-                <div class="container">
-                    <h2>Featured AI Tools</h2>
-                    <!-- Add your featured tools content here -->
-                </div>
-            </section>
+                <div id="adminDashboardContent">
+                    <section class="card">
+                        <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                        <p>Centralized team tracking and administrative controls.</p>
+                    </section>
 
-            <section class="call-to-action">
-                <div class="container">
-                    <p>Ready to find the perfect AI tool for your needs?</p>
-                    <a href="https://two050ai-toolss.onrender.com/" class="button">Discover Your AI</a>
-                </div>
-            </section>
-        </main>
+                    <section class="card" id="adminTeamGallerySection">
+                        <h3><i class="fas fa-id-card-alt"></i> Team Status Gallery (Quick View)</h3>
+                        <div class="admin-team-gallery" id="adminTeamGallery">
+                            <p>Loading team status...</p>
+                        </div>
+                    </section>
 
-        <footer class="footer">
-            <div class="container">
-                <p>© 2024 2050AI. All rights reserved.</p>
+                    <section class="card" id="adminEmailWhitelist">
+                        <h3><i class="fas fa-user-check"></i> Email Whitelist Management</h3>
+                        <p>Control which email addresses can access this application.</p>
+                        <form id="emailWhitelistForm" class="form-inline">
+                            <div class="form-group">
+                                <label for="emailToWhitelist">Email Address:</label>
+                                <input type="email" id="emailToWhitelist" placeholder="user@example.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">Add to Whitelist</button>
+                        </form>
+                        <h4 style="margin-top: 20px;">Currently Whitelisted Emails:</h4>
+                        <ul id="whitelistedEmailsList">
+                            <li>No emails whitelisted yet.</li>
+                        </ul>
+                    </section>
+
+                     <section class="card" id="adminGlobalScheduler">
+                        <h3><i class="fas fa-calendar-alt"></i> Global Weekday Scheduler</h3>
+                        <p>Set official clock-in/out times for all users for each weekday. These apply team-wide.</p>
+                        <form id="globalSchedulerForm">
+                            <table id="globalScheduleTable" style="width:100%; margin-bottom:15px;">
+                                <thead>
+                                    <tr><th>Day</th><th>Clock-In Time</th><th>Clock-Out Time</th></tr>
+                                </thead>
+                                <tbody id="globalScheduleTableBody"></tbody>
+                            </table>
+                            <button type="submit" class="btn btn-primary">Save Global Schedule</button>
+                        </form>
+                    </section>
+
+                     <section class="card" id="adminHistoricalAttendanceSection">
+                        <h3><i class="fas fa-history"></i> Historical Attendance Records</h3>
+                        <div class="form-group">
+                            <label for="adminHistoryUserSelect">Select User to View History:</label>
+                            <select id="adminHistoryUserSelect">
+                                <option value="">-- Select User --</option>
+                            </select>
+                        </div>
+                         <div class="filter-controls">
+                            <div class="form-group"><label for="adminHistoryStartDate">Start Date:</label><input type="date" id="adminHistoryStartDate"></div>
+                            <div class="form-group"><label for="adminHistoryEndDate">End Date:</label><input type="date" id="adminHistoryEndDate"></div>
+                            <button id="adminApplyHistoryFilter" class="btn btn-primary">Fetch History</button>
+                        </div>
+                        <div id="adminAttendanceHistoryLog" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--medium-gray); padding: 10px; border-radius: var(--border-radius); margin-bottom:20px;"><p>Select a user and date range to view history.</p></div>
+                    </section>
+
+                    <section class="card" id="adminAnnouncements">
+                        <h3><i class="fas fa-bullhorn"></i> Announcements Posting Tool</h3>
+                        <form id="announcementForm">
+                            <div class="form-group">
+                                <label for="announcementTitle">Title:</label>
+                                <input type="text" id="announcementTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="announcementContent">Content:</label>
+                                <textarea id="announcementContent" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post Announcement</button>
+                        </form>
+                        <h4 style="margin-top: 25px; border-top: 1px solid var(--medium-gray); padding-top: 15px;">Posted Announcements</h4>
+                        <ul id="postedAnnouncementsList">
+                            <li class="no-admin-announcements-item">No announcements posted yet.</li>
+                        </ul>
+                    </section>
+
+                    <section class="card" id="adminBreakLog">
+                        <h3><i class="fas fa-coffee"></i> User Break Log Overview</h3>
+                        <p>Summary of user breaks recorded from Attendance Tracker (last 7 days).</p>
+                        <div id="adminUserBreakLogList">
+                            <p>No break data available yet or no users clocked in/out with breaks.</p>
+                        </div>
+                    </section>
+                </div> 
             </div>
-        </footer>
+
+        </div>
     </div>
 
+    <audio id="generalNotificationSound" src="https://actions.google.com/sounds/v1/notifications/device_alert_simple.ogg" preload="auto"></audio>
+    <div id="toastNotification" class="toast-notification"></div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
-        (function() {
-            // Theme Toggle (same as before)
-            function setThemeFromCookie() {
-                if (document.cookie.match(/theme=dark/i)) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
+        // IMPORTANT: Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMCqwIZL6cWvwuGa_yt9bBaJpf9KXRXY4", 
+            authDomain: "nitchiebotai.firebaseapp.com",
+            projectId: "nitchiebotai",
+            storageBucket: "nitchiebotai.firebasestorage.app",
+            messagingSenderId: "635455056920",
+            appId: "1:635455056920:web:bd3eac800dddadd47f276d"
+        };
+
+        let db, storage, auth;
+        const sdkStatusDisplay = document.getElementById('sdkStatus');
+        const loginWithGoogleButton = document.getElementById('loginWithGoogleButton');
+        const globalAuthErrorDisplay = document.getElementById('authError');
+        const accessDeniedMessageDiv = document.getElementById('accessDeniedMessage');
+
+
+        if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                storage = firebase.storage();
+                auth = firebase.auth();
+                if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Services Initialized. Please sign in.";
+                if(loginWithGoogleButton) loginWithGoogleButton.disabled = false;
+            } catch (e) {
+                console.error("Firebase initialization error:", e);
+                if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Error: Application services could not be initialized.";
+                if(loginWithGoogleButton) loginWithGoogleButton.disabled = true;
+                if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "App setup error. Contact support.";
+            }
+        } else {
+            console.error("Firebase SDK not loaded. Critical features will be affected.");
+            if(sdkStatusDisplay) sdkStatusDisplay.textContent = "Error: Required libraries not loaded.";
+            if(loginWithGoogleButton) loginWithGoogleButton.disabled = true;
+            if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "App components missing. Check connection or contact support.";
+            const firebaseStatusMsg = document.getElementById('firebaseStatusMessage');
+            if (firebaseStatusMsg) {
+                firebaseStatusMsg.textContent = "Firebase SDK not loaded. Attendance features are disabled.";
+                firebaseStatusMsg.style.display = 'block';
+            }
+        }
+
+        function showToast(message, type = 'info', duration = 3000) { 
+            const toast = document.getElementById('toastNotification');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.className = 'toast-notification'; 
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'success') toast.classList.add('success');
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const appContainer = document.querySelector('.app-container');
+            const loginContainer = document.getElementById('loginContainer');
+            const logoutButton = document.getElementById('logoutButton');
+
+            const body = document.body;
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const userGreetingProfilePicDiv = document.querySelector('.user-greeting-card .profile-pic');
+            const userGreetingProfilePicTrigger = document.getElementById('userGreetingProfilePicTrigger');
+            const userTitleDisplay = document.getElementById('userTitleDisplay');
+            const dynamicGreeting = document.getElementById('dynamicGreeting');
+            
+            const mainThemeToggle = document.getElementById('mainThemeToggle');
+
+            const hoursThisWeekDisplay = document.getElementById('hoursThisWeek');
+            const pendingTasksCountDisplay = document.getElementById('pendingTasksCount');
+            const dashboardCurrentTime = document.getElementById('dashboardCurrentTime');
+            const dashboardCurrentDate = document.getElementById('dashboardCurrentDate');
+
+            const notificationBellIcon = document.getElementById('notificationBellIcon');
+            const notificationCountBadge = document.getElementById('notificationCountBadge');
+            const notificationsDropdownContainer = document.getElementById('notificationsDropdownContainer');
+            const dynamicNotificationList = document.getElementById('dynamicNotificationList');
+            const markAllNotificationsReadBtn = document.getElementById('markAllNotificationsRead');
+            const generalNotificationSound = document.getElementById('generalNotificationSound');
+            let notifications = [];
+            let unreadNotificationCount = 0;
+
+            const userProfilePopup = document.getElementById('userProfilePopup');
+            const popupUserProfilePic = document.getElementById('popupUserProfilePic');
+            const popupUserStatusIndicator = document.getElementById('popupUserStatusIndicator');
+            const popupUserName = document.getElementById('popupUserName');
+            const popupUserEmail = document.getElementById('popupUserEmail');
+            const switchAccountButton = document.getElementById('switchAccountButton');
+            const popupSignOutButton = document.getElementById('popupSignOutButton');
+
+            const adminDashboardCodeEntryDiv = document.getElementById('adminDashboardCodeEntry');
+            const adminCodeInput = document.getElementById('adminCodeInput');
+            const unlockAdminDashboardButton = document.getElementById('unlockAdminDashboardButton');
+            const adminDashboardContentDiv = document.getElementById('adminDashboardContent');
+            const adminNavTab = document.querySelector('.nav-item[data-tab="admin"]');
+            let adminDashboardUnlocked = false;
+
+            const emailWhitelistForm = document.getElementById('emailWhitelistForm');
+            const emailToWhitelistInput = document.getElementById('emailToWhitelist');
+            const whitelistedEmailsListUL = document.getElementById('whitelistedEmailsList');
+
+            const globalSchedulerForm = document.getElementById('globalSchedulerForm');
+            const globalScheduleTableBody = document.getElementById('globalScheduleTableBody');
+            const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+            const adminHistoryUserSelect = document.getElementById('adminHistoryUserSelect');
+            const adminHistoryStartDateInput = document.getElementById('adminHistoryStartDate');
+            const adminHistoryEndDateInput = document.getElementById('adminHistoryEndDate');
+            const adminApplyHistoryFilterButton = document.getElementById('adminApplyHistoryFilter');
+            const adminAttendanceHistoryLogDiv = document.getElementById('adminAttendanceHistoryLog');
+            const adminTeamGalleryDiv = document.getElementById('adminTeamGallery');
+            const teamOverviewListDiv = document.getElementById('teamOverviewList');
+
+            const editUserModal = document.getElementById('editUserModal');
+            const closeEditUserModalBtn = document.getElementById('closeEditUserModal');
+            const editModalUserName = document.getElementById('editModalUserName');
+            const editModalUserEmail = document.getElementById('editModalUserEmail');
+            const editModalSystemStatusSelect = document.getElementById('editModalSystemStatus');
+            const saveSystemStatusOverrideBtn = document.getElementById('saveSystemStatusOverride');
+            const editModalLastAttendance = document.getElementById('editModalLastAttendance');
+            const viewUserFullHistoryBtn = document.getElementById('viewUserFullHistoryBtn');
+            const toggleWhitelistBtn = document.getElementById('toggleWhitelistBtn');
+            const editingUserIdInput = document.getElementById('editingUserId');
+
+
+            let currentAuthUser = null;
+            let currentEmployeeId = null;
+            let currentEmployeeName = "Guest";
+            let userIsAdmin = false; 
+            const ADMIN_UID = 'HvSGRjmIidV79McjnQrDx5ni9Pt1'; 
+            const ADMIN_EMAIL = 'jamescarbelledo@gmail.com'; // Fallback for local testing if UID is not set
+
+            function getWhitelistedEmails() {
+                return JSON.parse(localStorage.getItem('whitelistedEmails')) || [];
+            }
+            function saveWhitelistedEmails(emails) {
+                localStorage.setItem('whitelistedEmails', JSON.stringify(emails));
+            }
+             function isEmailWhitelisted(email) {
+                const whitelist = getWhitelistedEmails();
+                // If current user is the designated admin AND whitelist is empty, allow access for setup.
+                if ( (currentAuthUser?.uid === ADMIN_UID || currentAuthUser?.email === ADMIN_EMAIL) && whitelist.length === 0) {
+                    return true;
                 }
+                return whitelist.includes(email);
             }
 
-            function setThemeSwitchState() {
-                document.getElementById('toggleTheme').checked = document.cookie.match(/theme=dark/i) != null;
-            }
 
-            function toggleTheme() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    document.cookie = 'theme=light';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    document.cookie = 'theme=dark';
-                }
-            }
+            if (auth) {
+                auth.onAuthStateChanged(async user => { 
+                    if (user) {
+                         // Perform whitelisting check *after* currentAuthUser is set
+                        currentAuthUser = user; // Set currentAuthUser first for isEmailWhitelisted to use it
+                        currentEmployeeId = user.uid;
+                        currentEmployeeName = user.displayName || user.email?.split('@')[0] || "User";
+                        userIsAdmin = (user.uid === ADMIN_UID || user.email === ADMIN_EMAIL);
 
-            // Initialize Theme
-            setThemeFromCookie();
-            setThemeSwitchState();
-            document.getElementById('toggleTheme').addEventListener('change', toggleTheme);
+                        if (!isEmailWhitelisted(user.email)) {
+                             console.warn(`Access Denied: Email ${user.email} is not whitelisted.`);
+                             accessDeniedMessageDiv.style.display = 'block';
+                             loginContainer.style.display = 'flex';
+                             appContainer.style.display = 'none';
+                             if (auth) auth.signOut(); 
+                             currentAuthUser = null; // Reset currentAuthUser as they are signed out
+                             return;
+                        }
+                        accessDeniedMessageDiv.style.display = 'none';
 
-            // Centralized Menu Toggle (same as before)
-            const menuButton = document.querySelector('.menu-button');
-            const navMenu = document.querySelector('.nav-menu');
-            const topBar = document.getElementById('top-bar');
+                        localStorage.setItem('loggedInUserUID', user.uid);
+                        if(appContainer) appContainer.style.display = 'flex';
+                        if(loginContainer) loginContainer.style.display = 'none';
+                        if(logoutButton) logoutButton.style.display = 'flex';
+                        if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = '';
 
-            if (menuButton && navMenu) {
-                menuButton.addEventListener('click', () => {
-                    navMenu.classList.toggle('show');
-                    topBar.classList.toggle('menu-open');
+                        if(userNameDisplay) userNameDisplay.textContent = currentEmployeeName;
+                        if(userTitleDisplay) userTitleDisplay.textContent = "Welcome back!";
+                        if(userGreetingProfilePicDiv) { 
+                            if (user.photoURL) {
+                                userGreetingProfilePicDiv.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
+                            } else {
+                                userGreetingProfilePicDiv.innerHTML = `<i class="fas fa-user-check"></i>`;
+                            }
+                        }
+                        
+                        if (adminNavTab) adminNavTab.style.display = userIsAdmin ? 'flex' : 'none';
+
+                        const cteni = document.getElementById('currentTrackingEmployeeName');
+                        const cteids = document.getElementById('currentTrackingEmployeeIdShort');
+                        if(cteni) cteni.textContent = currentEmployeeName;
+                        if(cteids) cteids.textContent = currentEmployeeId ? currentEmployeeId.substring(0,8) + "..." : 'N/A';
+                        if(document.getElementById('attendanceControls')) document.getElementById('attendanceControls').style.display = 'block';
+                        const selfieBtn = document.getElementById('captureSelfieButton'); if(selfieBtn) selfieBtn.style.display = 'inline-block';
+
+                        updateGreeting(); await fetchLastAttendance(); await calculateHoursThisWeek(); updatePendingTasksCount();
+                        loadGlobalScheduleForUser(); 
+                        loadAndDisplayAnnouncements(); 
+                        await initializeUnifiedUserList(); 
+                        if(userIsAdmin) {
+                            renderWhitelistedEmails();
+                            renderGlobalScheduleForm();
+                            loadGlobalSchedulesToForm();
+                            populateAdminHistoryUserSelectWithUnifiedList();
+                        }
+                        resetIdleTimer(); 
+                        switchTab(localStorage.getItem('lastActiveTab') || 'home');
+                    } else {
+                        currentAuthUser = null; currentEmployeeId = null; currentEmployeeName = "Guest"; userIsAdmin = false;
+                        adminDashboardUnlocked = false; 
+                        if(adminDashboardContentDiv) adminDashboardContentDiv.style.display = 'none';
+                        if(adminDashboardCodeEntryDiv) adminDashboardCodeEntryDiv.style.display = 'block';
+                        if(adminCodeInput) adminCodeInput.value = '';
+
+                        localStorage.removeItem('loggedInUserUID');
+                        localStorage.removeItem('lastActiveTab');
+                        if(appContainer) appContainer.style.display = 'none'; if(loginContainer) loginContainer.style.display = 'flex'; if(logoutButton) logoutButton.style.display = 'none';
+                        if(userNameDisplay) userNameDisplay.textContent = currentEmployeeName; if(userTitleDisplay) userTitleDisplay.textContent = "Please log in to access features."; if(userGreetingProfilePicDiv) userGreetingProfilePicDiv.innerHTML = `<i class="fas fa-user"></i>`;
+                        if(document.getElementById('attendanceControls')) document.getElementById('attendanceControls').style.display = 'none';
+                        if(document.getElementById('lastActionStatus')) document.getElementById('lastActionStatus').textContent = "--"; if(document.getElementById('lastActionTime')) document.getElementById('lastActionTime').textContent = "--";
+                        updateGreeting();
+                        if(hoursThisWeekDisplay) hoursThisWeekDisplay.textContent = "-- hrs"; if(pendingTasksCountDisplay) pendingTasksCountDisplay.textContent = "--";
+                        const attHistLog = document.getElementById('attendanceHistoryLog'); const attHistChart = document.getElementById('historyChartContainer');
+                        if(attHistLog) attHistLog.innerHTML = "<p>Please log in to view history.</p>"; if(attHistChart) attHistChart.innerHTML = '<p class="chart-no-data">Log in to see chart data.</p>';
+                         if(loginContainer && body.style.display !== 'flex'){
+                            body.style.display = 'flex';
+                            body.style.justifyContent = 'center';
+                            body.style.alignItems = 'center';
+                        }
+                        clearTimeout(idleTimer); 
+                        if (adminNavTab) adminNavTab.style.display = 'none';
+                        if (userProfilePopup) userProfilePopup.classList.remove('visible'); 
+                    }
                 });
+            } else {
+                if(loginContainer) loginContainer.style.display = 'flex';
+                if(appContainer) appContainer.style.display = 'none';
+                if(loginContainer && body.style.display !== 'flex'){
+                    body.style.display = 'flex';
+                    body.style.justifyContent = 'center';
+                    body.style.alignItems = 'center';
+                }
             }
 
-            document.addEventListener('click', (event) => {
-                if (menuButton && navMenu && !menuButton.contains(event.target) && !navMenu.contains(event.target) && navMenu.classList.contains('show')) {
-                    navMenu.classList.remove('show');
-                    topBar.classList.remove('menu-open');
+            function signInWithGoogle() { 
+                if (!auth) { if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = "Authentication service is not available."; return; } 
+                const provider = new firebase.auth.GoogleAuthProvider(); 
+                auth.signInWithPopup(provider).catch(err => { 
+                    console.error("Google Sign-In Error:", err); 
+                    if(globalAuthErrorDisplay) globalAuthErrorDisplay.textContent = `Sign-In Error: ${err.message} (Code: ${err.code})`; 
+                }); 
+            }
+            function signOutUser() { 
+                if (userProfilePopup) userProfilePopup.classList.remove('visible');
+                if (!auth) { alert("Authentication service is not available."); return; } 
+                auth.signOut().catch(err => { console.error("Sign Out Error:", err); alert(`Sign Out Error: ${err.message}`); });
+            }
+            if(loginWithGoogleButton) loginWithGoogleButton.addEventListener('click', signInWithGoogle);
+            if(logoutButton) logoutButton.addEventListener('click', (e) => { e.preventDefault(); signOutUser(); });
+
+
+            function updateGreeting() { const h = new Date().getHours(); let gt = "Hi"; if (h<12) gt="Good Morning"; else if(h<18) gt="Good Afternoon"; else gt="Good Evening"; if (dynamicGreeting) dynamicGreeting.innerHTML = `${gt}, <span id="userNameForGreeting">${currentEmployeeName}</span>!`; }
+            function updateDashboardTime() { const n=new Date(); if(dashboardCurrentTime) dashboardCurrentTime.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); if(dashboardCurrentDate) dashboardCurrentDate.textContent=n.toLocaleDateString([],{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+            
+            function applyTheme(th) { 
+                body.dataset.theme = th; 
+                localStorage.setItem('theme', th); 
+                if(mainThemeToggle) mainThemeToggle.checked = th === 'dark';
+            }
+            mainThemeToggle?.addEventListener('change', () => applyTheme(mainThemeToggle.checked ? 'dark' : 'light'));
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            const tabContents = document.querySelectorAll('.main-content .tab-content');
+
+            async function switchTab(targetTabId) { 
+                if (!currentAuthUser && targetTabId !=='login' && targetTabId !== 'home') {
+                    if(loginContainer && loginContainer.style.display === 'none') { if(auth) auth.signOut(); }
+                    return;
+                }
+                if (targetTabId === 'admin' && !userIsAdmin) {
+                    showToast("Access Denied: Admin dashboard is restricted.", "error");
+                    return; 
+                }
+
+                navItems.forEach(i=>i.classList.toggle('active',i.dataset.tab===targetTabId));
+                tabContents.forEach(c=>c.classList.toggle('active',c.id===`tab-${targetTabId}`));
+                localStorage.setItem('lastActiveTab', targetTabId);
+
+                if(targetTabId==='home'){updateGreeting();updateDashboardTime();if(currentAuthUser&&db)calculateHoursThisWeek();updatePendingTasksCount();loadAndDisplayAnnouncements();}
+                if(targetTabId==='attendance' && currentAuthUser && db){ 
+                    const sd=document.getElementById('historyStartDate');
+                    const ed=document.getElementById('historyEndDate');
+                    if(sd)sd.valueAsDate=null;if(ed)ed.valueAsDate=null;
+                    fetchFullAttendanceHistory(); 
+                    loadGlobalScheduleForUser();
+                }
+                if(targetTabId==='team' && currentAuthUser) { 
+                    await loadAndRenderTeamOverview();
+                }
+                if(targetTabId==='tasks')renderTasks();
+                if(targetTabId==='notes')renderNotesList();
+                if(targetTabId==='admin' && userIsAdmin) {
+                    if (adminDashboardUnlocked) {
+                        loadAdminAnnouncements();
+                        await renderAdminTeamGallery(); 
+                        loadGlobalSchedulesToForm();
+                        loadAdminBreakLogs();
+                        renderWhitelistedEmails();
+                        populateAdminHistoryUserSelectWithUnifiedList();
+                    }
+                }
+            }
+            navItems.forEach(i => i.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(i.id !== 'logoutButton') switchTab(i.dataset.tab);
+            }));
+
+            userGreetingProfilePicTrigger?.addEventListener('click', () => {
+                if (!currentAuthUser) return;
+                if (userProfilePopup.classList.contains('visible')) {
+                    userProfilePopup.classList.remove('visible');
+                } else {
+                    popupUserName.textContent = currentEmployeeName;
+                    popupUserEmail.textContent = currentAuthUser.email;
+                    if (currentAuthUser.photoURL) {
+                        popupUserProfilePic.src = currentAuthUser.photoURL;
+                    } else {
+                        popupUserProfilePic.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>';
+                    }
+
+                    const currentUserData = unifiedUserList.find(u => u.id === currentAuthUser.uid); 
+                    const status = currentUserData ? currentUserData.systemStatus : 'active'; 
+                    
+                    popupUserStatusIndicator.className = 'status-dot'; 
+                    popupUserStatusIndicator.classList.add(`status-${status}`);
+
+                    userProfilePopup.classList.add('visible');
                 }
             });
 
-            // ----------------------------------
-            // --- Loading Screen Logic ---
-            // ----------------------------------
-            const loadingScreen = document.getElementById('loading-screen');
-            const aboutSection = document.getElementById('about-section');
-            const mainContent = document.getElementById('main-content');
-            const loadingBar = document.getElementById('loading-bar');
-            const robotContainer = document.getElementById('robot-container');
+            popupSignOutButton?.addEventListener('click', signOutUser);
+            switchAccountButton?.addEventListener('click', () => {
+                showToast("Switch account feature is not implemented in this demo.", "info");
+            });
 
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 1; // Adjust increment for loading speed
-                loadingBar.style.width = progress + '%';
-                robotContainer.style.transform = `translateX(calc(${progress}% - 40px))`; // Move robot along the bar
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none'; // Hide loading screen
-                    aboutSection.style.display = 'block';  // Show about section
+            document.addEventListener('click', (event) => {
+                if (userProfilePopup && userProfilePopup.classList.contains('visible')) {
+                    if (!userProfilePopup.contains(event.target) && !userGreetingProfilePicTrigger.contains(event.target)) {
+                        userProfilePopup.classList.remove('visible');
+                    }
                 }
-            }, 50); // Adjust interval for loading speed
+                 if (editUserModal && editUserModal.classList.contains('visible')) {
+                    if (!editUserModal.querySelector('.modal-content').contains(event.target)) {
+                       closeEditUserModal();
+                    }
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && userProfilePopup && userProfilePopup.classList.contains('visible')) {
+                    userProfilePopup.classList.remove('visible');
+                }
+                if (event.key === 'Escape' && editUserModal && editUserModal.classList.contains('visible')) {
+                    closeEditUserModal();
+                }
+            });
 
-            // ----------------------------------
-            // --- "Get Started" Button Logic ---
-            // ----------------------------------
-            const getStartedButton = document.getElementById('get-started-button');
-            if (getStartedButton) { // Check if button exists to prevent errors if about section is removed
-                getStartedButton.addEventListener('click', () => {
-                    aboutSection.style.display = 'none';     // Hide about section
-                    mainContent.style.display = 'block';    // Show main content
+
+            const clockInButton = document.getElementById('clockInButton'); 
+            const clockOutButton = document.getElementById('clockOutButton');
+            const pauseBreakButton = document.getElementById('pauseBreakButton');
+            const resumeWorkButton = document.getElementById('resumeWorkButton');
+            const lastActionStatusDisplay = document.getElementById('lastActionStatus'); 
+            const lastActionTimeDisplay = document.getElementById('lastActionTime');
+            const currentBreakStatusDisplay = document.getElementById('currentBreakStatus');
+            const currentTimeDisplay = document.getElementById('currentTimeDisplay'); 
+            const geolocationStatusDisplay = document.getElementById('geolocationStatus'); 
+            const captureSelfieButton = document.getElementById('captureSelfieButton'); 
+            const selfieVideo = document.getElementById('selfieVideo'); 
+            const selfieCanvas = document.getElementById('selfieCanvas'); 
+            const selfiePreview = document.getElementById('selfiePreview'); 
+            let currentGeolocation=null; let selfieStream=null; let capturedSelfieBlob=null; let lastLogId=null;
+            let isOnBreak = false; let currentBreakStartTime = null;
+
+            function updateLiveTime() { if(currentTimeDisplay) currentTimeDisplay.textContent = `Current Time: ${new Date().toLocaleTimeString()}`; } setInterval(updateLiveTime, 1000); if(currentTimeDisplay) updateLiveTime();
+
+            function getGeolocation() { return new Promise((resolve) => { if (!geolocationStatusDisplay) { console.warn("Geolocation display element missing."); resolve(null); return; } if (navigator.geolocation) { navigator.geolocation.getCurrentPosition( p => { currentGeolocation={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy}; geolocationStatusDisplay.textContent=`Geolocation: Acquired (Accuracy: ${p.coords.accuracy.toFixed(0)}m)`; resolve(currentGeolocation); }, e => { let msg="Geolocation: Error"; switch(e.code){case e.PERMISSION_DENIED:msg+=" (Permission Denied by User/System)";break;case e.POSITION_UNAVAILABLE:msg+=" (Location information is unavailable)";break;case e.TIMEOUT:msg+=" (Location request timed out)";break;default:msg+=` (${e.message||'Unknown GPS error'})`;} geolocationStatusDisplay.textContent=msg;console.warn("Geolocation Error Object:",e);resolve(null);}, {enableHighAccuracy:true,timeout:15000,maximumAge:0}); } else { geolocationStatusDisplay.textContent="Geolocation: Not supported by this browser"; resolve(null); } }); }
+            captureSelfieButton?.addEventListener('click', async () => { if(selfieStream){selfieStream.getTracks().forEach(t=>t.stop());if(selfieVideo)selfieVideo.style.display='none';if(selfiePreview)selfiePreview.style.display='none';captureSelfieButton.innerHTML='<i class="fas fa-camera"></i> Capture Selfie';selfieStream=null;capturedSelfieBlob=null;return;} try{selfieStream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode: "user"}});if(selfieVideo){selfieVideo.srcObject=selfieStream;selfieVideo.style.display='block';}if(selfiePreview)selfiePreview.style.display='none';captureSelfieButton.innerHTML='<i class="fas fa-check-circle"></i> Take Photo / <i class="fas fa-times-circle"></i> Cancel';}catch(err){console.error("Camera access error:",err);alert("Could not access camera. Please ensure permissions are granted and no other app is using it.");}});
+            selfieVideo?.addEventListener('click', () => { if(selfieStream&&selfieCanvas&&selfieVideo.videoWidth>0){const ctx=selfieCanvas.getContext('2d');selfieCanvas.width=selfieVideo.videoWidth;selfieCanvas.height=selfieVideo.videoHeight;ctx.drawImage(selfieVideo,0,0,selfieCanvas.width,selfieVideo.videoHeight);selfieCanvas.toBlob(b=>{capturedSelfieBlob=b;if(selfiePreview){selfiePreview.src=URL.createObjectURL(b);selfiePreview.style.display='block';}selfieStream.getTracks().forEach(t=>t.stop());if(selfieVideo)selfieVideo.style.display='none';selfieStream=null;if(captureSelfieButton)captureSelfieButton.innerHTML='<i class="fas fa-redo"></i> Retake Selfie';},'image/jpeg',0.9);}});
+            async function uploadSelfie(uid, logType) { if(!capturedSelfieBlob||!storage)return null;const ref=storage.ref(`selfies/${uid}/${logType}_${Date.now()}.jpg`);try{const snap=await ref.put(capturedSelfieBlob);const url=await snap.ref.getDownloadURL();capturedSelfieBlob=null;if(selfiePreview)selfiePreview.style.display='none';if(captureSelfieButton)captureSelfieButton.innerHTML='<i class="fas fa-camera"></i> Capture Selfie';return url;}catch(err){console.error("Selfie Upload Error:",err);alert(`Failed to upload selfie. Error: ${err.message}. Check CORS settings on Firebase Storage and network connection.`);return null;}}
+
+            async function fetchLastAttendance() {
+                if(!currentAuthUser||!db) return;
+                try{
+                    const qS=await db.collection("attendanceLogs")
+                        .where("employeeId", "==", currentAuthUser.uid)
+                        .orderBy("clockInTime","desc")
+                        .limit(1).get();
+                    if(!qS.empty){
+                        const logData=qS.docs[0].data();lastLogId=qS.docs[0].id;
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent=logData.clockOutTime?"Clocked Out":"Clocked In";
+                        const t=logData.clockOutTime?logData.clockOutTime.toDate():logData.clockInTime.toDate();
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=t.toLocaleString();
+                        
+                        clockInButton.disabled = !logData.clockOutTime;
+                        clockOutButton.disabled = !!logData.clockOutTime;
+                        pauseBreakButton.disabled = !!logData.clockOutTime; 
+                        
+                        isOnBreak = logData.status === "on_break";
+                        if (isOnBreak) {
+                            currentBreakStatusDisplay.textContent = `On Break (Started: ${new Date(logData.breaks[logData.breaks.length-1].startTime.seconds*1000).toLocaleTimeString()})`;
+                            pauseBreakButton.style.display = 'none';
+                            resumeWorkButton.style.display = 'inline-block';
+                            clockOutButton.disabled = true; 
+                        } else {
+                            currentBreakStatusDisplay.textContent = "Not on break";
+                            pauseBreakButton.style.display = 'inline-block';
+                            resumeWorkButton.style.display = 'none';
+                            pauseBreakButton.disabled = !!logData.clockOutTime; 
+                        }
+
+                    }else{
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="No records found";
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent="--";
+                        if(clockInButton)clockInButton.disabled=false;
+                        if(clockOutButton)clockOutButton.disabled=true;
+                        if(pauseBreakButton)pauseBreakButton.disabled=true;
+                        if(resumeWorkButton)resumeWorkButton.style.display='none';
+                        currentBreakStatusDisplay.textContent = "Not on break";
+                    }
+                }catch(err){
+                    console.error("Fetch last attendance log error:",err);
+                    if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Error loading status";
+                    if (err.code === 'failed-precondition') { showToast("Firestore query failed: Missing index for fetching last attendance. Admin: please create Firestore indexes.", "error", 5000); } 
+                    else if (err.message && err.message.includes("Invalid property path")) { showToast("Firestore query error (last attendance): Invalid field name. " + err.message, "error", 5000); }
+                }
+            }
+
+            clockInButton?.addEventListener('click', async () => {
+                if(!currentAuthUser||!db){showToast("Please sign in to clock in.", "error");return;}
+
+                const now = new Date();
+                const todayDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+                const globalSchedules = JSON.parse(localStorage.getItem('globalSchedules')) || {};
+                const todaySchedule = globalSchedules[todayDayName];
+                let isLateClockIn = false;
+
+                if (todaySchedule && todaySchedule.startTime) {
+                    const [startHour, startMinute] = todaySchedule.startTime.split(':').map(Number);
+                    const officialStartTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+                    const gracePeriodStartTime = new Date(officialStartTime.getTime() - 10 * 60000); 
+
+                    if (now < gracePeriodStartTime) {
+                        showToast(`Cannot clock in yet. Scheduled start time is ${todaySchedule.startTime}. You can clock in from ${gracePeriodStartTime.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}.`, "warning", 5000);
+                        return;
+                    }
+                    if (now > officialStartTime) {
+                        isLateClockIn = true;
+                    }
+                }
+
+
+                clockInButton.disabled=true;
+                await getGeolocation();
+                const tS=firebase.firestore.Timestamp.now();
+                let pUrl=null;
+                if(capturedSelfieBlob) pUrl = await uploadSelfie(currentAuthUser.uid,`in_${tS.toMillis()}`);
+
+                const entry={
+                    employeeId:currentAuthUser.uid,
+                    employeeName:currentAuthUser.displayName||currentAuthUser.email,
+                    clockInTime:tS,
+                    isLate: isLateClockIn,
+                    geolocationIn:currentGeolocation ? new firebase.firestore.GeoPoint(currentGeolocation.lat,currentGeolocation.lon) : null,
+                    geolocationInAccuracy: currentGeolocation && typeof currentGeolocation.acc === 'number' ? currentGeolocation.acc : null,
+                    photoInUrl:pUrl,
+                    status:"clocked_in",
+                    breaks: [] 
+                };
+                try{
+                    const dRef=await db.collection("attendanceLogs").add(entry);
+                    lastLogId=dRef.id;
+                    if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Clocked In";
+                    if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=tS.toDate().toLocaleString();
+                    if(clockOutButton)clockOutButton.disabled=false;
+                    if(pauseBreakButton)pauseBreakButton.disabled=false;
+                    calculateHoursThisWeek();
+                    if(document.getElementById('tab-attendance')?.classList.contains('active'))fetchFullAttendanceHistory();
+                    showToast(`Successfully Clocked In! ${isLateClockIn ? '(Marked as LATE)' : ''}`, isLateClockIn ? "warning" : "success");
+                    addNotification("attendance", `You clocked in at ${tS.toDate().toLocaleTimeString()} ${isLateClockIn ? '(LATE)' : ''}`, () => switchTab('attendance'));
+                    const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                    if (currentUserInList) {
+                        currentUserInList.attendanceStatus = 'Clocked In' + (isLateClockIn ? ' (Late)' : '');
+                        currentUserInList.lastAttendanceLog = entry; // Update with the new log
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                        if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    }
+                }catch(err){
+                    console.error("Clock-in error:",err);
+                    showToast("Error clocking in: " + err.message, "error");
+                    clockInButton.disabled=false;
+                }
+            });
+
+            clockOutButton?.addEventListener('click', async () => {
+                if(!currentAuthUser||!lastLogId||!db){showToast("Cannot clock out. No active session or not signed in.", "error");return;}
+                if(isOnBreak) { showToast("Please resume work before clocking out.", "warning"); return; }
+
+                clockOutButton.disabled=true;
+                await getGeolocation();
+                const tS=firebase.firestore.Timestamp.now();
+                let pUrl=null;
+                if(capturedSelfieBlob) pUrl = await uploadSelfie(currentAuthUser.uid,`out_${tS.toMillis()}`);
+                try{
+                    const logRef=db.collection("attendanceLogs").doc(lastLogId);
+                    const doc=await logRef.get();
+                    if(doc.exists&&!doc.data().clockOutTime){
+                        const inT=doc.data().clockInTime.toDate();
+                        const dur=Math.round((tS.toDate()-inT)/60000); 
+                        
+                        let totalBreakMinutes = 0;
+                        const breaksArray = doc.data().breaks || [];
+                        breaksArray.forEach(brk => {
+                            if (brk.startTime && brk.endTime) {
+                                totalBreakMinutes += Math.round((brk.endTime.toDate() - brk.startTime.toDate()) / 60000);
+                            }
+                        });
+                        const workDurationMinutes = dur - totalBreakMinutes;
+                        const updatedLogEntry = {
+                            clockOutTime:tS,
+                            durationMinutes:dur, 
+                            workDurationMinutes: workDurationMinutes, 
+                            totalBreakMinutes: totalBreakMinutes,
+                            status:"clocked_out",
+                            geolocationOut:currentGeolocation ? new firebase.firestore.GeoPoint(currentGeolocation.lat,currentGeolocation.lon) : null,
+                            geolocationOutAccuracy: currentGeolocation && typeof currentGeolocation.acc === 'number' ? currentGeolocation.acc : null,
+                            photoOutUrl:pUrl
+                        };
+
+                        await logRef.update(updatedLogEntry);
+                        if(lastActionStatusDisplay)lastActionStatusDisplay.textContent="Clocked Out";
+                        if(lastActionTimeDisplay)lastActionTimeDisplay.textContent=tS.toDate().toLocaleString();
+                        if(clockInButton)clockInButton.disabled=false;
+                        if(pauseBreakButton)pauseBreakButton.disabled=true;
+                        lastLogId=null; isOnBreak = false;
+                        calculateHoursThisWeek();
+                        if(document.getElementById('tab-attendance')?.classList.contains('active'))fetchFullAttendanceHistory();
+                        showToast("Successfully Clocked Out!", "success");
+                        addNotification("attendance", `You clocked out at ${tS.toDate().toLocaleTimeString()}. Work duration: ${workDurationMinutes} mins.`, () => switchTab('attendance'));
+                        const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                        if (currentUserInList) {
+                            currentUserInList.attendanceStatus = 'Clocked Out';
+                            currentUserInList.breakStatus = 'N/A';
+                            currentUserInList.lastAttendanceLog = {...doc.data(), ...updatedLogEntry}; // Update with new log
+                            if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                            if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                        }
+                    }else{
+                        showToast("Could not find active clock-in record or already clocked out.", "error");
+                        fetchLastAttendance(); 
+                    }
+                }catch(err){
+                    console.error("Clock-out error:",err);
+                    showToast("Error clocking out: " + err.message, "error");
+                    clockOutButton.disabled=false;
+                }
+            });
+
+            pauseBreakButton?.addEventListener('click', async () => {
+                if (!currentAuthUser || !lastLogId || !db || isOnBreak) {
+                    showToast("Cannot pause break. Not clocked in or already on break.", "warning");
+                    return;
+                }
+                pauseBreakButton.disabled = true;
+                currentBreakStartTime = firebase.firestore.Timestamp.now();
+                const newBreakEntry = { startTime: currentBreakStartTime, endTime: null, durationMinutes: null };
+                try {
+                    const logRef = db.collection("attendanceLogs").doc(lastLogId);
+                    await logRef.update({
+                        status: "on_break",
+                        breaks: firebase.firestore.FieldValue.arrayUnion(newBreakEntry)
+                    });
+                    isOnBreak = true;
+                    currentBreakStatusDisplay.textContent = `On Break (Started: ${currentBreakStartTime.toDate().toLocaleTimeString()})`;
+                    pauseBreakButton.style.display = 'none';
+                    resumeWorkButton.style.display = 'inline-block';
+                    resumeWorkButton.disabled = false;
+                    clockOutButton.disabled = true; 
+                    showToast("Break started.", "info");
+                    addNotification("break", `Break started at ${currentBreakStartTime.toDate().toLocaleTimeString()}`, () => switchTab('attendance'));
+                     const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                    if (currentUserInList) {
+                        currentUserInList.breakStatus = 'On Break';
+                        // Update lastAttendanceLog for real-time reflection
+                        if (currentUserInList.lastAttendanceLog) {
+                            currentUserInList.lastAttendanceLog.status = "on_break";
+                            if (!currentUserInList.lastAttendanceLog.breaks) currentUserInList.lastAttendanceLog.breaks = [];
+                            currentUserInList.lastAttendanceLog.breaks.push(newBreakEntry);
+                        }
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                         if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    }
+                } catch (err) {
+                    console.error("Pause break error:", err);
+                    showToast("Error starting break: " + err.message, "error");
+                    pauseBreakButton.disabled = false;
+                }
+            });
+
+            resumeWorkButton?.addEventListener('click', async () => {
+                if (!currentAuthUser || !lastLogId || !db || !isOnBreak || !currentBreakStartTime) {
+                     showToast("Cannot resume work. Not on break or error in break state.", "warning");
+                    return;
+                }
+                resumeWorkButton.disabled = true;
+                const breakEndTime = firebase.firestore.Timestamp.now();
+                const breakDuration = Math.round((breakEndTime.toDate() - currentBreakStartTime.toDate()) / 60000);
+
+                try {
+                    const logRef = db.collection("attendanceLogs").doc(lastLogId);
+                    const doc = await logRef.get();
+                    if (doc.exists) {
+                        const breaksArray = doc.data().breaks || [];
+                        if (breaksArray.length > 0) {
+                            const lastBreakIndex = breaksArray.findIndex(b => b.startTime.isEqual(currentBreakStartTime) && b.endTime === null);
+                            if (lastBreakIndex !== -1) { 
+                                breaksArray[lastBreakIndex].endTime = breakEndTime;
+                                breaksArray[lastBreakIndex].durationMinutes = breakDuration;
+                            }
+                        }
+                        await logRef.update({
+                            status: "clocked_in", 
+                            breaks: breaksArray
+                        });
+                        isOnBreak = false;
+                        currentBreakStartTime = null;
+                        currentBreakStatusDisplay.textContent = "Not on break";
+                        pauseBreakButton.style.display = 'inline-block';
+                        pauseBreakButton.disabled = false;
+                        resumeWorkButton.style.display = 'none';
+                        clockOutButton.disabled = false; 
+                        showToast(`Work resumed. Break duration: ${breakDuration} min.`, "info");
+                        addNotification("break", `Work resumed. Break was ${breakDuration} min.`, () => switchTab('attendance'));
+                        const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser.uid);
+                        if (currentUserInList) {
+                            currentUserInList.breakStatus = 'N/A';
+                             if (currentUserInList.lastAttendanceLog) {
+                                currentUserInList.lastAttendanceLog.status = "clocked_in";
+                                const lbi = currentUserInList.lastAttendanceLog.breaks.findIndex(b => b.endTime === null);
+                                if (lbi !== -1) {
+                                    currentUserInList.lastAttendanceLog.breaks[lbi].endTime = breakEndTime;
+                                    currentUserInList.lastAttendanceLog.breaks[lbi].durationMinutes = breakDuration;
+                                }
+                            }
+                            if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                            if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                        }
+                    }
+                } catch (err) {
+                    console.error("Resume work error:", err);
+                    showToast("Error resuming work: " + err.message, "error");
+                    resumeWorkButton.disabled = false;
+                }
+            });
+
+            let unifiedUserList = []; 
+
+            async function initializeUnifiedUserList() {
+                unifiedUserList = []; 
+                const tempUserMap = new Map(); 
+
+                const baseMockUsers = [
+                    { id: 'mockuser1', name: 'Alice Wonder', email: 'alice@example.com', role: 'Developer', systemStatus: 'active', lastActivity: Date.now(), photoURL: 'https://randomuser.me/api/portraits/women/1.jpg', attendanceStatus: 'Clocked Out', breakStatus: 'N/A', isWhitelisted: false, lastAttendanceLog: null },
+                    { id: 'mockuser2', name: 'Bob Builder', email: 'bob@example.com', role: 'Designer', systemStatus: 'offline', lastActivity: Date.now() - (20 * 60 * 1000), photoURL: 'https://randomuser.me/api/portraits/men/1.jpg', attendanceStatus: 'Clocked Out', breakStatus: 'N/A', isWhitelisted: false, lastAttendanceLog: null },
+                ];
+                baseMockUsers.forEach(user => tempUserMap.set(user.id, { ...user }));
+
+                if (currentAuthUser) {
+                    tempUserMap.set(currentAuthUser.uid, {
+                        id: currentAuthUser.uid,
+                        name: currentEmployeeName,
+                        email: currentAuthUser.email,
+                        photoURL: currentAuthUser.photoURL,
+                        role: userIsAdmin ? 'Admin' : 'User',
+                        systemStatus: 'active', 
+                        lastActivity: Date.now(),
+                        isWhitelisted: isEmailWhitelisted(currentAuthUser.email),
+                        attendanceStatus: lastActionStatusDisplay?.textContent || 'Unknown',
+                        breakStatus: currentBreakStatusDisplay?.textContent || 'N/A',
+                        lastAttendanceLog: null 
+                    });
+                }
+
+                const whitelisted = getWhitelistedEmails();
+                whitelisted.forEach(email => {
+                    let existingUser = null;
+                    for (let user of tempUserMap.values()) {
+                        if (user.email === email) {
+                            existingUser = user;
+                            break;
+                        }
+                    }
+                    if (existingUser) {
+                        existingUser.isWhitelisted = true;
+                    } else {
+                        tempUserMap.set(email, { 
+                            id: email, 
+                            name: email.split('@')[0], 
+                            email: email, 
+                            role: 'Whitelisted', 
+                            systemStatus: 'offline', 
+                            lastActivity: 0, 
+                            isWhitelisted: true,
+                            photoURL: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>',
+                            attendanceStatus: 'Unknown',
+                            breakStatus: 'N/A',
+                            lastAttendanceLog: null
+                        });
+                    }
+                });
+
+                if (db) {
+                    try {
+                        const attendanceSnapshot = await db.collection("attendanceLogs").orderBy("clockInTime", "desc").get();
+                        const userLastLogMap = new Map();
+
+                        attendanceSnapshot.docs.forEach(doc => {
+                            const log = doc.data();
+                            if (!userLastLogMap.has(log.employeeId)) { 
+                                userLastLogMap.set(log.employeeId, log);
+                            }
+                        });
+                        
+                        userLastLogMap.forEach((log, employeeId) => {
+                            const attendanceStatus = log.clockOutTime ? 'Clocked Out' : 'Clocked In' + (log.isLate ? ' (Late)' : '');
+                            const breakS = (log.status === 'on_break') ? 'On Break' : (log.clockOutTime ? 'N/A' : 'Not on Break');
+                            
+                            if (tempUserMap.has(employeeId)) {
+                                const existingUser = tempUserMap.get(employeeId);
+                                existingUser.name = log.employeeName || existingUser.name; 
+                                if(log.photoInUrl || log.photoOutUrl) existingUser.photoURL = log.photoInUrl || log.photoOutUrl || existingUser.photoURL;
+                                existingUser.attendanceStatus = attendanceStatus;
+                                existingUser.breakStatus = breakS;
+                                existingUser.lastAttendanceLog = log;
+                                if (!existingUser.email && log.employeeName && log.employeeName.includes('@')) { 
+                                    existingUser.email = log.employeeName;
+                                }
+                            } else {
+                                tempUserMap.set(employeeId, {
+                                    id: employeeId,
+                                    name: log.employeeName || 'Unknown User',
+                                    email: (log.employeeName && log.employeeName.includes('@')) ? log.employeeName : `${employeeId.substring(0,5)}@unknown.com`,
+                                    photoURL: log.photoInUrl || log.photoOutUrl || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>',
+                                    role: 'Logged User',
+                                    systemStatus: 'offline', 
+                                    lastActivity: log.clockInTime.toDate().getTime(),
+                                    isWhitelisted: isEmailWhitelisted((log.employeeName && log.employeeName.includes('@')) ? log.employeeName : ''),
+                                    attendanceStatus: attendanceStatus,
+                                    breakStatus: breakS,
+                                    lastAttendanceLog: log
+                                });
+                            }
+                        });
+                    } catch (err) {
+                        console.error("Error fetching user data from attendance logs:", err);
+                         if (err.code === 'failed-precondition') { showToast("Firestore query failed (user list): Missing index. Admin: create Firestore indexes.", "error", 5000); }
+                    }
+                }
+                unifiedUserList = Array.from(tempUserMap.values());
+            }
+
+            async function loadAndRenderTeamOverview() {
+                if (!teamOverviewListDiv || !currentAuthUser) {
+                    if (teamOverviewListDiv) teamOverviewListDiv.innerHTML = '<p>Please log in to view team overview.</p>';
+                    return;
+                }
+                teamOverviewListDiv.innerHTML = '<p>Loading team members...</p>';
+                await initializeUnifiedUserList(); 
+                renderTeamOverview();
+            }
+            
+            function renderTeamOverview() {
+                if (!teamOverviewListDiv) return;
+                teamOverviewListDiv.innerHTML = '';
+
+                if (unifiedUserList.length === 0) {
+                    teamOverviewListDiv.innerHTML = '<p>No team members to display. Admins can whitelist emails in the Admin Dashboard.</p>';
+                    return;
+                }
+
+                unifiedUserList.forEach(user => {
+                    const item = document.createElement('div');
+                    item.classList.add('team-overview-user-item');
+                    item.dataset.userId = user.id;
+
+                    let displayName = user.name || user.email.split('@')[0];
+                    if (user.id === currentAuthUser?.uid) displayName += " (You)";
+
+                    item.innerHTML = `
+                        <img src="${user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>'}" alt="${displayName}" class="team-overview-avatar">
+                        <div class="team-overview-info">
+                            <h4>${displayName}</h4>
+                            <p class="email">${user.email || 'No email available'}</p>
+                            <p>System: <span class="status-dot status-${user.systemStatus || 'offline'}"></span> <span class="status-text">${user.systemStatus || 'offline'}</span></p>
+                            <p class="attendance-status ${user.attendanceStatus && user.attendanceStatus.includes('(Late)') ? 'late-entry' : ''}">Attendance: ${user.attendanceStatus || 'N/A'}</p>
+                            <p>Whitelisted: ${user.isWhitelisted ? 'Yes' : 'No'}</p>
+                        </div>
+                        <div class="team-overview-actions">
+                            ${userIsAdmin && adminDashboardUnlocked ? `<button class="btn btn-sm btn-secondary edit-user-overview-btn" data-user-id="${user.id}">Edit</button>` : ''}
+                        </div>
+                    `;
+                    teamOverviewListDiv.appendChild(item);
+                });
+
+                document.querySelectorAll('.edit-user-overview-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        openEditUserModal(this.dataset.userId);
+                    });
+                });
+            }
+            
+            function openEditUserModal(userId) {
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (!user) {
+                    showToast("User not found.", "error");
+                    return;
+                }
+                editingUserIdInput.value = userId;
+                editModalUserName.textContent = user.name || 'N/A';
+                editModalUserEmail.textContent = user.email || 'N/A';
+                editModalSystemStatusSelect.value = user.systemStatus || 'offline';
+                editModalLastAttendance.textContent = user.attendanceStatus || 'N/A';
+                
+                toggleWhitelistBtn.textContent = user.isWhitelisted ? "Remove from Whitelist" : "Add to Whitelist";
+                toggleWhitelistBtn.dataset.currentWhitelistStatus = user.isWhitelisted;
+
+                editUserModal.classList.add('visible');
+            }
+
+            function closeEditUserModal() {
+                editUserModal.classList.remove('visible');
+            }
+            closeEditUserModalBtn?.addEventListener('click', closeEditUserModal);
+
+            saveSystemStatusOverrideBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                const newStatus = editModalSystemStatusSelect.value;
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (user) {
+                    user.systemStatus = newStatus;
+                    if (userId === currentAuthUser?.uid) user.lastActivity = Date.now(); 
+                    renderTeamOverview(); 
+                    if (adminDashboardUnlocked && document.getElementById('tab-admin')?.classList.contains('active')) renderAdminTeamGallery();
+                    showToast(`Display status for ${user.name} updated to ${newStatus}.`, "success");
+                }
+                closeEditUserModal();
+            });
+
+            viewUserFullHistoryBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                if(adminHistoryUserSelect) adminHistoryUserSelect.value = userId; 
+                switchTab('admin'); 
+                if(!adminDashboardUnlocked) {
+                     showToast("Please unlock Admin Dashboard to view historical data.", "warning");
+                } else {
+                    adminApplyHistoryFilterButton.click(); 
+                    document.getElementById('adminHistoricalAttendanceSection').scrollIntoView({ behavior: 'smooth' });
+                }
+                closeEditUserModal();
+            });
+            
+            toggleWhitelistBtn?.addEventListener('click', () => {
+                const userId = editingUserIdInput.value;
+                const user = unifiedUserList.find(u => u.id === userId);
+                if (!user || !user.email) {
+                     showToast("User email not available for whitelist action.", "error");
+                     return;
+                }
+                
+                let currentWhitelist = getWhitelistedEmails();
+                if (user.isWhitelisted) { 
+                    currentWhitelist = currentWhitelist.filter(email => email !== user.email);
+                    user.isWhitelisted = false;
+                    showToast(`${user.email} removed from whitelist.`, "success");
+                } else { 
+                    if (!currentWhitelist.includes(user.email)) {
+                        currentWhitelist.push(user.email);
+                    }
+                    user.isWhitelisted = true;
+                    showToast(`${user.email} added to whitelist.`, "success");
+                }
+                saveWhitelistedEmails(currentWhitelist);
+                renderWhitelistedEmails(); 
+                renderTeamOverview(); 
+                toggleWhitelistBtn.textContent = user.isWhitelisted ? "Remove from Whitelist" : "Add to Whitelist";
+            });
+
+
+            async function renderAdminTeamGallery() { 
+                if (!adminTeamGalleryDiv || !userIsAdmin || !adminDashboardUnlocked) return;
+                adminTeamGalleryDiv.innerHTML = ''; 
+
+                if (unifiedUserList.length === 0) {
+                     await initializeUnifiedUserList(); 
+                }
+
+                if (unifiedUserList.length === 0) {
+                     adminTeamGalleryDiv.innerHTML = '<p>No users to display in gallery. Whitelist users or wait for attendance data.</p>';
+                     return;
+                }
+
+                unifiedUserList.forEach(user => {
+                    const card = document.createElement('div');
+                    card.classList.add('admin-team-user-card');
+                    card.innerHTML = `
+                        <div class="gallery-avatar-container">
+                            <img src="${user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>'}" alt="${user.name}" class="gallery-avatar">
+                            <span class="gallery-status-dot status-${user.systemStatus || 'offline'}"></span>
+                        </div>
+                        <h4 class="gallery-user-name">${user.name || user.email.split('@')[0]} ${user.id === currentAuthUser?.uid ? '(You)' : ''}</h4>
+                        <p class="gallery-user-email">${user.email || 'N/A'}</p>
+                        <p class="gallery-attendance-status ${user.attendanceStatus && user.attendanceStatus.includes('(Late)') ? 'late-entry' : ''}">Attendance: ${user.attendanceStatus || 'N/A'}</p>
+                        <p class="gallery-break-status">Break: ${user.breakStatus || 'N/A'}</p>
+                    `;
+                    adminTeamGalleryDiv.appendChild(card);
                 });
             }
 
 
-        })();
+            let idleTimeout = 10 * 60 * 1000; 
+            let idleTimer;
+
+            function resetIdleTimer() { 
+                clearTimeout(idleTimer);
+                const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser?.uid);
+                if (currentUserInList) {
+                    currentUserInList.lastActivity = Date.now();
+                    if (currentUserInList.systemStatus === 'idle') {
+                        currentUserInList.systemStatus = 'active';
+                        if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                        if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                        if (userProfilePopup.classList.contains('visible')) { 
+                           popupUserStatusIndicator.className = 'status-dot status-active';
+                        }
+                    }
+                }
+                idleTimer = setTimeout(setCurrentUserToIdle, idleTimeout);
+            }
+
+            function setCurrentUserToIdle() {
+                const currentUserInList = unifiedUserList.find(u => u.id === currentAuthUser?.uid);
+                if (currentUserInList && currentUserInList.systemStatus === 'active') { 
+                    currentUserInList.systemStatus = 'idle';
+                    if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                     if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+                    if (userProfilePopup.classList.contains('visible')) { 
+                        popupUserStatusIndicator.className = 'status-dot status-idle';
+                    }
+                    addNotification("status_admin", `${currentUserInList.name} is now idle.`, () => switchTab('admin'));
+                }
+            }
+            window.addEventListener('mousemove', resetIdleTimer);
+            window.addEventListener('keydown', resetIdleTimer);
+            window.addEventListener('mousedown', resetIdleTimer);
+            window.addEventListener('scroll', resetIdleTimer);
+            window.addEventListener('touchstart', resetIdleTimer);
+
+
+            function checkAllUserIdleStatus() { 
+                unifiedUserList.forEach(user => {
+                    if (user.id !== currentAuthUser?.uid && user.systemStatus === 'active') { 
+                        if (Date.now() - (user.lastActivity || 0) > idleTimeout) {
+                            user.systemStatus = 'idle';
+                        }
+                    }
+                });
+                if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+            }
+
+            function simulateStatusChanges() { 
+                 unifiedUserList.forEach(user => {
+                    if (user.id !== currentAuthUser?.uid) { 
+                        const rand = Math.random();
+                        if (rand < 0.1 && user.systemStatus !== 'offline') { 
+                            user.systemStatus = 'offline';
+                        } else if (rand < 0.3 && user.systemStatus === 'offline') { 
+                            user.systemStatus = 'active';
+                            user.lastActivity = Date.now();
+                        } else if (user.systemStatus === 'active') { 
+                            user.lastActivity = Date.now() - (Math.random() * 10 * 60 * 1000); 
+                        }
+                    }
+                });
+                checkAllUserIdleStatus(); 
+                if (userIsAdmin && document.getElementById('tab-admin')?.classList.contains('active') && adminDashboardUnlocked) renderAdminTeamGallery();
+                if (document.getElementById('tab-team')?.classList.contains('active')) renderTeamOverview();
+            }
+            
+            function populateAdminHistoryUserSelectWithUnifiedList() {
+                if (!adminHistoryUserSelect) return;
+                adminHistoryUserSelect.innerHTML = '<option value="">-- Select User --</option>';
+                unifiedUserList.forEach(user => { 
+                    const option = document.createElement('option');
+                    option.value = user.id; 
+                    option.textContent = user.name + (user.email ? ` (${user.email})` : '');
+                    adminHistoryUserSelect.appendChild(option);
+                });
+            }
+            adminApplyHistoryFilterButton?.addEventListener('click', () => {
+                const selectedUserId = adminHistoryUserSelect.value;
+                if (!selectedUserId) {
+                    showToast("Please select a user to view their history.", "warning");
+                    return;
+                }
+                fetchFullAttendanceHistory(selectedUserId, adminAttendanceHistoryLogDiv, null); 
+            });
+            
+
+            const adminBreakLogListDiv = document.getElementById('adminUserBreakLogList');
+            async function loadAdminBreakLogs() {
+                if (!adminBreakLogListDiv || !userIsAdmin || !db || !adminDashboardUnlocked) return;
+                adminBreakLogListDiv.innerHTML = '<p>Loading break logs...</p>';
+                
+                try {
+                    const sevenDaysAgo = new Date();
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                    const attendanceSnapshot = await db.collection("attendanceLogs")
+                                                .where("clockInTime", ">=", firebase.firestore.Timestamp.fromDate(sevenDaysAgo))
+                                                .orderBy("clockInTime", "desc")
+                                                .get();
+                    
+                    let html = '';
+                    const userBreaks = {};
+
+                    attendanceSnapshot.docs.forEach(doc => {
+                        const log = doc.data();
+                        if (log.breaks && log.breaks.length > 0) {
+                            if (!userBreaks[log.employeeId]) {
+                                userBreaks[log.employeeId] = { name: log.employeeName || log.employeeId, totalBreakTime: 0, entries: [] };
+                            }
+                            log.breaks.forEach(brk => {
+                                if (brk.durationMinutes) {
+                                    userBreaks[log.employeeId].totalBreakTime += brk.durationMinutes;
+                                }
+                                userBreaks[log.employeeId].entries.push({
+                                    date: log.clockInTime.toDate().toLocaleDateString(),
+                                    start: brk.startTime.toDate().toLocaleTimeString(),
+                                    end: brk.endTime ? brk.endTime.toDate().toLocaleTimeString() : 'N/A',
+                                    duration: brk.durationMinutes ? `${brk.durationMinutes} min` : 'Ongoing'
+                                });
+                            });
+                        }
+                    });
+
+                    if (Object.keys(userBreaks).length === 0) {
+                        html = '<p>No break data found in the last 7 days.</p>';
+                    } else {
+                        Object.values(userBreaks).forEach(userData => {
+                            html += `<div class="card" style="margin-bottom:15px;"><h4>${userData.name} (Total Break: ${userData.totalBreakTime} min)</h4><ul>`;
+                            userData.entries.slice(0, 5).forEach(entry => { 
+                                html += `<li>${entry.date}: ${entry.start} - ${entry.end} (${entry.duration})</li>`;
+                            });
+                            html += `</ul></div>`;
+                        });
+                    }
+                    adminBreakLogListDiv.innerHTML = html;
+
+                } catch (err) {
+                    console.error("Error loading admin break logs:", err);
+                    adminBreakLogListDiv.innerHTML = '<p>Error loading break logs. Check console.</p>';
+                    if (err.code === 'failed-precondition') showToast("Firestore query failed: Missing index for admin break logs.", "error", 5000);
+                }
+            }
+
+
+            updateDashboardTime(); setInterval(updateDashboardTime, 30000);
+            renderTasks();
+            renderNotesList();
+            loadAndDisplayAnnouncements(); 
+            renderNotifications(); 
+        });
     </script>
 </body>
 </html>
